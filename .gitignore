@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+dist/
+build/
+
+# Node / interfaz
+node_modules/
+app/dist/
+
+# Rust / Tauri
+target/
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
