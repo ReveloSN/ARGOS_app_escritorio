@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block" rel="stylesheet">
+<style>body{margin:0;background:#E4E1DA;font-family:'IBM Plex Sans',sans-serif;color:#1C1A17}a{color:#1F5F6B}a:hover{color:#184C56}</style>
+</helmet>
+
+<div style="padding:56px 64px 24px;display:flex;flex-direction:column;gap:10px;max-width:1100px">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="width:22px;height:22px;border:2px solid #1F5F6B;border-radius:5px;display:grid;place-items:center;box-sizing:border-box"><div style="width:7px;height:7px;border-radius:50%;background:#1F5F6B"></div></div>
+    <span style="font-weight:600;letter-spacing:0.12em;font-size:16px">ARGUS</span>
+    <span style="font-size:14px;color:#4F4B44">Interfaz de escritorio · Windows y Linux · ventana mínima 1100 × 700</span>
+  </div>
+  <p style="margin:0;font-size:15px;line-height:1.55;color:#4F4B44;max-width:820px;text-wrap:pretty">Pantallas a 1280 × 800. El flujo sigue el recorrido de una revisión: cargar archivos, confirmar la lectura, ver alertas, comparar valores, decidir y cerrar. El detalle de alerta es interactivo: pruebe los botones o las teclas C, E, I y Ctrl Z.</p>
+  <div style="display:flex;gap:20px;font-size:14px;flex-wrap:wrap">
+    <a href="ARGUS Design System.dc.html">Hoja de design system</a>
+    <a href="ARGUS Estados y Mensajes.dc.html">Mapa de navegación, estados y mensajes de error</a>
+  </div>
+</div>
+
+<section data-screen-label="Pantallas tema claro" style="padding:24px 64px 48px;display:flex;flex-wrap:wrap;gap:56px;--bg:#F7F6F3;--surface:#FFFFFF;--surface-2:#F3F1EC;--surface-3:#EBE8E1;--border:#E2DFD8;--border-strong:#CFCBC2;--text:#1C1A17;--text-2:#4F4B44;--text-3:#6B665D;--accent:#1F5F6B;--accent-hover:#184C56;--accent-fg:#FFFFFF;--accent-soft:#E3EEF0;--accent-text:#1F5F6B;--high:#B42318;--high-bg:#FBEAE8;--high-border:#F0C2BC;--med:#8A5300;--med-bg:#FBF0DC;--med-border:#EBCF9C;--low:#4F4B44;--low-bg:#EFEDE8;--low-border:#CFCBC2;--diff-bg:#F6D7D2">
+
+  <!-- 01 NUEVA REVISIÓN -->
+  <div id="p1" style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;padding:2px 6px;background:#1C1A17;color:#F7F6F3;border-radius:3px">01</span><span style="font-size:16px;font-weight:600">Nueva revisión · paso 2 de 3, Confirmar lectura</span></div>
+    <div data-screen-label="01 Nueva revisión" style="width:1280px;height:800px;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:48px minmax(0,1fr);background:var(--bg);color:var(--text);font-size:13px;overflow:hidden;border:1px solid #CFCBC2">
+      <div style="grid-row:1 / 3;display:flex"><dc-import name="ARGUS Sidebar" active="inicio" session="" hint-size="216px,800px"></dc-import></div>
+      <dc-import name="ARGUS Topbar" engine="analizando" session="Nueva revisión (sin guardar)" hint-size="100%,48px"></dc-import>
+      <main style="display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-height:0">
+        <div style="padding:16px 28px 0;display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--border);background:var(--surface)">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span>Inicio</span><span style="color:var(--text-3)">›</span><span style="color:var(--text);font-weight:500">Nueva revisión</span></div>
+          <h1 style="margin:0;font-size:20px;line-height:28px;font-weight:600">Nueva revisión</h1>
+          <ol style="list-style:none;margin:0;padding:0;display:flex;gap:0">
+            <li style="display:flex;align-items:center;gap:8px;padding:0 24px 12px 0;border-bottom:2px solid transparent;color:var(--text-2)"><span style="width:20px;height:20px;border-radius:50%;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1">check</span></span>1. Cargar</li>
+            <li style="display:flex;align-items:center;gap:8px;padding:0 24px 12px;border-bottom:2px solid var(--accent);color:var(--text);font-weight:600"><span style="width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px">2</span>Confirmar lectura</li>
+            <li style="display:flex;align-items:center;gap:8px;padding:0 24px 12px;border-bottom:2px solid transparent;color:var(--text-3)"><span style="width:20px;height:20px;border-radius:50%;border:1px solid var(--border-strong);display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px;box-sizing:border-box">3</span>Revisar</li>
+          </ol>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;padding:20px 28px;min-height:0;overflow:auto">
+          <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+            <div style="border:1px dashed var(--border-strong);border-radius:6px;background:var(--surface);padding:16px 18px;display:flex;align-items:center;gap:16px">
+              <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:26px;line-height:1;color:var(--text-3)">upload_file</span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                <span style="font-weight:500">Arrastre más archivos aquí o elíjalos desde el equipo</span>
+                <span style="font-size:12px;color:var(--text-3)">PDF, DOCX, XLSX, EML o texto pegado · hasta 10 MB por archivo</span>
+              </div>
+              <button style="min-width:120px;height:30px;padding:0 12px;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">Elegir archivos <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">Ctrl O</span></button>
+              <button style="min-width:110px;height:30px;padding:0 12px;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">Pegar texto <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">Ctrl V</span></button>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:8px"><span style="font-weight:600">Archivos de la sesión</span><span style="font-size:12px;color:var(--text-3)">Revise qué se leyó en cada uno antes de continuar</span></div>
+            <div style="border:1px solid var(--border-strong);border-radius:6px;background:var(--surface);overflow:hidden">
+              <div style="display:grid;grid-template-columns:44px minmax(0,1fr) 260px 120px;gap:12px;padding:8px 14px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:11.5px;color:var(--text-3);letter-spacing:0.03em;text-transform:uppercase"><span>Tipo</span><span>Archivo</span><span>Lectura</span><span></span></div>
+              <div style="display:grid;grid-template-columns:44px minmax(0,1fr) 260px 120px;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:2px 0;text-align:center;border:1px solid var(--border-strong);border-radius:3px;color:var(--text-2)">PDF</span>
+                <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Contrato_4857_v3.pdf</span><span style="font-size:12px;color:var(--text-3)">1,8 MB · modificado 10/10/2026</span></div>
+                <div style="display:flex;align-items:center;gap:6px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1;color:var(--accent-text)">check_circle</span><span>Leído · 14 páginas, texto completo</span></div>
+                <span style="font-size:12px;color:var(--accent-text);text-decoration:underline;text-underline-offset:2px">Ver texto leído</span>
+              </div>
+              <div style="display:grid;grid-template-columns:44px minmax(0,1fr) 260px 120px;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:2px 0;text-align:center;border:1px solid var(--border-strong);border-radius:3px;color:var(--text-2)">PDF</span>
+                <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Anexo_1_condiciones.pdf</span><span style="font-size:12px;color:var(--text-3)">640 KB · modificado 09/10/2026</span></div>
+                <div style="display:flex;align-items:center;gap:6px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1;color:var(--accent-text)">check_circle</span><span>Leído · 6 páginas, texto completo</span></div>
+                <span style="font-size:12px;color:var(--accent-text);text-decoration:underline;text-underline-offset:2px">Ver texto leído</span>
+              </div>
+              <div style="display:grid;grid-template-columns:44px minmax(0,1fr) 260px 120px;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:2px 0;text-align:center;border:1px solid var(--border-strong);border-radius:3px;color:var(--text-2)">XLSX</span>
+                <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Anexo_2_tarifas.xlsx</span><span style="font-size:12px;color:var(--text-3)">92 KB · modificado 12/10/2026</span></div>
+                <div style="display:flex;align-items:center;gap:6px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1;color:var(--accent-text)">check_circle</span><span>Leído · 3 hojas, 214 celdas con datos</span></div>
+                <span style="font-size:12px;color:var(--accent-text);text-decoration:underline;text-underline-offset:2px">Ver texto leído</span>
+              </div>
+              <div style="display:grid;grid-template-columns:44px minmax(0,1fr) 260px 120px;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:2px 0;text-align:center;border:1px solid var(--border-strong);border-radius:3px;color:var(--text-2)">EML</span>
+                <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Correo_remision_cliente.eml</span><span style="font-size:12px;color:var(--text-3)">48 KB · 3 adjuntos</span></div>
+                <div style="display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-2)"><span>Leyendo adjuntos · 2 de 3</span><span style="font-family:'IBM Plex Mono',monospace">64 %</span></div><div style="height:4px;background:var(--surface-3);border-radius:2px;overflow:hidden"><div style="width:64%;height:100%;background:var(--accent)"></div></div></div>
+                <span style="font-size:12px;color:var(--text-3)">Cancelar</span>
+              </div>
+              <div style="display:grid;grid-template-columns:44px minmax(0,1fr) 392px;gap:12px;align-items:start;padding:12px 14px;background:var(--high-bg)">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:2px 0;text-align:center;border:1px solid var(--high-border);border-radius:3px;color:var(--high);background:var(--surface)">PDF</span>
+                <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">anexo_3.pdf</span><span style="font-size:12px;color:var(--text-2)">3,2 MB · 4 páginas</span></div>
+                <div role="alert" style="display:flex;gap:8px;color:var(--text)">
+                  <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1;color:var(--high)">report</span>
+                  <div style="display:flex;flex-direction:column;gap:8px">
+                    <span style="line-height:1.45"><strong style="font-weight:600">No pudimos leer «anexo_3.pdf».</strong> Es una imagen escaneada sin texto. Súbalo de nuevo con texto seleccionable o actívelo para lectura por OCR.</span>
+                    <div style="display:flex;gap:6px"><button style="min-width:110px;height:28px;padding:0 10px;border:1px solid var(--accent);border-radius:4px;background:var(--accent);color:var(--accent-fg);font:500 12px 'IBM Plex Sans',sans-serif">Activar OCR</button><button style="min-width:120px;height:28px;padding:0 10px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 12px 'IBM Plex Sans',sans-serif">Reemplazar archivo</button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside style="display:flex;flex-direction:column;gap:16px">
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--text-2)">Nombre de la sesión</span><span style="min-height:32px;box-sizing:border-box;padding:6px 10px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);line-height:1.4">Expediente 2026-118 · Arrendamiento Bodega Fontibón</span></label>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--text-2)">Sensibilidad</span><div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:4px;background:var(--surface)"><span>Equilibrada</span><span style="font-size:12px;color:var(--accent-text);text-decoration:underline;text-underline-offset:2px">Cambiar</span></div><span style="font-size:12px;color:var(--text-3);line-height:1.4">Compara identificadores, fechas, montos, nombres y periodos. Omite diferencias solo de formato.</span></div>
+            <div style="border-top:1px solid var(--border);padding-top:14px;display:flex;flex-direction:column;gap:8px">
+              <span style="font-size:12px;font-weight:500;color:var(--text-2)">Resumen de lectura</span>
+              <div style="display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:12.5px"><span style="color:var(--text-2)">Leídos completos</span><span style="font-family:'IBM Plex Mono',monospace">3</span><span style="color:var(--text-2)">En lectura</span><span style="font-family:'IBM Plex Mono',monospace">1</span><span style="color:var(--text-2)">Necesitan atención</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--high)">1</span></div>
+            </div>
+            <div style="display:flex;gap:8px;font-size:12px;color:var(--text-3);line-height:1.4"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1">lock</span><span>Los archivos se leen en este equipo. No se envían a internet.</span></div>
+          </aside>
+        </div>
+        <footer style="display:flex;align-items:center;gap:8px;padding:12px 28px;border-top:1px solid var(--border);background:var(--surface)">
+          <span style="flex:1;font-size:12.5px;color:var(--text-2)">«anexo_3.pdf» no se incluirá en la revisión hasta que se pueda leer.</span>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid transparent;border-radius:4px;background:transparent;color:var(--text-2);font:400 13px 'IBM Plex Sans',sans-serif">Cancelar</button>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">Atrás</button>
+          <button style="min-width:160px;height:32px;padding:0 14px;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--accent);border-radius:4px;background:var(--accent);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif">Revisar 4 archivos <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.85">Ctrl ↵</span></button>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <!-- 02 RESULTADOS -->
+  <div id="p2" style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;padding:2px 6px;background:#1C1A17;color:#F7F6F3;border-radius:3px">02</span><span style="font-size:16px;font-weight:600">Resultados · dos filtros combinados, menú contextual abierto</span></div>
+    <div data-screen-label="02 Resultados" style="width:1280px;height:800px;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:48px minmax(0,1fr);background:var(--bg);color:var(--text);font-size:13px;overflow:hidden;border:1px solid #CFCBC2">
+      <div style="grid-row:1 / 3;display:flex"><dc-import name="ARGUS Sidebar" active="revision" hint-size="216px,800px"></dc-import></div>
+      <dc-import name="ARGUS Topbar" engine="listo" hint-size="100%,48px"></dc-import>
+      <main style="display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;min-height:0">
+        <div style="padding:14px 24px 0;display:flex;flex-direction:column;gap:10px;background:var(--surface);border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span>Expediente 2026-118</span><span style="color:var(--text-3)">›</span><span style="color:var(--text);font-weight:500">Alertas</span></div>
+          <div style="display:flex;align-items:flex-end;gap:16px">
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
+              <h1 style="margin:0;font-size:20px;line-height:28px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Expediente 2026-118 · Arrendamiento Bodega Fontibón</h1>
+              <span style="font-size:12px;color:var(--text-2)">5 archivos · 4 leídos · revisado el <span style="font-family:'IBM Plex Mono',monospace">13/10/2026 09:42</span></span>
+            </div>
+            <button style="min-width:120px;height:30px;padding:0 12px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">Cerrar revisión</button>
+          </div>
+          <div role="tablist" style="display:flex;gap:4px">
+            <span role="tab" style="padding:8px 12px;border-bottom:2px solid var(--accent);font-weight:600;display:flex;gap:6px">Alertas <span style="font-family:'IBM Plex Mono',monospace;font-weight:400;color:var(--text-2)">9</span></span>
+            <span role="tab" style="padding:8px 12px;border-bottom:2px solid transparent;color:var(--text-2);display:flex;gap:6px">Archivos <span style="font-family:'IBM Plex Mono',monospace;color:var(--text-3)">5</span></span>
+            <span role="tab" style="padding:8px 12px;border-bottom:2px solid transparent;color:var(--text-2);display:flex;gap:6px">Decisiones <span style="font-family:'IBM Plex Mono',monospace;color:var(--text-3)">2</span></span>
+          </div>
+        </div>
+        <div style="padding:12px 24px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;gap:8px;align-items:stretch">
+            <div style="display:flex;border:1px solid var(--border-strong);border-radius:4px;overflow:hidden;background:var(--surface)">
+              <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-right:1px solid var(--border)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1;color:var(--high)">report</span>Alto <span style="font-family:'IBM Plex Mono',monospace;font-weight:600">3</span></span>
+              <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-right:1px solid var(--border)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1;color:var(--med)">warning</span>Medio <span style="font-family:'IBM Plex Mono',monospace;font-weight:600">4</span></span>
+              <span style="display:flex;align-items:center;gap:6px;padding:6px 12px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1;color:var(--low)">info</span>Bajo <span style="font-family:'IBM Plex Mono',monospace;font-weight:600">2</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:0 4px;font-size:12px;color:var(--text-2)"><span>Decididas <span style="font-family:'IBM Plex Mono',monospace;color:var(--text)">2 de 9</span></span><span style="width:96px;height:4px;background:var(--surface-3);border-radius:2px;overflow:hidden;display:block"><span style="display:block;width:22%;height:100%;background:var(--accent)"></span></span></div>
+            <div style="flex:1"></div>
+            <div style="display:flex;width:300px">
+              <div style="flex:1;height:30px;box-sizing:border-box;display:flex;align-items:center;gap:6px;padding:0 10px;border:1px solid var(--border-strong);border-right:none;border-radius:4px 0 0 4px;background:var(--surface);color:var(--text-3)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1">search</span><span style="flex:1">Buscar en alertas</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px">/</span></div>
+              <button style="min-width:64px;height:30px;padding:0 10px;border:1px solid var(--border-strong);border-radius:0 4px 4px 0;background:var(--surface-2);color:var(--text);font:400 12px 'IBM Plex Sans',sans-serif">Buscar</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <span style="font-size:12px;color:var(--text-3);margin-right:2px">Filtros</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;height:26px;white-space:nowrap;padding:0 4px 0 10px;border:1px solid var(--accent);border-radius:4px;background:var(--accent-soft);color:var(--accent-text);font-size:12px;box-sizing:border-box">Riesgo: Alto, Medio<span aria-label="Quitar filtro" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1;padding:2px">close</span></span>
+            <span style="display:inline-flex;align-items:center;gap:4px;height:26px;white-space:nowrap;padding:0 6px 0 10px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);font-size:12px;color:var(--text-2);box-sizing:border-box">Tipo: Todos<span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1">expand_more</span></span>
+            <span style="display:inline-flex;align-items:center;gap:4px;height:26px;white-space:nowrap;padding:0 6px 0 10px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);font-size:12px;color:var(--text-2);box-sizing:border-box">Archivo: Todos<span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1">expand_more</span></span>
+            <span style="display:inline-flex;align-items:center;gap:4px;height:26px;white-space:nowrap;padding:0 4px 0 10px;border:1px solid var(--accent);border-radius:4px;background:var(--accent-soft);color:var(--accent-text);font-size:12px;box-sizing:border-box">Estado: Pendiente<span aria-label="Quitar filtro" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1;padding:2px">close</span></span>
+            <span style="font-size:12px;color:var(--accent-text);text-decoration:underline;text-underline-offset:2px;margin-left:4px;white-space:nowrap">Quitar filtros</span>
+            <div style="flex:1"></div>
+            <span style="font-size:12px;color:var(--text-2)">Mostrando <span style="font-family:'IBM Plex Mono',monospace;color:var(--text)">7 de 9</span> alertas</span>
+          </div>
+        </div>
+        <div style="overflow:auto;min-height:0;padding:0 24px 16px">
+          <div style="display:grid;grid-template-columns:78px 30px minmax(0,1fr) 160px 160px 92px 32px;gap:12px;padding:10px 12px 8px;font-size:11.5px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.03em;position:sticky;top:0;background:var(--bg)"><span>Riesgo</span><span>#</span><span>Alerta</span><span>Valor A</span><span>Valor B</span><span>Estado</span><span></span></div>
+          <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+            <div style="display:flex;align-items:center;gap:8px;padding:12px 2px 6px;font-size:12px;font-weight:600;color:var(--text-2)"><span>{{ g.label }}</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:400;color:var(--text-3)">{{ g.count }}</span><span style="flex:1;height:1px;background:var(--border)"></span></div>
+            <div style="border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+              <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+                <div style="position:relative;display:grid;grid-template-columns:78px 30px minmax(0,1fr) 160px 160px 92px 32px;gap:12px;align-items:center;padding:9px 12px;border-top:{{ r.sep }};background:{{ r.bg }}">
+                  <span style="display:inline-flex;align-items:center;gap:3px;height:20px;padding:0 6px;border-radius:3px;background:{{ r.tagBg }};color:{{ r.tagFg }};border:1px solid {{ r.tagBd }};font-size:11.5px;font-weight:600;justify-self:start;box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:14px;line-height:1">{{ r.icon }}</span>{{ r.risk }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-3)">{{ r.n }}</span>
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.title }}</span><span style="font-size:12px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.type }} · {{ r.files }}</span></div>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.a }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.b }}</span>
+                  <span style="font-size:12px;color:var(--text-2);display:flex;align-items:center;gap:4px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:14px;line-height:1">radio_button_unchecked</span>Pendiente</span>
+                  <span title="Acciones" style="width:28px;height:28px;display:grid;place-items:center;border-radius:4px;border:1px solid {{ r.menuBd }};background:{{ r.menuBg }};color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1">more_horiz</span></span>
+                  <sc-if value="{{ r.menu }}" hint-placeholder-val="{{ false }}">
+                    <div role="menu" style="position:absolute;right:12px;top:42px;z-index:5;width:236px;padding:4px;background:var(--surface);border:1px solid var(--border-strong);border-radius:5px;box-shadow:0 4px 12px rgba(28,26,23,0.12);display:flex;flex-direction:column;font-size:13px">
+                      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:3px;background:var(--surface-3)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1">compare</span><span style="flex:1">Abrir detalle</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">↵</span></div>
+                      <div style="height:1px;background:var(--border);margin:4px 0"></div>
+                      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1">check</span><span style="flex:1">Es correcto</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">C</span></div>
+                      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;font-weight:500"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1">edit_note</span><span style="flex:1">Es un error</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">E</span></div>
+                      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1">visibility_off</span><span style="flex:1">Ignorar</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">I</span></div>
+                      <div style="height:1px;background:var(--border);margin:4px 0"></div>
+                      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1">notifications_off</span><span style="flex:1">No alertar casos similares</span></div>
+                      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1">content_copy</span><span style="flex:1">Copiar Valor A y Valor B</span></div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+          <div style="display:flex;align-items:center;gap:6px;padding:14px 2px 0;font-size:12px;color:var(--text-3)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1">filter_alt_off</span>2 alertas de riesgo bajo ocultas por los filtros (ya decididas).</div>
+        </div>
+        <footer style="display:flex;gap:18px;padding:7px 24px;border-top:1px solid var(--border);background:var(--surface);font-size:11.5px;color:var(--text-3)">
+          <span><span style="font-family:'IBM Plex Mono',monospace;color:var(--text-2)">J K</span> moverse</span><span><span style="font-family:'IBM Plex Mono',monospace;color:var(--text-2)">↵</span> abrir</span><span><span style="font-family:'IBM Plex Mono',monospace;color:var(--text-2)">C E I</span> decidir</span><span><span style="font-family:'IBM Plex Mono',monospace;color:var(--text-2)">/</span> buscar</span><span><span style="font-family:'IBM Plex Mono',monospace;color:var(--text-2)">Ctrl Z</span> deshacer</span>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <!-- 03 DETALLE -->
+  <div id="p3" style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;padding:2px 6px;background:#1C1A17;color:#F7F6F3;border-radius:3px">03</span><span style="font-size:16px;font-weight:600">Detalle de alerta · interactivo</span></div>
+    <div style="width:1280px;height:800px;border:1px solid #CFCBC2;box-sizing:content-box"><dc-import name="ARGUS Detalle Alerta" theme="claro" hint-size="1280px,800px"></dc-import></div>
+  </div>
+
+  <!-- 04 HISTORIAL -->
+  <div id="p4" style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;padding:2px 6px;background:#1C1A17;color:#F7F6F3;border-radius:3px">04</span><span style="font-size:16px;font-weight:600">Historial · sesión seleccionada con sus decisiones</span></div>
+    <div data-screen-label="04 Historial" style="width:1280px;height:800px;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:48px minmax(0,1fr);background:var(--bg);color:var(--text);font-size:13px;overflow:hidden;border:1px solid #CFCBC2">
+      <div style="grid-row:1 / 3;display:flex"><dc-import name="ARGUS Sidebar" active="historial" hint-size="216px,800px"></dc-import></div>
+      <dc-import name="ARGUS Topbar" engine="listo" placeholder="Buscar en el historial" hint-size="100%,48px"></dc-import>
+      <main style="display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:auto minmax(0,1fr);min-height:0">
+        <div style="grid-column:1 / 3;padding:16px 24px;display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--border);background:var(--surface)">
+          <div style="display:flex;align-items:center;gap:12px">
+            <h1 style="margin:0;font-size:20px;line-height:28px;font-weight:600;flex:1">Historial</h1>
+            <span style="display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px 0 10px;border:1px solid var(--border-strong);border-radius:4px;font-size:12px;color:var(--text-2)">Periodo: últimos 30 días<span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1">expand_more</span></span>
+            <button style="min-width:150px;height:28px;padding:0 10px;display:flex;align-items:center;gap:6px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 12px 'IBM Plex Sans',sans-serif"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1">download</span>Exportar registro (CSV)</button>
+          </div>
+          <div aria-label="Métricas de uso" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--border);border-radius:6px">
+            <div style="padding:12px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:var(--text-2)">Alertas resueltas</span><span style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500">214</span><span style="font-size:12px;color:var(--text-3)">en 23 sesiones</span></div>
+            <div style="padding:12px 16px;display:flex;flex-direction:column;gap:4px;border-left:1px solid var(--border)"><span style="font-size:12px;color:var(--text-2)">Tiempo medio de revisión</span><span style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500">6 min 40 s</span><span style="font-size:12px;color:var(--text-3)">desde cargar hasta cerrar</span></div>
+            <div style="padding:12px 16px;display:flex;flex-direction:column;gap:4px;border-left:1px solid var(--border)"><span style="font-size:12px;color:var(--text-2)">Marcadas como error real</span><span style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500">31 %</span><span style="font-size:12px;color:var(--text-3)">66 de 214 · el resto fue «Es correcto» o «Ignorar»</span></div>
+          </div>
+        </div>
+        <div style="overflow:auto;min-height:0;padding:12px 24px">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 120px 64px 64px 96px 130px;gap:12px;padding:6px 12px;font-size:11.5px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.03em"><span>Sesión</span><span>Fecha</span><span>Archivos</span><span>Alertas</span><span>Decididas</span><span>Estado</span></div>
+          <div style="border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+            <sc-for list="{{ sessions }}" as="s" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 120px 64px 64px 96px 130px;gap:12px;align-items:center;padding:10px 12px;border-top:{{ s.sep }};background:{{ s.bg }};box-shadow:{{ s.ring }}">
+                <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span title="{{ s.name }}" style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ s.name }}</span><span style="font-size:12px;color:var(--text-3)">{{ s.who }}</span></div>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-2)">{{ s.date }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ s.files }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ s.alerts }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ s.decided }}</span>
+                <span style="font-size:12px;color:var(--text-2);display:flex;align-items:center;gap:4px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1">{{ s.icon }}</span>{{ s.state }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <aside style="border-left:1px solid var(--border);background:var(--surface);overflow:auto;min-height:0;display:flex;flex-direction:column">
+          <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:4px">
+            <span style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.04em">Decisiones de la sesión</span>
+            <span style="font-weight:600;line-height:1.35">Informe de gestión junio 2026 · Junta directiva</span>
+            <span style="font-size:12px;color:var(--text-2)">Camilo Herrera · cerrada el <span style="font-family:'IBM Plex Mono',monospace">08/10/2026 16:31</span></span>
+          </div>
+          <sc-for list="{{ decisions }}" as="d" hint-placeholder-count="3">
+            <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center;gap:3px;height:18px;padding:0 5px;border-radius:3px;background:{{ d.tagBg }};color:{{ d.tagFg }};border:1px solid {{ d.tagBd }};font-size:11px;font-weight:600;box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:13px;line-height:1">{{ d.icon }}</span>{{ d.risk }}</span><span style="font-size:12px;color:var(--text-3)">{{ d.type }}</span></div>
+              <span style="font-weight:500;line-height:1.35">{{ d.title }}</span>
+              <div style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;font-size:12px"><span style="color:var(--text-3)">A</span><span style="font-family:'IBM Plex Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.a }}</span><span style="color:var(--text-3)">B</span><span style="font-family:'IBM Plex Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.b }}</span></div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1">{{ d.dIcon }}</span><span style="font-weight:500;color:var(--text)">{{ d.decision }}</span><span>· {{ d.when }}</span></div>
+              <span style="font-size:12px;color:var(--text-2);line-height:1.4">{{ d.note }}</span>
+            </div>
+          </sc-for>
+        </aside>
+      </main>
+    </div>
+  </div>
+
+  <!-- 05 AJUSTES -->
+  <div id="p5" style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;padding:2px 6px;background:#1C1A17;color:#F7F6F3;border-radius:3px">05</span><span style="font-size:16px;font-weight:600">Ajustes · confirmación de guardado</span></div>
+    <div data-screen-label="05 Ajustes" style="width:1280px;height:800px;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:48px minmax(0,1fr);background:var(--bg);color:var(--text);font-size:13px;overflow:hidden;border:1px solid #CFCBC2">
+      <div style="grid-row:1 / 3;display:flex"><dc-import name="ARGUS Sidebar" active="ajustes" hint-size="216px,800px"></dc-import></div>
+      <dc-import name="ARGUS Topbar" engine="listo" placeholder="Buscar en ajustes" hint-size="100%,48px"></dc-import>
+      <main style="display:grid;grid-template-columns:200px minmax(0,1fr);min-height:0">
+        <nav aria-label="Secciones de ajustes" style="border-right:1px solid var(--border);padding:20px 10px;display:flex;flex-direction:column;gap:2px;background:var(--surface)">
+          <span style="padding:7px 10px;border-radius:4px;background:var(--surface-3);font-weight:500">Detección</span>
+          <span style="padding:7px 10px;color:var(--text-2)">Idioma y región</span>
+          <span style="padding:7px 10px;color:var(--text-2)">Apariencia</span>
+          <span style="padding:7px 10px;color:var(--text-2)">Privacidad</span>
+          <span style="padding:7px 10px;color:var(--text-2)">Atajos de teclado</span>
+        </nav>
+        <div style="overflow:auto;min-height:0;padding:20px 32px 32px;display:flex;flex-direction:column;gap:20px;max-width:760px">
+          <div style="display:flex;align-items:center;gap:12px"><h1 style="margin:0;font-size:20px;line-height:28px;font-weight:600;flex:1">Ajustes</h1><span role="status" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1;color:var(--accent-text)">check</span>Se guardaron los cambios · <span style="font-family:'IBM Plex Mono',monospace">10:05</span></span></div>
+
+          <section style="display:flex;flex-direction:column;gap:12px">
+            <h2 style="margin:0;font-size:15px;font-weight:600">Detección</h2>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-size:12px;font-weight:500;color:var(--text-2)">Sensibilidad</span>
+              <div role="radiogroup" style="display:flex;border:1px solid var(--border-strong);border-radius:4px;overflow:hidden;align-self:flex-start;background:var(--surface)">
+                <span style="min-width:96px;text-align:center;padding:7px 14px;color:var(--text-2)">Estricta</span>
+                <span style="min-width:96px;text-align:center;padding:7px 14px;background:var(--accent);color:var(--accent-fg);font-weight:500">Equilibrada</span>
+                <span style="min-width:96px;text-align:center;padding:7px 14px;color:var(--text-2);border-left:1px solid var(--border)">Permisiva</span>
+              </div>
+              <span style="font-size:12.5px;color:var(--text-2);line-height:1.45;max-width:560px">Detecta diferencias en identificadores, fechas, montos, nombres y periodos. No alerta diferencias solo de formato, como «S.A.S.» frente a «SAS» o puntos en un NIT.</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-size:12px;font-weight:500;color:var(--text-2)">Tipos que se comparan</span>
+              <div style="display:flex;gap:16px;flex-wrap:wrap">
+                <sc-for list="{{ types }}" as="t" hint-placeholder-count="5"><span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:16px;border-radius:3px;background:var(--accent);display:grid;place-items:center;color:var(--accent-fg)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:14px;line-height:1">check</span></span>{{ t }}</span></sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-size:12px;font-weight:500;color:var(--text-2)">Casos que no generan alerta <span style="font-weight:400;color:var(--text-3)">· creados con «No alertar casos similares»</span></span>
+              <div style="border:1px solid var(--border);border-radius:5px;background:var(--surface)">
+                <sc-for list="{{ rules }}" as="r" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-top:{{ r.sep }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.rule }}</span><span style="font-size:12px;color:var(--text-3)">{{ r.date }}</span><span style="font-size:12px;color:var(--accent-text);text-decoration:underline;text-underline-offset:2px">Quitar</span></div>
+                </sc-for>
+              </div>
+            </div>
+          </section>
+
+          <section style="display:flex;flex-direction:column;gap:12px;padding-top:18px;border-top:1px solid var(--border)">
+            <h2 style="margin:0;font-size:15px;font-weight:600">Idioma y región</h2>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--text-2)">Idioma</span><span style="display:flex;align-items:center;height:32px;padding:0 8px 0 10px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface)"><span style="flex:1">Español (Colombia)</span><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;color:var(--text-3)">expand_more</span></span></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--text-2)">Formato regional</span><span style="display:flex;align-items:center;height:32px;padding:0 8px 0 10px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface)"><span style="flex:1">Colombia · es-CO</span><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;color:var(--text-3)">expand_more</span></span></label>
+            </div>
+            <span style="font-size:12px;color:var(--text-2)">Vista previa: <span style="font-family:'IBM Plex Mono',monospace;color:var(--text)">13/10/2026 · $ 18.450.000,00 · NIT 900.482.315-7</span></span>
+          </section>
+
+          <section style="display:flex;flex-direction:column;gap:12px;padding-top:18px;border-top:1px solid var(--border)">
+            <h2 style="margin:0;font-size:15px;font-weight:600">Apariencia</h2>
+            <div role="radiogroup" style="display:flex;gap:10px">
+              <span style="min-width:120px;display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:4px"><span style="width:14px;height:14px;border-radius:50%;border:4px solid var(--accent);box-sizing:border-box;background:var(--surface)"></span>Claro</span>
+              <span style="min-width:120px;display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface)"><span style="width:14px;height:14px;border-radius:50%;border:1px solid var(--border-strong);box-sizing:border-box"></span>Oscuro</span>
+              <span style="min-width:120px;display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface)"><span style="width:14px;height:14px;border-radius:50%;border:1px solid var(--border-strong);box-sizing:border-box"></span>Según el sistema</span>
+            </div>
+          </section>
+
+          <section style="display:flex;flex-direction:column;gap:12px;padding-top:18px;border-top:1px solid var(--border)">
+            <h2 style="margin:0;font-size:15px;font-weight:600">Privacidad</h2>
+            <div style="display:flex;gap:12px;padding:12px 14px;border:1px solid var(--border-strong);border-radius:5px;background:var(--surface)">
+              <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;color:var(--accent-text)">lock</span>
+              <div style="display:flex;flex-direction:column;gap:4px;line-height:1.45"><span style="font-weight:600">El análisis es local</span><span style="color:var(--text-2)">Los archivos se leen y comparan en este equipo, incluida la lectura por OCR. ARGUS no envía su contenido a internet ni a servidores externos.</span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px"><span style="width:32px;height:18px;border-radius:9px;background:var(--accent);position:relative;flex:none"><span style="position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--surface)"></span></span><span style="flex:1">Guardar el historial de decisiones durante 90 días</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-3)">C:\Usuarios\lmartinez\ARGUS\historial</span></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Detalle tema oscuro" style="padding:24px 64px 96px;display:flex;flex-direction:column;gap:10px">
+  <div style="display:flex;align-items:baseline;gap:10px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;padding:2px 6px;background:#1C1A17;color:#F7F6F3;border-radius:3px">03 · oscuro</span><span style="font-size:16px;font-weight:600">Detalle de alerta · tema oscuro</span></div>
+  <div style="width:1280px;height:800px;border:1px solid #4A463F"><dc-import name="ARGUS Detalle Alerta" theme="oscuro" hint-size="1280px,800px"></dc-import></div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const RISK = {
+  alto: {risk:'Alto',icon:'report',tagBg:'var(--high-bg)',tagFg:'var(--high)',tagBd:'var(--high-border)'},
+  medio:{risk:'Medio',icon:'warning',tagBg:'var(--med-bg)',tagFg:'var(--med)',tagBd:'var(--med-border)'},
+  bajo: {risk:'Bajo',icon:'info',tagBg:'var(--low-bg)',tagFg:'var(--low)',tagBd:'var(--low-border)'}
+};
+const ROWS = [
+  ['alto',1,'El número de contrato no coincide entre dos documentos','Identificador','Contrato_4857_v3.pdf, Anexo_1_condiciones.pdf','4857','4587'],
+  ['alto',2,'El correo cita tarifas de junio; el adjunto es de mayo','Periodo','Correo_remision_cliente.eml, Anexo_2_tarifas.xlsx','junio 2026','mayo 2026'],
+  ['alto',3,'El canon mensual no coincide','Monto','Contrato_4857_v3.pdf p. 3, Anexo_2_tarifas.xlsx C12','$ 18.450.000','$ 18.540.000'],
+  ['medio',4,'La fecha de inicio es distinta','Fecha','Contrato_4857_v3.pdf p. 2, Correo_remision_cliente.eml','01/07/2026','01/08/2026'],
+  ['medio',5,'Dígito de verificación del NIT distinto','Identificador','Contrato_4857_v3.pdf p. 1, Anexo_2_tarifas.xlsx','900.482.315-7','900.482.315-1'],
+  ['medio',6,'Apellido del representante legal distinto','Nombre','Contrato_4857_v3.pdf p. 14, Anexo_1_condiciones.pdf p. 6','María F. Rojas Pérez','María F. Rojas Peña'],
+  ['medio',7,'La vigencia del contrato no coincide','Periodo','Contrato_4857_v3.pdf p. 2, Anexo_1_condiciones.pdf p. 1','36 meses','30 meses']
+];
+const SESSIONS = [
+  ['Expediente 2026-118 · Arrendamiento Bodega Fontibón','Laura Martínez','13/10/2026 09:42','5','9','2 de 9','En curso','pending'],
+  ['Informe de gestión junio 2026 · Junta directiva','Camilo Herrera','08/10/2026 16:10','4','3','3 de 3','Cerrada','task_alt',true],
+  ['Contrato de prestación de servicios No. 3921','Laura Martínez','06/10/2026 11:25','3','0','—','Sin inconsistencias','check'],
+  ['Conciliación bancaria septiembre 2026','Camilo Herrera','02/10/2026 08:57','6','12','12 de 12','Cerrada','task_alt'],
+  ['Otrosí No. 2 · Contrato No. 4410','Laura Martínez','29/09/2026 15:03','2','4','4 de 4','Cerrada','task_alt'],
+  ['Facturación proveedor Transportes del Caribe S.A.S.','Camilo Herrera','25/09/2026 10:18','7','5','5 de 5','Cerrada','task_alt'],
+  ['Póliza de cumplimiento No. 21-44-101005873','Laura Martínez','22/09/2026 14:40','2','1','1 de 1','Cerrada','task_alt']
+];
+const DECISIONS = [
+  ['alto','Periodo','El correo dice «informe de junio» y el adjunto es de mayo','«…adjunto el informe de junio…»','Informe_gestion_mayo_2026.xlsx','Es un error','edit_note','08/10 16:14','Se reemplazó el adjunto por Informe_gestion_junio_2026.xlsx antes de enviar.'],
+  ['medio','Monto','Total de ingresos operacionales distinto','$ 4.218.600.000','$ 4.218.060.000','Es un error','edit_note','08/10 16:22','Valor correcto: $ 4.218.600.000 (estado de resultados).'],
+  ['bajo','Nombre','Nombre del cliente abreviado','Grupo Empresarial del Valle S.A.','Grupo Emp. del Valle S.A.','Es correcto','check','08/10 16:25','Es el mismo cliente; la abreviatura es la del sistema contable.']
+];
+class Component extends DCLogic {
+  renderVals() {
+    const rows = ROWS.map(([r, n, title, type, files, a, b], i) => ({ ...RISK[r], n, title, type, files, a, b,
+      menu: n === 2, menuBd: n === 2 ? 'var(--border-strong)' : 'transparent', menuBg: n === 2 ? 'var(--surface-3)' : 'transparent',
+      bg: n === 2 ? 'var(--surface-2)' : 'transparent' }));
+    const mk = (risk, label) => { const rs = rows.filter(x => x.risk === risk); return { label, count: rs.length, rows: rs.map((x, i) => ({ ...x, sep: i ? '1px solid var(--border)' : 'none' })) }; };
+    return {
+      groups: [mk('Alto', 'Riesgo alto'), mk('Medio', 'Riesgo medio')],
+      sessions: SESSIONS.map(([name, who, date, files, alerts, decided, state, icon, sel], i) => ({ name, who, date, files, alerts, decided, state, icon,
+        sep: i ? '1px solid var(--border)' : 'none', bg: sel ? 'var(--surface-3)' : 'transparent', ring: sel ? 'inset 0 0 0 1px var(--border-strong)' : 'none' })),
+      decisions: DECISIONS.map(([r, type, title, a, b, decision, dIcon, when, note]) => ({ ...RISK[r], type, title, a, b, decision, dIcon, when, note })),
+      types: ['Identificadores', 'Fechas', 'Montos', 'Nombres', 'Periodos'],
+      rules: [['Logística Andina S.A.S. = LOGISTICA ANDINA SAS', 'desde 02/10/2026'], ['$ 36.900.000 = 36,9 millones', 'desde 13/10/2026'], ['Bogotá D.C. = Bogotá, D. C.', 'desde 18/09/2026']].map(([rule, date], i) => ({ rule, date, sep: i ? '1px solid var(--border)' : 'none' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

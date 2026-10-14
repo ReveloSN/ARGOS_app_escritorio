@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block" rel="stylesheet">
+</helmet>
+<header style="height:48px;box-sizing:border-box;display:flex;align-items:center;gap:16px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--surface);font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:var(--text)">
+  <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:0 1 360px">
+    <span style="font-size:12px;color:var(--text-3);flex:none">Sesión</span>
+    <span title="{{ session }}" style="font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ session }}</span>
+    <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;color:var(--text-3);flex:none">expand_more</span>
+  </div>
+  <div style="flex:1 1 420px;max-width:440px;min-width:200px;height:32px;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 6px 0 10px;border:1px solid var(--border-strong);border-radius:4px;background:var(--bg);color:var(--text-3)">
+    <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1">search</span>
+    <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ placeholder }}</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:1px 5px;border:1px solid var(--border-strong);border-radius:3px;color:var(--text-2);background:var(--surface)">Ctrl K</span>
+  </div>
+  <div style="flex:1"></div>
+  <sc-if value="{{ isReady }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;align-items:center;gap:6px;color:var(--text-2);font-size:12px;white-space:nowrap">
+      <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1;color:var(--accent-text)">check_circle</span>
+      <span>Motor de análisis: listo</span>
+    </div>
+  </sc-if>
+  <sc-if value="{{ isBusy }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;gap:8px;color:var(--text-2);font-size:12px;white-space:nowrap">
+      <span style="width:56px;height:4px;border-radius:2px;background:var(--surface-3);overflow:hidden;display:block"><span style="display:block;width:64%;height:100%;background:var(--accent)"></span></span>
+      <span>Analizando · 3 de 5 archivos</span>
+    </div>
+  </sc-if>
+  <sc-if value="{{ isStopped }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;gap:6px;color:var(--high);font-size:12px;font-weight:500;white-space:nowrap">
+      <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1">report</span>
+      <span>Motor de análisis detenido</span>
+    </div>
+  </sc-if>
+  <div title="Ayuda y atajos (F1)" style="width:32px;height:32px;display:grid;place-items:center;color:var(--text-2);border-radius:4px">
+    <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:19px;line-height:1">keyboard</span>
+  </div>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1064,&quot;height&quot;:48},&quot;session&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Expediente 2026-118 · Arrendamiento Bodega Fontibón&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;engine&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;listo&quot;,&quot;analizando&quot;,&quot;detenido&quot;],&quot;default&quot;:&quot;listo&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;placeholder&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Buscar en alertas y documentos&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const e = this.props.engine ?? 'listo';
+    return {
+      session: this.props.session ?? 'Expediente 2026-118 · Arrendamiento Bodega Fontibón',
+      placeholder: this.props.placeholder ?? 'Buscar en alertas y documentos',
+      isReady: e === 'listo', isBusy: e === 'analizando', isStopped: e === 'detenido'
+    };
+  }
+}
+</script>
+</body>
+</html>

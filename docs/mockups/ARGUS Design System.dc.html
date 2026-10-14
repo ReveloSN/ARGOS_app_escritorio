@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block" rel="stylesheet">
+<style>body{margin:0;background:#E4E1DA;font-family:'IBM Plex Sans',sans-serif;color:#1C1A17}a{color:#1F5F6B}a:hover{color:#184C56}</style>
+</helmet>
+<div style="--bg:#F7F6F3;--surface:#FFFFFF;--surface-2:#F3F1EC;--surface-3:#EBE8E1;--border:#E2DFD8;--border-strong:#CFCBC2;--text:#1C1A17;--text-2:#4F4B44;--text-3:#6B665D;--accent:#1F5F6B;--accent-hover:#184C56;--accent-fg:#FFFFFF;--accent-soft:#E3EEF0;--accent-text:#1F5F6B;--high:#B42318;--high-bg:#FBEAE8;--high-border:#F0C2BC;--med:#8A5300;--med-bg:#FBF0DC;--med-border:#EBCF9C;--low:#4F4B44;--low-bg:#EFEDE8;--low-border:#CFCBC2;--diff-bg:#F6D7D2;padding:56px 64px 96px;display:flex;flex-direction:column;gap:56px;width:1280px;font-size:13px;color:var(--text)">
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="ARGUS.dc.html" style="font-size:13px">‹ Pantallas</a>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:24px;height:24px;border:2px solid var(--accent);border-radius:5px;display:grid;place-items:center;box-sizing:border-box"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent)"></div></div>
+      <h1 style="margin:0;font-size:24px;font-weight:600">ARGUS · Design system</h1>
+    </div>
+    <p style="margin:0;max-width:760px;color:var(--text-2);line-height:1.55;font-size:14px">Personalidad: preciso, sobrio, confiable, claro, calmado. Un solo color de acento (petróleo). Rojo y ámbar quedan reservados para el riesgo de las alertas y siempre van con icono y texto. Jerarquía por tipografía y espaciado; bordes de 1 px, esquinas de 3 a 6 px.</p>
+  </div>
+
+  <!-- TOKENS -->
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2 style="margin:0;font-size:18px;font-weight:600">Design tokens · tres niveles</h2>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:24px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-weight:600">1 · Globales <span style="font-weight:400;color:var(--text-3)">valores crudos</span></span>
+        <div style="border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+          <sc-for list="{{ globals }}" as="t" hint-placeholder-count="20">
+            <div style="display:grid;grid-template-columns:20px minmax(0,1fr) 110px;gap:10px;align-items:center;padding:6px 12px;border-top:{{ t.sep }}">
+              <span style="width:18px;height:18px;border-radius:3px;border:1px solid rgba(0,0,0,0.12);background:{{ t.sw }}"></span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ t.name }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-2)">{{ t.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-weight:600">2 · Semánticos <span style="font-weight:400;color:var(--text-3)">propósito · cambian con el tema</span></span>
+          <div style="border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 150px 150px;gap:10px;padding:7px 12px;font-size:11.5px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.03em;background:var(--surface-2);border-bottom:1px solid var(--border)"><span>Token</span><span>Claro</span><span>Oscuro</span></div>
+            <sc-for list="{{ semantic }}" as="t" hint-placeholder-count="16">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 150px 150px;gap:10px;align-items:center;padding:6px 12px;border-top:{{ t.sep }}">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ t.name }}</span>
+                <span style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-2)"><span style="width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,0.12);background:{{ t.l }};flex:none"></span>{{ t.lRef }}</span>
+                <span style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-2)"><span style="width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,0.12);background:{{ t.d }};flex:none"></span>{{ t.dRef }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-weight:600">3 · De componente <span style="font-weight:400;color:var(--text-3)">apuntan a semánticos</span></span>
+          <div style="border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+            <sc-for list="{{ component }}" as="t" hint-placeholder-count="10">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:8px;align-items:center;padding:6px 12px;border-top:{{ t.sep }}">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ t.name }}</span>
+                <span style="color:var(--text-3);text-align:center">→</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-2)">{{ t.ref }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-weight:600">Exportación <span style="font-weight:400;color:var(--text-3)">formato agnóstico (W3C Design Tokens) → CSS, Qt, GTK</span></span>
+          <pre style="margin:0;padding:14px;background:#1C1A17;color:#ECE9E3;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.6;overflow:auto">{
+  "color": { "accent": { "500": { "$type": "color", "$value": "#1F5F6B" } } },
+  "color.risk.high": { "$value": "{color.red.600}", "$extensions": { "dark": "{color.red.300}" } },
+  "button.primary.bg.default": { "$value": "{color.action.primary}" }
+}
+/* CSS generado */
+:root { --color-risk-high: #B42318; --button-primary-bg-default: var(--color-action-primary); }
+[data-theme="dark"] { --color-risk-high: #F2877C; }</pre>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px">
+      <div style="display:flex;flex-direction:column;gap:8px"><span style="font-weight:600">Espaciado <span style="font-weight:400;color:var(--text-3)">base 4 px</span></span>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+          <sc-for list="{{ spacing }}" as="s" hint-placeholder-count="7"><div style="display:grid;grid-template-columns:90px 50px 1fr;gap:8px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:12px"><span>{{ s.name }}</span><span style="color:var(--text-2)">{{ s.v }}px</span><span style="height:8px;background:var(--accent-soft);border:1px solid var(--accent);width:{{ s.w }};box-sizing:border-box"></span></div></sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px"><span style="font-weight:600">Radios y bordes</span>
+        <div style="display:flex;gap:14px;padding:12px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface);align-items:flex-end">
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><span style="width:48px;height:36px;border:1px solid var(--border-strong);border-radius:3px"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px">radius.xs 3</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><span style="width:48px;height:36px;border:1px solid var(--border-strong);border-radius:4px"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px">radius.sm 4</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><span style="width:48px;height:36px;border:1px solid var(--border-strong);border-radius:6px"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px">radius.md 6</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><span style="width:48px;height:36px;border:1px solid var(--border-strong)"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px">border.width 1</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px"><span style="font-weight:600">Movimiento <span style="font-weight:400;color:var(--text-3)">funcional, sin rebotes</span></span>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:6px 12px;padding:12px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface);font-size:12px">
+          <span style="font-family:'IBM Plex Mono',monospace">motion.fast 150ms</span><span style="color:var(--text-2)">hover, foco, chips de filtro</span>
+          <span style="font-family:'IBM Plex Mono',monospace">motion.base 200ms</span><span style="color:var(--text-2)">marcar decisión, aviso con Deshacer</span>
+          <span style="font-family:'IBM Plex Mono',monospace">motion.slow 250ms</span><span style="color:var(--text-2)">abrir detalle, entrada de archivos</span>
+          <span style="font-family:'IBM Plex Mono',monospace">easing.standard</span><span style="color:var(--text-2)">cubic-bezier(0.2, 0, 0, 1)</span>
+          <span style="font-family:'IBM Plex Mono',monospace">reduced-motion</span><span style="color:var(--text-2)">solo cambio de opacidad</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIPOGRAFÍA -->
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:18px;font-weight:600">Átomos · Tipografía</h2>
+    <div style="border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:baseline;padding:12px 16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-2)">title · Sans 600 20/28</span><span style="font-size:20px;line-height:28px;font-weight:600">El número de contrato no coincide entre dos documentos</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:baseline;padding:12px 16px;border-top:1px solid var(--border)"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-2)">heading · Sans 600 15/22</span><span style="font-size:15px;line-height:22px;font-weight:600">¿Cómo quiere continuar?</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:baseline;padding:12px 16px;border-top:1px solid var(--border)"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-2)">body · Sans 400 13/20</span><span style="font-size:13px;line-height:20px">El contrato principal y el Anexo 1 citan números distintos para el mismo contrato.</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:baseline;padding:12px 16px;border-top:1px solid var(--border)"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-2)">caption · Sans 400 12/16</span><span style="font-size:12px;line-height:16px;color:var(--text-2)">Contrato_4857_v3.pdf · Página 1 · Encabezado</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:baseline;padding:12px 16px;border-top:1px solid var(--border)"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-2)">data · Mono 400 13/20</span><span style="font-family:'IBM Plex Mono',monospace;font-size:13px">NIT 900.482.315-7 · $ 18.450.000 · 01/07/2026</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:baseline;padding:12px 16px;border-top:1px solid var(--border)"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-2)">value · Mono 500 26/32</span><span style="font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:500">4857</span></div>
+    </div>
+  </section>
+
+  <!-- ÁTOMOS -->
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:18px;font-weight:600">Átomos</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px">
+      <div style="display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+        <span style="font-weight:600">Botones <span style="font-weight:400;color:var(--text-3)">ancho mínimo + padding flexible</span></span>
+        <div style="display:grid;grid-template-columns:90px repeat(4,auto);gap:10px 12px;align-items:center;justify-content:start;font-size:12px;color:var(--text-3)">
+          <span></span><span>Normal</span><span>Hover</span><span>Foco</span><span>Desactivado</span>
+          <span>Primario</span>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid var(--accent);border-radius:4px;background:var(--accent);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif">Revisar</button>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid var(--accent-hover);border-radius:4px;background:var(--accent-hover);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif">Revisar</button>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid var(--accent);border-radius:4px;background:var(--accent);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif;outline:2px solid var(--accent);outline-offset:2px">Revisar</button>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid var(--border);border-radius:4px;background:var(--surface-3);color:var(--text-3);font:500 13px 'IBM Plex Sans',sans-serif">Revisar</button>
+          <span>Secundario</span>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">Atrás</button>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid var(--text-3);border-radius:4px;background:var(--surface-2);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">Atrás</button>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif;outline:2px solid var(--accent);outline-offset:2px">Atrás</button>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text-3);font:400 13px 'IBM Plex Sans',sans-serif">Atrás</button>
+          <span>Terciario</span>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid transparent;border-radius:4px;background:transparent;color:var(--text-2);font:400 13px 'IBM Plex Sans',sans-serif">Cancelar</button>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid transparent;border-radius:4px;background:var(--surface-3);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">Cancelar</button>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid transparent;border-radius:4px;background:transparent;color:var(--text-2);font:400 13px 'IBM Plex Sans',sans-serif;outline:2px solid var(--accent);outline-offset:2px">Cancelar</button>
+          <button style="min-width:96px;height:32px;padding:0 14px;border:1px solid transparent;border-radius:4px;background:transparent;color:var(--text-3);font:400 13px 'IBM Plex Sans',sans-serif">Cancelar</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+        <span style="font-weight:600">Etiquetas de riesgo <span style="font-weight:400;color:var(--text-3)">forma del icono + texto + color</span></span>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:3px;background:var(--high-bg);color:var(--high);border:1px solid var(--high-border);font-size:12px;font-weight:600;box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1">report</span>Riesgo alto</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:3px;background:var(--med-bg);color:var(--med);border:1px solid var(--med-border);font-size:12px;font-weight:600;box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1">warning</span>Riesgo medio</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:3px;background:var(--low-bg);color:var(--low);border:1px solid var(--low-border);font-size:12px;font-weight:600;box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1">info</span>Riesgo bajo</span>
+          <span style="font-size:12px;color:var(--text-3)">Contraste texto/fondo: 5,9 · 6,0 · 7,6 : 1</span>
+        </div>
+        <span style="font-weight:600;margin-top:4px">Estado de decisión</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:3px;border:1px solid var(--border-strong);font-size:12px;color:var(--text-2);box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1">radio_button_unchecked</span>Pendiente</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:3px;border:1px solid var(--accent);background:var(--accent-soft);font-size:12px;color:var(--accent-text);box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1">check</span>Es correcto</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:3px;border:1px solid var(--accent);background:var(--accent);font-size:12px;color:var(--accent-fg);box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1">edit_note</span>Es un error</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:3px;border:1px dashed var(--border-strong);font-size:12px;color:var(--text-2);box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1">visibility_off</span>Ignorada</span>
+        </div>
+        <span style="font-size:12px;color:var(--text-3);line-height:1.45">«Es un error» es la única acción rellena; «Ignorar» usa borde punteado, icono propio y otra tecla (I). Así no se confunden.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+        <span style="font-weight:600">Inputs</span>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--text-2)">Nombre de la sesión</span><span style="height:32px;box-sizing:border-box;display:flex;align-items:center;padding:0 10px;border:1px solid var(--border-strong);border-radius:4px;color:var(--text-3)">Ej.: Expediente 2026-119</span></label>
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--text-2)">Foco</span><span style="height:32px;box-sizing:border-box;display:flex;align-items:center;padding:0 10px;border:1px solid var(--accent);border-radius:4px;outline:2px solid var(--accent-soft)">Expediente 2026-118</span></label>
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--text-2)">Con error</span><span style="height:32px;box-sizing:border-box;display:flex;align-items:center;padding:0 10px;border:1px solid var(--high);border-radius:4px"></span><span style="font-size:12px;color:var(--high);display:flex;gap:4px;align-items:center"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:14px;line-height:1">report</span>Escriba un nombre para la sesión.</span></label>
+          <div style="display:flex;flex-direction:column;gap:8px;padding-top:20px">
+            <span style="display:flex;align-items:center;gap:8px"><span style="width:16px;height:16px;border-radius:3px;background:var(--accent);display:grid;place-items:center;color:var(--accent-fg)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:14px;line-height:1">check</span></span>Casilla marcada</span>
+            <span style="display:flex;align-items:center;gap:8px"><span style="width:32px;height:18px;border-radius:9px;background:var(--accent);position:relative"><span style="position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--surface)"></span></span>Interruptor activo</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+        <span style="font-weight:600">Iconos <span style="font-weight:400;color:var(--text-3)">Material Symbols, trazo 400, siempre con texto</span></span>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+          <sc-for list="{{ icons }}" as="i" hint-placeholder-count="12">
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;min-width:0"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;color:var(--text-2)">{{ i.g }}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ i.l }}</span></div>
+          </sc-for>
+        </div>
+        <span style="font-weight:600;margin-top:4px">Atajo de teclado</span>
+        <div style="display:flex;gap:6px;align-items:center"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:1px 5px;border:1px solid var(--border-strong);border-radius:3px;color:var(--text-2)">Ctrl K</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:1px 5px;border:1px solid var(--border-strong);border-radius:3px;color:var(--text-2)">E</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:1px 5px;border:1px solid var(--border-strong);border-radius:3px;color:var(--text-2)">Ctrl ↵</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOLÉCULAS -->
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:18px;font-weight:600">Moléculas</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px">
+      <div style="display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+        <span style="font-weight:600">Búsqueda con botón</span>
+        <div style="display:flex">
+          <div style="flex:1;height:30px;box-sizing:border-box;display:flex;align-items:center;gap:6px;padding:0 10px;border:1px solid var(--border-strong);border-right:none;border-radius:4px 0 0 4px;color:var(--text)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;line-height:1;color:var(--text-3)">search</span><span style="font-family:'IBM Plex Mono',monospace;flex:1">4587</span><span aria-label="Borrar" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1;color:var(--text-3)">close</span></div>
+          <button style="min-width:64px;height:30px;padding:0 10px;border:1px solid var(--border-strong);border-radius:0 4px 4px 0;background:var(--surface-2);color:var(--text);font:400 12px 'IBM Plex Sans',sans-serif">Buscar</button>
+        </div>
+        <span style="font-size:12px;color:var(--text-3)">Busca en alertas y en el texto de los documentos. Tecla /</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+        <span style="font-weight:600">Chip de filtro</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;gap:4px;height:26px;white-space:nowrap;padding:0 6px 0 10px;border:1px solid var(--border-strong);border-radius:4px;font-size:12px;color:var(--text-2);box-sizing:border-box">Tipo: Todos<span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1">expand_more</span></span>
+          <span style="display:inline-flex;align-items:center;gap:4px;height:26px;white-space:nowrap;padding:0 4px 0 10px;border:1px solid var(--accent);border-radius:4px;background:var(--accent-soft);color:var(--accent-text);font-size:12px;box-sizing:border-box">Riesgo: Alto<span aria-label="Quitar filtro" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1;padding:2px">close</span></span>
+        </div>
+        <div style="border:1px solid var(--border-strong);border-radius:5px;padding:4px;display:flex;flex-direction:column;font-size:12.5px">
+          <sc-for list="{{ facets }}" as="f" hint-placeholder-count="5"><span style="display:flex;align-items:center;gap:8px;padding:5px 6px"><span style="width:14px;height:14px;border-radius:3px;border:1px solid {{ f.bd }};background:{{ f.bg }};box-sizing:border-box"></span><span style="flex:1">{{ f.l }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-3)">{{ f.n }}</span></span></sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+        <span style="font-weight:600">Campo de valor con origen</span>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid var(--border-strong);border-radius:5px">
+          <span style="font-size:11.5px;font-weight:600;letter-spacing:0.04em">VALOR B</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500">$ 18.<span style="background:var(--diff-bg);color:var(--high);border-bottom:2px solid var(--high)">54</span>0.000</span>
+          <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;line-height:1;color:var(--text-3)">table_chart</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--text)">Anexo_2_tarifas.xlsx</span>· Hoja Resumen · C12</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORGANISMOS -->
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:18px;font-weight:600">Organismos</h2>
+    <div style="display:grid;grid-template-columns:216px 56px minmax(0,1fr);gap:24px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:var(--text-2)">Barra lateral</span><div style="height:560px;border:1px solid var(--border-strong);display:flex"><dc-import name="ARGUS Sidebar" active="revision" hint-size="216px,560px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:var(--text-2)">Contraída</span><div style="height:560px;border:1px solid var(--border-strong);display:flex"><dc-import name="ARGUS Sidebar" active="revision" collapsed="{{ true }}" hint-size="56px,560px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:var(--text-2)">Barra superior · tres estados del motor</span>
+          <div style="border:1px solid var(--border-strong)"><dc-import name="ARGUS Topbar" engine="listo" hint-size="100%,48px"></dc-import></div>
+          <div style="border:1px solid var(--border-strong)"><dc-import name="ARGUS Topbar" engine="analizando" hint-size="100%,48px"></dc-import></div>
+          <div style="border:1px solid var(--border-strong)"><dc-import name="ARGUS Topbar" engine="detenido" hint-size="100%,48px"></dc-import></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:var(--text-2)">Lista de alertas · fila normal, hover y seleccionada</span>
+          <div style="border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+            <div style="display:grid;grid-template-columns:78px minmax(0,1fr) 130px 130px 32px;gap:12px;align-items:center;padding:9px 12px"><span style="display:inline-flex;align-items:center;gap:3px;height:20px;padding:0 6px;border-radius:3px;background:var(--high-bg);color:var(--high);border:1px solid var(--high-border);font-size:11.5px;font-weight:600;justify-self:start;box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:14px;line-height:1">report</span>Alto</span><span style="font-weight:500">El canon mensual no coincide</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">$ 18.450.000</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">$ 18.540.000</span><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;color:var(--text-3)">more_horiz</span></div>
+            <div style="display:grid;grid-template-columns:78px minmax(0,1fr) 130px 130px 32px;gap:12px;align-items:center;padding:9px 12px;border-top:1px solid var(--border);background:var(--surface-2)"><span style="display:inline-flex;align-items:center;gap:3px;height:20px;padding:0 6px;border-radius:3px;background:var(--med-bg);color:var(--med);border:1px solid var(--med-border);font-size:11.5px;font-weight:600;justify-self:start;box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:14px;line-height:1">warning</span>Medio</span><span style="font-weight:500">La fecha de inicio es distinta</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">01/07/2026</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">01/08/2026</span><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;color:var(--text-2)">more_horiz</span></div>
+            <div style="display:grid;grid-template-columns:78px minmax(0,1fr) 130px 130px 32px;gap:12px;align-items:center;padding:9px 12px;border-top:1px solid var(--border);background:var(--surface-3);box-shadow:inset 0 0 0 1px var(--border-strong)"><span style="display:inline-flex;align-items:center;gap:3px;height:20px;padding:0 6px;border-radius:3px;background:var(--low-bg);color:var(--low);border:1px solid var(--low-border);font-size:11.5px;font-weight:600;justify-self:start;box-sizing:border-box"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:14px;line-height:1">info</span>Bajo</span><span style="font-weight:600">Razón social con otro formato</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">S.A.S.</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">SAS</span><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;color:var(--text-2)">more_horiz</span></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px">
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:var(--text-2)">Panel comparativo lado a lado</span>
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr);border:1px solid var(--border-strong);border-radius:6px;background:var(--surface);padding:12px;align-items:center">
+              <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:11px;font-weight:600;letter-spacing:0.04em">VALOR A</span><span style="font-family:'IBM Plex Mono',monospace;font-size:20px">4<span style="background:var(--diff-bg);color:var(--high);border-bottom:2px solid var(--high)">85</span>7</span><span style="font-size:11.5px;color:var(--text-2)">Contrato_4857_v3.pdf · p. 1</span></div>
+              <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;color:var(--text-3)">compare_arrows</span>
+              <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:11px;font-weight:600;letter-spacing:0.04em">VALOR B</span><span style="font-family:'IBM Plex Mono',monospace;font-size:20px">4<span style="background:var(--diff-bg);color:var(--high);border-bottom:2px solid var(--high)">58</span>7</span><span style="font-size:11.5px;color:var(--text-2)">Anexo_1_condiciones.pdf · p. 2</span></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:var(--text-2)">Zona de carga · arrastrando</span>
+            <div style="border:1px dashed var(--accent);background:var(--accent-soft);border-radius:6px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--accent-text)">
+              <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:24px;line-height:1">upload_file</span>
+              <span style="font-weight:600">Suelte para agregar 3 archivos</span>
+              <span style="font-size:12px">PDF, DOCX, XLSX, EML · hasta 10 MB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMPLATES -->
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:18px;font-weight:600">Templates <span style="font-weight:400;font-size:14px;color:var(--text-3)">estructura sin contenido</span></h2>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px">
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:var(--text-2)">Lista + detalle · Resultados y Detalle de alerta</span>
+        <div style="height:300px;display:grid;grid-template-columns:44px 150px minmax(0,1fr);grid-template-rows:24px 20px minmax(0,1fr);border:1px solid var(--border-strong);background:var(--surface);font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-3)">
+          <div style="grid-row:1 / 4;border-right:1px solid var(--border-strong);background:var(--surface-2);padding:4px">nav</div>
+          <div style="grid-column:2 / 4;border-bottom:1px solid var(--border-strong);padding:4px 8px">barra superior · sesión · búsqueda · motor</div>
+          <div style="grid-column:2 / 4;border-bottom:1px solid var(--border);padding:3px 8px">breadcrumb · tabs</div>
+          <div style="border-right:1px solid var(--border-strong);padding:8px;display:flex;flex-direction:column;gap:6px"><span>lista</span><span style="height:22px;border:1px solid var(--border)"></span><span style="height:22px;border:1px solid var(--text-3)"></span><span style="height:22px;border:1px solid var(--border)"></span><span style="height:22px;border:1px solid var(--border)"></span></div>
+          <div style="padding:8px;display:grid;grid-template-rows:30px minmax(0,1fr) 50px;gap:8px"><span style="border:1px solid var(--border);padding:3px">encabezado de alerta</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><span style="border:1px solid var(--border);padding:3px">Valor A</span><span style="border:1px solid var(--border);padding:3px">Valor B</span></div><span style="border:1px solid var(--border);padding:3px">decisión</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:var(--text-2)">Wizard · Nueva revisión</span>
+        <div style="height:300px;display:grid;grid-template-columns:44px minmax(0,1fr);grid-template-rows:24px 44px minmax(0,1fr) 30px;border:1px solid var(--border-strong);background:var(--surface);font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-3)">
+          <div style="grid-row:1 / 5;border-right:1px solid var(--border-strong);background:var(--surface-2);padding:4px">nav</div>
+          <div style="border-bottom:1px solid var(--border-strong);padding:4px 8px">barra superior</div>
+          <div style="border-bottom:1px solid var(--border);padding:6px 8px;display:flex;gap:8px;align-items:flex-end"><span style="border-bottom:2px solid var(--border-strong);padding:2px 6px">1</span><span style="border-bottom:2px solid var(--text-3);padding:2px 6px">2</span><span style="border-bottom:2px solid var(--border-strong);padding:2px 6px">3</span><span>pasos</span></div>
+          <div style="padding:8px;display:grid;grid-template-columns:minmax(0,1fr) 90px;gap:8px"><div style="display:flex;flex-direction:column;gap:6px"><span style="height:34px;border:1px dashed var(--border-strong);padding:3px">zona de carga</span><span style="flex:1;border:1px solid var(--border);padding:3px">archivos + estado de lectura</span></div><span style="border:1px solid var(--border);padding:3px">opciones</span></div>
+          <div style="border-top:1px solid var(--border);padding:6px 8px;display:flex;justify-content:flex-end;gap:6px"><span style="border:1px solid var(--border);padding:0 8px">atrás</span><span style="border:1px solid var(--text-3);padding:0 8px">acción principal</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- I18N -->
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:18px;font-weight:600">Internacionalización · prueba con inglés</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px">
+      <div style="display:flex;flex-direction:column;gap:12px;padding:16px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+        <span style="font-weight:600">Botones de decisión · mismo ancho mínimo, el texto crece</span>
+        <div style="display:grid;grid-template-columns:28px repeat(3,auto);gap:8px;align-items:center;justify-content:start">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">es</span>
+          <button style="min-width:112px;height:32px;padding:0 14px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">Es correcto</button>
+          <button style="min-width:112px;height:32px;padding:0 14px;border:1px solid var(--accent);border-radius:4px;background:var(--accent);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif">Es un error</button>
+          <button style="min-width:112px;height:32px;padding:0 14px;border:1px dashed var(--border-strong);border-radius:4px;background:transparent;color:var(--text-2);font:400 13px 'IBM Plex Sans',sans-serif">Ignorar</button>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">en</span>
+          <button style="min-width:112px;height:32px;padding:0 14px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">It's correct</button>
+          <button style="min-width:112px;height:32px;padding:0 14px;border:1px solid var(--accent);border-radius:4px;background:var(--accent);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif">It's a mistake</button>
+          <button style="min-width:112px;height:32px;padding:0 14px;border:1px dashed var(--border-strong);border-radius:4px;background:transparent;color:var(--text-2);font:400 13px 'IBM Plex Sans',sans-serif">Ignore</button>
+        </div>
+        <span style="font-weight:600;margin-top:4px">Tabs · elipsis con tooltip a partir de 160 px</span>
+        <div style="display:flex;gap:4px;border-bottom:1px solid var(--border)">
+          <span style="padding:8px 12px;border-bottom:2px solid var(--accent);font-weight:600">Alerts <span style="font-family:'IBM Plex Mono',monospace;font-weight:400">9</span></span>
+          <span style="padding:8px 12px;color:var(--text-2)">Files <span style="font-family:'IBM Plex Mono',monospace">5</span></span>
+          <span title="Decisions and corrections" style="padding:8px 12px;color:var(--text-2);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;box-sizing:border-box">Decisions and corrections</span>
+        </div>
+        <span style="font-weight:600;margin-top:4px">Formato regional</span>
+        <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:6px 16px;font-size:12.5px">
+          <span></span><span style="font-size:11.5px;color:var(--text-3)">es-CO</span><span style="font-size:11.5px;color:var(--text-3)">en-US</span>
+          <span style="color:var(--text-2)">Fecha</span><span style="font-family:'IBM Plex Mono',monospace">13/10/2026</span><span style="font-family:'IBM Plex Mono',monospace">10/13/2026</span>
+          <span style="color:var(--text-2)">Monto</span><span style="font-family:'IBM Plex Mono',monospace">$ 18.450.000,00</span><span style="font-family:'IBM Plex Mono',monospace">COP 18,450,000.00</span>
+          <span style="color:var(--text-2)">Porcentaje</span><span style="font-family:'IBM Plex Mono',monospace">31 %</span><span style="font-family:'IBM Plex Mono',monospace">31%</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px;padding:16px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface)">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-weight:600">Barra lateral en inglés</span>
+          <div style="height:420px;border:1px solid var(--border-strong);display:flex"><dc-import name="ARGUS Sidebar" active="revision" label-inicio="Home" label-revision="Current review in progress" label-historial="History" label-ajustes="Settings" session="Case file 2026-118 · Fontibón Warehouse Lease Agreement" pending="7 of 9 alerts pending" hint-size="216px,420px"></dc-import></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px;color:var(--text-2);line-height:1.5;padding-top:28px">
+          <span><strong style="color:var(--text);font-weight:600">Ítems de navegación:</strong> una línea, elipsis y tooltip con el texto completo.</span>
+          <span><strong style="color:var(--text);font-weight:600">Sesión activa:</strong> hasta dos líneas, luego elipsis.</span>
+          <span><strong style="color:var(--text);font-weight:600">Iconos:</strong> tamaño fijo; la etiqueta ocupa el espacio restante y nunca empuja el icono.</span>
+          <span><strong style="color:var(--text);font-weight:600">Atajos:</strong> no se traducen; el modificador sí (Ctrl / ⌘ según sistema).</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const G = [
+  ['color.neutral.0','#FFFFFF'],['color.neutral.50','#F7F6F3'],['color.neutral.75','#ECE9E3'],['color.neutral.100','#F3F1EC'],['color.neutral.200','#E2DFD8'],['color.neutral.250','#C4BFB5'],['color.neutral.300','#CFCBC2'],['color.neutral.400','#9C978D'],['color.neutral.500','#6B665D'],['color.neutral.700','#4F4B44'],['color.neutral.750','#4A463F'],['color.neutral.800','#34312C'],['color.neutral.875','#23211D'],['color.neutral.900','#1C1A17'],['color.neutral.950','#141311'],
+  ['color.accent.100','#E3EEF0'],['color.accent.200','#93C8D1'],['color.accent.300','#7BBAC5'],['color.accent.500','#1F5F6B'],['color.accent.600','#184C56'],['color.accent.900','#1B3236'],
+  ['color.red.50','#FBEAE8'],['color.red.100','#F6D7D2'],['color.red.300','#F2877C'],['color.red.600','#B42318'],['color.red.900','#5A2620'],['color.red.950','#3A1D19'],
+  ['color.amber.50','#FBF0DC'],['color.amber.300','#E7B35A'],['color.amber.700','#8A5300'],['color.amber.950','#33270F']
+];
+const S = [
+  ['color.background.primary','#F7F6F3','neutral.50','#141311','neutral.950'],
+  ['color.background.surface','#FFFFFF','neutral.0','#1C1A17','neutral.900'],
+  ['color.background.subtle','#F3F1EC','neutral.100','#23211D','neutral.875'],
+  ['color.text.primary','#1C1A17','neutral.900','#ECE9E3','neutral.75'],
+  ['color.text.secondary','#4F4B44','neutral.700','#C4BFB5','neutral.250'],
+  ['color.text.tertiary','#6B665D','neutral.500','#9C978D','neutral.400'],
+  ['color.border.default','#E2DFD8','neutral.200','#34312C','neutral.800'],
+  ['color.border.strong','#CFCBC2','neutral.300','#4A463F','neutral.750'],
+  ['color.action.primary','#1F5F6B','accent.500','#7BBAC5','accent.300'],
+  ['color.action.primary.hover','#184C56','accent.600','#93C8D1','accent.200'],
+  ['color.action.subtle','#E3EEF0','accent.100','#1B3236','accent.900'],
+  ['color.risk.high','#B42318','red.600','#F2877C','red.300'],
+  ['color.risk.high.bg','#FBEAE8','red.50','#3A1D19','red.950'],
+  ['color.risk.medium','#8A5300','amber.700','#E7B35A','amber.300'],
+  ['color.risk.medium.bg','#FBF0DC','amber.50','#33270F','amber.950'],
+  ['color.risk.low','#4F4B44','neutral.700','#C4BFB5','neutral.250'],
+  ['color.diff.highlight','#F6D7D2','red.100','#5A2620','red.900']
+];
+const C = [
+  ['button.primary.bg.default','color.action.primary'],['button.primary.bg.hover','color.action.primary.hover'],['button.secondary.border','color.border.strong'],
+  ['alert.row.high.border','color.risk.high'],['alert.tag.high.bg','color.risk.high.bg'],['alert.tag.medium.fg','color.risk.medium'],
+  ['value.diff.bg','color.diff.highlight'],['value.diff.underline','color.risk.high'],
+  ['sidebar.bg','color.background.subtle'],['sidebar.item.active.bg','color.background.surface'],
+  ['chip.filter.active.bg','color.action.subtle'],['focus.ring','color.action.primary'],['radius.control','radius.sm'],['spacing.row.padding','spacing.2 spacing.3']
+];
+const sep = i => i ? '1px solid var(--border)' : 'none';
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      globals: [...G.map(([name, value], i) => ({ name, value, sw: value, sep: sep(i) })),
+        ...[['spacing.1','4px'],['spacing.4','16px'],['radius.sm','4px']].map(([name, value]) => ({ name, value, sw: 'transparent', sep: sep(1) }))],
+      semantic: S.map(([name, l, lRef, d, dRef], i) => ({ name, l, lRef, d, dRef, sep: sep(i) })),
+      component: C.map(([name, ref], i) => ({ name, ref, sep: sep(i) })),
+      spacing: [['spacing.1',4],['spacing.2',8],['spacing.3',12],['spacing.4',16],['spacing.5',20],['spacing.6',24],['spacing.8',32]].map(([name, v]) => ({ name, v, w: (v * 4) + 'px' })),
+      icons: [['report','Riesgo alto'],['warning','Advertencia'],['info','Información'],['description','Archivo'],['compare_arrows','Comparar'],['check','Es correcto'],['edit_note','Es un error'],['visibility_off','Ignorar'],['upload_file','Cargar'],['search','Buscar'],['history','Historial'],['lock','Análisis local']].map(([g, l]) => ({ g, l })),
+      facets: [['Identificador',2,1],['Fecha',2,0],['Monto',2,1],['Nombre',2,0],['Periodo',1,0]].map(([l, n, on]) => ({ l, n, bd: on ? 'var(--accent)' : 'var(--border-strong)', bg: on ? 'var(--accent)' : 'transparent' }))
+    };
+  }
+}
+</script>
+</body>
+</html>
