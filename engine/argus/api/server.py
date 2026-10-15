@@ -17,6 +17,7 @@ from typing import TextIO
 import uvicorn
 
 from argus.api.app import create_app
+from argus.api.composition import default_database_path
 from argus.api.settings import EngineSettings
 
 LOOPBACK_HOST = "127.0.0.1"
@@ -73,7 +74,7 @@ def stop_when_stdin_closes(server: uvicorn.Server, stdin: TextIO) -> None:
 
 
 def run(options: LaunchOptions, access_token: str) -> None:
-    settings = EngineSettings.from_installed_package(access_token=access_token)
+    settings = EngineSettings.from_installed_package(access_token, default_database_path())
     server = uvicorn.Server(uvicorn.Config(create_app(settings), access_log=False))
     with bind_loopback_socket(options.port) as sock:
         print(format_ready_announcement(sock.getsockname()[1]), flush=True)

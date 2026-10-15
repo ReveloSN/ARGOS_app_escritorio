@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from importlib.metadata import version
+from pathlib import Path
 
 PACKAGE_NAME = "argus-engine"
 
@@ -18,8 +19,11 @@ class EngineSettings:
 
     version: str
     access_token: str
+    database_path: Path
     allowed_origins: tuple[str, ...] = TAURI_ORIGINS
 
     @classmethod
-    def from_installed_package(cls, access_token: str) -> "EngineSettings":
-        return cls(version=version(PACKAGE_NAME), access_token=access_token)
+    def from_installed_package(cls, access_token: str, database_path: Path) -> "EngineSettings":
+        return cls(
+            version=version(PACKAGE_NAME), access_token=access_token, database_path=database_path
+        )

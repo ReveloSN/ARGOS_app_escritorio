@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -10,8 +12,12 @@ TAURI_WINDOWS_ORIGIN = "http://tauri.localhost"
 
 
 @pytest.fixture
-def settings() -> EngineSettings:
-    return EngineSettings(version=TEST_VERSION, access_token=TEST_TOKEN)
+def settings(tmp_path: Path) -> EngineSettings:
+    return EngineSettings(
+        version=TEST_VERSION,
+        access_token=TEST_TOKEN,
+        database_path=tmp_path / "argus.sqlite3",
+    )
 
 
 @pytest.fixture

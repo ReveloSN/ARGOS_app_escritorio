@@ -2,7 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from argus.api.access_token import AUTHORIZATION_HEADER, AccessTokenMiddleware
+from argus.api.composition import build_review_storage, build_run_review
 from argus.api.routes.health import build_health_router
+from argus.api.routes.reviews import build_reviews_router
 from argus.api.settings import EngineSettings
 
 API_TITLE = "ARGUS engine"
@@ -14,6 +16,8 @@ def create_app(settings: EngineSettings) -> FastAPI:
     """Raíz de composición: aquí se construyen e inyectan las dependencias del motor."""
     app = FastAPI(title=API_TITLE, version=settings.version)
     app.include_router(build_health_router(settings))
+    storage = build_review_storage(settings.database_path)
+    app.include_router(build_reviews_router(build_run_review(storage)))
     app.add_middleware(AccessTokenMiddleware, access_token=settings.access_token)
     # CORS se agrega al final para quedar por fuera: responde los preflight y también
     # marca los 401, de modo que la interfaz pueda leer el rechazo.

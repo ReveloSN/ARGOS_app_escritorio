@@ -8,6 +8,8 @@ from platformdirs import user_data_path
 from argus.application.detect_inconsistencies import DetectInconsistencies
 from argus.application.document_reader_factory import DocumentReaderFactory
 from argus.application.entity_extraction_pipeline import EntityExtractionPipeline
+from argus.application.review_session_use_cases import StartReviewSession
+from argus.application.run_review import EntityReviewAnalyzer, RunReview
 from argus.domain.comparison.comparators_by_type import comparators_for
 from argus.domain.document import DocumentFormat
 from argus.domain.risk_rules import DEFAULT_RISK_RULES, RiskClassifier
@@ -32,6 +34,7 @@ from argus.infrastructure.readers.eml_reader import EmlDocumentReader
 from argus.infrastructure.readers.pdf_reader import PdfDocumentReader
 from argus.infrastructure.readers.text_reader import PlainTextReader
 from argus.infrastructure.readers.xlsx_reader import XlsxDocumentReader
+from argus.infrastructure.system_clock import SystemClock
 
 APP_NAME = "ARGUS"
 DATABASE_FILE_NAME = "argus.sqlite3"
@@ -96,3 +99,11 @@ def build_entity_extraction_pipeline() -> EntityExtractionPipeline:
             PersonNameExtractor(),
         ]
     )
+
+
+def build_run_review(storage: ReviewStorage) -> RunReview:
+    analyzer = EntityReviewAnalyzer(
+        build_entity_extraction_pipeline(), build_inconsistency_detector()
+    )
+    start_session = StartReviewSession(storage.sessions, storage.alerts, SystemClock())
+    return RunReview(build_document_reader_factory(), analyzer, start_session)

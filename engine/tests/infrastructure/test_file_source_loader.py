@@ -2,11 +2,9 @@ from pathlib import Path
 
 import pytest
 
+from argus.application.document_limits import MAX_DOCUMENT_BYTES
 from argus.domain.errors import UnreadableDocumentError, UnreadableReason
-from argus.infrastructure.file_source_loader import (
-    MAX_DOCUMENT_BYTES,
-    FileSourceLoader,
-)
+from argus.infrastructure.file_source_loader import FileSourceLoader
 
 
 def test_loader_reads_name_and_bytes(tmp_path: Path) -> None:

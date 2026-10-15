@@ -1,10 +1,8 @@
 from pathlib import Path
 
+from argus.application.document_limits import MAX_DOCUMENT_BYTES
 from argus.application.ports.document_reader import DocumentSource
 from argus.domain.errors import UnreadableDocumentError, UnreadableReason
-
-# Límite que anuncia la zona de carga de los mockups («hasta 10 MB por archivo»).
-MAX_DOCUMENT_BYTES = 10 * 1024 * 1024
 
 
 class FileSourceLoader:

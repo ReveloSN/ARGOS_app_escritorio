@@ -1,4 +1,5 @@
 from importlib.metadata import version
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 
@@ -23,7 +24,7 @@ def test_health_reports_status_and_injected_version(
 
 
 def test_settings_read_version_from_installed_package() -> None:
-    settings = EngineSettings.from_installed_package(access_token=TEST_TOKEN)
+    settings = EngineSettings.from_installed_package(TEST_TOKEN, Path("argus.sqlite3"))
 
     assert settings.version == version(PACKAGE_NAME)
     assert settings.access_token == TEST_TOKEN

@@ -94,6 +94,11 @@ def alert_from_json(text: str) -> Alert:
     )
 
 
+def location_payload(location: SourceLocation) -> LocationPayload:
+    """Ubicación como diccionario con su tipo: {"kind": "page", "page": 1}."""
+    return {"kind": LOCATION_KINDS[type(location)], **asdict(location)}
+
+
 def _entity_payload(entity: Entity) -> EntityPayload:
     location = entity.occurrence.location
     return {
@@ -101,7 +106,7 @@ def _entity_payload(entity: Entity) -> EntityPayload:
         "raw": entity.raw_value,
         "normalized": entity.normalized_value,
         "document": entity.occurrence.document_name,
-        "location": {"kind": LOCATION_KINDS[type(location)], **asdict(location)},
+        "location": location_payload(location),
         "excerpt": entity.occurrence.excerpt,
     }
 
