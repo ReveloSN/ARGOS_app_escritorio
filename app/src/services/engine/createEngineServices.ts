@@ -10,7 +10,7 @@ import { TauriEngineConnectionSource } from "./tauriEngineConnectionSource";
 /** Raíz de composición de la interfaz: elige de dónde sale la conexión al motor. */
 export function createEngineServices(): EngineServices {
   const client = new EngineClient(createConnectionSource());
-  return { statusMonitor: new EngineStatusMonitor(client) };
+  return { statusMonitor: new EngineStatusMonitor(client), reviewStarter: client };
 }
 
 function createConnectionSource(): EngineConnectionSource {

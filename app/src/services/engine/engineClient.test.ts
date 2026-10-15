@@ -60,4 +60,27 @@ describe("EngineClient", () => {
 
     await expect(client.checkHealth()).rejects.toBeInstanceOf(EngineUnavailableError);
   });
+
+  it("inicia una revisión enviando el nombre y los archivos al motor", async () => {
+    const result = {
+      session: { id: "s1", name: "Revisión", createdAt: "" },
+      documents: [],
+      alerts: [],
+    };
+    const fetchResource = vi.fn<(input: string, init: RequestInit) => Promise<Response>>(() =>
+      Promise.resolve(jsonResponse(result)),
+    );
+    const client = new EngineClient(sourceReturning(READY_STATE), fetchResource);
+    const file = new File(["Contrato No. 4857"], "notas.txt");
+
+    const review = await client.startReview({ name: "Revisión", files: [file] });
+
+    const [url, init] = fetchResource.mock.calls[0] ?? [];
+    const body = init?.body as FormData;
+    expect(review).toEqual(result);
+    expect(url).toBe("http://127.0.0.1:5000/reviews");
+    expect(init?.method).toBe("POST");
+    expect(body.get("name")).toBe("Revisión");
+    expect((body.get("files") as File).name).toBe("notas.txt");
+  });
 });

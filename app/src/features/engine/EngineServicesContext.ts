@@ -1,9 +1,11 @@
 import { createContext, useContext } from "react";
 
 import type { EngineStatusMonitor } from "../../services/engine/engineStatusMonitor";
+import type { ReviewStarter } from "../../services/engine/reviewTypes";
 
 export interface EngineServices {
   readonly statusMonitor: EngineStatusMonitor;
+  readonly reviewStarter: ReviewStarter;
 }
 
 export const EngineServicesContext = createContext<EngineServices | null>(null);

@@ -20,8 +20,8 @@ export interface ActiveSessionSummary {
 interface SidebarProps {
   readonly active: SidebarSection;
   readonly collapsed: boolean;
-  readonly session?: ActiveSessionSummary;
-  readonly reviewBadge?: string;
+  readonly session?: ActiveSessionSummary | undefined;
+  readonly reviewBadge?: string | undefined;
   readonly onNavigate: (section: SidebarSection) => void;
   readonly onToggleCollapsed: () => void;
   readonly onNewReview: () => void;

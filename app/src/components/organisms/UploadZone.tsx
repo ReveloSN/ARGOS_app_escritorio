@@ -12,7 +12,8 @@ const PASTE_SHORTCUT = [MODIFIER_KEY, "V"];
 
 interface UploadZoneProps {
   readonly onFilesSelected: (files: readonly File[]) => void;
-  readonly onPasteText: () => void;
+  /** Sin acción no se muestra «Pegar texto»: nunca un botón que no hace nada. */
+  readonly onPasteText?: () => void;
 }
 
 export function UploadZone({ onFilesSelected, onPasteText }: UploadZoneProps) {
@@ -70,9 +71,11 @@ export function UploadZone({ onFilesSelected, onPasteText }: UploadZoneProps) {
       >
         {t("upload.choose")}
       </Button>
-      <Button size="md" shortcut={PASTE_SHORTCUT} onClick={onPasteText}>
-        {t("upload.paste")}
-      </Button>
+      {onPasteText && (
+        <Button size="md" shortcut={PASTE_SHORTCUT} onClick={onPasteText}>
+          {t("upload.paste")}
+        </Button>
+      )}
     </div>
   );
 }

@@ -1,0 +1,102 @@
+.heading {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+  margin: 0;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+}
+
+.hint,
+.muted {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-regular);
+}
+
+.muted {
+  margin: 0;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: var(--size-control-xl) minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--spacing-3);
+  align-items: center;
+  padding: var(--spacing-2-5) var(--spacing-3-5);
+}
+
+.row + .row {
+  border-top: var(--border-width) solid var(--color-border-default);
+}
+
+.fileName {
+  overflow: hidden;
+  font-family: var(--font-family-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  color: var(--color-text-secondary);
+}
+
+.readIcon {
+  color: var(--color-action-text);
+}
+
+.remove {
+  display: grid;
+  justify-self: end;
+  place-items: center;
+  width: var(--size-control-sm);
+  height: var(--size-control-sm);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-1-5) var(--spacing-3);
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.count {
+  color: var(--color-text-primary);
+  font-family: var(--font-family-mono);
+}
+
+.attention {
+  color: var(--color-risk-high);
+}
+
+.note {
+  display: flex;
+  gap: var(--spacing-2);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.footerMessage {
+  flex: 1;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}

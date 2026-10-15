@@ -11,6 +11,8 @@ export interface ComparedValue {
   readonly fileName: string;
   /** Ubicación ya traducida («Página 1 · Encabezado»). */
   readonly location: string;
+  /** Fragmento del documento donde aparece el valor. */
+  readonly excerpt?: string | undefined;
   readonly occurrences: number;
   readonly files: number;
 }
@@ -47,6 +49,7 @@ function ValueCard({ label, compared }: { label: TranslationKey; compared: Compa
       <div className={styles.cardBody}>
         <DiffValue value={compared.value} positions={compared.positions} />
         <SourceLine fileName={compared.fileName} location={compared.location} />
+        {compared.excerpt && <blockquote className={styles.excerpt}>{compared.excerpt}</blockquote>}
       </div>
     </section>
   );

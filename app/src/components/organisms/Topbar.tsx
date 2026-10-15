@@ -7,11 +7,12 @@ import styles from "./Topbar.module.css";
 const SEARCH_SHORTCUT = [MODIFIER_KEY, "K"];
 
 interface TopbarProps {
-  readonly sessionName?: string;
+  readonly sessionName?: string | undefined;
   readonly searchPlaceholder?: string;
   readonly engineStatus: EngineStatusView;
-  readonly onOpenSearch: () => void;
-  readonly onOpenHelp: () => void;
+  /** Sin acción no se muestra la búsqueda: nunca un control que no hace nada. */
+  readonly onOpenSearch?: () => void;
+  readonly onOpenHelp?: () => void;
 }
 
 export function Topbar({
@@ -35,22 +36,26 @@ export function Topbar({
           <Icon name="expand_more" size="md" className={styles.muted} />
         </div>
       )}
-      <button type="button" className={styles.search} onClick={onOpenSearch}>
-        <Icon name="search" size="md" />
-        <span className={styles.placeholder}>{placeholder}</span>
-        <Kbd keys={SEARCH_SHORTCUT} />
-      </button>
+      {onOpenSearch && (
+        <button type="button" className={styles.search} onClick={onOpenSearch}>
+          <Icon name="search" size="md" />
+          <span className={styles.placeholder}>{placeholder}</span>
+          <Kbd keys={SEARCH_SHORTCUT} />
+        </button>
+      )}
       <div className={styles.spacer} />
       <EngineStatusIndicator status={engineStatus} />
-      <button
-        type="button"
-        title={t("topbar.help")}
-        aria-label={t("topbar.help")}
-        className={styles.help}
-        onClick={onOpenHelp}
-      >
-        <Icon name="keyboard" size="md" />
-      </button>
+      {onOpenHelp && (
+        <button
+          type="button"
+          title={t("topbar.help")}
+          aria-label={t("topbar.help")}
+          className={styles.help}
+          onClick={onOpenHelp}
+        >
+          <Icon name="keyboard" size="md" />
+        </button>
+      )}
     </header>
   );
 }

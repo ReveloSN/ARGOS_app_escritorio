@@ -106,11 +106,149 @@
     "dark": "Oscuro",
     "system": "Según el sistema"
   },
-  "designSystem": {
-    "title": "Design system",
-    "atoms": "Átomos",
-    "molecules": "Moléculas",
-    "organisms": "Organismos",
-    "reviewSample": "Revisar"
+  "home": {
+    "title": "Todavía no hay revisiones",
+    "description": "Cargue los documentos que va a enviar o firmar. ARGUS los compara entre sí y le muestra las diferencias antes de que finalice.",
+    "note": "Los archivos se analizan en este equipo."
+  },
+  "engineUnavailable": {
+    "what": "El motor de análisis no responde.",
+    "why": "Sin el motor, ARGUS no puede leer ni comparar los archivos.",
+    "todo": "Reintente la conexión. Si sigue sin responder, cierre ARGUS y ábralo de nuevo.",
+    "retry": "Reintentar conexión"
+  },
+  "newReview": {
+    "title": "Nueva revisión",
+    "steps": {
+      "load": "Cargar",
+      "confirm": "Confirmar lectura",
+      "review": "Revisar"
+    },
+    "sessionName": "Nombre de la sesión",
+    "sessionNameRequired": "Escriba un nombre para la sesión.",
+    "files": "Archivos de la sesión",
+    "filesHint": "Revise qué se leyó en cada uno antes de continuar",
+    "noFiles": "Todavía no hay archivos. Agréguelos con la zona de carga.",
+    "removeFile": "Quitar «{name}»",
+    "localNote": "Los archivos se leen en este equipo. No se envían a internet.",
+    "analyze": {
+      "one": "Leer y comparar {count} archivo",
+      "other": "Leer y comparar {count} archivos"
+    },
+    "analyzing": {
+      "one": "Leyendo y comparando {count} archivo…",
+      "other": "Leyendo y comparando {count} archivos…"
+    },
+    "cancel": "Cancelar",
+    "back": "Atrás",
+    "reviewFiles": {
+      "one": "Revisar {count} archivo",
+      "other": "Revisar {count} archivos"
+    },
+    "readSummary": "Resumen de lectura",
+    "readComplete": "Leídos completos",
+    "needAttention": "Necesitan atención",
+    "readStatus": {
+      "one": "Leído · {count} fragmento con texto",
+      "other": "Leído · {count} fragmentos con texto"
+    },
+    "notIncluded": {
+      "one": "{count} archivo no se incluirá en la revisión porque no se pudo leer.",
+      "other": "{count} archivos no se incluirán en la revisión porque no se pudieron leer."
+    },
+    "replaceFile": "Reemplazar archivo",
+    "columns": {
+      "type": "Tipo",
+      "file": "Archivo",
+      "reading": "Lectura"
+    }
+  },
+  "analysisFailed": {
+    "what": "No se pudo completar la revisión.",
+    "why": "El motor de análisis no respondió.",
+    "todo": "Revise que ARGUS siga abierto e inténtelo de nuevo. Los archivos siguen cargados.",
+    "retry": "Intentar de nuevo"
+  },
+  "unreadable": {
+    "no_text": {
+      "what": "No pudimos leer «{name}».",
+      "why": "Es una imagen escaneada sin texto.",
+      "todo": "Súbalo de nuevo con texto seleccionable."
+    },
+    "encrypted": {
+      "what": "«{name}» está protegido con contraseña.",
+      "why": "Para compararlo, ARGUS necesita abrirlo.",
+      "todo": "Guárdelo sin contraseña y cárguelo de nuevo."
+    },
+    "corrupted": {
+      "what": "No pudimos leer «{name}».",
+      "why": "El archivo está dañado o incompleto.",
+      "todo": "Ábralo en su programa, guárdelo de nuevo y cárguelo."
+    },
+    "too_large": {
+      "what": "No se agregó «{name}».",
+      "why": "El archivo pesa más de 10 MB.",
+      "todo": "Guárdelo sin imágenes incrustadas o divídalo en dos archivos."
+    },
+    "not_found": {
+      "what": "No pudimos abrir «{name}».",
+      "why": "El archivo se movió o se eliminó.",
+      "todo": "Búsquelo y cárguelo de nuevo."
+    },
+    "unsupported_format": {
+      "what": "No se puede revisar «{name}».",
+      "why": "ARGUS lee PDF, DOCX, XLSX, EML y texto.",
+      "todo": "Expórtelo como PDF o DOCX y cárguelo de nuevo."
+    }
+  },
+  "results": {
+    "alertsLabel": "Alertas",
+    "readSummary": {
+      "one": "{count} archivo leído de {total}",
+      "other": "{count} archivos leídos de {total}"
+    },
+    "alertCount": {
+      "one": "{count} alerta · ordenada por riesgo",
+      "other": "{count} alertas · ordenadas por riesgo"
+    },
+    "noInconsistencies": "No se encontraron inconsistencias",
+    "comparedFiles": {
+      "one": "Se comparó {count} archivo y sus valores coinciden.",
+      "other": "Se compararon {count} archivos y sus valores coinciden."
+    }
+  },
+  "alertDetail": {
+    "position": "Alerta {number} de {total}",
+    "label": "Alerta {number}",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+  "review": {
+    "pendingSummary": {
+      "one": "{count} alerta pendiente de {total}",
+      "other": "{count} alertas pendientes de {total}"
+    }
+  },
+  "unavailableSection": {
+    "title": "Esta sección todavía no está disponible",
+    "description": "Se habilitará en una próxima versión de ARGUS."
+  },
+  "entityTypes": {
+    "contract_id": "Identificador",
+    "tax_id": "Identificador tributario",
+    "money": "Monto",
+    "date": "Fecha",
+    "person_name": "Nombre",
+    "organization_name": "Razón social",
+    "period": "Periodo"
+  },
+  "alertTitles": {
+    "contract_id": "El número de contrato no coincide entre dos documentos",
+    "tax_id": "El NIT o la cédula no coincide",
+    "money": "El monto no coincide",
+    "date": "La fecha es distinta",
+    "person_name": "El nombre de una persona es distinto",
+    "organization_name": "La razón social está escrita distinto",
+    "period": "El periodo no coincide"
   }
 }

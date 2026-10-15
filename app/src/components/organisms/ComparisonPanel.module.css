@@ -38,6 +38,17 @@
   font-size: var(--font-size-caption);
 }
 
+.excerpt {
+  margin: 0;
+  padding: var(--spacing-2-5) var(--spacing-3);
+  border: var(--border-width) solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  background: var(--color-background-subtle);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-serif);
+  line-height: var(--line-height-body);
+}
+
 .cardBody {
   display: flex;
   flex: 1;

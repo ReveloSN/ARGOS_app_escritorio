@@ -10,28 +10,44 @@ import "material-symbols/outlined.css";
 import "./design-tokens/index.css";
 import "./styles/base.css";
 
-import { StrictMode } from "react";
+import { StrictMode, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 
 import { App } from "./App";
 import { EngineServicesContext } from "./features/engine/EngineServicesContext";
+import { ReviewProvider } from "./features/review/ReviewProvider";
 import { ThemeProvider } from "./features/settings/theme/ThemeProvider";
 import { I18nProvider } from "./i18n/I18nProvider";
 import { createEngineServices } from "./services/engine/createEngineServices";
 
 const ROOT_ELEMENT_ID = "root";
+const DEV_CATALOG_PATH = "/dev/design-system";
 
 const rootElement = document.getElementById(ROOT_ELEMENT_ID);
 if (!rootElement) throw new Error(`Falta el elemento #${ROOT_ELEMENT_ID} en index.html.`);
+const root = createRoot(rootElement);
+const engineServices = createEngineServices();
 
-createRoot(rootElement).render(
-  <StrictMode>
-    <I18nProvider>
-      <ThemeProvider>
-        <EngineServicesContext.Provider value={createEngineServices()}>
-          <App />
-        </EngineServicesContext.Provider>
-      </ThemeProvider>
-    </I18nProvider>
-  </StrictMode>,
-);
+function render(content: ReactNode) {
+  root.render(
+    <StrictMode>
+      <I18nProvider>
+        <ThemeProvider>
+          <EngineServicesContext.Provider value={engineServices}>
+            <ReviewProvider>{content}</ReviewProvider>
+          </EngineServicesContext.Provider>
+        </ThemeProvider>
+      </I18nProvider>
+    </StrictMode>,
+  );
+}
+
+// El catálogo de componentes solo existe en desarrollo: en el build de producción
+// import.meta.env.DEV es `false` y esta rama, con su import dinámico, se elimina.
+if (import.meta.env.DEV && window.location.pathname === DEV_CATALOG_PATH) {
+  void import("./dev/DesignSystemCatalog").then(({ DesignSystemCatalog }) => {
+    render(<DesignSystemCatalog />);
+  });
+} else {
+  render(<App />);
+}

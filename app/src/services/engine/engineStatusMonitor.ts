@@ -44,7 +44,8 @@ export class EngineStatusMonitor {
     this.timer = undefined;
   }
 
-  private async refresh(): Promise<void> {
+  /** Consulta el motor ahora mismo, sin esperar al siguiente intervalo («Reintentar»). */
+  async refresh(): Promise<void> {
     this.publish(await this.probe());
   }
 

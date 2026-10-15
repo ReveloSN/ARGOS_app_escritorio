@@ -106,11 +106,149 @@
     "dark": "Dark",
     "system": "Match system"
   },
-  "designSystem": {
-    "title": "Design system",
-    "atoms": "Atoms",
-    "molecules": "Molecules",
-    "organisms": "Organisms",
-    "reviewSample": "Review"
+  "home": {
+    "title": "No reviews yet",
+    "description": "Load the documents you are about to send or sign. ARGUS compares them with each other and shows you the differences before you finish.",
+    "note": "Files are analyzed on this computer."
+  },
+  "engineUnavailable": {
+    "what": "The analysis engine is not responding.",
+    "why": "Without the engine, ARGUS can't read or compare files.",
+    "todo": "Retry the connection. If it still doesn't respond, close ARGUS and open it again.",
+    "retry": "Retry connection"
+  },
+  "newReview": {
+    "title": "New review",
+    "steps": {
+      "load": "Load",
+      "confirm": "Confirm reading",
+      "review": "Review"
+    },
+    "sessionName": "Session name",
+    "sessionNameRequired": "Enter a name for the session.",
+    "files": "Session files",
+    "filesHint": "Check what was read in each one before continuing",
+    "noFiles": "No files yet. Add them with the drop zone.",
+    "removeFile": "Remove «{name}»",
+    "localNote": "Files are read on this computer. They are not sent to the internet.",
+    "analyze": {
+      "one": "Read and compare {count} file",
+      "other": "Read and compare {count} files"
+    },
+    "analyzing": {
+      "one": "Reading and comparing {count} file…",
+      "other": "Reading and comparing {count} files…"
+    },
+    "cancel": "Cancel",
+    "back": "Back",
+    "reviewFiles": {
+      "one": "Review {count} file",
+      "other": "Review {count} files"
+    },
+    "readSummary": "Reading summary",
+    "readComplete": "Fully read",
+    "needAttention": "Need attention",
+    "readStatus": {
+      "one": "Read · {count} fragment with text",
+      "other": "Read · {count} fragments with text"
+    },
+    "notIncluded": {
+      "one": "{count} file won't be included in the review because it couldn't be read.",
+      "other": "{count} files won't be included in the review because they couldn't be read."
+    },
+    "replaceFile": "Replace file",
+    "columns": {
+      "type": "Type",
+      "file": "File",
+      "reading": "Reading"
+    }
+  },
+  "analysisFailed": {
+    "what": "The review couldn't be completed.",
+    "why": "The analysis engine didn't respond.",
+    "todo": "Check that ARGUS is still open and try again. Your files are still loaded.",
+    "retry": "Try again"
+  },
+  "unreadable": {
+    "no_text": {
+      "what": "We couldn't read «{name}».",
+      "why": "It's a scanned image with no text.",
+      "todo": "Upload it again with selectable text."
+    },
+    "encrypted": {
+      "what": "«{name}» is password protected.",
+      "why": "To compare it, ARGUS needs to open it.",
+      "todo": "Save it without a password and load it again."
+    },
+    "corrupted": {
+      "what": "We couldn't read «{name}».",
+      "why": "The file is damaged or incomplete.",
+      "todo": "Open it in its program, save it again and load it."
+    },
+    "too_large": {
+      "what": "«{name}» wasn't added.",
+      "why": "The file is larger than 10 MB.",
+      "todo": "Save it without embedded images or split it into two files."
+    },
+    "not_found": {
+      "what": "We couldn't open «{name}».",
+      "why": "The file was moved or deleted.",
+      "todo": "Find it and load it again."
+    },
+    "unsupported_format": {
+      "what": "«{name}» can't be reviewed.",
+      "why": "ARGUS reads PDF, DOCX, XLSX, EML and text.",
+      "todo": "Export it as PDF or DOCX and load it again."
+    }
+  },
+  "results": {
+    "alertsLabel": "Alerts",
+    "readSummary": {
+      "one": "{count} of {total} file read",
+      "other": "{count} of {total} files read"
+    },
+    "alertCount": {
+      "one": "{count} alert · sorted by risk",
+      "other": "{count} alerts · sorted by risk"
+    },
+    "noInconsistencies": "No inconsistencies found",
+    "comparedFiles": {
+      "one": "{count} file was compared and its values match.",
+      "other": "{count} files were compared and their values match."
+    }
+  },
+  "alertDetail": {
+    "position": "Alert {number} of {total}",
+    "label": "Alert {number}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "review": {
+    "pendingSummary": {
+      "one": "{count} of {total} alert pending",
+      "other": "{count} of {total} alerts pending"
+    }
+  },
+  "unavailableSection": {
+    "title": "This section isn't available yet",
+    "description": "It will be enabled in an upcoming version of ARGUS."
+  },
+  "entityTypes": {
+    "contract_id": "Identifier",
+    "tax_id": "Tax identifier",
+    "money": "Amount",
+    "date": "Date",
+    "person_name": "Name",
+    "organization_name": "Company name",
+    "period": "Period"
+  },
+  "alertTitles": {
+    "contract_id": "The contract number doesn't match between two documents",
+    "tax_id": "The tax ID doesn't match",
+    "money": "The amount doesn't match",
+    "date": "The date is different",
+    "person_name": "A person's name is different",
+    "organization_name": "The company name is written differently",
+    "period": "The period doesn't match"
   }
 }

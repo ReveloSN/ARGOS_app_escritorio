@@ -1,48 +1,49 @@
 import { useState } from "react";
 
-import type { EngineStatusView } from "./components/molecules/EngineStatusIndicator";
 import { Sidebar } from "./components/organisms/Sidebar";
-import type { SidebarSection } from "./components/organisms/sidebarSections";
 import { Topbar } from "./components/organisms/Topbar";
 import { AppShell } from "./components/templates/AppShell";
 import { useEngineStatus } from "./features/engine/useEngineStatus";
-import { DesignSystemPage } from "./pages/DesignSystemPage";
-import { SAMPLE_SESSION } from "./pages/designSystemSamples";
+import {
+  HOME_ROUTE,
+  routeForSection,
+  sectionOf,
+  type AppRoute,
+} from "./features/navigation/appRoute";
+import { useReview } from "./features/review/reviewContext";
+import { useActiveSessionSummary } from "./features/review/useActiveSessionSummary";
+import { CurrentPage } from "./pages/CurrentPage";
 
-const IGNORE = () => undefined;
-
-// Hasta la Fase 6 la app muestra la galería del design system dentro del marco real.
+/** Arranca en Inicio; sesión activa y contadores aparecen solo con una revisión real. */
 export function App() {
   const engineStatus = useEngineStatus();
-  const [section, setSection] = useState<SidebarSection>("review");
+  const { review } = useReview();
+  const indicators = useActiveSessionSummary(review);
+  const [route, setRoute] = useState<AppRoute>(HOME_ROUTE);
   const [collapsed, setCollapsed] = useState(false);
-  const engineView: EngineStatusView = { kind: engineStatus };
 
   return (
     <AppShell
       sidebar={
         <Sidebar
-          active={section}
+          active={sectionOf(route)}
           collapsed={collapsed}
-          session={SAMPLE_SESSION}
-          reviewBadge="7"
-          onNavigate={setSection}
+          session={indicators?.card}
+          reviewBadge={indicators?.badge}
+          onNavigate={(section) => {
+            setRoute(routeForSection(section));
+          }}
           onToggleCollapsed={() => {
             setCollapsed((current) => !current);
           }}
-          onNewReview={IGNORE}
+          onNewReview={() => {
+            setRoute({ page: "newReview" });
+          }}
         />
       }
-      topbar={
-        <Topbar
-          sessionName={SAMPLE_SESSION.name}
-          engineStatus={engineView}
-          onOpenSearch={IGNORE}
-          onOpenHelp={IGNORE}
-        />
-      }
+      topbar={<Topbar sessionName={review?.session.name} engineStatus={{ kind: engineStatus }} />}
     >
-      <DesignSystemPage />
+      <CurrentPage route={route} onNavigate={setRoute} />
     </AppShell>
   );
 }
