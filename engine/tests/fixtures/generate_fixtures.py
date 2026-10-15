@@ -28,6 +28,7 @@ CONTRACT_PAGES = [
     [
         "CLÁUSULA TERCERA. Canon mensual: $ 18.450.000",
         "Fecha de inicio: 01/07/2026. Vigencia: 36 meses.",
+        "Representante legal: María F. Rojas Pérez",
     ],
 ]
 
@@ -105,6 +106,7 @@ def build_annex_docx() -> bytes:
     table.cell(0, 1).text = "Valor"
     table.cell(1, 0).text = "Canon mensual"
     table.cell(1, 1).text = "$ 18.540.000"
+    document.add_paragraph("Representante legal: María F. Rojas Peña")
     buffer = BytesIO()
     document.save(buffer)
     return buffer.getvalue()
