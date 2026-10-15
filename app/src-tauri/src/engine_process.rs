@@ -83,7 +83,10 @@ pub fn launch_engine(token: &str) -> Result<EngineProcess, EngineLaunchError> {
         .stderr(Stdio::inherit())
         .spawn()
         .map_err(EngineLaunchError::Spawn)?;
-    let stdout = child.stdout.take().ok_or(EngineLaunchError::MissingStdout)?;
+    let stdout = child
+        .stdout
+        .take()
+        .ok_or(EngineLaunchError::MissingStdout)?;
     match wait_for_ready_port(stdout) {
         Ok(port) => Ok(EngineProcess::new(child, port)),
         Err(error) => {
@@ -127,10 +130,12 @@ fn development_engine_command() -> Command {
         .join("..")
         .join("engine");
     let mut command = Command::new("uv");
-    command
-        .args(["run", "--project"])
-        .arg(engine_dir)
-        .args(["python", "-m", "argus", "--exit-on-stdin-close"]);
+    command.args(["run", "--project"]).arg(engine_dir).args([
+        "python",
+        "-m",
+        "argus",
+        "--exit-on-stdin-close",
+    ]);
     hide_console_window(&mut command);
     command
 }
