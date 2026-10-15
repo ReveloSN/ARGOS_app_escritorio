@@ -11,7 +11,7 @@
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "vitest run",
+    "test": "vitest run && vitest run -c vitest.bundle.config.ts",
     "tauri": "tauri",
     "lint:css": "stylelint \"src/**/*.css\""
   },

@@ -1,5 +1,5 @@
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 
 // Tauri carga la interfaz desde este puerto exacto (tauri.conf.json → devUrl).
 const DEV_SERVER_PORT = 1420;
@@ -24,6 +24,7 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    exclude: [...configDefaults.exclude, "**/*.bundle.test.ts"],
     setupFiles: ["./src/test/setup.ts"],
   },
 });
