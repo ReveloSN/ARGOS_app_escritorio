@@ -1,35 +1,51 @@
 import { act, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "./App";
 import { EngineServicesContext } from "./features/engine/EngineServicesContext";
+import { ThemeProvider } from "./features/settings/theme/ThemeProvider";
+import { I18nProvider } from "./i18n/I18nProvider";
 import { EngineStatusMonitor } from "./services/engine/engineStatusMonitor";
 
-function renderWithMonitor(monitor: EngineStatusMonitor) {
+function renderApp(monitor: EngineStatusMonitor) {
   return render(
-    <EngineServicesContext.Provider value={{ statusMonitor: monitor }}>
-      <App />
-    </EngineServicesContext.Provider>,
+    <I18nProvider>
+      <ThemeProvider>
+        <EngineServicesContext.Provider value={{ statusMonitor: monitor }}>
+          <App />
+        </EngineServicesContext.Provider>
+      </ThemeProvider>
+    </I18nProvider>,
   );
 }
 
 describe("App", () => {
-  it("muestra el nombre de la aplicación tomado de i18n", () => {
-    const monitor = new EngineStatusMonitor({ checkHealth: () => new Promise(vi.fn()) });
-
-    renderWithMonitor(monitor);
-
-    expect(screen.getByRole("heading", { level: 1, name: "ARGUS" })).toBeInTheDocument();
+  beforeEach(() => {
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })),
+    );
   });
 
-  it("muestra que el motor está listo cuando responde", async () => {
-    const monitor = new EngineStatusMonitor({
-      checkHealth: () => Promise.resolve({ status: "ok", version: "1" }),
-    });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
 
-    renderWithMonitor(monitor);
+  it("muestra la navegación global y la barra superior", () => {
+    renderApp(new EngineStatusMonitor({ checkHealth: () => new Promise(vi.fn()) }));
+
+    expect(screen.getByRole("navigation", { name: "Navegación principal" })).toBeInTheDocument();
+    expect(screen.getByRole("banner")).toBeInTheDocument();
+  });
+
+  it("muestra en la barra superior que el motor está listo cuando responde", async () => {
+    renderApp(
+      new EngineStatusMonitor({
+        checkHealth: () => Promise.resolve({ status: "ok", version: "1" }),
+      }),
+    );
     await act(() => Promise.resolve());
 
-    expect(screen.getByRole("status")).toHaveTextContent("Motor de análisis: listo");
+    expect(screen.getByRole("banner")).toHaveTextContent("Motor de análisis: listo");
   });
 });
