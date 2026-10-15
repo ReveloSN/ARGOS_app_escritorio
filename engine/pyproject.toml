@@ -5,6 +5,9 @@ description = "Motor local de análisis de ARGUS: lee documentos, extrae entidad
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.143.1",
+    "openpyxl>=3.1.5",
+    "pypdf>=6.20.1",
+    "python-docx>=1.2.0",
     "uvicorn[standard]>=0.54.0",
 ]
 
@@ -23,6 +26,7 @@ dev = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "ruff>=0.17.0",
+    "types-openpyxl>=3.1.5.20260827",
 ]
 
 [tool.black]
