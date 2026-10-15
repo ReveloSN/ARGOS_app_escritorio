@@ -1,0 +1,27 @@
+{
+  "rules": {
+    "color-no-hex": true,
+    "color-named": "never",
+    "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla", "hwb", "lab", "lch", "oklch"],
+    "unit-disallowed-list": ["px", "rem", "em", "ms", "s", "pt", "vh", "vw"],
+    "declaration-property-value-allowed-list": {
+      "/^font-(size|weight|family)$/": ["/^var\\(--/", "inherit"],
+      "line-height": ["/^var\\(--/", "1", "normal", "inherit"],
+      "letter-spacing": ["/^var\\(--/", "normal"],
+      "box-shadow": ["none", "/^var\\(--/", "/^inset 0 0 0 var\\(--/"],
+      "/^transition/": ["none", "/var\\(--duration/"],
+      "z-index": ["/^var\\(--/", "0", "1"]
+    }
+  },
+  "overrides": [
+    {
+      "files": ["src/design-tokens/**/*.css"],
+      "rules": {
+        "color-no-hex": null,
+        "function-disallowed-list": null,
+        "unit-disallowed-list": null,
+        "declaration-property-value-allowed-list": null
+      }
+    }
+  ]
+}

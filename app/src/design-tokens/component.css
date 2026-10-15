@@ -1,0 +1,50 @@
+/* Nivel 3 · De componente: apuntan a semánticos; cambiar un componente no toca el resto. */
+:root {
+  --button-primary-bg: var(--color-action-primary);
+  --button-primary-bg-hover: var(--color-action-primary-hover);
+  --button-primary-fg: var(--color-action-primary-fg);
+  --button-secondary-bg: var(--color-background-surface);
+  --button-secondary-bg-hover: var(--color-background-subtle);
+  --button-secondary-border: var(--color-border-strong);
+  --button-tertiary-fg: var(--color-text-secondary);
+  --button-tertiary-bg-hover: var(--color-background-raised);
+  --button-disabled-bg: var(--color-background-raised);
+  --button-disabled-fg: var(--color-text-tertiary);
+  --radius-control: var(--radius-sm);
+
+  --alert-tag-high-bg: var(--color-risk-high-bg);
+  --alert-tag-high-fg: var(--color-risk-high);
+  --alert-tag-high-border: var(--color-risk-high-border);
+  --alert-tag-medium-bg: var(--color-risk-medium-bg);
+  --alert-tag-medium-fg: var(--color-risk-medium);
+  --alert-tag-medium-border: var(--color-risk-medium-border);
+  --alert-tag-low-bg: var(--color-risk-low-bg);
+  --alert-tag-low-fg: var(--color-risk-low);
+  --alert-tag-low-border: var(--color-risk-low-border);
+  --alert-row-hover-bg: var(--color-background-subtle);
+  --alert-row-selected-bg: var(--color-background-raised);
+  --alert-row-selected-border: var(--color-border-strong);
+
+  --value-diff-bg: var(--color-diff-highlight);
+  --value-diff-fg: var(--color-risk-high);
+  --value-diff-underline: var(--color-risk-high);
+
+  --sidebar-bg: var(--color-background-subtle);
+  --sidebar-item-active-bg: var(--color-background-surface);
+  --sidebar-item-active-border: var(--color-border-strong);
+  --sidebar-item-active-icon: var(--color-action-text);
+
+  --chip-filter-active-bg: var(--color-action-subtle);
+  --chip-filter-active-fg: var(--color-action-text);
+  --chip-filter-active-border: var(--color-action-primary);
+
+  --decision-selected-bg: var(--color-action-subtle);
+  --decision-selected-border: var(--color-action-primary);
+
+  --toast-bg: var(--color-background-inverse);
+  --toast-fg: var(--color-text-inverse);
+
+  --focus-ring-color: var(--color-focus-ring);
+  --focus-ring-width: var(--border-width-strong);
+  --focus-ring-offset: var(--border-width-strong);
+}

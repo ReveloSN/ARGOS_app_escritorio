@@ -1,0 +1,135 @@
+/* Nivel 1 · Globales: valores crudos. Ningún componente los usa directamente. */
+:root {
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f7f6f3;
+  --color-neutral-75: #ece9e3;
+  --color-neutral-100: #f3f1ec;
+  --color-neutral-125: #efede8;
+  --color-neutral-150: #ebe8e1;
+  --color-neutral-200: #e2dfd8;
+  --color-neutral-250: #c4bfb5;
+  --color-neutral-300: #cfcbc2;
+  --color-neutral-400: #9c978d;
+  --color-neutral-500: #6b665d;
+  --color-neutral-700: #4f4b44;
+  --color-neutral-750: #4a463f;
+  --color-neutral-800: #34312c;
+  --color-neutral-820: #2d2a26;
+  --color-neutral-830: #2b2925;
+  --color-neutral-875: #23211d;
+  --color-neutral-900: #1c1a17;
+  --color-neutral-950: #141311;
+
+  --color-accent-100: #e3eef0;
+  --color-accent-200: #93c8d1;
+  --color-accent-250: #8cc6d0;
+  --color-accent-300: #7bbac5;
+  --color-accent-500: #1f5f6b;
+  --color-accent-600: #184c56;
+  --color-accent-900: #1b3236;
+  --color-accent-950: #0e1f22;
+
+  --color-red-50: #fbeae8;
+  --color-red-100: #f6d7d2;
+  --color-red-200: #f0c2bc;
+  --color-red-300: #f2877c;
+  --color-red-600: #b42318;
+  --color-red-800: #6b2c25;
+  --color-red-900: #5a2620;
+  --color-red-950: #3a1d19;
+
+  --color-amber-50: #fbf0dc;
+  --color-amber-200: #ebcf9c;
+  --color-amber-300: #e7b35a;
+  --color-amber-700: #8a5300;
+  --color-amber-800: #5e4619;
+  --color-amber-950: #33270f;
+
+  --color-shadow: rgb(28 26 23 / 12%);
+
+  --spacing-0-5: 2px;
+  --spacing-1: 4px;
+  --spacing-1-5: 6px;
+  --spacing-2: 8px;
+  --spacing-2-5: 10px;
+  --spacing-3: 12px;
+  --spacing-3-5: 14px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 28px;
+  --spacing-8: 32px;
+
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-round: 50%;
+  --border-width: 1px;
+  --border-width-strong: 2px;
+
+  --font-family-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-family-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-family-serif: "IBM Plex Serif", Georgia, serif;
+  --font-family-icons: "Material Symbols Outlined";
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-size-micro: 11px;
+  --font-size-caption: 12px;
+  --font-size-body: 13px;
+  --font-size-emphasis: 14px;
+  --font-size-heading: 15px;
+  --font-size-section: 16px;
+  --font-size-title: 20px;
+  --font-size-metric: 22px;
+  --font-size-value: 26px;
+  --line-height-caption: 16px;
+  --line-height-body: 20px;
+  --line-height-heading: 22px;
+  --line-height-title: 28px;
+  --line-height-value: 32px;
+  --letter-spacing-label: 0.04em;
+  --letter-spacing-brand: 0.12em;
+
+  --icon-size-xs: 14px;
+  --icon-size-sm: 16px;
+  --icon-size-md: 18px;
+  --icon-size-lg: 20px;
+  --icon-size-xl: 24px;
+
+  --size-control-xs: 22px;
+  --size-control-sm: 26px;
+  --size-control-md: 30px;
+  --size-control-lg: 32px;
+  --size-control-xl: 36px;
+  --size-topbar: 48px;
+  --size-sidebar-expanded: 216px;
+  --size-sidebar-collapsed: 56px;
+  --size-button-min: 96px;
+  --size-progress: 4px;
+  --size-checkbox: 16px;
+  --size-toggle-width: 32px;
+  --size-toggle-height: 18px;
+  --size-toggle-thumb: 14px;
+  --size-brand-mark: 18px;
+  --size-brand-dot: 6px;
+  --size-step-marker: 20px;
+  --size-tab-max: 160px;
+  --size-side-panel: 300px;
+  --size-topbar-session: 360px;
+  --size-topbar-search-min: 200px;
+  --size-topbar-search-max: 440px;
+  --size-readable-narrow: 440px;
+  --size-progress-inline: 56px;
+  --size-column-risk: 90px;
+  --size-column-number: 44px;
+  --size-column-value: 160px;
+  --size-column-state: 130px;
+  --size-column-actions: 52px;
+  --border-width-brand: 1.5px;
+
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 250ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+}

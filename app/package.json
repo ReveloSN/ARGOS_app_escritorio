@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "lint:css": "stylelint \"src/**/*.css\""
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",
@@ -41,6 +42,7 @@
     "globals": "^16.5.0",
     "jsdom": "^26.1.0",
     "prettier": "^3.9.10",
+    "stylelint": "^16.26.1",
     "typescript": "5.8",
     "typescript-eslint": "^8.71.2",
     "vite": "^6.4.4",

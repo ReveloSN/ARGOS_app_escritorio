@@ -1,0 +1,61 @@
+/* Nivel 2 · Semánticos: el propósito de cada valor. Cambian con el tema. */
+:root {
+  --color-background-primary: var(--color-neutral-50);
+  --color-background-surface: var(--color-neutral-0);
+  --color-background-subtle: var(--color-neutral-100);
+  --color-background-raised: var(--color-neutral-150);
+  --color-background-inverse: var(--color-neutral-900);
+  --color-border-default: var(--color-neutral-200);
+  --color-border-strong: var(--color-neutral-300);
+  --color-text-primary: var(--color-neutral-900);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-tertiary: var(--color-neutral-500);
+  --color-text-inverse: var(--color-neutral-50);
+  --color-action-primary: var(--color-accent-500);
+  --color-action-primary-hover: var(--color-accent-600);
+  --color-action-primary-fg: var(--color-neutral-0);
+  --color-action-subtle: var(--color-accent-100);
+  --color-action-text: var(--color-accent-500);
+  --color-risk-high: var(--color-red-600);
+  --color-risk-high-bg: var(--color-red-50);
+  --color-risk-high-border: var(--color-red-200);
+  --color-risk-medium: var(--color-amber-700);
+  --color-risk-medium-bg: var(--color-amber-50);
+  --color-risk-medium-border: var(--color-amber-200);
+  --color-risk-low: var(--color-neutral-700);
+  --color-risk-low-bg: var(--color-neutral-125);
+  --color-risk-low-border: var(--color-neutral-300);
+  --color-diff-highlight: var(--color-red-100);
+  --color-focus-ring: var(--color-accent-500);
+  --shadow-overlay: 0 4px 12px var(--color-shadow);
+}
+
+[data-theme="dark"] {
+  --color-background-primary: var(--color-neutral-950);
+  --color-background-surface: var(--color-neutral-900);
+  --color-background-subtle: var(--color-neutral-875);
+  --color-background-raised: var(--color-neutral-820);
+  --color-background-inverse: var(--color-neutral-75);
+  --color-border-default: var(--color-neutral-800);
+  --color-border-strong: var(--color-neutral-750);
+  --color-text-primary: var(--color-neutral-75);
+  --color-text-secondary: var(--color-neutral-250);
+  --color-text-tertiary: var(--color-neutral-400);
+  --color-text-inverse: var(--color-neutral-950);
+  --color-action-primary: var(--color-accent-300);
+  --color-action-primary-hover: var(--color-accent-200);
+  --color-action-primary-fg: var(--color-accent-950);
+  --color-action-subtle: var(--color-accent-900);
+  --color-action-text: var(--color-accent-250);
+  --color-risk-high: var(--color-red-300);
+  --color-risk-high-bg: var(--color-red-950);
+  --color-risk-high-border: var(--color-red-800);
+  --color-risk-medium: var(--color-amber-300);
+  --color-risk-medium-bg: var(--color-amber-950);
+  --color-risk-medium-border: var(--color-amber-800);
+  --color-risk-low: var(--color-neutral-250);
+  --color-risk-low-bg: var(--color-neutral-830);
+  --color-risk-low-border: var(--color-neutral-750);
+  --color-diff-highlight: var(--color-red-900);
+  --color-focus-ring: var(--color-accent-300);
+}
