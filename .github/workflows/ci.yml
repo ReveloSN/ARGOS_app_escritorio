@@ -42,6 +42,10 @@ jobs:
       - name: Pruebas
         run: uv run pytest
 
+      # CLAUDE.md §11: dominio y aplicación con al menos 85 % de cobertura.
+      - name: Cobertura de dominio y aplicación
+        run: uv run coverage report --include="argus/domain/*,argus/application/*" --fail-under=85
+
   app:
     name: Interfaz (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
