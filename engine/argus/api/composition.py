@@ -1,8 +1,12 @@
 """Construcción de las dependencias del motor: el único lugar que conoce los adaptadores."""
 
+from argus.application.detect_inconsistencies import DetectInconsistencies
 from argus.application.document_reader_factory import DocumentReaderFactory
 from argus.application.entity_extraction_pipeline import EntityExtractionPipeline
+from argus.domain.comparison.comparators_by_type import comparators_for
 from argus.domain.document import DocumentFormat
+from argus.domain.risk_rules import DEFAULT_RISK_RULES, RiskClassifier
+from argus.domain.sensitivity import DEFAULT_SENSITIVITY, Sensitivity
 from argus.infrastructure.extraction.contract_id_extractor import ContractIdExtractor
 from argus.infrastructure.extraction.date_extractor import DateExtractor
 from argus.infrastructure.extraction.money_extractor import MoneyExtractor
@@ -29,6 +33,17 @@ def build_document_reader_factory() -> DocumentReaderFactory:
         }
     )
     return attachment_readers.with_reader(DocumentFormat.EML, EmlDocumentReader(attachment_readers))
+
+
+def build_inconsistency_detector(
+    sensitivity: Sensitivity = DEFAULT_SENSITIVITY,
+) -> DetectInconsistencies:
+    policy = sensitivity.policy
+    return DetectInconsistencies(
+        comparators_for(policy),
+        RiskClassifier(DEFAULT_RISK_RULES),
+        reports_format_differences=policy.reports_format_differences,
+    )
 
 
 def build_entity_extraction_pipeline() -> EntityExtractionPipeline:
