@@ -1,0 +1,5 @@
+# LF en todos los SO: prettier, black y rustfmt verifican el mismo contenido en ubuntu y windows.
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.icns binary
