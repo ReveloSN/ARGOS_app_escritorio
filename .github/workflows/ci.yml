@@ -102,6 +102,10 @@ jobs:
         working-directory: app/src-tauri
         run: cargo clippy --all-targets -- -D warnings
 
+      - name: Pruebas Rust
+        working-directory: app/src-tauri
+        run: cargo test
+
       # Compila la app completa sin generar instaladores; el empaquetado es de la Fase 8.
       - name: Compilar app de escritorio
         run: npm run tauri -- build --no-bundle
