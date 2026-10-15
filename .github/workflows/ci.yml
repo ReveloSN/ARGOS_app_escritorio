@@ -71,6 +71,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Ningún valor visual fuera de los tokens (CLAUDE.md §9).
+      - name: Lint de estilos
+        run: npm run lint:css
+
       - name: Formato
         run: npm run format:check
 
