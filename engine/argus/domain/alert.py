@@ -4,6 +4,7 @@ from argus.domain.comparison.difference import Difference
 from argus.domain.entity import Entity, EntityType
 from argus.domain.errors import InvalidValueError
 from argus.domain.risk import RiskLevel
+from argus.domain.validation import require_positive
 
 
 @dataclass(frozen=True)
@@ -76,3 +77,14 @@ class Alert:
     @property
     def confidence(self) -> float:
         return self.difference.confidence
+
+
+@dataclass(frozen=True)
+class NumberedAlert:
+    """Alerta guardada en una sesión, con el número que ve el usuario («Alerta 3 de 9»)."""
+
+    number: int
+    alert: Alert
+
+    def __post_init__(self) -> None:
+        require_positive("El número de alerta", self.number)

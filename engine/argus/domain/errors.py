@@ -30,3 +30,16 @@ class UnreadableDocumentError(ArgusDomainError):
 class UnsupportedFormatError(UnreadableDocumentError):
     def __init__(self, document_name: str) -> None:
         super().__init__(document_name, UnreadableReason.UNSUPPORTED_FORMAT)
+
+
+class SessionNotFoundError(ArgusDomainError):
+    def __init__(self, session_id: str) -> None:
+        super().__init__(f"No existe la sesión «{session_id}».")
+        self.session_id = session_id
+
+
+class AlertNotFoundError(ArgusDomainError):
+    def __init__(self, session_id: str, alert_number: int) -> None:
+        super().__init__(f"La sesión «{session_id}» no tiene la alerta {alert_number}.")
+        self.session_id = session_id
+        self.alert_number = alert_number
