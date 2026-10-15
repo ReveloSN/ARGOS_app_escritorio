@@ -1,5 +1,12 @@
 {
   "app": {
     "name": "ARGUS"
+  },
+  "engine": {
+    "status": {
+      "starting": "Iniciando motor de análisis",
+      "ready": "Motor de análisis: listo",
+      "stopped": "Motor de análisis detenido"
+    }
   }
 }

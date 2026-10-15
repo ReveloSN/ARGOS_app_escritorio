@@ -1,12 +1,15 @@
-import { DEFAULT_LOCALE, MESSAGES_BY_LOCALE } from "./i18n/messages";
-import { translate } from "./i18n/translate";
+import { EngineStatusIndicator } from "./components/molecules/EngineStatusIndicator";
+import { useEngineStatus } from "./features/engine/useEngineStatus";
+import { useTranslation } from "./i18n/useTranslation";
 
 export function App() {
-  const messages = MESSAGES_BY_LOCALE[DEFAULT_LOCALE];
+  const t = useTranslation();
+  const engineStatus = useEngineStatus();
 
   return (
     <main>
-      <h1>{translate(messages, "app.name")}</h1>
+      <h1>{t("app.name")}</h1>
+      <EngineStatusIndicator status={engineStatus} />
     </main>
   );
 }

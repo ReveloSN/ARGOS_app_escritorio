@@ -1,5 +1,12 @@
 {
   "app": {
     "name": "ARGUS"
+  },
+  "engine": {
+    "status": {
+      "starting": "Starting analysis engine",
+      "ready": "Analysis engine: ready",
+      "stopped": "Analysis engine stopped"
+    }
   }
 }
