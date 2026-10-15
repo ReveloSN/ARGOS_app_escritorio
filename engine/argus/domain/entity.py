@@ -11,6 +11,7 @@ class EntityType(StrEnum):
     MONEY = "money"
     TAX_ID = "tax_id"
     PERSON_NAME = "person_name"
+    ORGANIZATION_NAME = "organization_name"
     PERIOD = "period"
 
 

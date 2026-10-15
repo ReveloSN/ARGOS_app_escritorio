@@ -36,5 +36,6 @@ def test_entity_types_cover_the_values_argus_compares() -> None:
         "money",
         "tax_id",
         "person_name",
+        "organization_name",
         "period",
     }
