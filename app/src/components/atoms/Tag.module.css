@@ -1,0 +1,77 @@
+/* Etiquetas compactas: riesgo, estado de decisión y tipo de archivo comparten forma. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  height: var(--size-control-xs);
+  padding: 0 var(--spacing-1-5);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-xs);
+  font-size: var(--font-size-caption);
+  white-space: nowrap;
+}
+
+.compact {
+  height: auto;
+  padding: var(--spacing-0-5) var(--spacing-1);
+  font-size: var(--font-size-micro);
+}
+
+.high,
+.medium,
+.low {
+  font-weight: var(--font-weight-semibold);
+}
+
+.high {
+  border-color: var(--alert-tag-high-border);
+  background: var(--alert-tag-high-bg);
+  color: var(--alert-tag-high-fg);
+}
+
+.medium {
+  border-color: var(--alert-tag-medium-border);
+  background: var(--alert-tag-medium-bg);
+  color: var(--alert-tag-medium-fg);
+}
+
+.low {
+  border-color: var(--alert-tag-low-border);
+  background: var(--alert-tag-low-bg);
+  color: var(--alert-tag-low-fg);
+}
+
+.pending {
+  color: var(--color-text-secondary);
+}
+
+.correct {
+  border-color: var(--decision-selected-border);
+  background: var(--decision-selected-bg);
+  color: var(--color-action-text);
+}
+
+.error {
+  border-color: var(--color-action-primary);
+  background: var(--color-action-primary);
+  color: var(--color-action-primary-fg);
+}
+
+.ignored {
+  border-style: dashed;
+  color: var(--color-text-secondary);
+}
+
+.fileType {
+  justify-content: center;
+  min-width: var(--size-control-sm);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-micro);
+  color: var(--color-text-secondary);
+}
+
+.unreadable {
+  border-color: var(--color-risk-high-border);
+  background: var(--color-background-surface);
+  color: var(--color-risk-high);
+}

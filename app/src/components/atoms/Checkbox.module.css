@@ -1,0 +1,35 @@
+.checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  cursor: pointer;
+}
+
+/* El input nativo sigue recibiendo foco y teclado; solo se oculta su dibujo. */
+.input {
+  position: absolute;
+  opacity: 0;
+}
+
+.box {
+  display: grid;
+  place-items: center;
+  width: var(--size-checkbox);
+  height: var(--size-checkbox);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-xs);
+  background: var(--color-background-surface);
+  color: var(--color-action-primary-fg);
+  transition: background-color var(--duration-fast) var(--easing-standard);
+}
+
+.input:checked + .box {
+  border-color: var(--color-action-primary);
+  background: var(--color-action-primary);
+}
+
+.input:focus-visible + .box {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}

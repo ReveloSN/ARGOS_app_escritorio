@@ -1,0 +1,16 @@
+.mark {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: var(--size-brand-mark);
+  height: var(--size-brand-mark);
+  border: var(--border-width-brand) solid var(--color-action-primary);
+  border-radius: var(--radius-sm);
+}
+
+.dot {
+  width: var(--size-brand-dot);
+  height: var(--size-brand-dot);
+  border-radius: var(--radius-round);
+  background: var(--color-action-primary);
+}

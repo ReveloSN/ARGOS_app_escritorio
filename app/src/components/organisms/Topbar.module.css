@@ -1,0 +1,77 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  height: var(--size-topbar);
+  padding: 0 var(--spacing-4);
+  border-bottom: var(--border-width) solid var(--color-border-default);
+  background: var(--color-background-surface);
+}
+
+.session {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: var(--spacing-2);
+  min-width: 0;
+  max-width: var(--size-topbar-session);
+}
+
+.sessionLabel {
+  flex: none;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.sessionName {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: var(--font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--color-text-tertiary);
+}
+
+.search {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--spacing-2);
+  min-width: var(--size-topbar-search-min);
+  max-width: var(--size-topbar-search-max);
+  height: var(--size-control-lg);
+  padding: 0 var(--spacing-1-5) 0 var(--spacing-2-5);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-background-primary);
+  color: var(--color-text-tertiary);
+  cursor: text;
+}
+
+.placeholder {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.help {
+  display: grid;
+  place-items: center;
+  width: var(--size-control-lg);
+  height: var(--size-control-lg);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}

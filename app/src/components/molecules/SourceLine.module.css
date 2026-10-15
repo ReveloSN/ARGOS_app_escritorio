@@ -1,0 +1,17 @@
+.source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.icon {
+  color: var(--color-text-tertiary);
+}
+
+.file {
+  color: var(--color-text-primary);
+  font-family: var(--font-family-mono);
+}

@@ -1,0 +1,44 @@
+.zone {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-4);
+  border: var(--border-width) dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+  transition:
+    background-color var(--duration-slow) var(--easing-standard),
+    border-color var(--duration-slow) var(--easing-standard);
+}
+
+.dragging {
+  border-color: var(--color-action-primary);
+  background: var(--color-action-subtle);
+  color: var(--color-action-text);
+}
+
+.icon {
+  color: var(--color-text-tertiary);
+}
+
+.dragging .icon {
+  color: var(--color-action-text);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-0-5);
+  min-width: 0;
+}
+
+.prompt {
+  flex: 1;
+  font-weight: var(--font-weight-medium);
+}
+
+.formats {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}

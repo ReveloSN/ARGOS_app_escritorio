@@ -1,0 +1,27 @@
+.value {
+  display: inline-flex;
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+}
+
+.lg {
+  gap: var(--spacing-0-5);
+  font-size: var(--font-size-value);
+}
+
+.md {
+  font-size: var(--font-size-title);
+}
+
+.lg .same,
+.lg .differs {
+  padding: var(--spacing-1) var(--spacing-0-5);
+}
+
+.differs {
+  border-bottom: var(--border-width-strong) solid var(--value-diff-underline);
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+  background: var(--value-diff-bg);
+  color: var(--value-diff-fg);
+}

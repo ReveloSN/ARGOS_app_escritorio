@@ -1,0 +1,19 @@
+.kbd {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-micro);
+  line-height: var(--line-height-caption);
+  white-space: nowrap;
+}
+
+.boxed {
+  padding: 0 var(--spacing-1);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-xs);
+  background: var(--color-background-surface);
+  color: var(--color-text-secondary);
+}
+
+.inline {
+  color: inherit;
+  opacity: 0.85;
+}

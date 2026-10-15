@@ -1,19 +1,37 @@
-import type { TranslationKey } from "../../i18n/translate";
-import { useTranslation } from "../../i18n/useTranslation";
-import type { EngineStatus } from "../../services/engine/engineStatusMonitor";
+import { useI18n } from "../../i18n/i18nContext";
+import { Icon } from "../atoms/Icon";
+import { ProgressBar } from "../atoms/ProgressBar";
+import { joinClassNames } from "../joinClassNames";
+import styles from "./EngineStatusIndicator.module.css";
 
-const STATUS_MESSAGE_KEYS: Readonly<Record<EngineStatus, TranslationKey>> = {
-  starting: "engine.status.starting",
-  ready: "engine.status.ready",
-  stopped: "engine.status.stopped",
-};
+export type EngineStatusView =
+  | { readonly kind: "starting" | "ready" | "stopped" }
+  | { readonly kind: "analyzing"; readonly done: number; readonly total: number };
 
 interface EngineStatusIndicatorProps {
-  readonly status: EngineStatus;
+  readonly status: EngineStatusView;
 }
 
-// Sin estilos hasta la Fase 5: el estado ya se comunica con texto, no solo con color.
+// El estado se comunica con texto e icono, no solo con color (CLAUDE.md §9).
 export function EngineStatusIndicator({ status }: EngineStatusIndicatorProps) {
-  const t = useTranslation();
-  return <p role="status">{t(STATUS_MESSAGE_KEYS[status])}</p>;
+  const { t } = useI18n();
+
+  if (status.kind === "analyzing") {
+    const text = t("engine.status.analyzing", { done: status.done, total: status.total });
+    return (
+      <p role="status" className={styles.status}>
+        <span className={styles.progress}>
+          <ProgressBar value={status.done / status.total} label={text} />
+        </span>
+        {text}
+      </p>
+    );
+  }
+  const icon = { starting: "hourglass_top", ready: "check_circle", stopped: "report" }[status.kind];
+  return (
+    <p role="status" className={joinClassNames(styles.status, styles[status.kind])}>
+      <Icon name={icon} size="sm" className={styles.icon} />
+      {t(`engine.status.${status.kind}`)}
+    </p>
+  );
 }

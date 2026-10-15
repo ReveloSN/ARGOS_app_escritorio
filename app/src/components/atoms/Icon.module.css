@@ -1,0 +1,27 @@
+.icon {
+  flex: none;
+  font-family: var(--font-family-icons);
+  font-weight: var(--font-weight-regular);
+  line-height: 1;
+  user-select: none;
+}
+
+.xs {
+  font-size: var(--icon-size-xs);
+}
+
+.sm {
+  font-size: var(--icon-size-sm);
+}
+
+.md {
+  font-size: var(--icon-size-md);
+}
+
+.lg {
+  font-size: var(--icon-size-lg);
+}
+
+.xl {
+  font-size: var(--icon-size-xl);
+}

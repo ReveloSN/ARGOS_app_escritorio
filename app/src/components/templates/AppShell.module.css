@@ -1,0 +1,17 @@
+.shell {
+  display: grid;
+  grid-template-rows: var(--size-topbar) minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
+  height: 100%;
+  overflow: hidden;
+}
+
+.sidebar {
+  display: flex;
+  grid-row: 1 / 3;
+}
+
+.main {
+  min-height: 0;
+  overflow: auto;
+}

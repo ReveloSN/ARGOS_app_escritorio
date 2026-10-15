@@ -1,0 +1,53 @@
+.message {
+  display: flex;
+  gap: var(--spacing-2-5);
+  padding: var(--spacing-3) var(--spacing-3-5);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+}
+
+.inline {
+  border-color: var(--color-risk-high-border);
+  background: var(--color-risk-high-bg);
+}
+
+.inline .icon {
+  color: var(--color-risk-high);
+}
+
+.neutral .icon,
+.dialog .icon {
+  color: var(--color-text-secondary);
+}
+
+.dialog {
+  box-shadow: var(--shadow-overlay);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-1-5);
+}
+
+.what {
+  font-weight: var(--font-weight-semibold);
+}
+
+.why {
+  color: var(--color-text-secondary);
+}
+
+.technical {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-1-5);
+  margin-block-start: var(--spacing-1);
+}
