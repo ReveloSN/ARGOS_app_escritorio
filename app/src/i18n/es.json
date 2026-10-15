@@ -6,7 +6,111 @@
     "status": {
       "starting": "Iniciando motor de análisis",
       "ready": "Motor de análisis: listo",
+      "analyzing": "Analizando · {done} de {total} archivos",
       "stopped": "Motor de análisis detenido"
     }
+  },
+  "navigation": {
+    "label": "Navegación principal",
+    "home": "Inicio",
+    "currentReview": "Revisión actual",
+    "history": "Historial",
+    "settings": "Ajustes",
+    "newReview": "Nueva revisión",
+    "collapse": "Contraer",
+    "expand": "Expandir",
+    "localAnalysis": "Análisis local en este equipo",
+    "activeSession": "Sesión activa"
+  },
+  "topbar": {
+    "session": "Sesión",
+    "searchPlaceholder": "Buscar en alertas y documentos",
+    "help": "Ayuda y atajos"
+  },
+  "risk": {
+    "high": "Alto",
+    "medium": "Medio",
+    "low": "Bajo",
+    "highLong": "Riesgo alto",
+    "mediumLong": "Riesgo medio",
+    "lowLong": "Riesgo bajo"
+  },
+  "decision": {
+    "pending": "Pendiente",
+    "correct": "Es correcto",
+    "error": "Es un error",
+    "ignored": "Ignorada"
+  },
+  "actions": {
+    "search": "Buscar",
+    "clearSearch": "Borrar búsqueda",
+    "removeFilter": "Quitar filtro",
+    "undo": "Deshacer",
+    "rowActions": "Acciones"
+  },
+  "alerts": {
+    "listLabel": "Lista de alertas",
+    "valueA": "Valor A",
+    "valueB": "Valor B",
+    "compare": "Comparar Valor A con Valor B",
+    "occurrences": {
+      "one": "{count} aparición",
+      "other": "{count} apariciones"
+    },
+    "inFiles": {
+      "one": "en {count} archivo",
+      "other": "en {count} archivos"
+    },
+    "columns": {
+      "risk": "Riesgo",
+      "number": "#",
+      "alert": "Alerta",
+      "valueA": "Valor A",
+      "valueB": "Valor B",
+      "state": "Estado"
+    }
+  },
+  "origin": {
+    "page": "Página {page}",
+    "paragraph": "Párrafo {paragraph}",
+    "tableCell": "Tabla {table} · fila {row}, columna {column}",
+    "sheetCell": "Hoja {sheet} · {cell}",
+    "subject": "Asunto del correo",
+    "body": "Cuerpo del correo",
+    "line": "Línea {line}"
+  },
+  "upload": {
+    "prompt": "Arrastre más archivos aquí o elíjalos desde el equipo",
+    "formats": "PDF, DOCX, XLSX, EML o texto pegado · hasta 10 MB por archivo",
+    "choose": "Elegir archivos",
+    "paste": "Pegar texto",
+    "dropping": {
+      "one": "Suelte para agregar {count} archivo",
+      "other": "Suelte para agregar {count} archivos"
+    }
+  },
+  "navigationAids": {
+    "breadcrumb": "Ruta",
+    "steps": "Pasos"
+  },
+  "errors": {
+    "technicalDetail": "Detalle técnico, para soporte: {code}"
+  },
+  "shortcuts": {
+    "control": "Ctrl",
+    "command": "⌘"
+  },
+  "appearance": {
+    "label": "Apariencia",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Según el sistema"
+  },
+  "designSystem": {
+    "title": "Design system",
+    "atoms": "Átomos",
+    "molecules": "Moléculas",
+    "organisms": "Organismos",
+    "reviewSample": "Revisar"
   }
 }

@@ -1,0 +1,34 @@
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2-5);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  min-width: var(--size-button-min);
+  padding: var(--spacing-2) var(--spacing-3);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-background-surface);
+  cursor: pointer;
+}
+
+.selected {
+  border-color: var(--decision-selected-border);
+  background: var(--decision-selected-bg);
+}
+
+.dot {
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-round);
+  background: var(--color-background-surface);
+}
+
+.selected .dot {
+  border: var(--spacing-1) solid var(--color-action-primary);
+}

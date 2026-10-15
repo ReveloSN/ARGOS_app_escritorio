@@ -11,6 +11,7 @@ const MAX_FILE_LINES = 150;
 const MAX_PARAMS = 3;
 const MAX_NESTING = 2;
 const MAX_COMPLEXITY = 5;
+const MAX_COMPONENT_COMPLEXITY = 8;
 
 const LETTER = "[A-Za-zÀ-ÿ]";
 const I18N_MESSAGE = "Los textos de interfaz van en src/i18n/*.json (CLAUDE.md §9).";
@@ -59,12 +60,14 @@ export default tseslint.config(
   {
     // En componentes el límite que aplica es el del archivo: el JSX no se mide por función.
     files: ["**/*.tsx"],
-    rules: { "max-lines-per-function": "off" },
+    // Cada `&&` y ternario del JSX suma complejidad; en componentes se admite un poco más.
+    rules: { "max-lines-per-function": "off", complexity: ["error", MAX_COMPONENT_COMPLEXITY] },
   },
   {
-    // Los bloques describe/it agrupan casos; su tamaño no refleja responsabilidades.
+    // Los bloques describe/it agrupan casos; su tamaño no refleja responsabilidades. Los textos
+    // de las pruebas son datos de ejemplo, no interfaz: la regla de i18n no aplica.
     files: ["**/*.test.{ts,tsx}"],
-    rules: { "max-lines-per-function": "off" },
+    rules: { "max-lines-per-function": "off", "no-restricted-syntax": "off", complexity: "off" },
   },
   prettier,
 );

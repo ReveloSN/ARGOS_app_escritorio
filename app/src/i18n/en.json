@@ -6,7 +6,111 @@
     "status": {
       "starting": "Starting analysis engine",
       "ready": "Analysis engine: ready",
+      "analyzing": "Analyzing · {done} of {total} files",
       "stopped": "Analysis engine stopped"
     }
+  },
+  "navigation": {
+    "label": "Main navigation",
+    "home": "Home",
+    "currentReview": "Current review",
+    "history": "History",
+    "settings": "Settings",
+    "newReview": "New review",
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "localAnalysis": "Analyzed locally on this computer",
+    "activeSession": "Active session"
+  },
+  "topbar": {
+    "session": "Session",
+    "searchPlaceholder": "Search alerts and documents",
+    "help": "Help and shortcuts"
+  },
+  "risk": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "highLong": "High risk",
+    "mediumLong": "Medium risk",
+    "lowLong": "Low risk"
+  },
+  "decision": {
+    "pending": "Pending",
+    "correct": "It's correct",
+    "error": "It's a mistake",
+    "ignored": "Ignored"
+  },
+  "actions": {
+    "search": "Search",
+    "clearSearch": "Clear search",
+    "removeFilter": "Remove filter",
+    "undo": "Undo",
+    "rowActions": "Actions"
+  },
+  "alerts": {
+    "listLabel": "Alert list",
+    "valueA": "Value A",
+    "valueB": "Value B",
+    "compare": "Compare Value A with Value B",
+    "occurrences": {
+      "one": "{count} occurrence",
+      "other": "{count} occurrences"
+    },
+    "inFiles": {
+      "one": "in {count} file",
+      "other": "in {count} files"
+    },
+    "columns": {
+      "risk": "Risk",
+      "number": "#",
+      "alert": "Alert",
+      "valueA": "Value A",
+      "valueB": "Value B",
+      "state": "Status"
+    }
+  },
+  "origin": {
+    "page": "Page {page}",
+    "paragraph": "Paragraph {paragraph}",
+    "tableCell": "Table {table} · row {row}, column {column}",
+    "sheetCell": "Sheet {sheet} · {cell}",
+    "subject": "Email subject",
+    "body": "Email body",
+    "line": "Line {line}"
+  },
+  "upload": {
+    "prompt": "Drag more files here or choose them from your computer",
+    "formats": "PDF, DOCX, XLSX, EML or pasted text · up to 10 MB per file",
+    "choose": "Choose files",
+    "paste": "Paste text",
+    "dropping": {
+      "one": "Drop to add {count} file",
+      "other": "Drop to add {count} files"
+    }
+  },
+  "navigationAids": {
+    "breadcrumb": "Path",
+    "steps": "Steps"
+  },
+  "errors": {
+    "technicalDetail": "Technical detail, for support: {code}"
+  },
+  "shortcuts": {
+    "control": "Ctrl",
+    "command": "⌘"
+  },
+  "appearance": {
+    "label": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "Match system"
+  },
+  "designSystem": {
+    "title": "Design system",
+    "atoms": "Atoms",
+    "molecules": "Molecules",
+    "organisms": "Organisms",
+    "reviewSample": "Review"
   }
 }
