@@ -103,6 +103,7 @@ Toda salida de IA se muestra como sugerencia con su confianza; la decisión siem
 - **Feedback:** progreso por archivo, confirmación al decidir, deshacer. Animaciones de 150–250 ms, funcionales.
 - **Estilo:** herramienta de trabajo sobria; un solo color de acento; fuente monoespaciada para identificadores, montos y fechas. Evitar degradados morados, glassmorphism, sombras difusas, tarjetas idénticas con iconos en círculos y emojis como iconos.
 - Los mockups de `docs/mockups/` son la fuente de verdad visual. Si algo no está en ellos, pregunta antes de inventar.
+- Los datos de ejemplo y el catálogo de componentes son solo para desarrollo; la interfaz de producción solo muestra datos reales del motor.
 
 ## 10. Métricas de usabilidad que el producto debe poder cumplir
 Eficacia (tasa de éxito de la tarea), eficiencia (tiempo en tarea y tasa de error), satisfacción (SUS ≥ 68). El historial muestra: alertas resueltas, tiempo medio de revisión y porcentaje de alertas marcadas como error real.
