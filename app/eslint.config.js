@@ -69,5 +69,10 @@ export default tseslint.config(
     files: ["**/*.test.{ts,tsx}"],
     rules: { "max-lines-per-function": "off", "no-restricted-syntax": "off", complexity: "off" },
   },
+  {
+    // Catálogo de componentes solo para desarrollo: no es interfaz de producción ni se empaqueta.
+    files: ["src/dev/**/*.{ts,tsx}"],
+    rules: { "no-restricted-syntax": "off" },
+  },
   prettier,
 );

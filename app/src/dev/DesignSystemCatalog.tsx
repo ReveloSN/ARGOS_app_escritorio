@@ -14,8 +14,8 @@ import { ComparisonPanel } from "../components/organisms/ComparisonPanel";
 import { UploadZone } from "../components/organisms/UploadZone";
 import { AppearanceSwitch } from "../features/settings/theme/AppearanceSwitch";
 import { useI18n } from "../i18n/i18nContext";
-import styles from "./DesignSystemPage.module.css";
-import * as samples from "./designSystemSamples";
+import * as samples from "./catalogSamples";
+import styles from "./DesignSystemCatalog.module.css";
 
 const IGNORE = () => undefined;
 
@@ -28,8 +28,11 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-/** Galería del design system con datos reales de los mockups (verificación visual y de temas). */
-export function DesignSystemPage() {
+/**
+ * Catálogo de componentes para desarrollo (ruta /dev/design-system). No forma parte del build de
+ * producción: main.tsx solo lo importa cuando import.meta.env.DEV es verdadero.
+ */
+export function DesignSystemCatalog() {
   const { t } = useI18n();
   const [query, setQuery] = useState("4587");
   const [selectedId, setSelectedId] = useState("3");
@@ -37,16 +40,16 @@ export function DesignSystemPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.title}>{t("designSystem.title")}</h1>
+        <h1 className={styles.title}>{"Catálogo de componentes · solo desarrollo"}</h1>
         <AppearanceSwitch />
       </div>
-      <Section title={t("designSystem.atoms")}>
+      <Section title="Átomos">
         <div className={styles.row}>
-          <Button variant="primary">{t("designSystem.reviewSample")}</Button>
+          <Button variant="primary">{"Revisar"}</Button>
           <Button>{t("upload.choose")}</Button>
           <Button variant="tertiary">{t("actions.undo")}</Button>
           <Button variant="primary" disabled>
-            {t("designSystem.reviewSample")}
+            {"Revisar"}
           </Button>
         </div>
         <div className={styles.row}>
@@ -60,7 +63,7 @@ export function DesignSystemPage() {
         </div>
         <ProgressBar value={0.64} label={t("engine.status.analyzing", { done: 3, total: 5 })} />
       </Section>
-      <Section title={t("designSystem.molecules")}>
+      <Section title="Moléculas">
         <div className={styles.row}>
           <SearchField
             label={t("actions.search")}
@@ -80,7 +83,7 @@ export function DesignSystemPage() {
           primaryAction={{ label: samples.SAMPLE_ERROR.primary, onClick: IGNORE }}
         />
       </Section>
-      <Section title={t("designSystem.organisms")}>
+      <Section title="Organismos">
         <AlertList rows={samples.SAMPLE_ROWS} selectedId={selectedId} onSelect={setSelectedId} />
         <ComparisonPanel first={samples.SAMPLE_VALUE_A} second={samples.SAMPLE_VALUE_B} />
         <UploadZone onFilesSelected={IGNORE} onPasteText={IGNORE} />
