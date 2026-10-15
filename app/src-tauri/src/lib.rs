@@ -1,6 +1,17 @@
+mod access_token;
+mod engine_process;
+mod engine_status;
+mod engine_supervisor;
+
+use engine_status::EngineStatusStore;
+use engine_supervisor::EngineProcessSlot;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .manage(EngineStatusStore::default())
+        .manage(EngineProcessSlot::default())
+        .invoke_handler(tauri::generate_handler![engine_status::engine_status])
         .setup(|app| {
             if cfg!(debug_assertions) {
                 app.handle().plugin(
@@ -9,8 +20,14 @@ pub fn run() {
                         .build(),
                 )?;
             }
+            engine_supervisor::start_engine_in_background(app.handle().clone());
             Ok(())
         })
-        .run(tauri::generate_context!())
-        .expect("error while building tauri application");
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application")
+        .run(|app, event| {
+            if let tauri::RunEvent::Exit = event {
+                engine_supervisor::stop_engine(app);
+            }
+        });
 }
