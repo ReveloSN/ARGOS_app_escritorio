@@ -19,6 +19,7 @@ import { ReviewProvider } from "./features/review/ReviewProvider";
 import { ThemeProvider } from "./features/settings/theme/ThemeProvider";
 import { I18nProvider } from "./i18n/I18nProvider";
 import { createEngineServices } from "./services/engine/createEngineServices";
+import { browserPreferenceStorage } from "./services/preferences/preferenceStorage";
 
 const ROOT_ELEMENT_ID = "root";
 const DEV_CATALOG_PATH = "/dev/design-system";
@@ -31,8 +32,8 @@ const engineServices = createEngineServices();
 function render(content: ReactNode) {
   root.render(
     <StrictMode>
-      <I18nProvider>
-        <ThemeProvider>
+      <I18nProvider storage={browserPreferenceStorage}>
+        <ThemeProvider storage={browserPreferenceStorage}>
           <EngineServicesContext.Provider value={engineServices}>
             <ReviewProvider>{content}</ReviewProvider>
           </EngineServicesContext.Provider>

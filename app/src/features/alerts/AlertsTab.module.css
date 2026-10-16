@@ -1,0 +1,86 @@
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2-5);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-bottom: var(--border-width) solid var(--color-border-default);
+}
+
+.toolbar,
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.toolbar {
+  align-items: stretch;
+}
+
+.grow {
+  flex: 1;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5);
+  padding: 0 var(--spacing-1);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.progressBar {
+  width: var(--size-progress-wide);
+}
+
+.count {
+  color: var(--color-text-primary);
+  font-family: var(--font-family-mono);
+}
+
+.searchField {
+  width: var(--size-search-field);
+  max-width: 100%;
+}
+
+.filtersLabel,
+.showing {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.showing {
+  color: var(--color-text-secondary);
+}
+
+.clearFilters {
+  margin-inline-start: var(--spacing-1);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-action-text);
+  font-size: var(--font-size-caption);
+  text-decoration: underline;
+  text-underline-offset: var(--spacing-0-5);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.listArea {
+  flex: 1;
+  min-height: 0;
+  padding: 0 var(--spacing-6) var(--spacing-4);
+  overflow: auto;
+}
+
+.hiddenNote {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  margin: 0;
+  padding: var(--spacing-3-5) var(--spacing-0-5) 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}

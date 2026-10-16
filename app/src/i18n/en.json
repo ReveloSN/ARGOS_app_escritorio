@@ -68,7 +68,10 @@
       "valueA": "Value A",
       "valueB": "Value B",
       "state": "Status"
-    }
+    },
+    "showOccurrences": "Show all {count} occurrences",
+    "hideOccurrences": "Hide occurrences",
+    "occurrenceListLabel": "All occurrences"
   },
   "origin": {
     "page": "Page {page}",
@@ -98,7 +101,13 @@
   },
   "shortcuts": {
     "control": "Ctrl",
-    "command": "⌘"
+    "command": "⌘",
+    "barLabel": "Keyboard shortcuts",
+    "move": "move",
+    "open": "open",
+    "decide": "decide",
+    "search": "search",
+    "undo": "undo"
   },
   "appearance": {
     "label": "Appearance",
@@ -215,23 +224,53 @@
     "comparedFiles": {
       "one": "{count} file was compared and its values match.",
       "other": "{count} files were compared and their values match."
-    }
+    },
+    "tabsLabel": "Review views",
+    "tabs": {
+      "alerts": "Alerts",
+      "files": "Files",
+      "decisions": "Decisions"
+    },
+    "fileCount": {
+      "one": "{count} file",
+      "other": "{count} files"
+    },
+    "readCount": {
+      "one": "{count} read",
+      "other": "{count} read"
+    },
+    "reviewedAt": "reviewed on {date}",
+    "closedAt": "closed on {date}",
+    "closeReview": "Close review",
+    "decidedLabel": "Decided",
+    "decidedProgress": "{decided} of {total}",
+    "searchAlerts": "Search alerts",
+    "noMatches": "No alert matches the filters",
+    "noMatchesFor": "No alert matches “{query}”",
+    "activeFilters": "There are {count} active filters. Clear them or search for the value in the documents.",
+    "searchInDocuments": "Search for the value in the documents.",
+    "searchDocuments": "Search documents",
+    "hiddenByFilters": "{count} alerts hidden by the filters.",
+    "showCompared": "See what was compared",
+    "filesLabel": "Review files"
   },
   "alertDetail": {
     "position": "Alert {number} of {total}",
     "label": "Alert {number}",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "allDecided": "Every alert has a decision. Close the review to keep it in the history.",
+    "navigationKeys": "J / K",
+    "openAtPage": "Open at page {page}",
+    "openFile": "Open file",
+    "readOnly": "Review closed on {date}. Its decisions are read-only."
   },
   "review": {
     "pendingSummary": {
       "one": "{count} of {total} alert pending",
       "other": "{count} of {total} alerts pending"
-    }
-  },
-  "unavailableSection": {
-    "title": "This section isn't available yet",
-    "description": "It will be enabled in an upcoming version of ARGUS."
+    },
+    "closedSummary": "Closed · read-only"
   },
   "entityTypes": {
     "contract_id": "Identifier",
@@ -250,5 +289,278 @@
     "person_name": "A person's name is different",
     "organization_name": "The company name is written differently",
     "period": "The period doesn't match"
+  },
+  "closeFailed": {
+    "what": "The review could not be closed.",
+    "why": "The analysis engine did not respond.",
+    "todo": "Try again. Your decisions are already saved.",
+    "retry": "Try again"
+  },
+  "decisionCard": {
+    "valueA": "A",
+    "valueB": "B",
+    "correctValue": "Correct value: {value}",
+    "none": "No decisions in this session yet.",
+    "listLabel": "Decisions"
+  },
+  "decisionFailed": {
+    "what": "The decision on Alert {number} was not saved.",
+    "why": "The analysis engine did not respond; the alert is still pending.",
+    "todo": "Retry to save it.",
+    "retry": "Retry"
+  },
+  "decisionNotice": {
+    "decided": "Alert {number} marked as “{decision}”.",
+    "undone": "The decision was undone.",
+    "undoFailed": "It could not be undone. Try again with Ctrl Z."
+  },
+  "decisionPanel": {
+    "title": "How do you want to continue?",
+    "undoHint": "You can undo any decision with Ctrl Z",
+    "ignore": "Ignore",
+    "correctDescription": "Both values are valid. The alert is closed with no changes.",
+    "errorDescription": "One of the values is wrong. It goes to the corrections list.",
+    "ignoreDescription": "Not relevant now. It is not corrected and stays marked as ignored.",
+    "whichIsCorrect": "Which value is correct?",
+    "optionalHint": "Optional. It helps prepare the correction.",
+    "correction": "Will be added to corrections: change {wrong} to {right} in {where}.",
+    "inFiles": {
+      "one": "{count} file ({occurrences} occurrences)",
+      "other": "{count} files ({occurrences} occurrences)"
+    }
+  },
+  "difference": {
+    "transposition": "Difference: positions {positions} swapped",
+    "characterChange": {
+      "one": "Difference: different character at position {positions}",
+      "other": "Difference: different characters at positions {positions}"
+    },
+    "dateComponent": "Difference: the day, month or year of the date changes",
+    "dayMonthSwap": "Difference: day and month are swapped",
+    "similarName": "Difference: similar names written differently",
+    "formatOnly": "Difference: the same value written in another format",
+    "valuesDiffer": "Difference: the values do not have the same number of characters",
+    "highlightNote": "· different characters are highlighted and underlined"
+  },
+  "duration": {
+    "seconds": "{seconds} s",
+    "minutesSeconds": "{minutes} min {seconds} s",
+    "hoursMinutes": "{hours} h {minutes} min"
+  },
+  "filters": {
+    "label": "Filters",
+    "risk": "Risk",
+    "type": "Type",
+    "file": "File",
+    "state": "Status",
+    "all": "All",
+    "summary": "{name}: {value}",
+    "clear": "Clear filters",
+    "showing": "Showing {visible} of {total} alerts"
+  },
+  "history": {
+    "title": "History",
+    "periodLabel": "Period",
+    "period": "Period: last {days} days",
+    "export": "Export log (CSV)",
+    "exportFileName": "argus-log-{date}.csv",
+    "tableLabel": "History sessions",
+    "columns": {
+      "session": "Session",
+      "date": "Date",
+      "files": "Files",
+      "alerts": "Alerts",
+      "decided": "Decided",
+      "status": "Status"
+    },
+    "status": {
+      "in_progress": "In progress",
+      "closed": "Closed",
+      "no_inconsistencies": "No inconsistencies"
+    },
+    "decidedOf": "{decided} of {total}",
+    "noValue": "—",
+    "metrics": {
+      "label": "Usage metrics",
+      "resolved": "Resolved alerts",
+      "inSessions": {
+        "one": "in {count} session",
+        "other": "in {count} sessions"
+      },
+      "duration": "Average review time",
+      "durationDetail": "from upload to close",
+      "noClosed": "No closed reviews in this period yet",
+      "errors": "Marked as a real error",
+      "errorsDetail": "{count} of {total} · the rest were “It is correct” or “Ignore”",
+      "noResolved": "No resolved alerts in this period yet"
+    },
+    "decisionsLabel": "Session decisions",
+    "closedOn": "Closed on {date}",
+    "inProgressSince": "In progress since {date}",
+    "openReview": "Open review",
+    "empty": {
+      "title": "No reviews in this period",
+      "description": "Your reviews will appear here with their decisions and metrics."
+    },
+    "failed": {
+      "what": "We could not load the history.",
+      "why": "The analysis engine did not respond.",
+      "todo": "Retry. If it still does not respond, close ARGUS and open it again."
+    },
+    "sessionFailed": {
+      "what": "We could not open this session.",
+      "why": "The analysis engine did not respond.",
+      "todo": "Retry to see its decisions."
+    },
+    "exportFailed": {
+      "what": "The log was not exported.",
+      "why": "The analysis engine did not respond.",
+      "todo": "Retry the export."
+    },
+    "retry": "Retry"
+  },
+  "csv": {
+    "session": "Session",
+    "sessionDate": "Session date",
+    "alert": "Alert",
+    "risk": "Risk",
+    "type": "Type",
+    "valueA": "Value A",
+    "valueB": "Value B",
+    "decision": "Decision",
+    "correctValue": "Correct value",
+    "decidedAt": "Decision date"
+  },
+  "openDocument": {
+    "opened": "“{name}” opened with the system app · {location}",
+    "dismiss": "Got it",
+    "missing": {
+      "what": "We could not open “{name}”.",
+      "why": "The copy of the file was moved or deleted from the history folder.",
+      "todo": "Look for it in its original location or start a new review with the file."
+    },
+    "unavailable": {
+      "what": "We could not open “{name}”.",
+      "why": "The analysis engine did not respond.",
+      "todo": "Try again in a few seconds."
+    }
+  },
+  "reading": {
+    "label": "Reading progress",
+    "progress": "Reading {done} of {total} files",
+    "comparing": "Comparing the files with each other…",
+    "remaining": "≈ {time} left",
+    "waiting": "Waiting",
+    "reading": "Reading…",
+    "read": "Read",
+    "unreadable": "Could not be read",
+    "note": "When it finishes, you will see what was read from each file before reviewing the alerts."
+  },
+  "rowActions": {
+    "open": "Open detail",
+    "suppress": "Do not alert similar cases",
+    "copy": "Copy Value A and Value B",
+    "suppressed": "Similar cases will not be alerted from the next review. You can remove it in Settings.",
+    "suppressFailed": "“Do not alert similar cases” was not saved. Try again.",
+    "copied": "Value A and Value B were copied.",
+    "copyFailed": "The values could not be copied."
+  },
+  "search": {
+    "results": "Search results",
+    "escape": "Esc",
+    "alertsGroup": "Alerts",
+    "documentsGroup": "Document excerpts",
+    "sessionsGroup": "Sessions",
+    "sectionsGroup": "Settings sections",
+    "alertTitle": "#{number} · {title}",
+    "historyPlaceholder": "Search the history",
+    "settingsPlaceholder": "Search settings",
+    "typeMore": "Type at least 2 letters.",
+    "searching": "Searching…",
+    "noResults": "No results for “{query}”.",
+    "failed": "We could not search: the analysis engine did not respond. Type again to retry.",
+    "openFailed": "We could not open “{name}”. Try again."
+  },
+  "settings": {
+    "title": "Settings",
+    "navLabel": "Settings sections",
+    "saved": "Changes saved",
+    "sections": {
+      "detection": "Detection",
+      "language": "Language and region",
+      "appearance": "Appearance",
+      "privacy": "Privacy",
+      "shortcuts": "Keyboard shortcuts"
+    },
+    "detection": {
+      "sensitivity": "Sensitivity",
+      "types": "Types compared",
+      "rules": "Cases that do not raise alerts",
+      "rulesNote": "· created with “Do not alert similar cases”",
+      "noRules": "No cases yet. Create them with “Do not alert similar cases” in each alert’s ⋯ menu.",
+      "rule": "{first} = {second}",
+      "since": "since {date}",
+      "remove": "Remove",
+      "removeRule": "Remove “{rule}”"
+    },
+    "sensitivity": {
+      "strict": "Strict",
+      "balanced": "Balanced",
+      "permissive": "Permissive",
+      "strictDescription": "Also detects format-only differences and different years in dates. Allows up to 2 different characters in identifiers.",
+      "balancedDescription": "Detects differences in identifiers, dates, amounts, names and periods. Does not alert format-only differences, such as “S.A.S.” versus “SAS” or dots in a tax ID.",
+      "permissiveDescription": "Alerts only the clearest differences: nearly identical names and one different character in identifiers. Does not alert format-only differences."
+    },
+    "categories": {
+      "identifiers": "Identifiers",
+      "dates": "Dates",
+      "amounts": "Amounts",
+      "names": "Names",
+      "periods": "Periods"
+    },
+    "language": {
+      "language": "Language",
+      "region": "Regional format",
+      "preview": "Preview:",
+      "locales": {
+        "es": "Español (Colombia)",
+        "en": "English (United States)"
+      },
+      "regions": {
+        "es-CO": "Colombia · es-CO",
+        "en-US": "United States · en-US"
+      }
+    },
+    "privacy": {
+      "localTitle": "Analysis is local",
+      "localDescription": "Files are read and compared on this computer. ARGUS does not send their content to the internet or to external servers.",
+      "retention": "Keep the decision history for 90 days",
+      "folder": "History folder",
+      "retentionOn": "Reviews older than 90 days, with the copy of their files, are deleted when ARGUS starts.",
+      "retentionOff": "The history is kept with no time limit."
+    },
+    "shortcuts": {
+      "newReview": "New review",
+      "search": "Search the current screen",
+      "sidebar": "Collapse or expand the sidebar",
+      "move": "Next or previous alert",
+      "open": "Open the selected alert",
+      "correct": "It is correct",
+      "error": "It is an error",
+      "ignore": "Ignore",
+      "searchAlerts": "Search alerts",
+      "undo": "Undo the last decision"
+    },
+    "unavailable": {
+      "what": "We could not load these settings.",
+      "why": "They are kept by the analysis engine, which did not respond.",
+      "todo": "Retry. Language and appearance are still available.",
+      "retry": "Retry"
+    },
+    "saveFailed": {
+      "what": "The change was not saved.",
+      "why": "The analysis engine did not respond.",
+      "todo": "Retry to see the current settings and make the change again."
+    }
   }
 }

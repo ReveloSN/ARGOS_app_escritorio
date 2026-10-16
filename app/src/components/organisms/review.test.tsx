@@ -32,7 +32,9 @@ const ROWS: readonly AlertRowData[] = [
 
 describe("AlertList", () => {
   it("muestra riesgo con texto, ambos valores y el estado de cada alerta", () => {
-    renderWithProviders(<AlertList rows={ROWS} selectedId="1" onSelect={vi.fn()} />);
+    renderWithProviders(
+      <AlertList groups={[{ id: "todas", rows: ROWS }]} selectedId="1" onSelect={vi.fn()} />,
+    );
 
     const table = screen.getByRole("table", { name: "Lista de alertas" });
     expect(table).toHaveTextContent("Alto");
@@ -42,7 +44,9 @@ describe("AlertList", () => {
 
   it("marca la fila seleccionada y selecciona con clic o con Enter", async () => {
     const onSelect = vi.fn();
-    renderWithProviders(<AlertList rows={ROWS} selectedId="1" onSelect={onSelect} />);
+    renderWithProviders(
+      <AlertList groups={[{ id: "todas", rows: ROWS }]} selectedId="1" onSelect={onSelect} />,
+    );
     const [, firstRow, secondRow] = screen.getAllByRole("row");
 
     await userEvent.click(secondRow ?? document.body);

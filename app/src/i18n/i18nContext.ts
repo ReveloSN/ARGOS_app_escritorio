@@ -1,12 +1,14 @@
 import { createContext, useContext } from "react";
 
 import type { Formatters } from "./formatters";
-import type { Locale } from "./messages";
+import type { Locale, Region } from "./messages";
 import type { PluralRequest, TranslationKey, TranslationParams } from "./translate";
 
 export interface I18n {
   readonly locale: Locale;
   readonly setLocale: (locale: Locale) => void;
+  readonly region: Region;
+  readonly setRegion: (region: Region) => void;
   readonly t: (key: TranslationKey, params?: TranslationParams) => string;
   readonly tPlural: (request: PluralRequest) => string;
   readonly format: Formatters;

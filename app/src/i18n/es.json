@@ -68,7 +68,10 @@
       "valueA": "Valor A",
       "valueB": "Valor B",
       "state": "Estado"
-    }
+    },
+    "showOccurrences": "Ver las {count} apariciones",
+    "hideOccurrences": "Ocultar apariciones",
+    "occurrenceListLabel": "Todas las apariciones"
   },
   "origin": {
     "page": "Página {page}",
@@ -98,7 +101,13 @@
   },
   "shortcuts": {
     "control": "Ctrl",
-    "command": "⌘"
+    "command": "⌘",
+    "barLabel": "Atajos de teclado",
+    "move": "moverse",
+    "open": "abrir",
+    "decide": "decidir",
+    "search": "buscar",
+    "undo": "deshacer"
   },
   "appearance": {
     "label": "Apariencia",
@@ -215,23 +224,53 @@
     "comparedFiles": {
       "one": "Se comparó {count} archivo y sus valores coinciden.",
       "other": "Se compararon {count} archivos y sus valores coinciden."
-    }
+    },
+    "tabsLabel": "Vistas de la revisión",
+    "tabs": {
+      "alerts": "Alertas",
+      "files": "Archivos",
+      "decisions": "Decisiones"
+    },
+    "fileCount": {
+      "one": "{count} archivo",
+      "other": "{count} archivos"
+    },
+    "readCount": {
+      "one": "{count} leído",
+      "other": "{count} leídos"
+    },
+    "reviewedAt": "revisado el {date}",
+    "closedAt": "cerrada el {date}",
+    "closeReview": "Cerrar revisión",
+    "decidedLabel": "Decididas",
+    "decidedProgress": "{decided} de {total}",
+    "searchAlerts": "Buscar en alertas",
+    "noMatches": "Ninguna alerta coincide con los filtros",
+    "noMatchesFor": "Ninguna alerta coincide con «{query}»",
+    "activeFilters": "Hay {count} filtros activos. Quítelos o busque el valor dentro de los documentos.",
+    "searchInDocuments": "Busque el valor dentro de los documentos.",
+    "searchDocuments": "Buscar en documentos",
+    "hiddenByFilters": "{count} alertas ocultas por los filtros.",
+    "showCompared": "Ver qué se comparó",
+    "filesLabel": "Archivos de la revisión"
   },
   "alertDetail": {
     "position": "Alerta {number} de {total}",
     "label": "Alerta {number}",
     "previous": "Anterior",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "allDecided": "Todas las alertas están decididas. Puede cerrar la revisión para dejarla en el historial.",
+    "navigationKeys": "J / K",
+    "openAtPage": "Abrir en página {page}",
+    "openFile": "Abrir archivo",
+    "readOnly": "Revisión cerrada el {date}. Las decisiones quedan como solo lectura."
   },
   "review": {
     "pendingSummary": {
       "one": "{count} alerta pendiente de {total}",
       "other": "{count} alertas pendientes de {total}"
-    }
-  },
-  "unavailableSection": {
-    "title": "Esta sección todavía no está disponible",
-    "description": "Se habilitará en una próxima versión de ARGUS."
+    },
+    "closedSummary": "Cerrada · solo lectura"
   },
   "entityTypes": {
     "contract_id": "Identificador",
@@ -250,5 +289,278 @@
     "person_name": "El nombre de una persona es distinto",
     "organization_name": "La razón social está escrita distinto",
     "period": "El periodo no coincide"
+  },
+  "closeFailed": {
+    "what": "No se pudo cerrar la revisión.",
+    "why": "El motor de análisis no respondió.",
+    "todo": "Inténtelo de nuevo. Sus decisiones ya están guardadas.",
+    "retry": "Intentar de nuevo"
+  },
+  "decisionCard": {
+    "valueA": "A",
+    "valueB": "B",
+    "correctValue": "Valor correcto: {value}",
+    "none": "Todavía no hay decisiones en esta sesión.",
+    "listLabel": "Decisiones"
+  },
+  "decisionFailed": {
+    "what": "No se guardó la decisión sobre la Alerta {number}.",
+    "why": "El motor de análisis no respondió; la alerta sigue pendiente.",
+    "todo": "Reintente para guardarla.",
+    "retry": "Reintentar"
+  },
+  "decisionNotice": {
+    "decided": "Alerta {number} marcada como «{decision}».",
+    "undone": "Se deshizo la decisión.",
+    "undoFailed": "No se pudo deshacer. Inténtelo de nuevo con Ctrl Z."
+  },
+  "decisionPanel": {
+    "title": "¿Cómo quiere continuar?",
+    "undoHint": "Puede deshacer cualquier decisión con Ctrl Z",
+    "ignore": "Ignorar",
+    "correctDescription": "Los dos valores son válidos. La alerta se cierra sin cambios.",
+    "errorDescription": "Uno de los valores está mal. Pasa a la lista de correcciones.",
+    "ignoreDescription": "No es relevante ahora. No se corrige y queda marcada como ignorada.",
+    "whichIsCorrect": "¿Cuál es el valor correcto?",
+    "optionalHint": "Opcional. Ayuda a preparar la corrección.",
+    "correction": "Se agregará a correcciones: cambiar {wrong} por {right} en {where}.",
+    "inFiles": {
+      "one": "{count} archivo ({occurrences} apariciones)",
+      "other": "{count} archivos ({occurrences} apariciones)"
+    }
+  },
+  "difference": {
+    "transposition": "Diferencia: posiciones {positions} intercambiadas",
+    "characterChange": {
+      "one": "Diferencia: carácter distinto en la posición {positions}",
+      "other": "Diferencia: caracteres distintos en las posiciones {positions}"
+    },
+    "dateComponent": "Diferencia: cambia el día, el mes o el año de la fecha",
+    "dayMonthSwap": "Diferencia: el día y el mes están intercambiados",
+    "similarName": "Diferencia: nombres parecidos escritos de forma distinta",
+    "formatOnly": "Diferencia: el mismo valor escrito con otro formato",
+    "valuesDiffer": "Diferencia: los valores no tienen la misma cantidad de caracteres",
+    "highlightNote": "· los caracteres distintos están resaltados y subrayados"
+  },
+  "duration": {
+    "seconds": "{seconds} s",
+    "minutesSeconds": "{minutes} min {seconds} s",
+    "hoursMinutes": "{hours} h {minutes} min"
+  },
+  "filters": {
+    "label": "Filtros",
+    "risk": "Riesgo",
+    "type": "Tipo",
+    "file": "Archivo",
+    "state": "Estado",
+    "all": "Todos",
+    "summary": "{name}: {value}",
+    "clear": "Quitar filtros",
+    "showing": "Mostrando {visible} de {total} alertas"
+  },
+  "history": {
+    "title": "Historial",
+    "periodLabel": "Periodo",
+    "period": "Periodo: últimos {days} días",
+    "export": "Exportar registro (CSV)",
+    "exportFileName": "registro-argus-{date}.csv",
+    "tableLabel": "Sesiones del historial",
+    "columns": {
+      "session": "Sesión",
+      "date": "Fecha",
+      "files": "Archivos",
+      "alerts": "Alertas",
+      "decided": "Decididas",
+      "status": "Estado"
+    },
+    "status": {
+      "in_progress": "En curso",
+      "closed": "Cerrada",
+      "no_inconsistencies": "Sin inconsistencias"
+    },
+    "decidedOf": "{decided} de {total}",
+    "noValue": "—",
+    "metrics": {
+      "label": "Métricas de uso",
+      "resolved": "Alertas resueltas",
+      "inSessions": {
+        "one": "en {count} sesión",
+        "other": "en {count} sesiones"
+      },
+      "duration": "Tiempo medio de revisión",
+      "durationDetail": "desde cargar hasta cerrar",
+      "noClosed": "Aún no hay revisiones cerradas en este periodo",
+      "errors": "Marcadas como error real",
+      "errorsDetail": "{count} de {total} · el resto fue «Es correcto» o «Ignorar»",
+      "noResolved": "Aún no hay alertas resueltas en este periodo"
+    },
+    "decisionsLabel": "Decisiones de la sesión",
+    "closedOn": "Cerrada el {date}",
+    "inProgressSince": "En curso desde el {date}",
+    "openReview": "Abrir revisión",
+    "empty": {
+      "title": "No hay revisiones en este periodo",
+      "description": "Las revisiones que haga aparecerán aquí con sus decisiones y métricas."
+    },
+    "failed": {
+      "what": "No pudimos cargar el historial.",
+      "why": "El motor de análisis no respondió.",
+      "todo": "Reintente. Si sigue sin responder, cierre ARGUS y ábralo de nuevo."
+    },
+    "sessionFailed": {
+      "what": "No pudimos abrir esta sesión.",
+      "why": "El motor de análisis no respondió.",
+      "todo": "Reintente para ver sus decisiones."
+    },
+    "exportFailed": {
+      "what": "No se exportó el registro.",
+      "why": "El motor de análisis no respondió.",
+      "todo": "Reintente la exportación."
+    },
+    "retry": "Reintentar"
+  },
+  "csv": {
+    "session": "Sesión",
+    "sessionDate": "Fecha de la sesión",
+    "alert": "Alerta",
+    "risk": "Riesgo",
+    "type": "Tipo",
+    "valueA": "Valor A",
+    "valueB": "Valor B",
+    "decision": "Decisión",
+    "correctValue": "Valor correcto",
+    "decidedAt": "Fecha de la decisión"
+  },
+  "openDocument": {
+    "opened": "Se abrió «{name}» con la aplicación del sistema · {location}",
+    "dismiss": "Entendido",
+    "missing": {
+      "what": "No pudimos abrir «{name}».",
+      "why": "La copia del archivo se movió o se eliminó de la carpeta del historial.",
+      "todo": "Búsquelo en su ubicación original o cree una revisión nueva con el archivo."
+    },
+    "unavailable": {
+      "what": "No pudimos abrir «{name}».",
+      "why": "El motor de análisis no respondió.",
+      "todo": "Inténtelo de nuevo en unos segundos."
+    }
+  },
+  "reading": {
+    "label": "Avance de la lectura",
+    "progress": "Leyendo {done} de {total} archivos",
+    "comparing": "Comparando los archivos entre sí…",
+    "remaining": "≈ {time} restantes",
+    "waiting": "En espera",
+    "reading": "Leyendo…",
+    "read": "Leído",
+    "unreadable": "No se pudo leer",
+    "note": "Al terminar, verá qué se leyó de cada archivo antes de revisar las alertas."
+  },
+  "rowActions": {
+    "open": "Abrir detalle",
+    "suppress": "No alertar casos similares",
+    "copy": "Copiar Valor A y Valor B",
+    "suppressed": "No se alertarán casos similares desde la próxima revisión. Puede quitarlo en Ajustes.",
+    "suppressFailed": "No se guardó «No alertar casos similares». Inténtelo de nuevo.",
+    "copied": "Se copiaron el Valor A y el Valor B.",
+    "copyFailed": "No se pudieron copiar los valores."
+  },
+  "search": {
+    "results": "Resultados de la búsqueda",
+    "escape": "Esc",
+    "alertsGroup": "Alertas",
+    "documentsGroup": "Fragmentos de documentos",
+    "sessionsGroup": "Sesiones",
+    "sectionsGroup": "Secciones de ajustes",
+    "alertTitle": "#{number} · {title}",
+    "historyPlaceholder": "Buscar en el historial",
+    "settingsPlaceholder": "Buscar en ajustes",
+    "typeMore": "Escriba al menos 2 letras.",
+    "searching": "Buscando…",
+    "noResults": "Sin resultados para «{query}».",
+    "failed": "No pudimos buscar: el motor de análisis no respondió. Escriba de nuevo para reintentar.",
+    "openFailed": "No pudimos abrir «{name}». Inténtelo de nuevo."
+  },
+  "settings": {
+    "title": "Ajustes",
+    "navLabel": "Secciones de ajustes",
+    "saved": "Se guardaron los cambios",
+    "sections": {
+      "detection": "Detección",
+      "language": "Idioma y región",
+      "appearance": "Apariencia",
+      "privacy": "Privacidad",
+      "shortcuts": "Atajos de teclado"
+    },
+    "detection": {
+      "sensitivity": "Sensibilidad",
+      "types": "Tipos que se comparan",
+      "rules": "Casos que no generan alerta",
+      "rulesNote": "· creados con «No alertar casos similares»",
+      "noRules": "Todavía no hay casos. Se crean con «No alertar casos similares» en el menú ⋯ de cada alerta.",
+      "rule": "{first} = {second}",
+      "since": "desde {date}",
+      "remove": "Quitar",
+      "removeRule": "Quitar «{rule}»"
+    },
+    "sensitivity": {
+      "strict": "Estricta",
+      "balanced": "Equilibrada",
+      "permissive": "Permisiva",
+      "strictDescription": "Detecta también diferencias solo de formato y años distintos en las fechas. Admite hasta 2 caracteres distintos en identificadores.",
+      "balancedDescription": "Detecta diferencias en identificadores, fechas, montos, nombres y periodos. No alerta diferencias solo de formato, como «S.A.S.» frente a «SAS» o puntos en un NIT.",
+      "permissiveDescription": "Alerta solo las diferencias más claras: nombres casi iguales y un carácter distinto en identificadores. No alerta diferencias solo de formato."
+    },
+    "categories": {
+      "identifiers": "Identificadores",
+      "dates": "Fechas",
+      "amounts": "Montos",
+      "names": "Nombres",
+      "periods": "Periodos"
+    },
+    "language": {
+      "language": "Idioma",
+      "region": "Formato regional",
+      "preview": "Vista previa:",
+      "locales": {
+        "es": "Español (Colombia)",
+        "en": "English (United States)"
+      },
+      "regions": {
+        "es-CO": "Colombia · es-CO",
+        "en-US": "Estados Unidos · en-US"
+      }
+    },
+    "privacy": {
+      "localTitle": "El análisis es local",
+      "localDescription": "Los archivos se leen y comparan en este equipo. ARGUS no envía su contenido a internet ni a servidores externos.",
+      "retention": "Guardar el historial de decisiones durante 90 días",
+      "folder": "Carpeta del historial",
+      "retentionOn": "Las revisiones de más de 90 días, con la copia de sus archivos, se borran al iniciar ARGUS.",
+      "retentionOff": "El historial se conserva sin límite de tiempo."
+    },
+    "shortcuts": {
+      "newReview": "Nueva revisión",
+      "search": "Buscar en la pantalla actual",
+      "sidebar": "Contraer o expandir la barra lateral",
+      "move": "Alerta siguiente o anterior",
+      "open": "Abrir la alerta seleccionada",
+      "correct": "Es correcto",
+      "error": "Es un error",
+      "ignore": "Ignorar",
+      "searchAlerts": "Buscar en alertas",
+      "undo": "Deshacer la última decisión"
+    },
+    "unavailable": {
+      "what": "No pudimos cargar estos ajustes.",
+      "why": "Los guarda el motor de análisis, que no respondió.",
+      "todo": "Reintente. El idioma y la apariencia siguen disponibles.",
+      "retry": "Reintentar"
+    },
+    "saveFailed": {
+      "what": "No se guardó el cambio.",
+      "why": "El motor de análisis no respondió.",
+      "todo": "Reintente para ver los ajustes vigentes y vuelva a hacer el cambio."
+    }
   }
 }

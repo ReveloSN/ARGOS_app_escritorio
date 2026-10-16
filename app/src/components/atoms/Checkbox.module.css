@@ -33,3 +33,8 @@
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
+
+.input:disabled + .box {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

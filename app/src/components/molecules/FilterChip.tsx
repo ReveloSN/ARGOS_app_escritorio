@@ -24,7 +24,13 @@ export function FilterChip({ label, active = false, onRemove, onOpen }: FilterCh
   }
   return (
     <span className={joinClassNames(styles.chip, styles.active)}>
-      {label}
+      {onOpen ? (
+        <button type="button" className={styles.open} onClick={onOpen}>
+          {label}
+        </button>
+      ) : (
+        label
+      )}
       <button
         type="button"
         className={styles.remove}

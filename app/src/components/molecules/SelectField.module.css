@@ -1,0 +1,45 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1-5);
+}
+
+.label {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.control,
+.compactControl {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select {
+  width: 100%;
+  height: var(--size-control-lg);
+  padding: 0 var(--spacing-7) 0 var(--spacing-2-5);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-background-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body);
+  appearance: none;
+  cursor: pointer;
+}
+
+.compactControl .select {
+  height: var(--size-control-sm);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.icon {
+  position: absolute;
+  inset-inline-end: var(--spacing-2);
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}

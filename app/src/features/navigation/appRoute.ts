@@ -6,7 +6,7 @@ export type AppRoute =
   | { readonly page: "newReview" }
   | { readonly page: "results" }
   | { readonly page: "alert"; readonly number: number }
-  | { readonly page: "history" }
+  | { readonly page: "history"; readonly sessionId?: string }
   | { readonly page: "settings" };
 
 export const HOME_ROUTE: AppRoute = { page: "home" };

@@ -8,10 +8,10 @@ const SEARCH_SHORTCUT = [MODIFIER_KEY, "K"];
 
 interface TopbarProps {
   readonly sessionName?: string | undefined;
-  readonly searchPlaceholder?: string;
+  readonly searchPlaceholder?: string | undefined;
   readonly engineStatus: EngineStatusView;
   /** Sin acción no se muestra la búsqueda: nunca un control que no hace nada. */
-  readonly onOpenSearch?: () => void;
+  readonly onOpenSearch?: (() => void) | undefined;
   readonly onOpenHelp?: () => void;
 }
 

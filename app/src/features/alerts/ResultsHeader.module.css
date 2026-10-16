@@ -1,0 +1,32 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2-5);
+  padding: var(--spacing-3-5) var(--spacing-6) 0;
+  border-bottom: var(--border-width) solid var(--color-border-default);
+  background: var(--color-background-surface);
+}
+
+.titleRow {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-4);
+}
+
+.heading {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-title);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -56,3 +56,10 @@
   gap: var(--spacing-3);
   padding: var(--spacing-3-5);
 }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-1-5);
+  margin-top: auto;
+}

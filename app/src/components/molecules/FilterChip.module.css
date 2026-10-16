@@ -32,3 +32,12 @@
   color: inherit;
   cursor: pointer;
 }
+
+.open {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}

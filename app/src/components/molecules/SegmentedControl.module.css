@@ -1,0 +1,28 @@
+.group {
+  display: flex;
+  align-self: flex-start;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-background-surface);
+}
+
+.option {
+  min-width: var(--size-button-min);
+  padding: var(--spacing-1-5) var(--spacing-3-5);
+  border: 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-standard);
+}
+
+.option + .option {
+  border-inline-start: var(--border-width) solid var(--color-border-default);
+}
+
+.selected {
+  background: var(--color-action-primary);
+  color: var(--color-action-primary-fg);
+  font-weight: var(--font-weight-medium);
+}

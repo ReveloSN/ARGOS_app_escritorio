@@ -2,15 +2,26 @@ import { isTauri } from "@tauri-apps/api/core";
 
 import type { EngineServices } from "../../features/engine/EngineServicesContext";
 import { ConfiguredEngineConnectionSource } from "./configuredEngineConnectionSource";
+import { DocumentClient } from "./documentClient";
 import { EngineClient } from "./engineClient";
 import type { EngineConnectionSource } from "./engineConnection";
+import { EngineHttp } from "./engineHttp";
 import { EngineStatusMonitor } from "./engineStatusMonitor";
+import { HistoryClient } from "./historyClient";
+import { PreferencesClient } from "./preferencesClient";
+import { ReviewClient } from "./reviewClient";
 import { TauriEngineConnectionSource } from "./tauriEngineConnectionSource";
 
 /** Raíz de composición de la interfaz: elige de dónde sale la conexión al motor. */
 export function createEngineServices(): EngineServices {
-  const client = new EngineClient(createConnectionSource());
-  return { statusMonitor: new EngineStatusMonitor(client), reviewStarter: client };
+  const http = new EngineHttp(createConnectionSource());
+  return {
+    statusMonitor: new EngineStatusMonitor(new EngineClient(http)),
+    reviews: new ReviewClient(http),
+    history: new HistoryClient(http),
+    preferences: new PreferencesClient(http),
+    documents: new DocumentClient(http),
+  };
 }
 
 function createConnectionSource(): EngineConnectionSource {

@@ -1,0 +1,141 @@
+.panel {
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-3-5);
+  border-bottom: var(--border-width) solid var(--color-border-default);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+}
+
+.hint {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-2-5);
+  padding: var(--spacing-3-5);
+}
+
+.choice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1-5);
+  padding: var(--spacing-3);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+  color: var(--color-text-primary);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--easing-standard),
+    border-color var(--duration-base) var(--easing-standard);
+}
+
+/* «Es un error» es la acción principal: la única rellena con el color de acento. */
+.error {
+  border-color: var(--color-action-primary);
+  background: var(--color-action-primary);
+  color: var(--color-action-primary-fg);
+}
+
+.error.selected {
+  background: var(--color-action-primary-hover);
+}
+
+.ignored {
+  border-style: dashed;
+  background: transparent;
+}
+
+.value.selected,
+.choice.selected:not(.error) {
+  border-color: var(--decision-selected-border);
+  background: var(--decision-selected-bg);
+}
+
+.choiceTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-emphasis);
+  font-weight: var(--font-weight-semibold);
+}
+
+.ignored .choiceTitle {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.grow {
+  flex: 1;
+}
+
+.key {
+  padding: 0 var(--spacing-1);
+  border: var(--border-width) solid currentcolor;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-micro);
+  font-weight: var(--font-weight-regular);
+}
+
+.description {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.choice:not(.error) .description {
+  color: var(--color-text-secondary);
+}
+
+.chooser {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2-5);
+  padding: 0 var(--spacing-3-5) var(--spacing-3-5);
+}
+
+.question {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.value {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  min-width: var(--size-column-value);
+  height: var(--size-control-md);
+  padding: 0 var(--spacing-2-5);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-background-surface);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.valueText {
+  font-family: var(--font-family-mono);
+}
+
+.valueLabel {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}

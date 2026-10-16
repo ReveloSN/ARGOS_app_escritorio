@@ -84,7 +84,11 @@ export function DesignSystemCatalog() {
         />
       </Section>
       <Section title="Organismos">
-        <AlertList rows={samples.SAMPLE_ROWS} selectedId={selectedId} onSelect={setSelectedId} />
+        <AlertList
+          groups={[{ id: "muestras", label: "Riesgo alto y medio", rows: samples.SAMPLE_ROWS }]}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+        />
         <ComparisonPanel first={samples.SAMPLE_VALUE_A} second={samples.SAMPLE_VALUE_B} />
         <UploadZone onFilesSelected={IGNORE} onPasteText={IGNORE} />
         <div className={styles.empty}>

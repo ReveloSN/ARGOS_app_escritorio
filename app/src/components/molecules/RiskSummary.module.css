@@ -1,0 +1,42 @@
+.summary {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-background-surface);
+  list-style: none;
+}
+
+.level {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  padding: var(--spacing-1-5) var(--spacing-3);
+}
+
+.level + .level {
+  border-inline-start: var(--border-width) solid var(--color-border-default);
+}
+
+.count {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-semibold);
+}
+
+.high {
+  color: var(--color-risk-high);
+}
+
+.medium {
+  color: var(--color-risk-medium);
+}
+
+.low {
+  color: var(--color-risk-low);
+}
+
+.icon {
+  flex: none;
+}

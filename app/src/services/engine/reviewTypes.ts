@@ -1,4 +1,4 @@
-/** Respuesta de POST /reviews del motor (engine/argus/api/schemas/review.py). */
+/** Revisión tal como la entrega el motor (engine/argus/api/schemas/review.py). */
 
 export type RiskLevelValue = "high" | "medium" | "low";
 
@@ -7,6 +7,17 @@ export type EntityTypeValue =
 
 export type UnreadableReasonValue =
   "no_text" | "encrypted" | "corrupted" | "too_large" | "not_found" | "unsupported_format";
+
+export type DifferenceKindValue =
+  | "transposition"
+  | "character_change"
+  | "date_component"
+  | "day_month_swap"
+  | "similar_name"
+  | "format_only";
+
+export type DecisionKindValue = "correct" | "error" | "ignored";
+export type CorrectSideValue = "first" | "second";
 
 export type SourceLocationResult =
   | { readonly kind: "page"; readonly page: number }
@@ -37,7 +48,7 @@ export interface AlertResult {
   readonly number: number;
   readonly risk: RiskLevelValue;
   readonly entityType: EntityTypeValue;
-  readonly differenceKind: string;
+  readonly differenceKind: DifferenceKindValue;
   readonly confidence: number;
   readonly highlightPositions: readonly number[];
   readonly first: AlertSideResult;
@@ -51,18 +62,59 @@ export interface DocumentReadResult {
   readonly fragmentCount: number;
 }
 
+export interface SessionResult {
+  readonly id: string;
+  readonly name: string;
+  readonly createdAt: string;
+  readonly closedAt: string | null;
+}
+
+export interface DecisionResult {
+  readonly alertNumber: number;
+  readonly kind: DecisionKindValue;
+  readonly correctSide: CorrectSideValue | null;
+  readonly decidedAt: string;
+}
+
+export interface DecisionsResult {
+  readonly decisions: readonly DecisionResult[];
+  readonly canUndo: boolean;
+}
+
 export interface ReviewResult {
-  readonly session: { readonly id: string; readonly name: string; readonly createdAt: string };
+  readonly session: SessionResult;
   readonly documents: readonly DocumentReadResult[];
   readonly alerts: readonly AlertResult[];
+  readonly decisions: DecisionsResult;
 }
+
+/** Avance de la lectura, archivo por archivo, mientras el motor revisa (SSE). */
+export type ReviewProgressEvent =
+  | { readonly kind: "document_started"; readonly position: number; readonly name: string }
+  | {
+      readonly kind: "document_finished";
+      readonly position: number;
+      readonly document: DocumentReadResult;
+    }
+  | { readonly kind: "analysis_started" };
 
 export interface ReviewRequest {
   readonly name: string;
   readonly files: readonly File[];
+  readonly onProgress?: (event: ReviewProgressEvent) => void;
 }
 
-/** Puerto de la interfaz para iniciar revisiones; el cliente HTTP lo implementa. */
-export interface ReviewStarter {
+export interface DecisionInput {
+  readonly alertNumber: number;
+  readonly kind: DecisionKindValue;
+  readonly correctSide?: CorrectSideValue;
+}
+
+/** Puerto de la interfaz para las revisiones; el cliente HTTP lo implementa. */
+export interface ReviewGateway {
   startReview(request: ReviewRequest): Promise<ReviewResult>;
+  openReview(sessionId: string): Promise<ReviewResult>;
+  closeReview(sessionId: string): Promise<SessionResult>;
+  decide(sessionId: string, decision: DecisionInput): Promise<DecisionsResult>;
+  undoDecision(sessionId: string): Promise<DecisionsResult>;
 }

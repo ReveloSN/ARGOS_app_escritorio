@@ -3,14 +3,14 @@ import { useState } from "react";
 import { Breadcrumb } from "../components/molecules/Breadcrumb";
 import { StepIndicator } from "../components/molecules/StepIndicator";
 import { WizardLayout } from "../components/templates/WizardLayout";
-import { useEngineServices } from "../features/engine/EngineServicesContext";
 import { FileSelectionStep } from "../features/review/FileSelectionStep";
 import { ReadConfirmationStep } from "../features/review/ReadConfirmationStep";
+import { ReadingProgressPanel } from "../features/review/ReadingProgressPanel";
 import { ReadSummaryAside, SessionNameAside } from "../features/review/ReviewAside";
 import { useReview } from "../features/review/reviewContext";
+import { useStartReview } from "../features/review/useStartReview";
 import { ConfirmationFooter, SelectionFooter } from "../features/review/WizardFooters";
 import { useI18n } from "../i18n/i18nContext";
-import type { DocumentReadResult } from "../services/engine/reviewTypes";
 import styles from "./Page.module.css";
 
 interface NewReviewPageProps {
@@ -21,33 +21,20 @@ interface NewReviewPageProps {
 /** Wizard: Cargar → Confirmar lectura → Revisar (los resultados reales de la revisión). */
 export function NewReviewPage({ onCancel, onReviewed }: NewReviewPageProps) {
   const { t } = useI18n();
-  const { reviewStarter } = useEngineServices();
-  const { showReview, discardReview } = useReview();
+  const { discardReview } = useReview();
+  const review = useStartReview();
   const [files, setFiles] = useState<readonly File[]>([]);
   const [name, setName] = useState("");
   const [isNameMissing, setIsNameMissing] = useState(false);
-  const [isReading, setIsReading] = useState(false);
-  const [hasFailed, setHasFailed] = useState(false);
-  const [documents, setDocuments] = useState<readonly DocumentReadResult[] | null>(null);
+  const { documents, reading } = review;
 
-  const analyze = async () => {
+  const analyze = () => {
     setIsNameMissing(!name.trim());
-    if (!name.trim()) return;
-    setIsReading(true);
-    setHasFailed(false);
-    try {
-      const review = await reviewStarter.startReview({ name: name.trim(), files });
-      showReview(review);
-      setDocuments(review.documents);
-    } catch {
-      setHasFailed(true);
-    } finally {
-      setIsReading(false);
-    }
+    if (name.trim()) review.start(name.trim(), files);
   };
   const backToSelection = () => {
     discardReview();
-    setDocuments(null);
+    review.reset();
   };
   const readCount = (documents ?? []).filter((document) => document.status === "read").length;
 
@@ -96,17 +83,21 @@ export function NewReviewPage({ onCancel, onReviewed }: NewReviewPageProps) {
     <WizardLayout
       header={header}
       content={
-        <FileSelectionStep
-          files={files}
-          hasFailed={hasFailed}
-          onAdd={(added) => {
-            setFiles((current) => [...current, ...added]);
-          }}
-          onRemove={(index) => {
-            setFiles((current) => current.filter((_, position) => position !== index));
-          }}
-          onRetry={() => void analyze()}
-        />
+        reading ? (
+          <ReadingProgressPanel reading={reading} />
+        ) : (
+          <FileSelectionStep
+            files={files}
+            hasFailed={review.hasFailed}
+            onAdd={(added) => {
+              setFiles((current) => [...current, ...added]);
+            }}
+            onRemove={(index) => {
+              setFiles((current) => current.filter((_, position) => position !== index));
+            }}
+            onRetry={analyze}
+          />
+        )
       }
       aside={
         <SessionNameAside
@@ -118,9 +109,9 @@ export function NewReviewPage({ onCancel, onReviewed }: NewReviewPageProps) {
       footer={
         <SelectionFooter
           fileCount={files.length}
-          isReading={isReading}
+          isReading={reading !== null}
           onCancel={onCancel}
-          onAnalyze={() => void analyze()}
+          onAnalyze={analyze}
         />
       }
     />

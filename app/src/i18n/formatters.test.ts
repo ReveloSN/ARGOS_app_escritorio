@@ -11,7 +11,7 @@ const DATE = new Date(2026, 9, 13, 9, 42);
 
 describe("formatos regionales", () => {
   it("es-CO usa día/mes/año, punto de miles y coma decimal", () => {
-    const format = createFormatters("es");
+    const format = createFormatters("es-CO", "es");
 
     expect(format.date(DATE)).toBe("13/10/2026");
     expect(plain(format.amount(18_450_000, "COP"))).toBe("$ 18.450.000,00");
@@ -20,7 +20,7 @@ describe("formatos regionales", () => {
   });
 
   it("en-US usa mes/día/año y coma de miles", () => {
-    const format = createFormatters("en");
+    const format = createFormatters("en-US", "en");
 
     expect(format.date(DATE)).toBe("10/13/2026");
     expect(plain(format.amount(18_450_000, "COP"))).toBe("COP 18,450,000.00");
@@ -28,6 +28,11 @@ describe("formatos regionales", () => {
   });
 
   it("muestra fecha y hora para las sesiones del historial", () => {
-    expect(createFormatters("es").dateTime(DATE)).toBe("13/10/2026 09:42");
+    expect(createFormatters("es-CO", "es").dateTime(DATE)).toBe("13/10/2026 09:42");
+  });
+
+  it("enumera en el idioma de la interfaz aunque el formato regional sea otro", () => {
+    expect(createFormatters("en-US", "es").list(["2", "3"])).toBe("2 y 3");
+    expect(createFormatters("es-CO", "en").list(["2", "3"])).toBe("2 and 3");
   });
 });

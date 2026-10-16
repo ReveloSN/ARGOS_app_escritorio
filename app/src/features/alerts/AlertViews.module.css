@@ -1,0 +1,105 @@
+/* Confirmaciones y avisos: abajo y al centro, sobre el contenido (mockup del detalle). */
+.feedback {
+  position: fixed;
+  inset-inline-start: 50%;
+  inset-block-end: var(--spacing-5);
+  z-index: var(--layer-toast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.feedback > * {
+  pointer-events: auto;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding-bottom: var(--spacing-8);
+}
+
+.headerBar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  min-height: var(--size-control-xl);
+  padding: var(--spacing-1) var(--spacing-5);
+}
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.typeTag {
+  display: inline-flex;
+  align-items: center;
+  height: var(--size-control-xs);
+  padding: 0 var(--spacing-1-5);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-xs);
+  color: var(--color-text-secondary);
+}
+
+.titleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+}
+
+.heading {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-title);
+}
+
+.navigation {
+  display: flex;
+  flex: none;
+  gap: var(--spacing-1-5);
+}
+
+.readOnly {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-3-5);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-subtle);
+  color: var(--color-text-secondary);
+}
+
+.allDecided {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-3-5);
+  border: var(--border-width) solid var(--decision-selected-border);
+  border-radius: var(--radius-md);
+  background: var(--decision-selected-bg);
+}

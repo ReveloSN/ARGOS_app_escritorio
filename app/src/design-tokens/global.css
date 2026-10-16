@@ -46,6 +46,8 @@
   --color-amber-950: #33270f;
 
   --color-shadow: rgb(28 26 23 / 12%);
+  --color-scrim-light: rgb(28 26 23 / 24%);
+  --color-scrim-dark: rgb(0 0 0 / 48%);
 
   --spacing-0-5: 2px;
   --spacing-1: 4px;
@@ -126,6 +128,19 @@
   --size-column-value: 160px;
   --size-column-state: 130px;
   --size-column-actions: 52px;
+  --size-column-date: 144px;
+  --size-column-count: 72px;
+  --size-column-decided: 96px;
+  --size-menu: 236px;
+  --size-history-aside: 340px;
+  --size-settings-nav: 200px;
+  --size-readable-wide: 760px;
+  --size-progress-wide: 96px;
+  --size-search-field: 300px;
+  --size-dialog: 560px;
+  --layer-menu: 5;
+  --layer-overlay: 10;
+  --layer-toast: 20;
   --border-width-brand: 1.5px;
 
   --duration-fast: 150ms;

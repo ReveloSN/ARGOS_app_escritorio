@@ -1,7 +1,11 @@
+import { useState } from "react";
+
 import { useI18n } from "../../i18n/i18nContext";
 import type { TranslationKey } from "../../i18n/translate";
+import { Button } from "../atoms/Button";
 import { Icon } from "../atoms/Icon";
 import { DiffValue } from "../molecules/DiffValue";
+import { OccurrenceList, type OccurrenceView } from "../molecules/OccurrenceList";
 import { SourceLine } from "../molecules/SourceLine";
 import styles from "./ComparisonPanel.module.css";
 
@@ -15,6 +19,11 @@ export interface ComparedValue {
   readonly excerpt?: string | undefined;
   readonly occurrences: number;
   readonly files: number;
+  /** Todas las apariciones, para «Ver las N apariciones». */
+  readonly occurrenceList?: readonly OccurrenceView[] | undefined;
+  /** «Abrir en página 1»: abre el archivo original con la aplicación del sistema. */
+  readonly openLabel?: string | undefined;
+  readonly onOpen?: (() => void) | undefined;
 }
 
 interface ComparisonPanelProps {
@@ -41,7 +50,7 @@ function ValueCard({ label, compared }: { label: TranslationKey; compared: Compa
   const occurrences = tPlural({ key: "alerts.occurrences", count: compared.occurrences });
   const files = tPlural({ key: "alerts.inFiles", count: compared.files });
   return (
-    <section className={styles.card}>
+    <section aria-label={t(label)} className={styles.card}>
       <div className={styles.cardHeader}>
         <span className={styles.cardLabel}>{t(label)}</span>
         <span className={styles.cardMeta}>{`${occurrences} ${files}`}</span>
@@ -50,7 +59,41 @@ function ValueCard({ label, compared }: { label: TranslationKey; compared: Compa
         <DiffValue value={compared.value} positions={compared.positions} />
         <SourceLine fileName={compared.fileName} location={compared.location} />
         {compared.excerpt && <blockquote className={styles.excerpt}>{compared.excerpt}</blockquote>}
+        <ValueActions compared={compared} />
       </div>
     </section>
+  );
+}
+
+function ValueActions({ compared }: { compared: ComparedValue }) {
+  const { t } = useI18n();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const list = compared.occurrenceList ?? [];
+  const hasMore = list.length > 1;
+  if (!compared.onOpen && !hasMore) return null;
+  return (
+    <>
+      <div className={styles.actions}>
+        {compared.onOpen && (
+          <Button size="md" icon="open_in_new" onClick={compared.onOpen}>
+            {compared.openLabel}
+          </Button>
+        )}
+        {hasMore && (
+          <Button
+            size="md"
+            variant="tertiary"
+            onClick={() => {
+              setIsExpanded((current) => !current);
+            }}
+          >
+            {isExpanded
+              ? t("alerts.hideOccurrences")
+              : t("alerts.showOccurrences", { count: list.length })}
+          </Button>
+        )}
+      </div>
+      {isExpanded && <OccurrenceList label={t("alerts.occurrenceListLabel")} occurrences={list} />}
+    </>
   );
 }

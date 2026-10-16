@@ -1,0 +1,21 @@
+.layout {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  height: 100%;
+}
+
+.tabContent {
+  grid-row: 2 / 4;
+  padding: var(--spacing-4) var(--spacing-6);
+  overflow: auto;
+}
+
+.cards {
+  grid-row: 2 / 4;
+  margin: var(--spacing-4) var(--spacing-6);
+  overflow: auto;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+  align-self: start;
+}

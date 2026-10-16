@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { EngineNotReadyError, EngineUnavailableError, type EngineHealth } from "./engineClient";
+import type { EngineHealth } from "./engineClient";
+import { EngineNotReadyError, EngineUnavailableError } from "./engineHttp";
 import { EngineStatusMonitor, type EngineHealthChecker } from "./engineStatusMonitor";
 
 const POLL_INTERVAL_MS = 1000;

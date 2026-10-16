@@ -100,3 +100,28 @@
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
 }
+
+.reading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.readingHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-2);
+}
+
+.progressRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--spacing-3);
+  align-items: center;
+  padding: var(--spacing-2-5) var(--spacing-3-5);
+}
+
+.progressRow + .progressRow {
+  border-top: var(--border-width) solid var(--color-border-default);
+}

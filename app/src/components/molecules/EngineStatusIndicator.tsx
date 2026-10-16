@@ -19,19 +19,19 @@ export function EngineStatusIndicator({ status }: EngineStatusIndicatorProps) {
   if (status.kind === "analyzing") {
     const text = t("engine.status.analyzing", { done: status.done, total: status.total });
     return (
-      <p role="status" className={styles.status}>
+      <div role="status" className={styles.status}>
         <span className={styles.progress}>
           <ProgressBar value={status.done / status.total} label={text} />
         </span>
         {text}
-      </p>
+      </div>
     );
   }
   const icon = { starting: "hourglass_top", ready: "check_circle", stopped: "report" }[status.kind];
   return (
-    <p role="status" className={joinClassNames(styles.status, styles[status.kind])}>
+    <div role="status" className={joinClassNames(styles.status, styles[status.kind])}>
       <Icon name={icon} size="sm" className={styles.icon} />
       {t(`engine.status.${status.kind}`)}
-    </p>
+    </div>
   );
 }

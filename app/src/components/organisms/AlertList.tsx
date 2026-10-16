@@ -1,10 +1,10 @@
 import { useI18n } from "../../i18n/i18nContext";
 import type { TranslationKey } from "../../i18n/translate";
-import { DecisionTag, type DecisionState } from "../atoms/DecisionTag";
-import { Icon } from "../atoms/Icon";
-import { RiskTag, type RiskLevel } from "../atoms/RiskTag";
-import { joinClassNames } from "../joinClassNames";
+import type { DecisionState } from "../atoms/DecisionTag";
+import type { RiskLevel } from "../atoms/RiskTag";
+import type { MenuAction } from "../molecules/ActionMenu";
 import styles from "./AlertList.module.css";
+import { AlertRow } from "./AlertRow";
 
 export interface AlertRowData {
   readonly id: string;
@@ -15,6 +15,13 @@ export interface AlertRowData {
   readonly valueA: string;
   readonly valueB: string;
   readonly decision: DecisionState;
+}
+
+/** Un grupo de filas («Riesgo alto 3»); sin etiqueta, las filas van sin encabezado. */
+export interface AlertGroup {
+  readonly id: string;
+  readonly label?: string;
+  readonly rows: readonly AlertRowData[];
 }
 
 // Anchos de columna del mockup de Resultados; la columna «Alerta» toma el espacio restante.
@@ -28,14 +35,18 @@ const COLUMNS: readonly { readonly label: TranslationKey; readonly width?: strin
     { label: "alerts.columns.state", width: styles.stateColumn },
   ];
 
-interface AlertListProps {
-  readonly rows: readonly AlertRowData[];
-  readonly selectedId?: string;
+export interface AlertListProps {
+  readonly groups: readonly AlertGroup[];
+  readonly selectedId?: string | undefined;
+  /** Clic o Enter sobre la fila: abre el detalle. */
   readonly onSelect: (id: string) => void;
-  readonly onOpenActions?: ((id: string) => void) | undefined;
+  /** La fila recibió el foco (J / K o Tab): pasa a ser la seleccionada. */
+  readonly onHighlight?: ((id: string) => void) | undefined;
+  /** Acciones del menú «⋯»; sin ellas la fila no muestra el botón. */
+  readonly actionsFor?: ((row: AlertRowData) => readonly MenuAction[]) | undefined;
 }
 
-export function AlertList({ rows, selectedId, onSelect, onOpenActions }: AlertListProps) {
+export function AlertList(props: AlertListProps) {
   const { t } = useI18n();
   return (
     <table aria-label={t("alerts.listLabel")} className={styles.table}>
@@ -57,66 +68,21 @@ export function AlertList({ rows, selectedId, onSelect, onOpenActions }: AlertLi
           </th>
         </tr>
       </thead>
-      <tbody>
-        {rows.map((row) => (
-          <AlertRow
-            key={row.id}
-            row={row}
-            isSelected={row.id === selectedId}
-            {...{ onSelect, onOpenActions }}
-          />
-        ))}
-      </tbody>
+      {props.groups.map((group) => (
+        <tbody key={group.id}>
+          {group.label && (
+            <tr className={styles.groupHeader}>
+              <th scope="rowgroup" colSpan={COLUMNS.length + 1}>
+                {group.label}
+                <span className={styles.groupCount}>{group.rows.length}</span>
+              </th>
+            </tr>
+          )}
+          {group.rows.map((row) => (
+            <AlertRow key={row.id} row={row} isSelected={row.id === props.selectedId} {...props} />
+          ))}
+        </tbody>
+      ))}
     </table>
-  );
-}
-
-interface AlertRowProps extends Pick<AlertListProps, "onSelect" | "onOpenActions"> {
-  readonly row: AlertRowData;
-  readonly isSelected: boolean;
-}
-
-function AlertRow({ row, isSelected, onSelect, onOpenActions }: AlertRowProps) {
-  const { t } = useI18n();
-  return (
-    <tr
-      tabIndex={0}
-      aria-selected={isSelected}
-      className={joinClassNames(styles.row, isSelected && styles.selected)}
-      onClick={() => {
-        onSelect(row.id);
-      }}
-      onKeyDown={(event) => {
-        if (event.key === "Enter") onSelect(row.id);
-      }}
-    >
-      <td>
-        <RiskTag level={row.risk} compact />
-      </td>
-      <td className={styles.number}>{row.number}</td>
-      <td className={styles.alert}>
-        <span className={styles.title}>{row.title}</span>
-        <span className={styles.subtitle}>{row.subtitle}</span>
-      </td>
-      <td className={styles.value}>{row.valueA}</td>
-      <td className={styles.value}>{row.valueB}</td>
-      <td>
-        <DecisionTag state={row.decision} />
-      </td>
-      <td>
-        <button
-          type="button"
-          title={t("actions.rowActions")}
-          aria-label={t("actions.rowActions")}
-          className={styles.actions}
-          onClick={(event) => {
-            event.stopPropagation();
-            onOpenActions?.(row.id);
-          }}
-        >
-          <Icon name="more_horiz" size="md" />
-        </button>
-      </td>
-    </tr>
   );
 }

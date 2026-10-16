@@ -55,3 +55,9 @@
   font-size: var(--font-size-caption);
   cursor: pointer;
 }
+
+.hint {
+  color: var(--color-text-tertiary);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-micro);
+}

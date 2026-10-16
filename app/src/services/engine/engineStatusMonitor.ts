@@ -1,4 +1,5 @@
-import { EngineNotReadyError, type EngineHealth } from "./engineClient";
+import type { EngineHealth } from "./engineClient";
+import { EngineNotReadyError } from "./engineHttp";
 
 export type EngineStatus = "starting" | "ready" | "stopped";
 export type EngineStatusListener = (status: EngineStatus) => void;

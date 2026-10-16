@@ -1,3 +1,5 @@
+import type { DecisionState } from "../../components/atoms/DecisionTag";
+import type { OccurrenceView } from "../../components/molecules/OccurrenceList";
 import type { AlertRowData } from "../../components/organisms/AlertList";
 import type { ComparedValue } from "../../components/organisms/ComparisonPanel";
 import type { TranslationKey, TranslationParams } from "../../i18n/translate";
@@ -7,31 +9,12 @@ import type {
   EntityTypeValue,
   SourceLocationResult,
 } from "../../services/engine/reviewTypes";
+import { filesOf } from "./alertFilters";
 
-type Translate = (key: TranslationKey, params?: TranslationParams) => string;
+export type Translate = (key: TranslationKey, params?: TranslationParams) => string;
 type LocationDescriber = (location: SourceLocationResult, t: Translate) => string;
 
 const FILE_SEPARATOR = ", ";
-
-const ENTITY_TYPE_LABELS: Readonly<Record<EntityTypeValue, TranslationKey>> = {
-  contract_id: "entityTypes.contract_id",
-  tax_id: "entityTypes.tax_id",
-  money: "entityTypes.money",
-  date: "entityTypes.date",
-  person_name: "entityTypes.person_name",
-  organization_name: "entityTypes.organization_name",
-  period: "entityTypes.period",
-};
-
-const ALERT_TITLES: Readonly<Record<EntityTypeValue, TranslationKey>> = {
-  contract_id: "alertTitles.contract_id",
-  tax_id: "alertTitles.tax_id",
-  money: "alertTitles.money",
-  date: "alertTitles.date",
-  person_name: "alertTitles.person_name",
-  organization_name: "alertTitles.organization_name",
-  period: "alertTitles.period",
-};
 
 // Cada tipo de ubicación usa sus propios campos; el motor garantiza la forma de cada uno.
 const LOCATION_DESCRIPTIONS: Readonly<Record<SourceLocationResult["kind"], LocationDescriber>> = {
@@ -48,31 +31,55 @@ export function describeLocation(location: SourceLocationResult, t: Translate): 
   return LOCATION_DESCRIPTIONS[location.kind](location, t);
 }
 
-export function entityTypeLabel(alert: AlertResult, t: Translate): string {
-  return t(ENTITY_TYPE_LABELS[alert.entityType]);
+export function entityTypeLabel(entityType: EntityTypeValue, t: Translate): string {
+  return t(`entityTypes.${entityType}`);
 }
 
 export function alertTitle(alert: AlertResult, t: Translate): string {
-  return t(ALERT_TITLES[alert.entityType]);
+  return t(`alertTitles.${alert.entityType}`);
 }
 
 function documentsOf(side: AlertSideResult): string[] {
   return [...new Set(side.occurrences.map((occurrence) => occurrence.document))];
 }
 
-export function toAlertRow(alert: AlertResult, t: Translate): AlertRowData {
-  const files = [...new Set([...documentsOf(alert.first), ...documentsOf(alert.second)])];
+export function toAlertRow(
+  alert: AlertResult,
+  t: Translate,
+  decision: DecisionState,
+): AlertRowData {
   return {
     id: String(alert.number),
     number: alert.number,
     risk: alert.risk,
     title: alertTitle(alert, t),
-    subtitle: `${entityTypeLabel(alert, t)} · ${files.join(FILE_SEPARATOR)}`,
+    subtitle: `${entityTypeLabel(alert.entityType, t)} · ${filesOf(alert).join(FILE_SEPARATOR)}`,
     valueA: alert.first.value,
     valueB: alert.second.value,
-    // Las decisiones llegan con la siguiente entrega; por ahora toda alerta nueva está pendiente.
-    decision: "pending",
+    decision,
   };
+}
+
+/** Texto en el que busca «Buscar en alertas»: título, tipo, valores, archivos y número. */
+export function alertSearchText(alert: AlertResult, t: Translate): string {
+  const row = toAlertRow(alert, t, "pending");
+  return [String(alert.number), row.title, row.subtitle, row.valueA, row.valueB].join(" ");
+}
+
+export function toOccurrenceViews(side: AlertSideResult, t: Translate): OccurrenceView[] {
+  return side.occurrences.map((occurrence) => ({
+    fileName: occurrence.document,
+    location: describeLocation(occurrence.location, t),
+    excerpt: occurrence.excerpt,
+  }));
+}
+
+/** «Abrir en página 1» si el valor está en una página; si no, «Abrir archivo». */
+export function openLabelFor(side: AlertSideResult, t: Translate): string {
+  const location = side.occurrences[0]?.location;
+  return location?.kind === "page"
+    ? t("alertDetail.openAtPage", { page: location.page })
+    : t("alertDetail.openFile");
 }
 
 export function toComparedValue(
@@ -89,5 +96,6 @@ export function toComparedValue(
     excerpt: origin?.excerpt,
     occurrences: side.occurrences.length,
     files: documentsOf(side).length,
+    occurrenceList: toOccurrenceViews(side, t),
   };
 }

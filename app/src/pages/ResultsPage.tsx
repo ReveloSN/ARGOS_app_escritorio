@@ -1,59 +1,51 @@
-import { Button } from "../components/atoms/Button";
-import { Breadcrumb } from "../components/molecules/Breadcrumb";
-import { EmptyState } from "../components/molecules/EmptyState";
-import { AlertList } from "../components/organisms/AlertList";
-import { toAlertRow } from "../features/review/alertPresentation";
-import { useI18n } from "../i18n/i18nContext";
+import { AlertsTab } from "../features/alerts/AlertsTab";
+import { DecisionCardList } from "../features/alerts/DecisionCardList";
+import { DecisionFeedback } from "../features/alerts/DecisionFeedback";
+import { NoInconsistencies } from "../features/alerts/NoInconsistencies";
+import { ResultsHeader } from "../features/alerts/ResultsHeader";
+import { useResultsView } from "../features/alerts/resultsViewContext";
+import { useAlertDecisions } from "../features/alerts/useAlertDecisions";
+import { DocumentStatusList } from "../features/review/DocumentStatusList";
+import type { ReviewCloser } from "../features/review/useCloseReview";
 import type { ReviewResult } from "../services/engine/reviewTypes";
-import styles from "./Page.module.css";
+import styles from "./ResultsPage.module.css";
 
 interface ResultsPageProps {
   readonly review: ReviewResult;
+  readonly closer: ReviewCloser;
   readonly onOpenAlert: (number: number) => void;
-  readonly onNewReview: () => void;
+  readonly onSearchDocuments?: ((query: string) => void) | undefined;
 }
 
 /** Resultados de la revisión: solo existe con datos reales devueltos por el motor. */
-export function ResultsPage({ review, onOpenAlert, onNewReview }: ResultsPageProps) {
-  const { t, tPlural } = useI18n();
-  const readCount = review.documents.filter((document) => document.status === "read").length;
-  const total = review.documents.length;
+export function ResultsPage({ review, closer, onOpenAlert, onSearchDocuments }: ResultsPageProps) {
+  const { tab } = useResultsView();
+  const decisions = useAlertDecisions();
+  const hasAlerts = review.alerts.length > 0;
 
   return (
-    <div className={styles.page}>
-      <div className={styles.header}>
-        <Breadcrumb
-          items={[
-            { id: "session", label: review.session.name },
-            { id: "alerts", label: t("results.alertsLabel") },
-          ]}
+    <div className={styles.layout}>
+      <ResultsHeader review={review} closer={closer} />
+      {tab === "alerts" && hasAlerts && (
+        <AlertsTab
+          review={review}
+          decisions={decisions}
+          onOpenAlert={onOpenAlert}
+          onSearchDocuments={onSearchDocuments}
         />
-        <h1 className={styles.title}>{review.session.name}</h1>
-        <span className={styles.summary}>
-          {tPlural({ key: "results.readSummary", count: readCount, params: { total } })}
-        </span>
-      </div>
-      {review.alerts.length === 0 ? (
-        <EmptyState
-          isReassuring
-          icon="check"
-          title={t("results.noInconsistencies")}
-          description={tPlural({ key: "results.comparedFiles", count: readCount })}
-          actions={<Button onClick={onNewReview}>{t("navigation.newReview")}</Button>}
-        />
-      ) : (
-        <>
-          <span className={styles.summary}>
-            {tPlural({ key: "results.alertCount", count: review.alerts.length })}
-          </span>
-          <AlertList
-            rows={review.alerts.map((alert) => toAlertRow(alert, t))}
-            onSelect={(id) => {
-              onOpenAlert(Number(id));
-            }}
-          />
-        </>
       )}
+      {tab === "alerts" && !hasAlerts && <NoInconsistencies review={review} closer={closer} />}
+      {tab === "files" && (
+        <div className={styles.tabContent}>
+          <DocumentStatusList documents={review.documents} />
+        </div>
+      )}
+      {tab === "decisions" && (
+        <div className={styles.cards}>
+          <DecisionCardList review={review} onOpenAlert={onOpenAlert} />
+        </div>
+      )}
+      <DecisionFeedback decisions={decisions} />
     </div>
   );
 }

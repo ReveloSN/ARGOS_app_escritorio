@@ -1,0 +1,16 @@
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-1) var(--spacing-4);
+  padding: var(--spacing-1-5) var(--spacing-6);
+  border-top: var(--border-width) solid var(--color-border-default);
+  background: var(--color-background-surface);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-micro);
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}

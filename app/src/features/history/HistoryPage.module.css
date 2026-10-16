@@ -1,0 +1,73 @@
+.layout {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) var(--size-history-aside);
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  grid-column: 1 / 3;
+  flex-direction: column;
+  gap: var(--spacing-3-5);
+  padding: var(--spacing-4) var(--spacing-6);
+  border-bottom: var(--border-width) solid var(--color-border-default);
+  background: var(--color-background-surface);
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.title {
+  flex: 1;
+  margin: 0;
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-title);
+}
+
+.sessions {
+  min-height: 0;
+  padding: var(--spacing-3) var(--spacing-6);
+  overflow: auto;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+  border-inline-start: var(--border-width) solid var(--color-border-default);
+  background: var(--color-background-surface);
+}
+
+.asideHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-1);
+  padding: var(--spacing-3-5) var(--spacing-4);
+  border-bottom: var(--border-width) solid var(--color-border-default);
+}
+
+.asideLabel {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-micro);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+}
+
+.asideName {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-body);
+}
+
+.asideWhen {
+  margin-bottom: var(--spacing-1-5);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}

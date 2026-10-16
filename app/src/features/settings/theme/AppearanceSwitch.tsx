@@ -11,8 +11,13 @@ const OPTIONS: readonly { readonly value: ThemePreference; readonly label: Trans
   { value: "system", label: "appearance.system" },
 ];
 
+interface AppearanceSwitchProps {
+  /** Se avisa después de cambiar el tema (para la confirmación «Se guardaron los cambios»). */
+  readonly onChange?: () => void;
+}
+
 /** Ajustes > Apariencia de los mockups: claro, oscuro o según el sistema. */
-export function AppearanceSwitch() {
+export function AppearanceSwitch({ onChange }: AppearanceSwitchProps) {
   const { t } = useI18n();
   const { preference, setPreference } = useTheme();
 
@@ -27,6 +32,7 @@ export function AppearanceSwitch() {
           className={joinClassNames(styles.option, preference === option.value && styles.selected)}
           onClick={() => {
             setPreference(option.value);
+            onChange?.();
           }}
         >
           <span className={styles.dot} />
