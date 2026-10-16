@@ -53,6 +53,10 @@ class DecisionHistory:
         self._commands.execute(RecordDecisionCommand(self._repository, self._session_id, decision))
         return decision
 
+    @property
+    def can_undo(self) -> bool:
+        return self._commands.can_undo
+
     def undo(self) -> bool:
         return self._commands.undo()
 

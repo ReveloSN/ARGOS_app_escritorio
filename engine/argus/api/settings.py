@@ -19,11 +19,12 @@ class EngineSettings:
 
     version: str
     access_token: str
-    database_path: Path
+    # Carpeta del historial: la base de datos y la copia de los archivos leídos.
+    data_directory: Path
     allowed_origins: tuple[str, ...] = TAURI_ORIGINS
 
     @classmethod
-    def from_installed_package(cls, access_token: str, database_path: Path) -> "EngineSettings":
+    def from_installed_package(cls, access_token: str, data_directory: Path) -> "EngineSettings":
         return cls(
-            version=version(PACKAGE_NAME), access_token=access_token, database_path=database_path
+            version=version(PACKAGE_NAME), access_token=access_token, data_directory=data_directory
         )

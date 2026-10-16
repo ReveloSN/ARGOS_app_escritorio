@@ -34,6 +34,44 @@ MIGRATIONS: tuple[str, ...] = (
             REFERENCES alerts (session_id, number) ON DELETE CASCADE
     );
     """,
+    # Fase 6: cómo se leyó cada archivo y su texto (para volver a la sesión y buscar en ella),
+    # ajustes del usuario y casos que no generan alerta.
+    """
+    CREATE TABLE documents (
+        session_id TEXT NOT NULL REFERENCES sessions (id) ON DELETE CASCADE,
+        position INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        reason TEXT,
+        fragment_count INTEGER NOT NULL,
+        PRIMARY KEY (session_id, position)
+    );
+    CREATE TABLE fragments (
+        session_id TEXT NOT NULL,
+        document_position INTEGER NOT NULL,
+        ordinal INTEGER NOT NULL,
+        document_name TEXT NOT NULL,
+        location TEXT NOT NULL,
+        text TEXT NOT NULL,
+        search_text TEXT NOT NULL,
+        PRIMARY KEY (session_id, document_position, ordinal),
+        FOREIGN KEY (session_id, document_position)
+            REFERENCES documents (session_id, position) ON DELETE CASCADE
+    );
+    CREATE TABLE preferences (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+    );
+    CREATE TABLE suppression_rules (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        entity_type TEXT NOT NULL,
+        first_value TEXT NOT NULL,
+        second_value TEXT NOT NULL,
+        first_label TEXT NOT NULL,
+        second_label TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        UNIQUE (entity_type, first_value, second_value)
+    );
+    """,
 )
 SCHEMA_VERSION = len(MIGRATIONS)
 

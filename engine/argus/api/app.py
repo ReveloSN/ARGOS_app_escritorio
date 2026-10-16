@@ -2,22 +2,41 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from argus.api.access_token import AUTHORIZATION_HEADER, AccessTokenMiddleware
-from argus.api.composition import build_review_storage, build_run_review
+from argus.api.composition import build_engine_services
+from argus.api.error_handlers import register_error_handlers
+from argus.api.routes.documents import build_documents_router
 from argus.api.routes.health import build_health_router
-from argus.api.routes.reviews import build_reviews_router
+from argus.api.routes.history import build_history_router
+from argus.api.routes.preferences import (
+    build_preferences_router,
+    build_suppression_rules_router,
+)
+from argus.api.routes.reviews import build_decisions_router, build_reviews_router
 from argus.api.settings import EngineSettings
+from argus.application.ports.document_archive import FileOpener
+from argus.infrastructure.system_file_opener import SystemFileOpener
 
 API_TITLE = "ARGUS engine"
-ALLOWED_METHODS = ["GET", "POST"]
+ALLOWED_METHODS = ["GET", "POST", "PUT", "DELETE"]
 ALLOWED_HEADERS = [AUTHORIZATION_HEADER, "content-type"]
 
 
-def create_app(settings: EngineSettings) -> FastAPI:
+def create_app(settings: EngineSettings, file_opener: FileOpener | None = None) -> FastAPI:
     """Raíz de composición: aquí se construyen e inyectan las dependencias del motor."""
     app = FastAPI(title=API_TITLE, version=settings.version)
+    services = build_engine_services(settings.data_directory, file_opener or SystemFileOpener())
     app.include_router(build_health_router(settings))
-    storage = build_review_storage(settings.database_path)
-    app.include_router(build_reviews_router(build_run_review(storage)))
+    routers = (
+        build_reviews_router,
+        build_decisions_router,
+        build_documents_router,
+        build_history_router,
+        build_preferences_router,
+        build_suppression_rules_router,
+    )
+    for build_router in routers:
+        app.include_router(build_router(services))
+    register_error_handlers(app)
     app.add_middleware(AccessTokenMiddleware, access_token=settings.access_token)
     # CORS se agrega al final para quedar por fuera: responde los preflight y también
     # marca los 401, de modo que la interfaz pueda leer el rechazo.

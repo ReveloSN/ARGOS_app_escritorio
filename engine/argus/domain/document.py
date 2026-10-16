@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import PurePath
@@ -42,6 +43,14 @@ class TextFragment:
 
 
 @dataclass(frozen=True)
+class NamedFragment:
+    """Fragmento con el nombre del archivo donde está: el documento cargado o uno de sus adjuntos."""
+
+    document_name: str
+    fragment: TextFragment
+
+
+@dataclass(frozen=True)
 class AttachmentFailure:
     name: str
     reason: UnreadableReason
@@ -59,3 +68,9 @@ class Document:
 
     def __post_init__(self) -> None:
         require_text("El nombre del documento", self.name)
+
+    def named_fragments(self) -> Iterator[NamedFragment]:
+        """Fragmentos del documento y, después, los de cada adjunto."""
+        yield from (NamedFragment(self.name, fragment) for fragment in self.fragments)
+        for attachment in self.attachments:
+            yield from attachment.named_fragments()

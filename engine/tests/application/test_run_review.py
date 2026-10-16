@@ -3,6 +3,7 @@ from collections.abc import Sequence
 from argus.application.document_limits import MAX_DOCUMENT_BYTES
 from argus.application.document_reader_factory import DocumentReaderFactory
 from argus.application.ports.document_reader import DocumentSource
+from argus.application.review_recording import StoredReviewRecorder
 from argus.application.review_session_use_cases import StartReviewSession
 from argus.application.run_review import ReviewRequest, RunReview
 from argus.domain.alert import Alert
@@ -10,9 +11,12 @@ from argus.domain.document import Document, DocumentFormat, TextFragment
 from argus.domain.entity import EntityType
 from argus.domain.errors import UnreadableDocumentError, UnreadableReason
 from argus.domain.locations import LineLocation
+from argus.domain.read_outcome import DocumentReadOutcome
 from argus.domain.risk import RiskLevel
 from tests.application.in_memory_repositories import (
     InMemoryAlertRepository,
+    InMemoryDocumentArchive,
+    InMemoryDocumentRepository,
     InMemorySessionRepository,
     SteppingClock,
 )
@@ -46,13 +50,30 @@ class RecordingAnalyzer:
         return self._alerts
 
 
+class RecordingProgress:
+    """Observer de prueba: anota cada aviso en el orden en que llega."""
+
+    def __init__(self) -> None:
+        self.events: list[str] = []
+
+    def document_started(self, position: int, name: str) -> None:
+        self.events.append(f"inicia {position} {name}")
+
+    def document_finished(self, position: int, outcome: DocumentReadOutcome) -> None:
+        self.events.append(f"termina {position} {'leído' if outcome.is_read else outcome.reason}")
+
+    def analysis_started(self) -> None:
+        self.events.append("analiza")
+
+
 def build_run_review(
     analyzer: RecordingAnalyzer,
 ) -> tuple[RunReview, InMemorySessionRepository, InMemoryAlertRepository]:
     sessions, alerts = InMemorySessionRepository(), InMemoryAlertRepository()
     readers = DocumentReaderFactory({DocumentFormat.TEXT: LineReader()})
     start = StartReviewSession(sessions, alerts, SteppingClock())
-    return RunReview(readers, analyzer, start), sessions, alerts
+    recorder = StoredReviewRecorder(start, InMemoryDocumentRepository(), InMemoryDocumentArchive())
+    return RunReview(readers, analyzer, recorder), sessions, alerts
 
 
 def request(*sources: DocumentSource) -> ReviewRequest:
@@ -115,3 +136,21 @@ def test_read_outcome_counts_fragments_including_attachments() -> None:
     outcome = run_review.execute(request(DocumentSource("a.txt", b"uno\ndos\ntres")))
 
     assert outcome.documents[0].fragment_count == 3
+
+
+def test_progress_is_reported_file_by_file_before_the_analysis() -> None:
+    run_review, _, _ = build_run_review(RecordingAnalyzer([]))
+    progress = RecordingProgress()
+
+    run_review.execute(
+        request(DocumentSource("a.txt", b"Contrato 4857"), DocumentSource("vacio.txt", b"")),
+        progress,
+    )
+
+    assert progress.events == [
+        "inicia 0 a.txt",
+        "termina 0 leído",
+        "inicia 1 vacio.txt",
+        "termina 1 no_text",
+        "analiza",
+    ]

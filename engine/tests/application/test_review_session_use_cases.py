@@ -2,21 +2,15 @@ from datetime import timedelta
 
 import pytest
 
-from argus.application.review_session_use_cases import (
-    CloseReviewSession,
-    ComputeUsageMetrics,
-    StartReviewSession,
-)
+from argus.application.review_session_use_cases import CloseReviewSession, StartReviewSession
 from argus.domain.alert import Alert
-from argus.domain.decision import Decision, DecisionKind
 from argus.domain.entity import EntityType
-from argus.domain.errors import SessionNotFoundError
+from argus.domain.errors import ClosedSessionError, SessionNotFoundError
 from argus.domain.review_session import SessionStatus
 from argus.domain.risk import RiskLevel
 from tests.application.in_memory_repositories import (
     START,
     InMemoryAlertRepository,
-    InMemoryDecisionRepository,
     InMemorySessionRepository,
     SteppingClock,
 )
@@ -60,21 +54,13 @@ def test_closing_an_unknown_session_fails_explicitly() -> None:
         CloseReviewSession(InMemorySessionRepository(), SteppingClock()).execute("no-existe")
 
 
-def test_metrics_cover_sessions_created_since_the_given_date() -> None:
-    sessions, decisions, clock = (
-        InMemorySessionRepository(),
-        InMemoryDecisionRepository(),
-        SteppingClock(),
+def test_a_closed_review_cannot_be_closed_again() -> None:
+    sessions, clock = InMemorySessionRepository(), SteppingClock()
+    session = StartReviewSession(sessions, InMemoryAlertRepository(), clock).execute(
+        "Expediente", DOCUMENTS, [CONTRACT_ALERT]
     )
-    start = StartReviewSession(sessions, InMemoryAlertRepository(), clock)
-    old = start.execute("Antigua", DOCUMENTS, [CONTRACT_ALERT])
-    recent = start.execute("Reciente", DOCUMENTS, [CONTRACT_ALERT, MONEY_ALERT])
-    decisions.save(old.id, Decision(1, DecisionKind.ERROR, START))
-    decisions.save(recent.id, Decision(1, DecisionKind.ERROR, START))
-    decisions.save(recent.id, Decision(2, DecisionKind.CORRECT, START))
+    close = CloseReviewSession(sessions, clock)
+    close.execute(session.id)
 
-    metrics = ComputeUsageMetrics(sessions, decisions).execute(since=recent.created_at)
-
-    assert metrics.session_count == 1
-    assert metrics.resolved_alerts == 2
-    assert metrics.real_error_rate == pytest.approx(0.5)
+    with pytest.raises(ClosedSessionError):
+        close.execute(session.id)

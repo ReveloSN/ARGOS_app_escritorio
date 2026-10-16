@@ -1,4 +1,4 @@
-"""Respuesta de POST /reviews: lo que la interfaz necesita para Confirmar lectura y Resultados."""
+"""Revisión tal como la consume la interfaz: Confirmar lectura, Resultados y Detalle."""
 
 from datetime import datetime
 from typing import Literal
@@ -17,6 +17,7 @@ class SessionResponse(CamelModel):
     id: str
     name: str
     created_at: datetime
+    closed_at: datetime | None
 
 
 class DocumentResponse(CamelModel):
@@ -50,7 +51,36 @@ class AlertResponse(CamelModel):
     second: AlertSideResponse
 
 
+class DecisionResponse(CamelModel):
+    alert_number: int
+    kind: str
+    correct_side: str | None
+    decided_at: datetime
+
+
+class DecisionsResponse(CamelModel):
+    decisions: list[DecisionResponse]
+    can_undo: bool
+
+
 class ReviewResponse(CamelModel):
     session: SessionResponse
     documents: list[DocumentResponse]
     alerts: list[AlertResponse]
+    decisions: DecisionsResponse
+
+
+class DecisionRequestBody(CamelModel):
+    alert_number: int
+    kind: Literal["correct", "error", "ignored"]
+    correct_side: Literal["first", "second"] | None = None
+
+
+class DocumentStartedEvent(CamelModel):
+    position: int
+    name: str
+
+
+class DocumentFinishedEvent(CamelModel):
+    position: int
+    document: DocumentResponse

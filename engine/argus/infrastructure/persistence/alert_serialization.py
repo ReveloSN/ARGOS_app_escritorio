@@ -99,6 +99,15 @@ def location_payload(location: SourceLocation) -> LocationPayload:
     return {"kind": LOCATION_KINDS[type(location)], **asdict(location)}
 
 
+def location_from_payload(payload: LocationPayload) -> SourceLocation:
+    return LOCATION_BUILDERS[str(payload["kind"])](payload)
+
+
+def location_from_json(text: str) -> SourceLocation:
+    payload: LocationPayload = json.loads(text)
+    return location_from_payload(payload)
+
+
 def _entity_payload(entity: Entity) -> EntityPayload:
     location = entity.occurrence.location
     return {
@@ -112,6 +121,6 @@ def _entity_payload(entity: Entity) -> EntityPayload:
 
 
 def _entity(payload: EntityPayload) -> Entity:
-    location = LOCATION_BUILDERS[str(payload["location"]["kind"])](payload["location"])
+    location = location_from_payload(payload["location"])
     occurrence = Occurrence(payload["document"], location, payload["excerpt"])
     return Entity(EntityType(payload["type"]), payload["raw"], payload["normalized"], occurrence)

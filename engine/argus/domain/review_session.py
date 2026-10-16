@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from enum import StrEnum
 from uuid import uuid4
 
-from argus.domain.errors import InvalidValueError
+from argus.domain.errors import ClosedSessionError, InvalidValueError
 from argus.domain.validation import require_text, require_time_zone
 
 
@@ -52,6 +52,10 @@ class ReviewSession:
         )
 
     @property
+    def is_closed(self) -> bool:
+        return self.closed_at is not None
+
+    @property
     def status(self) -> SessionStatus:
         if self.closed_at is None:
             return SessionStatus.IN_PROGRESS
@@ -64,4 +68,6 @@ class ReviewSession:
 
     def close(self, closed_at: datetime) -> "ReviewSession":
         require_time_zone("La fecha de cierre", closed_at)
+        if self.is_closed:
+            raise ClosedSessionError(self.id)
         return replace(self, closed_at=closed_at)

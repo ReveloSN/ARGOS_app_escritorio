@@ -41,11 +41,22 @@ class SqliteSessionRepository:
         return _to_session(row)
 
     def list_created_since(self, since: datetime) -> tuple[ReviewSession, ...]:
+        return self._list_where("created_at >= ?", since)
+
+    def list_created_before(self, moment: datetime) -> tuple[ReviewSession, ...]:
+        return self._list_where("created_at < ?", moment)
+
+    def delete(self, session_id: str) -> None:
+        # Las claves foráneas en cascada borran también alertas, decisiones y documentos.
+        with self._database.connect() as connection:
+            connection.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
+
+    def _list_where(self, condition: str, moment: datetime) -> tuple[ReviewSession, ...]:
         with self._database.connect() as connection:
             rows = connection.execute(
-                f"SELECT {SESSION_COLUMNS} FROM sessions WHERE created_at >= ? "
+                f"SELECT {SESSION_COLUMNS} FROM sessions WHERE {condition} "
                 "ORDER BY created_at DESC",
-                (to_stored_timestamp(since),),
+                (to_stored_timestamp(moment),),
             ).fetchall()
         return tuple(_to_session(row) for row in rows)
 

@@ -7,11 +7,8 @@ import pytest
 
 from argus.api.composition import ReviewStorage, build_review_storage
 from argus.application.decision_history import DecisionHistory, DecisionRequest
-from argus.application.review_session_use_cases import (
-    CloseReviewSession,
-    ComputeUsageMetrics,
-    StartReviewSession,
-)
+from argus.application.review_history import HistoryRepositories, ReviewHistory
+from argus.application.review_session_use_cases import CloseReviewSession, StartReviewSession
 from argus.domain.alert import Alert
 from argus.domain.decision import CorrectSide, DecisionKind
 from argus.domain.entity import EntityType
@@ -70,7 +67,10 @@ def test_usage_metrics_are_computed_from_the_stored_history(storage: ReviewStora
     close.execute(first.id)
     close.execute(second.id)
 
-    metrics = ComputeUsageMetrics(storage.sessions, storage.decisions).execute(since=START)
+    history = ReviewHistory(
+        HistoryRepositories(storage.sessions, storage.alerts, storage.decisions)
+    )
+    metrics = history.overview(since=START).metrics
 
     assert metrics.session_count == 2
     assert metrics.resolved_alerts == 4

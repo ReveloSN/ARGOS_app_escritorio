@@ -43,3 +43,27 @@ class AlertNotFoundError(ArgusDomainError):
         super().__init__(f"La sesión «{session_id}» no tiene la alerta {alert_number}.")
         self.session_id = session_id
         self.alert_number = alert_number
+
+
+class ClosedSessionError(ArgusDomainError):
+    """Una revisión cerrada queda en el historial como solo lectura."""
+
+    def __init__(self, session_id: str) -> None:
+        super().__init__(f"La sesión «{session_id}» está cerrada y no admite cambios.")
+        self.session_id = session_id
+
+
+class DocumentNotFoundError(ArgusDomainError):
+    def __init__(self, session_id: str, document_name: str) -> None:
+        super().__init__(f"La sesión «{session_id}» no tiene el archivo leído «{document_name}».")
+        self.session_id = session_id
+        self.document_name = document_name
+
+
+class ArchivedFileMissingError(ArgusDomainError):
+    """La copia del archivo ya no está en la carpeta del historial (se movió o se borró)."""
+
+    def __init__(self, session_id: str, document_name: str) -> None:
+        super().__init__(f"Falta la copia de «{document_name}» de la sesión «{session_id}».")
+        self.session_id = session_id
+        self.document_name = document_name

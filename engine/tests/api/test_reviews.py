@@ -1,24 +1,31 @@
-from typing import Any
-
 from fastapi.testclient import TestClient
 
-from tests.infrastructure.conftest import FIXTURES_DIR
+from tests.api.review_stream import REVIEW_NAME, post_review, stream_review, upload
 
 
-def upload(name: str) -> tuple[str, tuple[str, bytes]]:
-    return ("files", (name, (FIXTURES_DIR / name).read_bytes()))
+def test_progress_is_streamed_file_by_file_before_the_review(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    streamed = stream_review(client, auth_headers, "Contrato_4857_v3.pdf", "anexo_3.pdf")
 
-
-def post_review(client: TestClient, headers: dict[str, str], *names: str) -> dict[str, Any]:
-    response = client.post(
-        "/reviews",
-        headers=headers,
-        data={"name": "Revisión de prueba"},
-        files=[upload(name) for name in names],
-    )
-    assert response.status_code == 200, response.text
-    body: dict[str, Any] = response.json()
-    return body
+    assert streamed.names == [
+        "document_started",
+        "document_finished",
+        "document_started",
+        "document_finished",
+        "analysis_started",
+        "review",
+    ]
+    assert streamed.events[0][1] == {"position": 0, "name": "Contrato_4857_v3.pdf"}
+    assert streamed.events[3][1] == {
+        "position": 1,
+        "document": {
+            "name": "anexo_3.pdf",
+            "status": "unreadable",
+            "reason": "no_text",
+            "fragmentCount": 0,
+        },
+    }
 
 
 def test_review_returns_the_session_and_how_each_file_was_read(
@@ -26,11 +33,13 @@ def test_review_returns_the_session_and_how_each_file_was_read(
 ) -> None:
     body = post_review(client, auth_headers, "Contrato_4857_v3.pdf", "anexo_3.pdf")
 
-    assert body["session"]["name"] == "Revisión de prueba"
+    assert body["session"]["name"] == REVIEW_NAME
+    assert body["session"]["closedAt"] is None
     assert body["documents"] == [
         {"name": "Contrato_4857_v3.pdf", "status": "read", "reason": None, "fragmentCount": 2},
         {"name": "anexo_3.pdf", "status": "unreadable", "reason": "no_text", "fragmentCount": 0},
     ]
+    assert body["decisions"] == {"decisions": [], "canUndo": False}
 
 
 def test_review_returns_real_alerts_with_both_values_and_their_origin(
@@ -58,6 +67,38 @@ def test_amount_highlight_is_computed_on_the_values_as_written(
     money = next(alert for alert in body["alerts"] if alert["entityType"] == "money")
     assert {money["first"]["value"], money["second"]["value"]} == {"$ 18.450.000", "$ 18.540.000"}
     assert money["highlightPositions"] == [6, 7]
+
+
+def test_a_stored_review_can_be_opened_again(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    created = post_review(client, auth_headers, "Contrato_4857_v3.pdf", "Anexo_1_condiciones.docx")
+
+    response = client.get(f"/reviews/{created['session']['id']}", headers=auth_headers)
+
+    assert response.status_code == 200
+    assert response.json() == created
+
+
+def test_closing_a_review_records_when_and_makes_it_read_only(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    session_id = post_review(client, auth_headers, "Contrato_4857_v3.pdf")["session"]["id"]
+
+    closed = client.post(f"/reviews/{session_id}/close", headers=auth_headers)
+    closed_again = client.post(f"/reviews/{session_id}/close", headers=auth_headers)
+
+    assert closed.status_code == 200
+    assert closed.json()["closedAt"] is not None
+    assert closed_again.status_code == 409
+    assert closed_again.json() == {"detail": "session_closed"}
+
+
+def test_unknown_review_is_reported(client: TestClient, auth_headers: dict[str, str]) -> None:
+    response = client.get("/reviews/no-existe", headers=auth_headers)
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "session_not_found"}
 
 
 def test_review_without_name_is_rejected(client: TestClient, auth_headers: dict[str, str]) -> None:
