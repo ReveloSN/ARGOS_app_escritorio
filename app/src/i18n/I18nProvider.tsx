@@ -12,7 +12,14 @@ import {
   type Locale,
   type Region,
 } from "./messages";
-import { translate, translatePlural } from "./translate";
+import {
+  isPluralKey,
+  isTranslationKey,
+  translate,
+  translatePlural,
+  type PluralKey,
+  type TranslationKey,
+} from "./translate";
 
 const LOCALE_KEY = "argus.locale";
 const REGION_KEY = "argus.region";
@@ -51,6 +58,8 @@ export function I18nProvider({
       },
       t: (key, params) => translate(messages, key, params),
       tPlural: (request) => translatePlural(messages, locale, request),
+      isKey: (key): key is TranslationKey => isTranslationKey(messages, key),
+      isPluralKey: (key): key is PluralKey => isPluralKey(messages, key),
       format: createFormatters(region, locale),
     };
   }, [locale, region, storage]);

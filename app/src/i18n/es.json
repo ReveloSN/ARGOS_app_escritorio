@@ -263,7 +263,8 @@
     "navigationKeys": "J / K",
     "openAtPage": "Abrir en página {page}",
     "openFile": "Abrir archivo",
-    "readOnly": "Revisión cerrada el {date}. Las decisiones quedan como solo lectura."
+    "readOnly": "Revisión cerrada el {date}. Las decisiones quedan como solo lectura.",
+    "aiSuggestion": "Sugerencia de la IA local · confianza {confidence}"
   },
   "review": {
     "pendingSummary": {
@@ -288,7 +289,10 @@
     "date": "La fecha es distinta",
     "person_name": "El nombre de una persona es distinto",
     "organization_name": "La razón social está escrita distinto",
-    "period": "El periodo no coincide"
+    "period": "El periodo no coincide",
+    "referenced_period": "El correo cita un periodo distinto al de su adjunto",
+    "out_of_pattern": "Una fecha se aparta del resto de los documentos",
+    "magnitude": "El mismo monto aparece con otra escala"
   },
   "closeFailed": {
     "what": "No se pudo cerrar la revisión.",
@@ -340,7 +344,10 @@
     "similarName": "Diferencia: nombres parecidos escritos de forma distinta",
     "formatOnly": "Diferencia: el mismo valor escrito con otro formato",
     "valuesDiffer": "Diferencia: los valores no tienen la misma cantidad de caracteres",
-    "highlightNote": "· los caracteres distintos están resaltados y subrayados"
+    "highlightNote": "· los caracteres distintos están resaltados y subrayados",
+    "referencedPeriod": "Diferencia: el periodo citado en el correo no es el del adjunto",
+    "outOfPattern": "Diferencia: el año se aparta décadas del resto de las fechas",
+    "magnitude": "Diferencia: las mismas cifras con ceros de más o de menos"
   },
   "duration": {
     "seconds": "{seconds} s",
@@ -561,6 +568,39 @@
       "what": "No se guardó el cambio.",
       "why": "El motor de análisis no respondió.",
       "todo": "Reintente para ver los ajustes vigentes y vuelva a hacer el cambio."
+    }
+  },
+  "explanation": {
+    "lead": {
+      "contract_id": "«{first}» y «{second}» citan números de contrato distintos.",
+      "tax_id": "«{first}» y «{second}» citan un NIT o una cédula distintos.",
+      "money": "«{first}» y «{second}» citan montos distintos.",
+      "date": "«{first}» y «{second}» citan fechas distintas.",
+      "person_name": "«{first}» y «{second}» escriben distinto el nombre de una persona.",
+      "organization_name": "«{first}» y «{second}» escriben distinto una razón social.",
+      "period": "«{first}» y «{second}» citan periodos distintos."
+    },
+    "cause": {
+      "transposition": "Los caracteres {a} y {b} aparecen en orden invertido, lo que suele indicar un error de digitación.",
+      "character_change": {
+        "one": "Cambia un solo carácter, como suele pasar al digitar.",
+        "other": "Cambian {count} caracteres en la misma posición."
+      },
+      "date_component": "Cambia solo el día, el mes o el año; el resto de la fecha coincide.",
+      "day_month_swap": "El día y el mes están intercambiados, un error frecuente entre formatos de fecha.",
+      "similar_name": "Los nombres son casi iguales: puede faltar una tilde o cambiar una letra.",
+      "format_only": "Es el mismo valor escrito de otra forma; no cambia su significado.",
+      "referenced_period": "El correo menciona «{mentioned}» y su adjunto «{attachment}», que trata del mismo tema, corresponde a «{attached}».",
+      "out_of_pattern": "Las demás fechas de los documentos son de otros años; una diferencia de décadas suele ser un año mal digitado.",
+      "magnitude": "Las cifras coinciden pero la escala no: suele faltar o sobrar un cero."
+    },
+    "majority": {
+      "one": "El Valor A aparece una vez y el Valor B, una sola vez.",
+      "other": "El Valor A aparece {count} veces y el Valor B, una sola: lo más probable es que el error esté en el Valor B."
+    },
+    "feedback": {
+      "one": "En revisiones anteriores marcó como error {errors} de {count} alerta parecida.",
+      "other": "En revisiones anteriores marcó como error {errors} de {count} alertas parecidas."
     }
   }
 }

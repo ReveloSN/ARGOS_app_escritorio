@@ -32,17 +32,31 @@ export class MissingTranslationError extends Error {
   }
 }
 
-export function translate(
-  messages: Messages,
-  key: TranslationKey,
-  params: TranslationParams = {},
-): string {
-  const value = key
+function nodeAt(messages: Messages, key: string): unknown {
+  return key
     .split(".")
     .reduce<unknown>(
       (node, segment) => (node as Record<string, unknown> | undefined)?.[segment],
       messages,
     );
+}
+
+/** Si la clave existe como texto: las claves que llegan del motor se validan antes de usarlas. */
+export function isTranslationKey(messages: Messages, key: string): key is TranslationKey {
+  return typeof nodeAt(messages, key) === "string";
+}
+
+export function isPluralKey(messages: Messages, key: string): key is PluralKey {
+  const node = nodeAt(messages, key) as Partial<PluralNode> | undefined;
+  return typeof node?.one === "string" && typeof node.other === "string";
+}
+
+export function translate(
+  messages: Messages,
+  key: TranslationKey,
+  params: TranslationParams = {},
+): string {
+  const value = nodeAt(messages, key);
   if (typeof value !== "string") throw new MissingTranslationError(key);
   return value.replace(PARAMETER, (match, name: string) => String(params[name] ?? match));
 }

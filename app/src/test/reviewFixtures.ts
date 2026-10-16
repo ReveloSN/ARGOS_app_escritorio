@@ -31,6 +31,15 @@ export const CONTRACT_ALERT: AlertResult = {
       { document: "anexo.pdf", location: { kind: "page", page: 3 }, excerpt: "Contrato No. 1324" },
     ],
   },
+  explanation: [
+    {
+      key: "explanation.lead.contract_id",
+      params: { first: "contrato.txt", second: "anexo.pdf" },
+      count: null,
+    },
+    { key: "explanation.cause.transposition", params: { a: "2", b: "3" }, count: null },
+    { key: "explanation.majority", params: {}, count: 2 },
+  ],
 };
 
 export const NAME_ALERT: AlertResult = {
@@ -58,6 +67,14 @@ export const NAME_ALERT: AlertResult = {
       { document: "anexo.pdf", location: { kind: "page", page: 6 }, excerpt: "María Rojas Peña" },
     ],
   },
+  explanation: [
+    {
+      key: "explanation.lead.person_name",
+      params: { first: "contrato.txt", second: "anexo.pdf" },
+      count: null,
+    },
+    { key: "explanation.cause.similar_name", params: {}, count: null },
+  ],
 };
 
 export const REVIEW: ReviewResult = {

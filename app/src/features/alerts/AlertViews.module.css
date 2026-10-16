@@ -76,6 +76,13 @@
   line-height: var(--line-height-title);
 }
 
+.explanation {
+  max-width: var(--size-readable-wide);
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
 .navigation {
   display: flex;
   flex: none;

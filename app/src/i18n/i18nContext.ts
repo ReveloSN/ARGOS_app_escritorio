@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 import type { Formatters } from "./formatters";
 import type { Locale, Region } from "./messages";
-import type { PluralRequest, TranslationKey, TranslationParams } from "./translate";
+import type { PluralKey, PluralRequest, TranslationKey, TranslationParams } from "./translate";
 
 export interface I18n {
   readonly locale: Locale;
@@ -11,6 +11,9 @@ export interface I18n {
   readonly setRegion: (region: Region) => void;
   readonly t: (key: TranslationKey, params?: TranslationParams) => string;
   readonly tPlural: (request: PluralRequest) => string;
+  /** Valida claves que no se conocen al compilar (las de la explicación que envía el motor). */
+  readonly isKey: (key: string) => key is TranslationKey;
+  readonly isPluralKey: (key: string) => key is PluralKey;
   readonly format: Formatters;
 }
 

@@ -19,6 +19,9 @@ const KIND_DESCRIPTIONS: Readonly<Partial<Record<DifferenceKindValue, Translatio
   day_month_swap: "difference.dayMonthSwap",
   similar_name: "difference.similarName",
   format_only: "difference.formatOnly",
+  referenced_period: "difference.referencedPeriod",
+  out_of_pattern: "difference.outOfPattern",
+  magnitude: "difference.magnitude",
 };
 
 /** «Diferencia: posiciones 2 y 3 intercambiadas · 8 ↔ 5», según cómo difieren los valores. */

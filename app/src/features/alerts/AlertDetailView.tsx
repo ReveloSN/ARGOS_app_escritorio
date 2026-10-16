@@ -16,6 +16,7 @@ import {
 import styles from "./AlertViews.module.css";
 import { DetailDecision } from "./DetailDecision";
 import { describeDifference } from "./differenceDescription";
+import { explanationText } from "./explanationText";
 import { OpenDocumentFailure } from "./OpenDocumentFailure";
 import type { AlertDecisions } from "./useAlertDecisions";
 import type { DocumentOpener } from "./useOpenDocument";
@@ -56,9 +57,18 @@ export function AlertDetailView(props: AlertDetailViewProps) {
             <RiskTag level={alert.risk} variant="long" />
             <span className={styles.typeTag}>{entityTypeLabel(alert.entityType, t)}</span>
             <DecisionTag state={decisionStateOf(review, alert.number)} />
+            {alert.differenceKind === "referenced_period" && (
+              // Salida de la IA local: se muestra como sugerencia con su confianza (CLAUDE.md §8).
+              <span className={styles.typeTag}>
+                {t("alertDetail.aiSuggestion", {
+                  confidence: i18n.format.percent(alert.confidence),
+                })}
+              </span>
+            )}
             <span>{t("alertDetail.position", { number: alert.number, total })}</span>
           </div>
           <h1 className={styles.title}>{alertTitle(alert, t)}</h1>
+          <p className={styles.explanation}>{explanationText(alert.explanation, i18n)}</p>
         </div>
         <div className={styles.navigation}>
           <Button

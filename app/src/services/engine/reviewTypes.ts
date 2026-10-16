@@ -14,7 +14,10 @@ export type DifferenceKindValue =
   | "date_component"
   | "day_month_swap"
   | "similar_name"
-  | "format_only";
+  | "format_only"
+  | "referenced_period"
+  | "out_of_pattern"
+  | "magnitude";
 
 export type DecisionKindValue = "correct" | "error" | "ignored";
 export type CorrectSideValue = "first" | "second";
@@ -44,6 +47,13 @@ export interface AlertSideResult {
   readonly occurrences: readonly OccurrenceResult[];
 }
 
+/** Una frase de la explicación: clave de texto de `explanation.*`, sus datos y, si es plural, la cantidad. */
+export interface ExplanationPartResult {
+  readonly key: string;
+  readonly params: Readonly<Record<string, string | number>>;
+  readonly count: number | null;
+}
+
 export interface AlertResult {
   readonly number: number;
   readonly risk: RiskLevelValue;
@@ -53,6 +63,7 @@ export interface AlertResult {
   readonly highlightPositions: readonly number[];
   readonly first: AlertSideResult;
   readonly second: AlertSideResult;
+  readonly explanation: readonly ExplanationPartResult[];
 }
 
 export interface DocumentReadResult {

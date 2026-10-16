@@ -6,6 +6,7 @@ import type { TranslationKey, TranslationParams } from "../../i18n/translate";
 import type {
   AlertResult,
   AlertSideResult,
+  DifferenceKindValue,
   EntityTypeValue,
   SourceLocationResult,
 } from "../../services/engine/reviewTypes";
@@ -35,8 +36,16 @@ export function entityTypeLabel(entityType: EntityTypeValue, t: Translate): stri
   return t(`entityTypes.${entityType}`);
 }
 
+// Las alertas de la comparación semántica y de anomalías tienen título propio: su tipo de dato
+// no basta para decir qué pasa.
+const TITLE_BY_KIND: Readonly<Partial<Record<DifferenceKindValue, TranslationKey>>> = {
+  referenced_period: "alertTitles.referenced_period",
+  out_of_pattern: "alertTitles.out_of_pattern",
+  magnitude: "alertTitles.magnitude",
+};
+
 export function alertTitle(alert: AlertResult, t: Translate): string {
-  return t(`alertTitles.${alert.entityType}`);
+  return t(TITLE_BY_KIND[alert.differenceKind] ?? `alertTitles.${alert.entityType}`);
 }
 
 function documentsOf(side: AlertSideResult): string[] {

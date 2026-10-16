@@ -263,7 +263,8 @@
     "navigationKeys": "J / K",
     "openAtPage": "Open at page {page}",
     "openFile": "Open file",
-    "readOnly": "Review closed on {date}. Its decisions are read-only."
+    "readOnly": "Review closed on {date}. Its decisions are read-only.",
+    "aiSuggestion": "Local AI suggestion · confidence {confidence}"
   },
   "review": {
     "pendingSummary": {
@@ -288,7 +289,10 @@
     "date": "The date is different",
     "person_name": "A person's name is different",
     "organization_name": "The company name is written differently",
-    "period": "The period doesn't match"
+    "period": "The period doesn't match",
+    "referenced_period": "The email cites a different period than its attachment",
+    "out_of_pattern": "A date stands apart from the rest of the documents",
+    "magnitude": "The same amount appears with a different scale"
   },
   "closeFailed": {
     "what": "The review could not be closed.",
@@ -340,7 +344,10 @@
     "similarName": "Difference: similar names written differently",
     "formatOnly": "Difference: the same value written in another format",
     "valuesDiffer": "Difference: the values do not have the same number of characters",
-    "highlightNote": "· different characters are highlighted and underlined"
+    "highlightNote": "· different characters are highlighted and underlined",
+    "referencedPeriod": "Difference: the period cited in the email is not the attachment's",
+    "outOfPattern": "Difference: the year is decades away from the other dates",
+    "magnitude": "Difference: the same digits with extra or missing zeros"
   },
   "duration": {
     "seconds": "{seconds} s",
@@ -561,6 +568,39 @@
       "what": "The change was not saved.",
       "why": "The analysis engine did not respond.",
       "todo": "Retry to see the current settings and make the change again."
+    }
+  },
+  "explanation": {
+    "lead": {
+      "contract_id": "“{first}” and “{second}” cite different contract numbers.",
+      "tax_id": "“{first}” and “{second}” cite a different tax or ID number.",
+      "money": "“{first}” and “{second}” cite different amounts.",
+      "date": "“{first}” and “{second}” cite different dates.",
+      "person_name": "“{first}” and “{second}” spell a person’s name differently.",
+      "organization_name": "“{first}” and “{second}” spell a company name differently.",
+      "period": "“{first}” and “{second}” cite different periods."
+    },
+    "cause": {
+      "transposition": "The characters {a} and {b} appear in reverse order, which usually signals a typing error.",
+      "character_change": {
+        "one": "A single character changes, as often happens when typing.",
+        "other": "{count} characters change in the same position."
+      },
+      "date_component": "Only the day, month or year changes; the rest of the date matches.",
+      "day_month_swap": "Day and month are swapped, a common error between date formats.",
+      "similar_name": "The names are almost identical: an accent may be missing or a letter changed.",
+      "format_only": "It is the same value written another way; its meaning does not change.",
+      "referenced_period": "The email mentions “{mentioned}” and its attachment “{attachment}”, on the same topic, is from “{attached}”.",
+      "out_of_pattern": "The other dates in the documents are from other years; a gap of decades is usually a mistyped year.",
+      "magnitude": "The digits match but the scale does not: a zero is usually missing or extra."
+    },
+    "majority": {
+      "one": "Value A appears once and Value B, once.",
+      "other": "Value A appears {count} times and Value B only once: the error is most likely in Value B."
+    },
+    "feedback": {
+      "one": "In previous reviews you marked {errors} of {count} similar alert as an error.",
+      "other": "In previous reviews you marked {errors} of {count} similar alerts as an error."
     }
   }
 }
