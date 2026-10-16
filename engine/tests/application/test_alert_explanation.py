@@ -49,6 +49,30 @@ def test_previous_decisions_on_similar_alerts_are_mentioned() -> None:
     assert explanation[-1] == ExplanationPart("explanation.feedback", {"errors": 4}, count=5)
 
 
+def test_a_referenced_period_does_not_count_repetitions_inside_the_same_email() -> None:
+    mentions = AlertSide(
+        (
+            entity(EntityType.PERIOD, "XXXX-06", "correo.eml"),
+            entity(EntityType.PERIOD, "XXXX-06", "correo.eml"),
+        )
+    )
+    alert = Alert.from_candidate(
+        AlertCandidate(
+            mentions,
+            side(EntityType.PERIOD, "2026-05", "tarifas.xlsx"),
+            Difference(DifferenceKind.REFERENCED_PERIOD, 0.8),
+        ),
+        RiskLevel.HIGH,
+    )
+
+    (explanation,) = TemplateAlertExplainer(FixedStatistics()).explain([alert])
+
+    assert [part.key for part in explanation] == [
+        "explanation.lead.period",
+        "explanation.cause.referenced_period",
+    ]
+
+
 def test_each_difference_kind_has_its_cause() -> None:
     period = Alert.from_candidate(
         AlertCandidate(

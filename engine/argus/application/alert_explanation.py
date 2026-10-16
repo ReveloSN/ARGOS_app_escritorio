@@ -91,7 +91,13 @@ def cause(alert: Alert) -> ExplanationPart:
 
 
 def majority(alert: Alert) -> ExplanationPart | None:
-    """Si un valor se repite y el otro aparece una vez, el error suele estar en el segundo."""
+    """Si un valor se repite y el otro aparece una vez, el error suele estar en el segundo.
+
+    No aplica al periodo citado en un correo: sus repeticiones son el asunto y el cuerpo del
+    mismo mensaje, no documentos que coinciden.
+    """
+    if alert.difference.kind is DifferenceKind.REFERENCED_PERIOD:
+        return None
     if alert.first.occurrence_count < MIN_REPEATED or alert.second.occurrence_count != 1:
         return None
     return ExplanationPart("explanation.majority", count=alert.first.occurrence_count)
