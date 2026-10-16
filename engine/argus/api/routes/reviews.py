@@ -38,13 +38,15 @@ def build_reviews_router(services: EngineServices) -> APIRouter:
         sources = tuple(
             [DocumentSource(file.filename or UNNAMED_FILE, await file.read()) for file in files]
         )
-        events = review_events(services.run_review, ReviewRequest(name.strip(), sources))
+        request = ReviewRequest(name.strip(), sources)
+        events = review_events(services.run_review, request, services.explainer)
         return StreamingResponse(events, media_type=EVENT_STREAM, headers=STREAM_HEADERS)
 
     @router.get("/{session_id}")
     def get_review(session_id: str) -> ReviewResponse:
         review = services.open_review.execute(session_id)
-        return to_review_response(review, services.decisions.state(session_id))
+        decisions = services.decisions.state(session_id)
+        return to_review_response(review, decisions, services.explainer)
 
     @router.post("/{session_id}/close")
     def close_review(session_id: str) -> SessionResponse:

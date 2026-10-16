@@ -5,13 +5,24 @@ from pathlib import Path
 
 from platformdirs import user_data_path
 
+from argus.api.settings import EngineSettings
+from argus.application.alert_explanation import AlertExplainer, TemplateAlertExplainer
 from argus.application.detect_inconsistencies import DetectInconsistencies
 from argus.application.document_access import OpenDocument, SearchDocuments
 from argus.application.document_reader_factory import DocumentReaderFactory
 from argus.application.entity_extraction_pipeline import EntityExtractionPipeline
+from argus.application.feedback_confidence import FeedbackAdjustingReviewAnalyzer
 from argus.application.open_review import OpenReview, StoredReviewRepositories
+from argus.application.out_of_pattern import AmountScaleSource, DateOutlierSource
 from argus.application.ports.document_archive import DocumentArchive, FileOpener
-from argus.application.review_analyzers import EntityReviewAnalyzer, SuppressingReviewAnalyzer
+from argus.application.referenced_period import ReferencedPeriodSource
+from argus.application.review_analyzers import (
+    AlertSource,
+    EntityReviewAnalyzer,
+    InconsistencySource,
+    ReviewAnalyzer,
+    SuppressingReviewAnalyzer,
+)
 from argus.application.review_decisions import DecisionRepositories, ReviewDecisions
 from argus.application.review_history import (
     HistoryRepositories,
@@ -37,11 +48,15 @@ from argus.infrastructure.extraction.period_extractor import PeriodExtractor
 from argus.infrastructure.extraction.person_name_extractor import PersonNameExtractor
 from argus.infrastructure.extraction.tax_id_extractor import TaxIdExtractor
 from argus.infrastructure.file_system_document_archive import FileSystemDocumentArchive
+from argus.infrastructure.nlp.embedding_model import embedding_model_directory, is_model_available
+from argus.infrastructure.nlp.onnx_text_similarity import OnnxTextSimilarity
+from argus.infrastructure.nlp.spacy_person_extractor import SpacyPersonNameExtractor
 from argus.infrastructure.persistence.sqlite_alert_repository import SqliteAlertRepository
 from argus.infrastructure.persistence.sqlite_database import SqliteDatabase
 from argus.infrastructure.persistence.sqlite_decision_repository import (
     SqliteDecisionRepository,
 )
+from argus.infrastructure.persistence.sqlite_decision_statistics import SqliteDecisionStatistics
 from argus.infrastructure.persistence.sqlite_document_repository import SqliteDocumentRepository
 from argus.infrastructure.persistence.sqlite_preference_repositories import (
     SqlitePreferencesRepository,
@@ -68,6 +83,7 @@ class ReviewStorage:
     documents: SqliteDocumentRepository
     preferences: SqlitePreferencesRepository
     rules: SqliteSuppressionRuleRepository
+    statistics: SqliteDecisionStatistics
 
 
 @dataclass(frozen=True)
@@ -82,6 +98,7 @@ class EngineServices:
     search_documents: SearchDocuments
     open_document: OpenDocument
     suppress_similar: SuppressSimilarAlerts
+    explainer: AlertExplainer
     storage: ReviewStorage
     data_directory: Path
 
@@ -101,16 +118,19 @@ def build_review_storage(database_path: Path) -> ReviewStorage:
         SqliteDocumentRepository(database),
         SqlitePreferencesRepository(database),
         SqliteSuppressionRuleRepository(database),
+        SqliteDecisionStatistics(database),
     )
 
 
-def build_engine_services(data_directory: Path, opener: FileOpener) -> EngineServices:
+def build_engine_services(settings: EngineSettings, opener: FileOpener) -> EngineServices:
+    data_directory = settings.data_directory
     storage = build_review_storage(data_directory / DATABASE_FILE_NAME)
     archive = FileSystemDocumentArchive(data_directory / ARCHIVE_FOLDER_NAME)
     clock = SystemClock()
     apply_history_retention(storage, archive)
+    analyzer = build_review_analyzer(storage, build_alert_sources(settings.models_directory))
     return EngineServices(
-        run_review=build_run_review(storage, archive),
+        run_review=build_run_review(storage, archive, analyzer),
         open_review=OpenReview(
             StoredReviewRepositories(storage.sessions, storage.alerts, storage.documents)
         ),
@@ -122,6 +142,7 @@ def build_engine_services(data_directory: Path, opener: FileOpener) -> EngineSer
         search_documents=SearchDocuments(storage.sessions, storage.documents),
         open_document=OpenDocument(storage.documents, archive, opener),
         suppress_similar=SuppressSimilarAlerts(storage.alerts, storage.rules, clock),
+        explainer=TemplateAlertExplainer(storage.statistics),
         storage=storage,
         data_directory=data_directory,
     )
@@ -169,17 +190,39 @@ def build_entity_extraction_pipeline() -> EntityExtractionPipeline:
             PeriodExtractor(),
             OrganizationNameExtractor(),
             PersonNameExtractor(),
+            SpacyPersonNameExtractor(),
         ]
     )
 
 
-def build_run_review(storage: ReviewStorage, archive: DocumentArchive) -> RunReview:
-    analyzer = SuppressingReviewAnalyzer(
-        EntityReviewAnalyzer(
-            build_entity_extraction_pipeline(), build_inconsistency_detector, storage.preferences
-        ),
-        storage.rules,
+def build_alert_sources(models_directory: Path) -> list[AlertSource]:
+    """Capas de detección (CLAUDE.md §8): reglas, semántica (si está el modelo) y anomalías."""
+    classifier = RiskClassifier(DEFAULT_RISK_RULES)
+    model = embedding_model_directory(models_directory)
+    semantic: list[AlertSource] = (
+        [ReferencedPeriodSource(OnnxTextSimilarity(model), classifier)]
+        if is_model_available(model)
+        else []
     )
+    return [
+        InconsistencySource(build_inconsistency_detector),
+        *semantic,
+        DateOutlierSource(classifier),
+        AmountScaleSource(classifier),
+    ]
+
+
+def build_review_analyzer(storage: ReviewStorage, sources: list[AlertSource]) -> ReviewAnalyzer:
+    analyzer = EntityReviewAnalyzer(
+        build_entity_extraction_pipeline(), sources, storage.preferences
+    )
+    suppressing = SuppressingReviewAnalyzer(analyzer, storage.rules)
+    return FeedbackAdjustingReviewAnalyzer(suppressing, storage.statistics)
+
+
+def build_run_review(
+    storage: ReviewStorage, archive: DocumentArchive, analyzer: ReviewAnalyzer
+) -> RunReview:
     start_session = StartReviewSession(storage.sessions, storage.alerts, SystemClock())
     recorder = StoredReviewRecorder(start_session, storage.documents, archive)
     return RunReview(build_document_reader_factory(), analyzer, recorder)

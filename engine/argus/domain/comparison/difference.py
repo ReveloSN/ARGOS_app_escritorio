@@ -12,6 +12,12 @@ class DifferenceKind(StrEnum):
     DAY_MONTH_SWAP = "day_month_swap"
     SIMILAR_NAME = "similar_name"
     FORMAT_ONLY = "format_only"
+    # Fase 7: un correo cita un periodo y su adjunto, del mismo tema, corresponde a otro.
+    REFERENCED_PERIOD = "referenced_period"
+    # Fase 7: un valor fuera del patrón del resto (una fecha décadas aparte).
+    OUT_OF_PATTERN = "out_of_pattern"
+    # Fase 7: el mismo monto con otra escala («18.450.000» frente a «184.500.000»).
+    MAGNITUDE = "magnitude"
 
 
 @dataclass(frozen=True)

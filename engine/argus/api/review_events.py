@@ -13,6 +13,7 @@ from argus.api.review_response import (
     to_review_response,
 )
 from argus.api.schemas.review import DocumentFinishedEvent, DocumentStartedEvent
+from argus.application.alert_explanation import AlertExplainer
 from argus.application.run_review import ReviewRequest, RunReview
 from argus.domain.read_outcome import DocumentReadOutcome
 
@@ -51,7 +52,9 @@ class QueuedReviewProgress:
         self._loop.call_soon_threadsafe(self._queue.put_nowait, format_event(name, payload))
 
 
-async def review_events(run_review: RunReview, request: ReviewRequest) -> AsyncIterator[str]:
+async def review_events(
+    run_review: RunReview, request: ReviewRequest, explainer: AlertExplainer
+) -> AsyncIterator[str]:
     """Eventos de avance y, al final, la revisión completa.
 
     Si el análisis falla, el flujo termina sin el evento «review» y la interfaz lo informa.
@@ -65,4 +68,4 @@ async def review_events(run_review: RunReview, request: ReviewRequest) -> AsyncI
     while (event := await events.get()) is not None:
         yield event
     review = stored_review_of(task.result())
-    yield format_event(REVIEW_FINISHED, to_review_response(review, NO_DECISIONS))
+    yield format_event(REVIEW_FINISHED, to_review_response(review, NO_DECISIONS, explainer))

@@ -35,6 +35,8 @@ AmountMismatch = EntityTypeIs(EntityType.MONEY) & ~FormatOnly
 DateMismatch = EntityTypeIs(EntityType.DATE) & ~FormatOnly
 NameMismatch = EntityTypeIs(EntityType.PERSON_NAME, EntityType.ORGANIZATION_NAME) & ~FormatOnly
 PeriodMismatch = EntityTypeIs(EntityType.PERIOD) & ~FormatOnly
+# Un correo que remite un adjunto de otro periodo es el caso guía de CLAUDE.md §1: riesgo alto.
+ReferencedPeriod = DifferenceIs(DifferenceKind.REFERENCED_PERIOD)
 
 
 @dataclass(frozen=True)
@@ -46,8 +48,8 @@ class RiskRule:
 class RiskClassifier:
     """Cadena de reglas: el riesgo lo decide la primera que se cumple; sin regla no hay alerta.
 
-    Una regla nueva se agrega a la lista, sin tocar esta clase. El modelo entrenable de la
-    Fase 7 podrá ocupar el lugar de esta cadena detrás de la misma interfaz.
+    Una regla nueva se agrega a la lista, sin tocar esta clase. Las decisiones del usuario no
+    cambian el riesgo: solo ajustan la confianza (ADR 016).
     """
 
     def __init__(self, rules: Sequence[RiskRule]) -> None:
@@ -63,6 +65,6 @@ class RiskClassifier:
 # El formato va primero: una diferencia solo de formato nunca es de riesgo alto.
 DEFAULT_RISK_RULES: tuple[RiskRule, ...] = (
     RiskRule(FormatOnly, RiskLevel.LOW),
-    RiskRule(IdentifierMismatch | AmountMismatch | DateMismatch, RiskLevel.HIGH),
+    RiskRule(IdentifierMismatch | AmountMismatch | DateMismatch | ReferencedPeriod, RiskLevel.HIGH),
     RiskRule(NameMismatch | PeriodMismatch, RiskLevel.MEDIUM),
 )

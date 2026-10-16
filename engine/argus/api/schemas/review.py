@@ -39,6 +39,14 @@ class AlertSideResponse(CamelModel):
     occurrences: list[OccurrenceResponse]
 
 
+class ExplanationPartResponse(CamelModel):
+    # Clave del texto en los archivos de idioma de la interfaz («explanation.lead.money»).
+    key: str
+    params: dict[str, str | int]
+    # Cantidad para elegir singular o plural; None si la frase no la necesita.
+    count: int | None
+
+
 class AlertResponse(CamelModel):
     number: int
     risk: str
@@ -49,6 +57,7 @@ class AlertResponse(CamelModel):
     highlight_positions: list[int]
     first: AlertSideResponse
     second: AlertSideResponse
+    explanation: list[ExplanationPartResponse]
 
 
 class DecisionResponse(CamelModel):

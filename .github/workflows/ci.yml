@@ -30,6 +30,16 @@ jobs:
       - name: Instalar Python y dependencias
         run: uv sync --locked
 
+      # Modelo de embeddings (ADR 016): se descarga una vez, verificado por SHA-256, y se
+      # guarda en caché. La clave cambia si cambian sus archivos o huellas.
+      - uses: actions/cache@v4
+        with:
+          path: engine/models
+          key: embedding-model-${{ hashFiles('engine/argus/infrastructure/nlp/embedding_model.py') }}
+
+      - name: Modelo de embeddings
+        run: uv run python -m argus.infrastructure.nlp.embedding_model
+
       - name: Lint
         run: uv run ruff check .
 
@@ -39,8 +49,11 @@ jobs:
       - name: Tipos
         run: uv run mypy
 
+      # En CI las pruebas con el modelo real son obligatorias: nunca se omiten en silencio.
       - name: Pruebas
         run: uv run pytest
+        env:
+          ARGUS_REQUIRE_MODELS: "1"
 
       # CLAUDE.md §11: dominio y aplicación con al menos 85 % de cobertura.
       - name: Cobertura de dominio y aplicación

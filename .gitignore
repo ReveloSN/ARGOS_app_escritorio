@@ -11,6 +11,9 @@ htmlcov/
 dist/
 build/
 
+# Modelos de IA descargados (se verifican por huella; ver engine/argus/infrastructure/nlp)
+engine/models/
+
 # Node / interfaz
 node_modules/
 app/dist/

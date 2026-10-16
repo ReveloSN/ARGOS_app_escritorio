@@ -4,10 +4,12 @@ from argus.api.schemas.review import (
     DecisionResponse,
     DecisionsResponse,
     DocumentResponse,
+    ExplanationPartResponse,
     OccurrenceResponse,
     ReviewResponse,
     SessionResponse,
 )
+from argus.application.alert_explanation import AlertExplainer, Explanation
 from argus.application.open_review import StoredReview
 from argus.application.review_decisions import DecisionsState
 from argus.application.run_review import ReviewOutcome
@@ -27,11 +29,17 @@ def stored_review_of(outcome: ReviewOutcome) -> StoredReview:
     return StoredReview(outcome.session, summaries, outcome.alerts)
 
 
-def to_review_response(review: StoredReview, decisions: DecisionsState) -> ReviewResponse:
+def to_review_response(
+    review: StoredReview, decisions: DecisionsState, explainer: AlertExplainer
+) -> ReviewResponse:
+    explanations = explainer.explain([item.alert for item in review.alerts])
     return ReviewResponse(
         session=session_response(review.session),
         documents=[document_response(document) for document in review.documents],
-        alerts=[_alert(item) for item in review.alerts],
+        alerts=[
+            _alert(item, explanation)
+            for item, explanation in zip(review.alerts, explanations, strict=True)
+        ],
         decisions=decisions_response(decisions),
     )
 
@@ -70,7 +78,14 @@ def _decision(decision: Decision) -> DecisionResponse:
     )
 
 
-def _alert(item: NumberedAlert) -> AlertResponse:
+def _explanation(explanation: Explanation) -> list[ExplanationPartResponse]:
+    return [
+        ExplanationPartResponse(key=part.key, params=dict(part.params), count=part.count)
+        for part in explanation
+    ]
+
+
+def _alert(item: NumberedAlert, explanation: Explanation) -> AlertResponse:
     alert = item.alert
     first_raw = alert.first.representative.raw_value
     second_raw = alert.second.representative.raw_value
@@ -83,6 +98,7 @@ def _alert(item: NumberedAlert) -> AlertResponse:
         highlight_positions=list(differing_positions(first_raw, second_raw)),
         first=_side(alert.first),
         second=_side(alert.second),
+        explanation=_explanation(explanation),
     )
 
 

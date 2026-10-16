@@ -4,6 +4,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from argus.api.composition import DATABASE_FILE_NAME, build_engine_services, build_review_storage
+from argus.api.settings import EngineSettings
 from argus.domain.preferences import UserPreferences
 from argus.domain.review_session import NewReviewSession, ReviewSession
 from tests.api.review_stream import REVIEW_NAME, post_review
@@ -83,7 +84,7 @@ def store_old_session(data_directory: Path) -> ReviewSession:
 def test_reviews_older_than_90_days_are_deleted_at_startup(tmp_path: Path) -> None:
     store_old_session(tmp_path)
 
-    services = build_engine_services(tmp_path, RecordingFileOpener())
+    services = build_engine_services(EngineSettings("9", "token", tmp_path), RecordingFileOpener())
 
     assert services.storage.sessions.list_created_before(datetime.now(UTC)) == ()
 
@@ -93,6 +94,6 @@ def test_without_retention_limit_the_history_is_kept(tmp_path: Path) -> None:
     storage = build_review_storage(tmp_path / DATABASE_FILE_NAME)
     storage.preferences.save(UserPreferences(has_retention_limit=False))
 
-    services = build_engine_services(tmp_path, RecordingFileOpener())
+    services = build_engine_services(EngineSettings("9", "token", tmp_path), RecordingFileOpener())
 
     assert services.storage.sessions.get(session.id) == session

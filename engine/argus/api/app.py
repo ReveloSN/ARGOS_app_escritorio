@@ -24,7 +24,7 @@ ALLOWED_HEADERS = [AUTHORIZATION_HEADER, "content-type"]
 def create_app(settings: EngineSettings, file_opener: FileOpener | None = None) -> FastAPI:
     """Raíz de composición: aquí se construyen e inyectan las dependencias del motor."""
     app = FastAPI(title=API_TITLE, version=settings.version)
-    services = build_engine_services(settings.data_directory, file_opener or SystemFileOpener())
+    services = build_engine_services(settings, file_opener or SystemFileOpener())
     app.include_router(build_health_router(settings))
     routers = (
         build_reviews_router,
