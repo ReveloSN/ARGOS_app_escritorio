@@ -1,4 +1,5 @@
 mod access_token;
+mod engine_command;
 mod engine_process;
 mod engine_status;
 mod engine_supervisor;
@@ -11,7 +12,11 @@ pub fn run() {
     tauri::Builder::default()
         .manage(EngineStatusStore::default())
         .manage(EngineProcessSlot::default())
-        .invoke_handler(tauri::generate_handler![engine_status::engine_status])
+        .plugin(tauri_plugin_dialog::init())
+        .invoke_handler(tauri::generate_handler![
+            engine_status::engine_status,
+            engine_supervisor::restart_engine
+        ])
         .setup(|app| {
             if cfg!(debug_assertions) {
                 app.handle().plugin(

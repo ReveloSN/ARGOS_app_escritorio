@@ -1,11 +1,12 @@
 use std::io::{BufRead, BufReader};
-use std::path::PathBuf;
 use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 
 use serde::Deserialize;
+
+use crate::engine_command::EngineLocation;
 
 const TOKEN_ENV_VAR: &str = "ARGUS_ENGINE_TOKEN";
 const READY_EVENT: &str = "ready";
@@ -22,6 +23,7 @@ struct EngineAnnouncement {
 #[derive(Debug)]
 pub enum EngineLaunchError {
     TokenGeneration(getrandom::Error),
+    MissingResources,
     Spawn(std::io::Error),
     MissingStdout,
     ExitedBeforeReady,
@@ -32,6 +34,7 @@ impl std::fmt::Display for EngineLaunchError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::TokenGeneration(error) => write!(formatter, "sin fuente aleatoria: {error}"),
+            Self::MissingResources => write!(formatter, "no se encontró la carpeta de recursos"),
             Self::Spawn(error) => write!(formatter, "no se pudo lanzar el motor: {error}"),
             Self::MissingStdout => write!(formatter, "el motor no expuso su salida"),
             Self::ExitedBeforeReady => write!(formatter, "el motor se cerró al arrancar"),
@@ -75,8 +78,12 @@ impl EngineProcess {
     }
 }
 
-pub fn launch_engine(token: &str) -> Result<EngineProcess, EngineLaunchError> {
-    let mut child = development_engine_command()
+pub fn launch_engine(
+    location: &EngineLocation,
+    token: &str,
+) -> Result<EngineProcess, EngineLaunchError> {
+    let mut child = location
+        .command()
         .env(TOKEN_ENV_VAR, token)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
@@ -121,35 +128,6 @@ fn parse_ready_port(line: &str) -> Option<u16> {
         .filter(|announcement| announcement.event == READY_EVENT)
         .map(|announcement| announcement.port)
 }
-
-/// En desarrollo el motor se ejecuta con uv desde el repositorio; el sidecar empaquetado con
-/// PyInstaller lo reemplaza en la Fase 8 (ADR 008).
-fn development_engine_command() -> Command {
-    let engine_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("..")
-        .join("..")
-        .join("engine");
-    let mut command = Command::new("uv");
-    command.args(["run", "--project"]).arg(engine_dir).args([
-        "python",
-        "-m",
-        "argus",
-        "--exit-on-stdin-close",
-    ]);
-    hide_console_window(&mut command);
-    command
-}
-
-#[cfg(windows)]
-fn hide_console_window(command: &mut Command) {
-    use std::os::windows::process::CommandExt;
-
-    const CREATE_NO_WINDOW: u32 = 0x0800_0000;
-    command.creation_flags(CREATE_NO_WINDOW);
-}
-
-#[cfg(not(windows))]
-fn hide_console_window(_command: &mut Command) {}
 
 #[cfg(test)]
 mod tests {
