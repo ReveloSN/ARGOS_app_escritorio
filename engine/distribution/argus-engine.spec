@@ -1,7 +1,9 @@
 # Motor de ARGUS empaquetado como carpeta (onedir) para incluirlo como recurso de Tauri (ADR 017).
-# Uso, desde engine/:  uv run pyinstaller packaging/argus-engine.spec --noconfirm
+# Uso, desde engine/:  uv run pyinstaller distribution/argus-engine.spec --noconfirm
 # Los modelos de embeddings NO van aquí: Tauri los incluye aparte y los indica con
 # ARGUS_MODELS_DIR. El modelo de spaCy sí, porque es un paquete de Python.
+
+from pathlib import Path
 
 from PyInstaller.utils.hooks import collect_all, collect_submodules, copy_metadata
 
@@ -20,7 +22,8 @@ hiddenimports += collect_submodules("uvicorn") + ["multipart", "python_multipart
 
 analysis = Analysis(
     ["entry.py"],
-    pathex=[".."],
+    # SPECPATH lo define PyInstaller: la carpeta de este archivo; su padre es engine/.
+    pathex=[str(Path(SPECPATH).parent)],
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,
