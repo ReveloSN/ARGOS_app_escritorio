@@ -45,6 +45,22 @@ export class EngineStatusMonitor {
     this.timer = undefined;
   }
 
+  /** Se cumple cuando el motor vuelve a responder, p. ej. después de reiniciarlo. */
+  async whenReady(): Promise<void> {
+    await this.refresh();
+    await new Promise<void>((resolve) => {
+      const finish = () => {
+        unsubscribe();
+        resolve();
+      };
+      const unsubscribe = this.subscribe((status) => {
+        if (status === "ready") finish();
+      });
+      // Ya respondía (o respondió entre la consulta y la suscripción).
+      if (this.status === "ready") finish();
+    });
+  }
+
   /** Consulta el motor ahora mismo, sin esperar al siguiente intervalo («Reintentar»). */
   async refresh(): Promise<void> {
     this.publish(await this.probe());

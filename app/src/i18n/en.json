@@ -544,7 +544,11 @@
       "retention": "Keep the decision history for 90 days",
       "folder": "History folder",
       "retentionOn": "Reviews older than 90 days, with the copy of their files, are deleted when ARGUS starts.",
-      "retentionOff": "The history is kept with no time limit."
+      "retentionOff": "The history is kept with no time limit.",
+      "changeFolder": "Change folder",
+      "chooseFolder": "Choose the history folder",
+      "moving": "Copying the history to the new folder. The analysis engine will restart when it finishes.",
+      "moved": "The history is now in the new folder. The previous folder was kept; you can delete it whenever you want."
     },
     "shortcuts": {
       "newReview": "New review",
@@ -568,6 +572,34 @@
       "what": "The change was not saved.",
       "why": "The analysis engine did not respond.",
       "todo": "Retry to see the current settings and make the change again."
+    },
+    "folderErrors": {
+      "chooseAnother": "Choose another folder",
+      "same_folder": {
+        "what": "The history is already in that folder.",
+        "why": "You chose the folder it uses now.",
+        "todo": "Choose a different folder to move it."
+      },
+      "folder_not_writable": {
+        "what": "We could not move the history.",
+        "why": "The chosen folder does not allow writing.",
+        "todo": "Choose another folder or ask for write permission on this one."
+      },
+      "folder_has_history": {
+        "what": "We did not move the history.",
+        "why": "The chosen folder already has an ARGUS history and we will not overwrite it.",
+        "todo": "Choose an empty folder or one without another history."
+      },
+      "copy_mismatch": {
+        "what": "We could not finish copying the history.",
+        "why": "The copy does not match the original, so ARGUS keeps using the current folder.",
+        "todo": "Check the available space and choose another folder."
+      },
+      "engine_unavailable": {
+        "what": "We could not move the history.",
+        "why": "The analysis engine did not respond.",
+        "todo": "Wait until the engine is ready and choose the folder again."
+      }
     }
   },
   "explanation": {

@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
 
+import type { DesktopShell } from "../../services/desktop/desktopShell";
 import type { DocumentAccess } from "../../services/engine/documentTypes";
 import type { EngineStatusMonitor } from "../../services/engine/engineStatusMonitor";
 import type { HistorySource } from "../../services/engine/historyTypes";
@@ -13,6 +14,8 @@ export interface EngineServices {
   readonly history: HistorySource;
   readonly preferences: PreferencesStore;
   readonly documents: DocumentAccess;
+  /** Solo en la app de escritorio; en el navegador es `null` y se ocultan sus acciones. */
+  readonly desktop: DesktopShell | null;
 }
 
 export const EngineServicesContext = createContext<EngineServices | null>(null);

@@ -1,5 +1,6 @@
 import type { EngineHttp } from "./engineHttp";
 import type {
+  HistoryFolderResult,
   PreferencesResult,
   PreferencesStore,
   PreferencesUpdate,
@@ -7,6 +8,8 @@ import type {
 } from "./preferencesTypes";
 
 const REQUEST_TIMEOUT_MS = 10_000;
+// Mover el historial copia la base y todos los archivos guardados: puede tardar bastante más.
+const HISTORY_MOVE_TIMEOUT_MS = 300_000;
 
 /** Ajustes de detección y privacidad, y casos que no generan alerta. */
 export class PreferencesClient implements PreferencesStore {
@@ -30,5 +33,10 @@ export class PreferencesClient implements PreferencesStore {
   removeSuppressionRule(ruleId: number): Promise<void> {
     const path = `/suppression-rules/${String(ruleId)}`;
     return this.http.empty({ path, timeoutMs: REQUEST_TIMEOUT_MS, method: "DELETE" });
+  }
+
+  moveHistoryFolder(path: string): Promise<HistoryFolderResult> {
+    const request = { path: "/preferences/history-folder", timeoutMs: HISTORY_MOVE_TIMEOUT_MS };
+    return this.http.json({ ...request, method: "POST", body: { path } });
   }
 }

@@ -1,6 +1,7 @@
 import { vi } from "vitest";
 
 import type { EngineServices } from "../features/engine/EngineServicesContext";
+import type { DesktopShell } from "../services/desktop/desktopShell";
 import type { EngineHealth } from "../services/engine/engineClient";
 import type {
   EngineConnectionSource,
@@ -33,6 +34,8 @@ export interface FakeEngineOptions {
   readonly history?: Partial<EngineServices["history"]>;
   readonly preferences?: Partial<EngineServices["preferences"]>;
   readonly documents?: Partial<EngineServices["documents"]>;
+  /** Sin valor, la prueba simula el navegador (no hay acciones de escritorio). */
+  readonly desktop?: DesktopShell;
 }
 
 function fakeReviews(overrides: FakeEngineOptions["reviews"]): EngineServices["reviews"] {
@@ -54,6 +57,7 @@ function fakePreferences(
     savePreferences: notConfigured(),
     suppressSimilar: notConfigured(),
     removeSuppressionRule: notConfigured(),
+    moveHistoryFolder: notConfigured(),
     ...overrides,
   };
 }
@@ -71,5 +75,6 @@ export function fakeEngineServices(options: FakeEngineOptions = {}): EngineServi
       openDocument: notConfigured(),
       ...options.documents,
     },
+    desktop: options.desktop ?? null,
   };
 }

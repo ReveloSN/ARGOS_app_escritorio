@@ -10,6 +10,8 @@ export interface EnginePreferences {
   readonly save: (change: Partial<PreferencesUpdate>) => void;
   readonly removeRule: (ruleId: number) => void;
   readonly reload: () => void;
+  /** Vuelve a leer los ajustes sin pasar por «cargando» (p. ej. tras mover el historial). */
+  readonly refresh: () => void;
   readonly hasSaveFailed: boolean;
 }
 
@@ -46,5 +48,8 @@ export function useEnginePreferences(onSaved: () => void): EnginePreferences {
     const reloaded = () => preferences.preferences();
     preferences.removeSuppressionRule(ruleId).then(reloaded).then(confirm, fail);
   };
-  return { state: query.state, save, removeRule, reload: query.reload, hasSaveFailed };
+  const refresh = () => {
+    preferences.preferences().then(query.replace, fail);
+  };
+  return { state: query.state, save, removeRule, reload: query.reload, refresh, hasSaveFailed };
 }

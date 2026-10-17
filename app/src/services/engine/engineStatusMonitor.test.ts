@@ -95,4 +95,30 @@ describe("EngineStatusMonitor", () => {
 
     expect(checkHealth).toHaveBeenCalledTimes(2);
   });
+
+  it("espera a que el motor vuelva a responder después de reiniciarlo", async () => {
+    const checkHealth = vi
+      .fn<() => Promise<EngineHealth>>()
+      .mockRejectedValueOnce(new EngineNotReadyError(true))
+      .mockRejectedValueOnce(new EngineNotReadyError(true))
+      .mockResolvedValue(HEALTHY);
+    const monitor = new EngineStatusMonitor({ checkHealth }, POLL_INTERVAL_MS);
+    const ready = vi.fn();
+
+    void monitor.whenReady().then(ready);
+    await advancePolls(0);
+    expect(ready).not.toHaveBeenCalled();
+    await advancePolls(1);
+
+    expect(ready).toHaveBeenCalledOnce();
+    expect(monitor.currentStatus).toBe("ready");
+  });
+
+  it("se cumple al instante si el motor ya responde", async () => {
+    const monitor = new EngineStatusMonitor(checkerWith(() => Promise.resolve(HEALTHY)));
+
+    await monitor.whenReady();
+
+    expect(monitor.currentStatus).toBe("ready");
+  });
 });

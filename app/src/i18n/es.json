@@ -544,7 +544,11 @@
       "retention": "Guardar el historial de decisiones durante 90 días",
       "folder": "Carpeta del historial",
       "retentionOn": "Las revisiones de más de 90 días, con la copia de sus archivos, se borran al iniciar ARGUS.",
-      "retentionOff": "El historial se conserva sin límite de tiempo."
+      "retentionOff": "El historial se conserva sin límite de tiempo.",
+      "changeFolder": "Cambiar carpeta",
+      "chooseFolder": "Elegir la carpeta del historial",
+      "moving": "Copiando el historial a la nueva carpeta. El motor de análisis se reiniciará al terminar.",
+      "moved": "El historial ya está en la nueva carpeta. La carpeta anterior se conservó; puede borrarla cuando quiera."
     },
     "shortcuts": {
       "newReview": "Nueva revisión",
@@ -568,6 +572,34 @@
       "what": "No se guardó el cambio.",
       "why": "El motor de análisis no respondió.",
       "todo": "Reintente para ver los ajustes vigentes y vuelva a hacer el cambio."
+    },
+    "folderErrors": {
+      "chooseAnother": "Elegir otra carpeta",
+      "same_folder": {
+        "what": "El historial ya está en esa carpeta.",
+        "why": "Eligió la misma carpeta que usa ahora.",
+        "todo": "Elija una carpeta distinta para moverlo."
+      },
+      "folder_not_writable": {
+        "what": "No pudimos mover el historial.",
+        "why": "La carpeta elegida no permite escribir.",
+        "todo": "Elija otra carpeta o pida permiso de escritura sobre esta."
+      },
+      "folder_has_history": {
+        "what": "No movimos el historial.",
+        "why": "La carpeta elegida ya tiene un historial de ARGUS y no lo vamos a sobrescribir.",
+        "todo": "Elija una carpeta vacía o que no tenga otro historial."
+      },
+      "copy_mismatch": {
+        "what": "No pudimos completar la copia del historial.",
+        "why": "La copia no coincide con el original, así que ARGUS sigue usando la carpeta actual.",
+        "todo": "Revise el espacio disponible y elija otra carpeta."
+      },
+      "engine_unavailable": {
+        "what": "No pudimos mover el historial.",
+        "why": "El motor de análisis no respondió.",
+        "todo": "Espere a que el motor esté listo y vuelva a elegir la carpeta."
+      }
     }
   },
   "explanation": {
