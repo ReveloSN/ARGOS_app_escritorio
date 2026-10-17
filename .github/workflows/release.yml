@@ -1,0 +1,110 @@
+name: Instaladores
+
+# ADR 017: los instaladores se generan aquí, no en el equipo de cada persona. Una etiqueta
+# vX.Y.Z publica una versión; «Run workflow» los genera solo como artefactos para probarlos.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  installers:
+    name: Instaladores (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            bundles: msi
+          # La versión más antigua de Ubuntu disponible: el AppImage y el motor empaquetado
+          # funcionan en distribuciones con una glibc igual o más nueva.
+          - os: ubuntu-22.04
+            bundles: deb,appimage
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: engine/uv.lock
+
+      - name: Instalar Python y dependencias
+        working-directory: engine
+        run: uv sync --locked
+
+      - uses: actions/cache@v4
+        with:
+          path: engine/models
+          key: embedding-model-${{ hashFiles('engine/argus/infrastructure/nlp/embedding_model.py') }}
+
+      - name: Modelo de embeddings
+        working-directory: engine
+        run: uv run python -m argus.infrastructure.nlp.embedding_model
+
+      - name: Empaquetar el motor
+        working-directory: engine
+        run: uv run pyinstaller distribution/argus-engine.spec --noconfirm --distpath dist --workpath build/pyinstaller
+
+      # Un instalador con un motor que no arranca no se publica.
+      - name: Probar el motor empaquetado
+        working-directory: engine
+        run: uv run python distribution/smoke_test.py
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Instalar dependencias de la interfaz
+        working-directory: app
+        run: npm ci
+
+      - name: Dependencias del sistema para Tauri (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libxdo-dev
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri -> target
+
+      # tauri.bundle.conf.json añade el motor y los modelos como recursos del instalador.
+      - name: Generar instaladores
+        working-directory: app
+        run: npm run tauri -- build --config src-tauri/tauri.bundle.conf.json --bundles ${{ matrix.bundles }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: argus-${{ runner.os }}
+          if-no-files-found: error
+          path: |
+            app/src-tauri/target/release/bundle/msi/*.msi
+            app/src-tauri/target/release/bundle/deb/*.deb
+            app/src-tauri/target/release/bundle/appimage/*.AppImage
+
+  release:
+    name: Publicar versión
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: installers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: installers
+          merge-multiple: true
+
+      # Instaladores sin firma de código por ahora (ADR 017): Windows mostrará SmartScreen.
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: installers/**/*
+          generate_release_notes: true
