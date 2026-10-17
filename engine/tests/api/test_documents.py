@@ -3,7 +3,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from argus.api.composition import ARCHIVE_FOLDER_NAME
+from argus.infrastructure.history_location import ARCHIVE_FOLDER_NAME
 from tests.api.review_stream import post_review
 from tests.application.in_memory_repositories import RecordingFileOpener
 
@@ -62,7 +62,7 @@ def test_a_copy_removed_from_the_history_folder_is_reported(
     client: TestClient, auth_headers: dict[str, str], tmp_path: Path
 ) -> None:
     session_id = post_review(client, auth_headers, *FILES)["session"]["id"]
-    shutil.rmtree(tmp_path / ARCHIVE_FOLDER_NAME / session_id)
+    shutil.rmtree(tmp_path / "historial" / ARCHIVE_FOLDER_NAME / session_id)
 
     response = client.post(
         f"/reviews/{session_id}/documents/open",

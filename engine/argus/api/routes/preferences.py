@@ -1,7 +1,11 @@
+from pathlib import Path
+
 from fastapi import APIRouter, Response
 
 from argus.api.composition import EngineServices
 from argus.api.schemas.preferences import (
+    HistoryFolderRequest,
+    HistoryFolderResponse,
     PreferencesResponse,
     PreferencesUpdate,
     SuppressionRequest,
@@ -32,6 +36,11 @@ def build_preferences_router(services: EngineServices) -> APIRouter:
             )
         )
         return _preferences_response(services)
+
+    @router.post("/preferences/history-folder")
+    def change_history_folder(body: HistoryFolderRequest) -> HistoryFolderResponse:
+        folder = services.change_history_folder.execute(Path(body.path))
+        return HistoryFolderResponse(history_folder=str(folder), restart_required=True)
 
     return router
 

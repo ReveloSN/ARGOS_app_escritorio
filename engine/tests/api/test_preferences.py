@@ -17,7 +17,7 @@ def test_defaults_compare_everything_and_show_the_history_folder(
         "sensitivity": "balanced",
         "comparedCategories": ALL_CATEGORIES,
         "hasRetentionLimit": True,
-        "historyFolder": str(tmp_path),
+        "historyFolder": str(tmp_path / "historial"),
         "suppressionRules": [],
     }
 
@@ -87,3 +87,31 @@ def test_suppressing_an_unknown_alert_is_reported(
     )
 
     assert response.status_code == 404
+
+
+def test_the_history_folder_can_be_moved_and_applies_after_a_restart(
+    client: TestClient, auth_headers: dict[str, str], tmp_path: Path
+) -> None:
+    post_review(client, auth_headers, *FILES)
+    target = tmp_path / "nueva"
+
+    response = client.post(
+        "/preferences/history-folder", headers=auth_headers, json={"path": str(target)}
+    )
+
+    assert response.json() == {"historyFolder": str(target), "restartRequired": True}
+    assert (target / "argus.sqlite3").is_file()
+    assert (tmp_path / "sistema" / "location.json").is_file()
+
+
+def test_moving_the_history_to_the_same_folder_is_rejected(
+    client: TestClient, auth_headers: dict[str, str], tmp_path: Path
+) -> None:
+    response = client.post(
+        "/preferences/history-folder",
+        headers=auth_headers,
+        json={"path": str(tmp_path / "historial")},
+    )
+
+    assert response.status_code == 422
+    assert response.json() == {"detail": "same_folder"}

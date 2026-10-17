@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from importlib.metadata import version
 from pathlib import Path
 
+from argus.infrastructure.history_location import default_data_directory
 from argus.infrastructure.nlp.embedding_model import default_models_directory
 
 PACKAGE_NAME = "argus-engine"
@@ -26,6 +27,8 @@ class EngineSettings:
     allowed_origins: tuple[str, ...] = TAURI_ORIGINS
     # Modelos de IA locales (embeddings); sin ellos se omite solo la comparación semántica.
     models_directory: Path = field(default_factory=default_models_directory)
+    # Donde se recuerda la carpeta elegida por el usuario (siempre la del sistema).
+    pointer_directory: Path = field(default_factory=default_data_directory)
 
     @classmethod
     def from_installed_package(cls, access_token: str, data_directory: Path) -> "EngineSettings":

@@ -14,7 +14,13 @@ TAURI_WINDOWS_ORIGIN = "http://tauri.localhost"
 
 @pytest.fixture
 def settings(tmp_path: Path) -> EngineSettings:
-    return EngineSettings(version=TEST_VERSION, access_token=TEST_TOKEN, data_directory=tmp_path)
+    # El puntero de la carpeta del historial nunca se escribe en la carpeta real del sistema.
+    return EngineSettings(
+        version=TEST_VERSION,
+        access_token=TEST_TOKEN,
+        data_directory=tmp_path / "historial",
+        pointer_directory=tmp_path / "sistema",
+    )
 
 
 @pytest.fixture

@@ -33,6 +33,16 @@ class PreferencesUpdate(CamelModel):
     has_retention_limit: bool
 
 
+class HistoryFolderRequest(CamelModel):
+    path: str
+
+
+class HistoryFolderResponse(CamelModel):
+    history_folder: str
+    # La carpeta nueva vale desde que el motor se reinicia.
+    restart_required: bool
+
+
 class SuppressionRequest(CamelModel):
     session_id: str
     alert_number: int

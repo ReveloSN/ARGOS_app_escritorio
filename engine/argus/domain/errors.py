@@ -67,3 +67,18 @@ class ArchivedFileMissingError(ArgusDomainError):
         super().__init__(f"Falta la copia de «{document_name}» de la sesión «{session_id}».")
         self.session_id = session_id
         self.document_name = document_name
+
+
+class HistoryFolderProblem(StrEnum):
+    """Por qué no se pudo mover el historial a la carpeta elegida (mensaje de 3 partes)."""
+
+    SAME_FOLDER = "same_folder"
+    NOT_WRITABLE = "folder_not_writable"
+    HAS_HISTORY = "folder_has_history"
+    COPY_MISMATCH = "copy_mismatch"
+
+
+class HistoryFolderError(ArgusDomainError):
+    def __init__(self, problem: HistoryFolderProblem) -> None:
+        super().__init__(f"No se pudo mover el historial: {problem}.")
+        self.problem = problem

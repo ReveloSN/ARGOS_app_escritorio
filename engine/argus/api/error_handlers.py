@@ -12,9 +12,12 @@ from argus.domain.errors import (
     ArgusDomainError,
     ClosedSessionError,
     DocumentNotFoundError,
+    HistoryFolderError,
     InvalidValueError,
     SessionNotFoundError,
 )
+
+UNPROCESSABLE = 422
 
 type ErrorHandler = Callable[[Request, Exception], Awaitable[JSONResponse]]
 
@@ -38,6 +41,13 @@ ERROR_RESPONSES: dict[type[ArgusDomainError], ErrorResponse] = {
 def register_error_handlers(app: FastAPI) -> None:
     for error_type, response in ERROR_RESPONSES.items():
         app.add_exception_handler(error_type, _handler_for(response))
+    app.add_exception_handler(HistoryFolderError, _history_folder_handler)
+
+
+async def _history_folder_handler(_request: Request, error: Exception) -> JSONResponse:
+    # El motivo («folder_not_writable», «folder_has_history»…) elige el mensaje en la interfaz.
+    problem = error.problem if isinstance(error, HistoryFolderError) else "invalid_value"
+    return JSONResponse({"detail": problem}, status_code=UNPROCESSABLE)
 
 
 def _handler_for(response: ErrorResponse) -> ErrorHandler:

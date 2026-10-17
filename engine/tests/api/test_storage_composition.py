@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from argus.api.composition import APP_NAME, default_data_directory
+from argus.infrastructure.history_location import APP_NAME, default_data_directory
 
 
 def test_history_lives_in_the_app_data_folder_of_the_operating_system() -> None:

@@ -3,10 +3,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from platformdirs import user_data_path
-
 from argus.api.settings import EngineSettings
 from argus.application.alert_explanation import AlertExplainer, TemplateAlertExplainer
+from argus.application.change_history_folder import ChangeHistoryFolder
 from argus.application.detect_inconsistencies import DetectInconsistencies
 from argus.application.document_access import OpenDocument, SearchDocuments
 from argus.application.document_reader_factory import DocumentReaderFactory
@@ -48,6 +47,12 @@ from argus.infrastructure.extraction.period_extractor import PeriodExtractor
 from argus.infrastructure.extraction.person_name_extractor import PersonNameExtractor
 from argus.infrastructure.extraction.tax_id_extractor import TaxIdExtractor
 from argus.infrastructure.file_system_document_archive import FileSystemDocumentArchive
+from argus.infrastructure.history_location import (
+    ARCHIVE_FOLDER_NAME,
+    DATABASE_FILE_NAME,
+    FileSystemHistoryCopier,
+    JsonHistoryPointer,
+)
 from argus.infrastructure.nlp.embedding_model import embedding_model_directory, is_model_available
 from argus.infrastructure.nlp.onnx_text_similarity import OnnxTextSimilarity
 from argus.infrastructure.nlp.spacy_person_extractor import SpacyPersonNameExtractor
@@ -69,10 +74,6 @@ from argus.infrastructure.readers.pdf_reader import PdfDocumentReader
 from argus.infrastructure.readers.text_reader import PlainTextReader
 from argus.infrastructure.readers.xlsx_reader import XlsxDocumentReader
 from argus.infrastructure.system_clock import SystemClock
-
-APP_NAME = "ARGUS"
-DATABASE_FILE_NAME = "argus.sqlite3"
-ARCHIVE_FOLDER_NAME = "documents"
 
 
 @dataclass(frozen=True)
@@ -99,13 +100,9 @@ class EngineServices:
     open_document: OpenDocument
     suppress_similar: SuppressSimilarAlerts
     explainer: AlertExplainer
+    change_history_folder: ChangeHistoryFolder
     storage: ReviewStorage
     data_directory: Path
-
-
-def default_data_directory() -> Path:
-    """Carpeta de datos de la app según el sistema operativo (AppData, ~/.local/share…)."""
-    return user_data_path(APP_NAME, appauthor=False)
 
 
 def build_review_storage(database_path: Path) -> ReviewStorage:
@@ -143,6 +140,11 @@ def build_engine_services(settings: EngineSettings, opener: FileOpener) -> Engin
         open_document=OpenDocument(storage.documents, archive, opener),
         suppress_similar=SuppressSimilarAlerts(storage.alerts, storage.rules, clock),
         explainer=TemplateAlertExplainer(storage.statistics),
+        change_history_folder=ChangeHistoryFolder(
+            data_directory,
+            FileSystemHistoryCopier(data_directory),
+            JsonHistoryPointer(settings.pointer_directory),
+        ),
         storage=storage,
         data_directory=data_directory,
     )
