@@ -1,5 +1,5 @@
 use std::io::{BufRead, BufReader};
-use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
+use std::process::{Child, ChildStdin, ChildStdout, Stdio};
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
