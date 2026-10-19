@@ -72,6 +72,17 @@ MIGRATIONS: tuple[str, ...] = (
         UNIQUE (entity_type, first_value, second_value)
     );
     """,
+    # Comparación de documentos (ADR 018): el informe completo, con el origen de cada cambio.
+    """
+    CREATE TABLE comparisons (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        mode TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        payload TEXT NOT NULL
+    );
+    CREATE INDEX comparisons_by_creation ON comparisons (created_at);
+    """,
 )
 SCHEMA_VERSION = len(MIGRATIONS)
 

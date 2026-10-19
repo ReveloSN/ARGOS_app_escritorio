@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from argus.application.embedding_similarity import EmbeddingTextSimilarity
 from argus.domain.entity import EntityType
 from argus.infrastructure.nlp.embedding_model import (
     MODELS_ENV_VAR,
@@ -12,7 +13,7 @@ from argus.infrastructure.nlp.embedding_model import (
     download_model,
     is_model_available,
 )
-from argus.infrastructure.nlp.onnx_text_similarity import OnnxTextSimilarity
+from argus.infrastructure.nlp.onnx_text_embedder import OnnxTextEmbedder
 from argus.infrastructure.nlp.spacy_person_extractor import (
     SpacyPersonNameExtractor,
     looks_like_person_name,
@@ -82,7 +83,7 @@ def test_models_folder_can_be_set_by_the_installer(
 
 @requires_embedding_model
 def test_same_topic_texts_are_more_similar_than_unrelated_ones() -> None:
-    similarity = OnnxTextSimilarity(MODEL_DIRECTORY)
+    similarity = EmbeddingTextSimilarity(OnnxTextEmbedder(MODEL_DIRECTORY))
 
     related, unrelated = similarity.similarities(
         "Anexo 2 tarifas. Tarifas mayo 2026",
@@ -91,3 +92,12 @@ def test_same_topic_texts_are_more_similar_than_unrelated_ones() -> None:
 
     assert related > 0.5 > unrelated
     assert similarity.similarities("texto", []) == ()
+
+
+@requires_embedding_model
+def test_embeddings_are_normalized_and_keep_the_order_of_the_texts() -> None:
+    vectors = OnnxTextEmbedder(MODEL_DIRECTORY).embed(["Cláusula primera", "Anexo de tarifas"])
+
+    assert len(vectors) == 2
+    assert all(abs(sum(value * value for value in vector) - 1) < 1e-3 for vector in vectors)
+    assert OnnxTextEmbedder(MODEL_DIRECTORY).embed([]) == ()

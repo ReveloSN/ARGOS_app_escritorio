@@ -32,12 +32,15 @@ class EntityExtractionPipeline:
     def build_index(self, documents: Iterable[Document]) -> EntityIndex:
         return EntityIndex(entity for document in documents for entity in self.extract(document))
 
-    def _extract_fragment(self, document_name: str, fragment: TextFragment) -> list[Entity]:
+    def matches(self, text: str) -> list[EntityMatch]:
+        """Valores reconocidos en un texto suelto, en orden de aparición."""
         claimed: list[EntityMatch] = []
         for extractor in self._extractors:
-            claim_free_matches(extractor.extract(fragment.text), claimed)
-        claimed.sort(key=lambda match: match.start)
-        return [to_entity(document_name, fragment, match) for match in claimed]
+            claim_free_matches(extractor.extract(text), claimed)
+        return sorted(claimed, key=lambda match: match.start)
+
+    def _extract_fragment(self, document_name: str, fragment: TextFragment) -> list[Entity]:
+        return [to_entity(document_name, fragment, match) for match in self.matches(fragment.text)]
 
 
 def claim_free_matches(candidates: Iterable[EntityMatch], claimed: list[EntityMatch]) -> None:

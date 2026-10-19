@@ -8,17 +8,19 @@ import numpy.typing as npt
 import onnxruntime as ort
 from tokenizers import Tokenizer
 
+from argus.application.ports.text_embedder import Embedding
+
 # Las frases que se comparan son cortas (un fragmento); más tokens no cambian el tema.
 MAX_TOKENS = 128
 
 type Matrix = npt.NDArray[np.float32]
 
 
-class OnnxTextSimilarity:
-    """Similitud semántica con embeddings multilingües en ONNX, sin PyTorch (ADR 002).
+class OnnxTextEmbedder:
+    """Embeddings multilingües en ONNX, sin PyTorch (ADR 002); adaptador local por defecto.
 
-    Promedia los vectores de los tokens (mean pooling, como sentence-transformers) y compara
-    con el coseno. El modelo se carga la primera vez que se usa, no al arrancar el motor.
+    Promedia los vectores de los tokens (mean pooling, como sentence-transformers) y normaliza
+    el resultado. El modelo se carga la primera vez que se usa, no al arrancar el motor.
     """
 
     def __init__(self, model_directory: Path) -> None:
@@ -36,13 +38,12 @@ class OnnxTextSimilarity:
     def _session(self) -> ort.InferenceSession:
         return ort.InferenceSession(str(self._model_directory / "model.onnx"))
 
-    def similarities(self, text: str, candidates: Sequence[str]) -> tuple[float, ...]:
-        if not candidates:
+    def embed(self, texts: Sequence[str]) -> tuple[Embedding, ...]:
+        if not texts:
             return ()
         with self._lock:
-            vectors = self._embed([text, *candidates])
-        scores = vectors[1:] @ vectors[0]
-        return tuple(max(0.0, float(score)) for score in scores)
+            vectors = self._embed(texts)
+        return tuple(tuple(float(value) for value in vector) for vector in vectors)
 
     def _embed(self, texts: Sequence[str]) -> Matrix:
         encodings = self._tokenizer.encode_batch(list(texts))

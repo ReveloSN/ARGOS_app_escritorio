@@ -16,15 +16,10 @@ from argus.api.schemas.review import (
     ReviewResponse,
     SessionResponse,
 )
+from argus.api.uploads import event_stream_response, uploaded_sources
 from argus.application.decision_history import DecisionRequest
-from argus.application.ports.document_reader import DocumentSource
 from argus.application.run_review import ReviewRequest
 from argus.domain.decision import CorrectSide, DecisionKind
-
-UNNAMED_FILE = "archivo_sin_nombre"
-EVENT_STREAM = "text/event-stream"
-# Sin caché ni búfer intermedio: cada evento debe llegar apenas se produce.
-STREAM_HEADERS = {"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}
 
 
 def build_reviews_router(services: EngineServices) -> APIRouter:
@@ -35,12 +30,10 @@ def build_reviews_router(services: EngineServices) -> APIRouter:
         name: Annotated[str, Form(min_length=1)],
         files: Annotated[list[UploadFile], File()],
     ) -> StreamingResponse:
-        sources = tuple(
-            [DocumentSource(file.filename or UNNAMED_FILE, await file.read()) for file in files]
+        request = ReviewRequest(name.strip(), await uploaded_sources(files))
+        return event_stream_response(
+            review_events(services.run_review, request, services.explainer)
         )
-        request = ReviewRequest(name.strip(), sources)
-        events = review_events(services.run_review, request, services.explainer)
-        return StreamingResponse(events, media_type=EVENT_STREAM, headers=STREAM_HEADERS)
 
     @router.get("/{session_id}")
     def get_review(session_id: str) -> ReviewResponse:

@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 
 from argus.application.document_limits import MAX_DOCUMENT_BYTES
+from argus.application.document_loader import DocumentLoader
 from argus.application.document_reader_factory import DocumentReaderFactory
 from argus.application.ports.document_reader import DocumentSource
 from argus.application.review_recording import StoredReviewRecorder
@@ -73,7 +74,7 @@ def build_run_review(
     readers = DocumentReaderFactory({DocumentFormat.TEXT: LineReader()})
     start = StartReviewSession(sessions, alerts, SteppingClock())
     recorder = StoredReviewRecorder(start, InMemoryDocumentRepository(), InMemoryDocumentArchive())
-    return RunReview(readers, analyzer, recorder), sessions, alerts
+    return RunReview(DocumentLoader(readers), analyzer, recorder), sessions, alerts
 
 
 def request(*sources: DocumentSource) -> ReviewRequest:

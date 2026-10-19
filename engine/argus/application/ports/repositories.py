@@ -9,6 +9,7 @@ from argus.domain.decision import Decision
 from argus.domain.document import NamedFragment
 from argus.domain.read_outcome import DocumentReadOutcome, ReadSummary
 from argus.domain.review_session import ReviewSession
+from argus.domain.text_comparison.report import ComparisonReport
 
 
 class SessionRepository(Protocol):
@@ -64,4 +65,12 @@ class DocumentRepository(Protocol):
         self, session_id: str, folded_query: str, limit: int
     ) -> tuple[NamedFragment, ...]:
         """Fragmentos cuyo texto, sin tildes ni mayúsculas, contiene la consulta ya plegada."""
+        ...
+
+
+class ComparisonRepository(Protocol):
+    def save(self, report: ComparisonReport) -> None: ...
+
+    def get(self, comparison_id: str) -> ComparisonReport:
+        """La comparación, o ComparisonNotFoundError si no existe."""
         ...

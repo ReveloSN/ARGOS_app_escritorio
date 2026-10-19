@@ -82,3 +82,18 @@ class HistoryFolderError(ArgusDomainError):
     def __init__(self, problem: HistoryFolderProblem) -> None:
         super().__init__(f"No se pudo mover el historial: {problem}.")
         self.problem = problem
+
+
+class ComparisonNotFoundError(ArgusDomainError):
+    def __init__(self, comparison_id: str) -> None:
+        super().__init__(f"No existe la comparación «{comparison_id}».")
+        self.comparison_id = comparison_id
+
+
+class NotEnoughDocumentsError(ArgusDomainError):
+    """Cada modo de comparación necesita un mínimo de archivos (dos versiones, un correo…)."""
+
+    def __init__(self, minimum: int, received: int) -> None:
+        super().__init__(f"Se necesitan al menos {minimum} archivos y llegaron {received}.")
+        self.minimum = minimum
+        self.received = received

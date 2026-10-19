@@ -40,26 +40,34 @@ ReferencedPeriod = DifferenceIs(DifferenceKind.REFERENCED_PERIOD)
 
 
 @dataclass(frozen=True)
-class RiskRule:
-    specification: Specification[AlertCandidate]
+class Rule[Candidate]:
+    specification: Specification[Candidate]
     risk: RiskLevel
 
 
-class RiskClassifier:
-    """Cadena de reglas: el riesgo lo decide la primera que se cumple; sin regla no hay alerta.
+class RuleChainClassifier[Candidate]:
+    """Cadena de reglas: el riesgo lo decide la primera que se cumple; sin regla, None.
 
-    Una regla nueva se agrega a la lista, sin tocar esta clase. Las decisiones del usuario no
-    cambian el riesgo: solo ajustan la confianza (ADR 016).
+    Una regla nueva se agrega a la lista, sin tocar esta clase. La usan las alertas y los
+    cambios entre documentos (ADR 018), cada uno con sus propias reglas.
     """
 
-    def __init__(self, rules: Sequence[RiskRule]) -> None:
+    def __init__(self, rules: Sequence[Rule[Candidate]]) -> None:
         self._rules = tuple(rules)
 
-    def classify(self, candidate: AlertCandidate) -> RiskLevel | None:
+    def classify(self, candidate: Candidate) -> RiskLevel | None:
         return next(
             (rule.risk for rule in self._rules if rule.specification.is_satisfied_by(candidate)),
             None,
         )
+
+
+RiskRule = Rule[AlertCandidate]
+
+
+class RiskClassifier(RuleChainClassifier[AlertCandidate]):
+    """Riesgo de una alerta; sin regla que se cumpla no hay alerta. Las decisiones del usuario
+    no cambian el riesgo: solo ajustan la confianza (ADR 016)."""
 
 
 # El formato va primero: una diferencia solo de formato nunca es de riesgo alto.

@@ -8,11 +8,12 @@ from argus.application.ports.document_archive import ArchivedFile
 from argus.domain.alert import Alert, NumberedAlert
 from argus.domain.decision import Decision
 from argus.domain.document import NamedFragment
-from argus.domain.errors import SessionNotFoundError
+from argus.domain.errors import ComparisonNotFoundError, SessionNotFoundError
 from argus.domain.preferences import UserPreferences
 from argus.domain.read_outcome import DocumentReadOutcome, ReadSummary
 from argus.domain.review_session import ReviewSession
 from argus.domain.suppression import SuppressedCase, SuppressionRule
+from argus.domain.text_comparison.report import ComparisonReport
 from argus.domain.text_search import fold_for_search
 
 START = datetime(2026, 10, 13, 9, 42, tzinfo=UTC)
@@ -173,3 +174,17 @@ class InMemorySuppressionRuleRepository:
 
     def delete(self, rule_id: int) -> None:
         self.rules = [rule for rule in self.rules if rule.id != rule_id]
+
+
+class InMemoryComparisonRepository:
+    def __init__(self) -> None:
+        self._reports: dict[str, ComparisonReport] = {}
+
+    def save(self, report: ComparisonReport) -> None:
+        self._reports[report.id] = report
+
+    def get(self, comparison_id: str) -> ComparisonReport:
+        try:
+            return self._reports[comparison_id]
+        except KeyError:
+            raise ComparisonNotFoundError(comparison_id) from None

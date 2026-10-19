@@ -11,9 +11,11 @@ from argus.domain.errors import (
     ArchivedFileMissingError,
     ArgusDomainError,
     ClosedSessionError,
+    ComparisonNotFoundError,
     DocumentNotFoundError,
     HistoryFolderError,
     InvalidValueError,
+    NotEnoughDocumentsError,
     SessionNotFoundError,
 )
 
@@ -35,6 +37,8 @@ ERROR_RESPONSES: dict[type[ArgusDomainError], ErrorResponse] = {
     ArchivedFileMissingError: ErrorResponse(410, "archived_file_missing"),
     ClosedSessionError: ErrorResponse(409, "session_closed"),
     InvalidValueError: ErrorResponse(422, "invalid_value"),
+    ComparisonNotFoundError: ErrorResponse(404, "comparison_not_found"),
+    NotEnoughDocumentsError: ErrorResponse(422, "not_enough_documents"),
 }
 
 
