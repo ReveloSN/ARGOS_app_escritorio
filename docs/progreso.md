@@ -1,6 +1,6 @@
 # Progreso de ARGUS
 
-Estado al 16/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verde en CI (ubuntu y windows).
+Estado al 19/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verde en CI (ubuntu y windows).
 
 ## Fases
 
@@ -16,6 +16,10 @@ Estado al 16/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 | 6 · Pantallas | Decisiones con deshacer, Resultados con filtros, Historial, Ajustes, búsqueda Ctrl K, progreso por archivo | ✅ Completa (ADR 015) |
 | 7 · IA | spaCy, embeddings ONNX, anomalías, aprendizaje con las decisiones y `AlertExplainer` | ✅ Completa (ADR 016) |
 | 8 · Empaquetado | Sidecar PyInstaller, instaladores .msi, .deb, .AppImage y elegir la carpeta del historial | ✅ Completa (ADR 017) |
+| A · Comparación (motor) | Segmentos con origen, alineación por huella y similitud, diff por palabra y carácter, materialidad, modos y `/comparisons` | ✅ Completa (ADR 018) |
+| B · IA opcional | Embedders local avanzado y en la nube (con consentimiento), contradicciones (NLI), `ChangeExplainer` y benchmark | Pendiente |
+| C · Comparar documentos (interfaz) | Mockup primero; dos paneles sincronizados, diff en el texto, cambios con filtros, decisiones, Explicar y matriz | Pendiente |
+| D · OCR opcional | PDF escaneados en vez de rechazarlos (revisa el ADR 005) | Pendiente |
 
 ## Qué puede hacer hoy la app
 
@@ -29,13 +33,14 @@ Estado al 16/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 - **IA local (sin internet):** nombres de persona con spaCy; un correo que cita un periodo distinto al de su adjunto del mismo tema (embeddings ONNX), mostrado como sugerencia con su confianza; fechas con un año fuera del patrón y montos con un cero de más o de menos; la confianza aprende de sus decisiones anteriores, y cada alerta trae una explicación en el idioma de la interfaz.
 - **Búsqueda global (Ctrl K):** en una revisión busca alertas y fragmentos de los documentos; en Historial, sesiones; en Ajustes, secciones.
 - Si el motor está detenido, Inicio sigue usable y dice qué hacer («Reintentar conexión»).
+- **Comparación de documentos (solo motor, todavía sin pantalla):** `POST /comparisons` con un modo (versiones, correo y adjunto, contrato y anexos, uno contra varios) divide cada archivo en párrafos, cláusulas y filas de tabla, los alinea y devuelve cada cambio (agregado, eliminado, modificado, movido) con su origen, el diff por palabra y por carácter, y su riesgo según toque montos, fechas, números, partes o negaciones. Funciona sin el modelo de embeddings; con él, también reconoce las reformulaciones. `GET /comparisons/{id}` la vuelve a abrir.
 - **Instaladores:** `.msi` (Windows), `.deb` y `.AppImage` (Linux) con el motor y los modelos incluidos; funcionan sin internet desde la primera ejecución.
 - Catálogo de componentes, solo en desarrollo: `npm --prefix app run dev` y abrir `http://localhost:1420/dev/design-system`.
 
 ## Pruebas
 
 - Modelo de embeddings (una vez, unos 118 MB, verificado por huella): `uv run --project engine python -m argus.infrastructure.nlp.embedding_model`. Sin él, solo se omite la comparación semántica.
-- Motor: `uv run --project engine pytest`, con el caso obligatorio 4857 vs 4587 → ALTA, el flujo SSE de `POST /reviews` y las rutas de decisiones, historial, ajustes, búsqueda y apertura de archivos.
+- Motor: `uv run --project engine pytest`, con el caso obligatorio 4857 vs 4587 → ALTA, el flujo SSE de `POST /reviews` y las rutas de decisiones, historial, ajustes, búsqueda y apertura de archivos, y la comparación de documentos (segmentos, alineación, diff, materialidad, modos y `/comparisons`).
 - Motor empaquetado: desde `engine/`, `uv run pyinstaller distribution/argus-engine.spec --noconfirm` y luego `uv run python distribution/smoke_test.py` (arranca el binario con datos temporales y revisa los archivos de ejemplo).
 - Instaladores: se generan en GitHub Actions (workflow «Instaladores»). Una etiqueta `vX.Y.Z` publica la versión en Releases; «Run workflow» los deja como artefactos.
 - Interfaz: `npm --prefix app test` corre la suite (flujos completos con servicios de prueba, lógica de filtros, diferencias, CSV y componentes) y, después, la verificación del build de producción (sin catálogo ni datos de ejemplo).
@@ -47,3 +52,5 @@ Estado al 16/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 - La explicación usa plantillas; conectar un proveedor de IA generativa (con consentimiento en Ajustes y clave en el llavero) queda como opción futura detrás del mismo puerto.
 - Deshacer vive mientras el motor está abierto; las decisiones quedan guardadas aunque se reinicie.
 - Un número sin moneda (por ejemplo una celda de Excel) todavía no se toma como monto.
+- Las comparaciones aún no aparecen en el Historial ni se borran con la retención de 90 días; llega con la Fase C.
+- Nemotron-3-Embed-1B solo se integrará en la Fase B si se verifica que existe, su licencia y su tamaño.
