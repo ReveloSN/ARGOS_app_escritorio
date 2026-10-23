@@ -2,13 +2,14 @@ import type { DecisionCardData } from "../../components/organisms/DecisionCard";
 import type { I18n } from "../../i18n/i18nContext";
 import type { AlertResult, DecisionResult, ReviewResult } from "../../services/engine/reviewTypes";
 import { alertTitle, entityTypeLabel } from "./alertPresentation";
+import { secondValue } from "./alertSides";
 
 type CardContext = Pick<I18n, "t" | "format">;
 
 /** «Valor correcto: 4857» cuando, al marcar un error, se indicó cuál valor es el correcto. */
 function correctValueNote(alert: AlertResult, decision: DecisionResult, i18n: CardContext) {
-  if (!decision.correctSide) return undefined;
   const side = decision.correctSide === "first" ? alert.first : alert.second;
+  if (!decision.correctSide || !side) return undefined;
   return i18n.t("decisionCard.correctValue", { value: side.value });
 }
 
@@ -23,7 +24,7 @@ export function toDecisionCard(
     typeLabel: entityTypeLabel(alert.entityType, i18n.t),
     title: alertTitle(alert, i18n.t),
     valueA: alert.first.value,
-    valueB: alert.second.value,
+    valueB: secondValue(alert),
     decision: decision.kind,
     decidedAt: i18n.format.dateTime(new Date(decision.decidedAt)),
     note: correctValueNote(alert, decision, i18n),

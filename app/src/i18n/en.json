@@ -295,7 +295,12 @@
     "period": "The period doesn't match",
     "referenced_period": "The email cites a different period than its attachment",
     "out_of_pattern": "A date stands apart from the rest of the documents",
-    "magnitude": "The same amount appears with a different scale"
+    "magnitude": "The same amount appears with a different scale",
+    "amount_in_words": "The amount in words does not match the number",
+    "total_mismatch": "The total is not the sum of its values",
+    "date_order": "The end date is before the start date",
+    "impossible_date": "A date does not exist in the calendar",
+    "blank_field": "A field was left blank"
   },
   "closeFailed": {
     "what": "The review could not be closed.",
@@ -350,7 +355,12 @@
     "highlightNote": "· different characters are highlighted and underlined",
     "referencedPeriod": "Difference: the period cited in the email is not the attachment's",
     "outOfPattern": "Difference: the year is decades away from the other dates",
-    "magnitude": "Difference: the same digits with extra or missing zeros"
+    "magnitude": "Difference: the same digits with extra or missing zeros",
+    "amountInWords": "Difference: the figure written in words is another one",
+    "totalMismatch": "Difference: the cells add up to another value",
+    "dateOrder": "Difference: the end comes before the start",
+    "impossibleDate": "Difference: that day does not exist in that month",
+    "blankField": "Difference: the value is missing"
   },
   "duration": {
     "seconds": "{seconds} s",
@@ -627,7 +637,12 @@
       "format_only": "It is the same value written another way; its meaning does not change.",
       "referenced_period": "The email mentions “{mentioned}” and its attachment “{attachment}”, on the same topic, is from “{attached}”.",
       "out_of_pattern": "The other dates in the documents are from other years; a gap of decades is usually a mistyped year.",
-      "magnitude": "The digits match but the scale does not: a zero is usually missing or extra."
+      "magnitude": "The digits match but the scale does not: a zero is usually missing or extra.",
+      "amount_in_words": "The figure is written twice to avoid mistakes: one of them is wrong.",
+      "total_mismatch": "A cell may be missing from the formula, or a value changed after adding.",
+      "date_order": "A year or month may have been mistyped; check the whole term.",
+      "impossible_date": "It is usually a mistyped day or month.",
+      "blank_field": "Fill it in before sending or signing the document."
     },
     "majority": {
       "one": "Value A appears once and Value B, once.",
@@ -636,6 +651,13 @@
     "feedback": {
       "one": "In previous reviews you marked {errors} of {count} similar alert as an error.",
       "other": "In previous reviews you marked {errors} of {count} similar alerts as an error."
+    },
+    "internal": {
+      "amount_in_words": "In “{document}”, {first} is written in words as “{second}”.",
+      "total_mismatch": "In “{document}”, the total {first} does not match the sum of its values, {second}.",
+      "date_order": "In “{document}”, the start date ({first}) is after the end date ({second}).",
+      "impossible_date": "In “{document}”, the date {first} does not exist in the calendar.",
+      "blank_field": "In “{document}”, the field “{first}” was left blank."
     }
   },
   "comparison": {

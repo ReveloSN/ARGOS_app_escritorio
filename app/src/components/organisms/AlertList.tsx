@@ -14,6 +14,8 @@ export interface AlertRowData {
   readonly subtitle: string;
   readonly valueA: string;
   readonly valueB: string;
+  /** Verificación de un solo dato: sin Valor B ni «No alertar casos similares». */
+  readonly isSingleValue?: boolean;
   readonly decision: DecisionState;
 }
 

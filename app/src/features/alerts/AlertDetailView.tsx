@@ -96,7 +96,10 @@ export function AlertDetailView(props: AlertDetailViewProps) {
       {opener.failure && (
         <OpenDocumentFailure failure={opener.failure} onDismiss={opener.dismiss} />
       )}
-      <ComparisonPanel first={compared(alert.first)} second={compared(alert.second)} />
+      <ComparisonPanel
+        first={compared(alert.first)}
+        second={alert.second ? compared(alert.second) : undefined}
+      />
       <DifferenceLine {...difference} />
       <DetailDecision {...props} />
     </div>

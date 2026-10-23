@@ -11,6 +11,7 @@ import type {
   SourceLocationResult,
 } from "../../services/engine/reviewTypes";
 import { filesOf } from "./alertFilters";
+import { secondValue } from "./alertSides";
 
 export type Translate = (key: TranslationKey, params?: TranslationParams) => string;
 type LocationDescriber = (location: SourceLocationResult, t: Translate) => string;
@@ -42,6 +43,11 @@ const TITLE_BY_KIND: Readonly<Partial<Record<DifferenceKindValue, TranslationKey
   referenced_period: "alertTitles.referenced_period",
   out_of_pattern: "alertTitles.out_of_pattern",
   magnitude: "alertTitles.magnitude",
+  amount_in_words: "alertTitles.amount_in_words",
+  total_mismatch: "alertTitles.total_mismatch",
+  date_order: "alertTitles.date_order",
+  impossible_date: "alertTitles.impossible_date",
+  blank_field: "alertTitles.blank_field",
 };
 
 export function alertTitle(alert: AlertResult, t: Translate): string {
@@ -64,7 +70,8 @@ export function toAlertRow(
     title: alertTitle(alert, t),
     subtitle: `${entityTypeLabel(alert.entityType, t)} · ${filesOf(alert).join(FILE_SEPARATOR)}`,
     valueA: alert.first.value,
-    valueB: alert.second.value,
+    valueB: secondValue(alert),
+    isSingleValue: alert.second === null,
     decision,
   };
 }

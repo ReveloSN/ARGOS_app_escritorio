@@ -87,7 +87,7 @@ describe("descripción de la diferencia", () => {
       differenceKind: "character_change",
       highlightPositions: [4],
       first: { ...CONTRACT_ALERT.first, value: "1234" },
-      second: { ...CONTRACT_ALERT.second, value: "1235" },
+      second: { value: "1235", normalizedValue: "1235", occurrences: [] },
     };
 
     expect(describeDifference(changed, i18n)).toEqual({

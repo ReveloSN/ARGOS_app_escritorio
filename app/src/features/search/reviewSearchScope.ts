@@ -10,6 +10,7 @@ import {
   type ScopedSearchItem,
   type SearchScope,
 } from "./searchScope";
+import { alertSides } from "../alerts/alertSides";
 
 export interface ReviewSearchContext {
   readonly review: ReviewResult;
@@ -23,7 +24,9 @@ function alertItem(alert: AlertResult, context: ReviewSearchContext): ScopedSear
   return {
     id: `alert-${String(alert.number)}`,
     title: t("search.alertTitle", { number: alert.number, title: alertTitle(alert, t) }),
-    detail: `${alert.first.value} · ${alert.second.value}`,
+    detail: alertSides(alert)
+      .map((side) => side.value)
+      .join(" · "),
     open: () => {
       context.navigate({ page: "alert", number: alert.number });
     },

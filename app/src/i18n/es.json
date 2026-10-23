@@ -295,7 +295,12 @@
     "period": "El periodo no coincide",
     "referenced_period": "El correo cita un periodo distinto al de su adjunto",
     "out_of_pattern": "Una fecha se aparta del resto de los documentos",
-    "magnitude": "El mismo monto aparece con otra escala"
+    "magnitude": "El mismo monto aparece con otra escala",
+    "amount_in_words": "El monto en letras no coincide con el número",
+    "total_mismatch": "El total no es la suma de sus valores",
+    "date_order": "La fecha de fin es anterior a la de inicio",
+    "impossible_date": "Una fecha no existe en el calendario",
+    "blank_field": "Un campo quedó sin llenar"
   },
   "closeFailed": {
     "what": "No se pudo cerrar la revisión.",
@@ -350,7 +355,12 @@
     "highlightNote": "· los caracteres distintos están resaltados y subrayados",
     "referencedPeriod": "Diferencia: el periodo citado en el correo no es el del adjunto",
     "outOfPattern": "Diferencia: el año se aparta décadas del resto de las fechas",
-    "magnitude": "Diferencia: las mismas cifras con ceros de más o de menos"
+    "magnitude": "Diferencia: las mismas cifras con ceros de más o de menos",
+    "amountInWords": "Diferencia: la cifra escrita en letras es otra",
+    "totalMismatch": "Diferencia: la suma de las celdas da otro valor",
+    "dateOrder": "Diferencia: el fin queda antes del inicio",
+    "impossibleDate": "Diferencia: ese día no existe en ese mes",
+    "blankField": "Diferencia: falta el valor"
   },
   "duration": {
     "seconds": "{seconds} s",
@@ -627,7 +637,12 @@
       "format_only": "Es el mismo valor escrito de otra forma; no cambia su significado.",
       "referenced_period": "El correo menciona «{mentioned}» y su adjunto «{attachment}», que trata del mismo tema, corresponde a «{attached}».",
       "out_of_pattern": "Las demás fechas de los documentos son de otros años; una diferencia de décadas suele ser un año mal digitado.",
-      "magnitude": "Las cifras coinciden pero la escala no: suele faltar o sobrar un cero."
+      "magnitude": "Las cifras coinciden pero la escala no: suele faltar o sobrar un cero.",
+      "amount_in_words": "La cifra se escribe dos veces para evitar errores: una de las dos está mal.",
+      "total_mismatch": "Puede faltar una celda en la fórmula o haber cambiado un valor después de sumar.",
+      "date_order": "Puede ser un año o un mes mal digitado; revise la vigencia completa.",
+      "impossible_date": "Suele ser un día o un mes mal digitado.",
+      "blank_field": "Complételo antes de enviar o firmar el documento."
     },
     "majority": {
       "one": "El Valor A aparece una vez y el Valor B, una sola vez.",
@@ -636,6 +651,13 @@
     "feedback": {
       "one": "En revisiones anteriores marcó como error {errors} de {count} alerta parecida.",
       "other": "En revisiones anteriores marcó como error {errors} de {count} alertas parecidas."
+    },
+    "internal": {
+      "amount_in_words": "En «{document}», {first} está escrito en letras como «{second}».",
+      "total_mismatch": "En «{document}», el total {first} no coincide con la suma de sus valores, {second}.",
+      "date_order": "En «{document}», la fecha de inicio ({first}) es posterior a la de fin ({second}).",
+      "impossible_date": "En «{document}», la fecha {first} no existe en el calendario.",
+      "blank_field": "En «{document}», el campo «{first}» quedó sin llenar."
     }
   },
   "comparison": {

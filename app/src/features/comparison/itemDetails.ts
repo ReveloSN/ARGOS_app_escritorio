@@ -42,6 +42,6 @@ export function inconsistencyDetail(alert: AlertResult, t: Translate): ItemDetai
     kind: t(`risk.${alert.risk}Long`),
     location: first.label,
     title: alertTitle(alert, t),
-    values: [first, sideValue(alert.second, t("alerts.valueB"))],
+    values: alert.second ? [first, sideValue(alert.second, t("alerts.valueB"))] : [first],
   };
 }

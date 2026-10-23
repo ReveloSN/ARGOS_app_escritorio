@@ -28,19 +28,24 @@ export interface ComparedValue {
 
 interface ComparisonPanelProps {
   readonly first: ComparedValue;
-  readonly second: ComparedValue;
+  /** Sin Valor B en las verificaciones de un solo dato (fecha imposible, campo vacío). */
+  readonly second?: ComparedValue | undefined;
 }
 
-/** Valor A y Valor B lado a lado, cada uno con su origen (CLAUDE.md §7). */
+/** Valor A y Valor B lado a lado, cada uno con su origen (CLAUDE.md §7); o solo el A. */
 export function ComparisonPanel({ first, second }: ComparisonPanelProps) {
   const { t } = useI18n();
   return (
     <div role="group" aria-label={t("alerts.compare")} className={styles.panel}>
       <ValueCard label="alerts.valueA" compared={first} />
-      <span className={styles.arrow}>
-        <Icon name="compare_arrows" size="lg" />
-      </span>
-      <ValueCard label="alerts.valueB" compared={second} />
+      {second && (
+        <>
+          <span className={styles.arrow}>
+            <Icon name="compare_arrows" size="lg" />
+          </span>
+          <ValueCard label="alerts.valueB" compared={second} />
+        </>
+      )}
     </div>
   );
 }

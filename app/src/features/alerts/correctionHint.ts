@@ -31,7 +31,7 @@ export function correctionHint(
   correctSide: CorrectSideValue | undefined,
   i18n: HintContext,
 ): string {
-  if (!correctSide) return i18n.t("decisionPanel.optionalHint");
+  if (!correctSide || !alert.second) return i18n.t("decisionPanel.optionalHint");
   const [right, wrong] =
     correctSide === "first" ? [alert.first, alert.second] : [alert.second, alert.first];
   return i18n.t("decisionPanel.correction", {

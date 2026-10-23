@@ -11,7 +11,8 @@ export type ValueSide = "first" | "second";
 interface DecisionPanelProps {
   readonly current: DecisionChoice | undefined;
   readonly correctSide: ValueSide | undefined;
-  readonly values: Readonly<Record<ValueSide, string>>;
+  /** Sin Valor B (verificación de un solo dato) no se pregunta cuál es el correcto. */
+  readonly values: { readonly first: string; readonly second: string | undefined };
   /** «Se agregará a correcciones: cambiar…», o la indicación de que es opcional. */
   readonly correctionHint: string;
   readonly onDecide: (choice: DecisionChoice) => void;
@@ -51,7 +52,9 @@ export function DecisionPanel(props: DecisionPanelProps) {
           </button>
         ))}
       </div>
-      {props.current === "error" && <CorrectValueChooser {...props} />}
+      {props.current === "error" && props.values.second !== undefined && (
+        <CorrectValueChooser {...props} />
+      )}
     </section>
   );
 }

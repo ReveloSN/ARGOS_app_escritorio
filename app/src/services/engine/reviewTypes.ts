@@ -17,7 +17,12 @@ export type DifferenceKindValue =
   | "format_only"
   | "referenced_period"
   | "out_of_pattern"
-  | "magnitude";
+  | "magnitude"
+  | "amount_in_words"
+  | "total_mismatch"
+  | "date_order"
+  | "impossible_date"
+  | "blank_field";
 
 export type DecisionKindValue = "correct" | "error" | "ignored";
 export type CorrectSideValue = "first" | "second";
@@ -62,7 +67,8 @@ export interface AlertResult {
   readonly confidence: number;
   readonly highlightPositions: readonly number[];
   readonly first: AlertSideResult;
-  readonly second: AlertSideResult;
+  /** Sin segundo valor en las verificaciones de un solo dato (fecha imposible, campo vacío). */
+  readonly second: AlertSideResult | null;
   readonly explanation: readonly ExplanationPartResult[];
 }
 

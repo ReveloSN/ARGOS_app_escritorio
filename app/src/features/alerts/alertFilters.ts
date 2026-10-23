@@ -5,6 +5,7 @@ import type {
   RiskLevelValue,
 } from "../../services/engine/reviewTypes";
 import { includesFolded } from "../search/foldForSearch";
+import { alertSides } from "./alertSides";
 
 /** Filtros combinables de Resultados (búsqueda faceted); una faceta vacía no filtra. */
 export interface AlertFilters {
@@ -29,7 +30,7 @@ export interface FilterableAlert {
 }
 
 export function filesOf(alert: AlertResult): string[] {
-  const occurrences = [...alert.first.occurrences, ...alert.second.occurrences];
+  const occurrences = alertSides(alert).flatMap((side) => side.occurrences);
   return [...new Set(occurrences.map((occurrence) => occurrence.document))];
 }
 

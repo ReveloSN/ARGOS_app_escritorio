@@ -30,7 +30,7 @@ export function DetailDecision({ review, alert, decisions, onCloseReview }: Aler
       <DecisionPanel
         current={current?.kind}
         correctSide={correctSide}
-        values={{ first: alert.first.value, second: alert.second.value }}
+        values={{ first: alert.first.value, second: alert.second?.value }}
         correctionHint={correctionHint(alert, correctSide, i18n)}
         onDecide={(kind) => {
           decisions.decide({ alertNumber: alert.number, kind });

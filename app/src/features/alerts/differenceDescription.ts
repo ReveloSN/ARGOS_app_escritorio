@@ -1,6 +1,7 @@
 import type { I18n } from "../../i18n/i18nContext";
 import type { TranslationKey } from "../../i18n/translate";
 import type { AlertResult, DifferenceKindValue } from "../../services/engine/reviewTypes";
+import { secondValue } from "./alertSides";
 
 export interface DifferenceDescription {
   readonly description: string;
@@ -22,6 +23,11 @@ const KIND_DESCRIPTIONS: Readonly<Partial<Record<DifferenceKindValue, Translatio
   referenced_period: "difference.referencedPeriod",
   out_of_pattern: "difference.outOfPattern",
   magnitude: "difference.magnitude",
+  amount_in_words: "difference.amountInWords",
+  total_mismatch: "difference.totalMismatch",
+  date_order: "difference.dateOrder",
+  impossible_date: "difference.impossibleDate",
+  blank_field: "difference.blankField",
 };
 
 /** «Diferencia: posiciones 2 y 3 intercambiadas · 8 ↔ 5», según cómo difieren los valores. */
@@ -64,7 +70,7 @@ function describeChangedCharacters(
   const positions = alert.highlightPositions;
   const changes = positions.map(
     (position) =>
-      `${characterAt(alert.first.value, position)} → ${characterAt(alert.second.value, position)}`,
+      `${characterAt(alert.first.value, position)} → ${characterAt(secondValue(alert), position)}`,
   );
   const description = i18n.tPlural({
     key: "difference.characterChange",

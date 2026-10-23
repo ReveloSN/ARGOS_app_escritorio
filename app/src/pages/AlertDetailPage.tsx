@@ -14,6 +14,7 @@ import { useDecisionShortcuts } from "../features/alerts/useDecisionShortcuts";
 import { useOpenDocument } from "../features/alerts/useOpenDocument";
 import { useI18n } from "../i18n/i18nContext";
 import type { ReviewResult } from "../services/engine/reviewTypes";
+import { alertSides } from "../features/alerts/alertSides";
 
 interface AlertDetailPageProps {
   readonly review: ReviewResult;
@@ -85,7 +86,9 @@ export function AlertDetailPage({
       number: item.number,
       risk: item.risk,
       title: alertTitle(item, t),
-      values: `${item.first.value} · ${item.second.value}`,
+      values: alertSides(item)
+        .map((side) => side.value)
+        .join(" · "),
       state: t(`decision.${state}`),
       isPending: state === "pending",
     };

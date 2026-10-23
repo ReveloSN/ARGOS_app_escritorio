@@ -68,7 +68,7 @@ function useDecisionActions(decisions: AlertDecisions): RowMenu {
 function useExtraActions(notice: TimedNotice): RowMenu {
   const suppress = useSuppressAction(notice);
   const copy = useCopyAction(notice);
-  return (row) => [suppress(row), copy(row)];
+  return (row) => (row.isSingleValue ? [copy(row)] : [suppress(row), copy(row)]);
 }
 
 function confirmWith(notice: TimedNotice, message: string): () => void {
@@ -106,7 +106,8 @@ function useCopyAction(notice: TimedNotice): RowAction {
     label: t("rowActions.copy"),
     isMuted: true,
     onSelect: () => {
-      const text = `${t("alerts.valueA")}: ${row.valueA}\n${t("alerts.valueB")}: ${row.valueB}`;
+      const first = `${t("alerts.valueA")}: ${row.valueA}`;
+      const text = row.isSingleValue ? first : `${first}\n${t("alerts.valueB")}: ${row.valueB}`;
       navigator.clipboard
         .writeText(text)
         .then(
