@@ -29,7 +29,7 @@ Estado al 23/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 | 6 · IA opcional | `ChangeExplainer` con respaldo por plantillas, «reformulado» frente a «cambio de sentido» y benchmark del embedder | ✅ Completa (ADR 024) |
 | 7 · Asistente | `ArgusAssistant` con sus estados derivados del motor, onboarding y ajuste «Mostrar asistente» | ✅ Completa (ADR 025) |
 | 8 · OCR | `OcrEngine` con Tesseract local y Google Document AI opcional (revisa el ADR 005) | ✅ Completa (ADR 026) |
-| 9 · Empaquetado y cierre | Instaladores con modelos, arranque sin internet, README y progreso final | Pendiente |
+| 9 · Empaquetado y cierre | Instaladores con modelos, arranque sin internet, README y progreso final | ✅ Completa (ADR 027) |
 
 ## Qué puede hacer hoy la app
 
@@ -51,7 +51,7 @@ Estado al 23/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 - **OCR:** en «Confirmar lectura», un PDF escaneado ofrece «Activar OCR» (y «Reemplazar archivo»). La revisión se vuelve a leer con OCR solo para ese archivo, con avance por página, y la lectura anterior se descarta. Por defecto lee Tesseract en este equipo, en español e inglés. Si se activa Google Document AI en Ajustes › OCR (proyecto, ubicación, procesador y clave JSON de la cuenta de servicio en el llavero), antes de enviar se dice cuántas páginas saldrán del equipo y se puede elegir el OCR local. Sin red o sin clave se usa el OCR local. «Archivos» indica qué se leyó con OCR.
 - **Asistente de IA:** el ojo de ARGUS en la barra lateral, y su texto en la barra superior, dice en qué está según datos reales: En pausa con el motor detenido (con «Reintentar»), Leyendo N de M archivos, Explicando un cambio, No pudo leer un archivo, N alertas de riesgo alto, Necesita una confirmación (datos «Sin confirmar»), Sin inconsistencias o Listo. Inicio lo muestra grande sobre la retícula. La primera vez se abren los «Primeros pasos» (3 pantallas; Esc omite y Enter avanza). Ajustes › Asistente permite ocultarlo (el estado queda en texto), reducir el movimiento y volver a ver los primeros pasos.
 - **IA opcional:** cada cambio de Comparar lleva la sugerencia «IA: Reformulado» o «IA: Cambio de sentido» (local, sin internet). «Explicar este cambio» muestra la explicación local o, si se activa en Ajustes > Inteligencia artificial con una clave de Anthropic guardada en el llavero del sistema, una «Sugerencia de IA» con la cita de su origen; si la IA falla, dice por qué y usa la explicación local.
-- **Instaladores:** `.msi` (Windows), `.deb` y `.AppImage` (Linux) con el motor y los modelos incluidos; funcionan sin internet desde la primera ejecución.
+- **Instaladores:** `.msi` (Windows), `.deb` y `.AppImage` (Linux) con el motor, los modelos y Tesseract (español e inglés) incluidos; funcionan sin internet desde la primera ejecución.
 - Catálogo de componentes, solo en desarrollo: `npm --prefix app run dev` y abrir `http://localhost:1420/dev/design-system`.
 
 ## Pruebas
@@ -59,7 +59,8 @@ Estado al 23/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 - Modelo de embeddings (una vez, unos 118 MB, verificado por huella): `uv run --project engine python -m argus.infrastructure.nlp.embedding_model`. Sin él, solo se omite la comparación semántica.
 - Motor: `uv run --project engine pytest`, con el caso obligatorio 4857 vs 4587 → ALTA, el flujo SSE de `POST /reviews` y las rutas de decisiones, historial, ajustes, búsqueda y apertura de archivos, y la comparación de documentos (segmentos, alineación, diff, materialidad, modos y `/comparisons`).
 - Motor empaquetado: desde `engine/`, `uv run pyinstaller distribution/argus-engine.spec --noconfirm` y luego `uv run python distribution/smoke_test.py` (arranca el binario con datos temporales y revisa los archivos de ejemplo).
-- Instaladores: se generan en GitHub Actions (workflow «Instaladores»). Una etiqueta `vX.Y.Z` publica la versión en Releases; «Run workflow» los deja como artefactos.
+- Instaladores: se generan en GitHub Actions (workflow «Instaladores»), después de una prueba de humo que arranca el motor empaquetado sin internet y comprueba reglas, spaCy, embeddings, OCR y Ajustes. Una etiqueta `vX.Y.Z` publica la versión en Releases; «Run workflow» los deja como artefactos (así quedó la v0.1).
+- Motor empaquetado en local: desde `engine/`, `uv run pyinstaller distribution/argus-engine.spec --noconfirm`, `uv run python distribution/bundle_tesseract.py` (con Tesseract instalado) y `uv run python distribution/smoke_test.py`.
 - Interfaz: `npm --prefix app test` corre la suite (flujos completos con servicios de prueba, lógica de filtros, diferencias, CSV y componentes) y, después, la verificación del build de producción (sin catálogo ni datos de ejemplo).
 
 ## Pendiente y decisiones abiertas
@@ -67,9 +68,9 @@ Estado al 23/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 - Compilar la app de escritorio en Windows requiere Rust y las Build Tools de Visual Studio (enlazador MSVC); en CI ya compila y genera los instaladores.
 - Los instaladores no tienen firma de código: Windows muestra SmartScreen al instalar.
 - La explicación de las alertas de una revisión sigue con plantillas; la IA generativa solo explica los cambios de Comparar.
-- Falta verificar que el sidecar de PyInstaller incluya `anthropic`, `pypdfium2`, `google-auth` y los backends de `keyring` (Fase 9).
 - Los puertos NLI (`EntailmentModel`) y del embedder Nemotron están listos sin implementar.
-- Tesseract y sus idiomas todavía no van dentro de los instaladores (Fase 9). Hasta entonces, el OCR local usa el Tesseract del sistema (`PATH` o `ARGUS_TESSERACT`).
+- En desarrollo, el OCR local usa el Tesseract del sistema (`PATH` o `ARGUS_TESSERACT`); los instaladores traen el suyo.
+- El modelo `es_core_news_md` de spaCy es GPL-3.0 y va en los instaladores: la licencia que se elija para ARGUS debe ser compatible (el repositorio aún no declara licencia).
 - Document AI en modo síncrono acepta hasta 15 páginas; un PDF más largo se lee con el OCR local.
 - Deshacer vive mientras el motor está abierto; las decisiones quedan guardadas aunque se reinicie.
 - Un número sin moneda (por ejemplo una celda de Excel) todavía no se toma como monto.
