@@ -49,6 +49,7 @@ def test_negations_are_counted_as_whole_words_in_spanish_and_english() -> None:
         ("LOGÍSTICA ANDINA S.A.S.", "LOGÍSTICA ANDINA SAS", Materiality.PUNCTUATION),
         ("Canon de 18.450.000", "Canon de 18450000", Materiality.PUNCTUATION),
         ("El canon mensual", "El canon anual", None),
+        ("El canon mensual", "El canon mensual", None),
     ],
 )
 def test_a_difference_only_in_spacing_case_or_punctuation_is_cosmetic(

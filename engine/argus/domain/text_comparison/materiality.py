@@ -57,7 +57,12 @@ _COSMETIC_NORMALIZERS: tuple[tuple[Materiality, Callable[[str], str]], ...] = (
 
 
 def cosmetic_difference(first: str, second: str) -> Materiality | None:
-    """Si dos textos solo difieren en espacios, mayúsculas o puntuación, cuál es la diferencia."""
+    """Si dos textos solo difieren en espacios, mayúsculas o puntuación, cuál es la diferencia.
+
+    Dos textos idénticos no difieren en nada (un segmento movido no es un cambio de forma).
+    """
+    if first == second:
+        return None
     return next(
         (
             materiality

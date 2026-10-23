@@ -129,6 +129,7 @@ def test_a_clause_that_changed_place_is_moved_without_edits() -> None:
 
     (moved,) = changes
     assert (moved.kind, moved.risk, moved.edits) == (ChangeKind.MOVED, RiskLevel.LOW, ())
+    assert moved.materialities == ()
     assert moved.first is not None
     assert moved.first.text == "Multas por retraso"
 
