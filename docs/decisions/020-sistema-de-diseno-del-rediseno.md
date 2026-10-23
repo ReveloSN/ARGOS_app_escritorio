@@ -1,0 +1,13 @@
+# 020 · Sistema de diseño del rediseño (Fase 2)
+
+- **Estado:** aceptada · 22/10/2026
+- **Contexto:** el rediseño (`docs/mockups/` del 22/10/2026) agrega una identidad propia: el ojo de ARGUS como logo y como asistente, un motivo de retícula, una hoja de movimiento y marcas de diferencia para la pantalla Comparar. La hoja de design system mantiene los mismos tokens globales, semánticos y de componente que ya tenía la app (ADR 013).
+- **Decisión:**
+  - **Tokens:** los tres niveles ya coincidían con el mockup y no cambian sus valores. Se agregan: tamaños del ojo (24, 48 y 128 px) y de la retícula, trazo del ojo según el tamaño, patrones de punteado, `--easing-decelerate` para fundidos y salidas (hoja de movimiento), y tokens de componente para las marcas de diferencia (`--diff-*`), el ojo (`--eye-*`) y la retícula.
+  - **Borde de «Cambiado»:** el mockup usa `#C9A266` (claro) y `#8A6A2A` (oscuro), que no llegan a 3:1 (2,1 y 2,9). Con el usuario se decidió usar el ámbar de riesgo medio (`#8A5300` y `#E7B35A`: 5,6 y 7,7:1).
+  - **Contraste verificado en pruebas:** a los pares de texto (4.5:1) se suman los trazos que comunican algo (3:1, WCAG 1.4.11): las líneas de cada marca de diferencia, el contorno de selección y el ojo en sus tres tonos, en los dos temas.
+  - **`ArgusEye`:** una sola pieza para el logo y los siete estados del asistente (idle, reading, success, doubt, alert, explaining, error). Cada estado cambia la forma del ojo, no solo el color. Las formas son datos (`eyeShapes.ts`) y los colores salen de tokens. Con etiqueta es una imagen accesible; sin ella es decorativo, por ejemplo junto al nombre «ARGUS» visible. Reemplaza a `BrandMark`. En la barra lateral contraída, el logo anuncia «ARGUS». Derivar el estado del motor y de la revisión queda para la Fase 7.
+  - **`ReticleMotif`:** retícula decorativa con trazo de 1 px que no se escala. Solo va en Inicio, estados vacíos y errores.
+  - **`DiffMark`:** marca de diferencia dentro del texto con forma propia: `<del>` tachado (falta), `<ins>` subrayado (agregado) y `<mark>` con borde punteado (cambiado). El elemento semántico lo anuncian los lectores de pantalla, y la selección se ve con un contorno sólido.
+  - **Catálogo:** los componentes nuevos aparecen en `/dev/design-system`, que sigue fuera del build de producción (ya verificado por la prueba del bundle).
+- **Consecuencias:** la reorganización de la barra lateral (Inicio, Expediente, Comparar, Revisar antes de enviar, Historial y Ajustes, con el bloque del asistente) se hace junto con las pantallas que la necesitan (fases 3, 4 y 7), para no enlazar destinos que aún no existen.

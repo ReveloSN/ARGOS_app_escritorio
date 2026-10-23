@@ -22,7 +22,7 @@ Estado al 22/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 | Fase | Contenido | Estado |
 |---|---|---|
 | 1 · Motor de comparación | Segmentos con origen, alineación por huella y similitud, diff por palabra y carácter, materialidad (número, fecha, monto, parte, negación y cambios de forma), modos y `/comparisons` con progreso | ✅ Completa (ADR 018, 019) |
-| 2 · Sistema de diseño | Tokens nuevos, componentes, temas claro y oscuro, i18n, contraste 4.5:1, catálogo solo en desarrollo | Pendiente |
+| 2 · Sistema de diseño | Tokens del rediseño, ojo de ARGUS (logo y estados del asistente), retícula, marcas de diferencia, contraste 4.5:1 (texto) y 3:1 (trazos) en los dos temas, catálogo solo en desarrollo | ✅ Completa (ADR 020) |
 | 3 · Interfaz de comparación | Pantalla Comparar: paneles sincronizados, diff en el texto, resumen, minimapa, filtros, decisiones y matriz | Pendiente |
 | 4 · Expediente y prevención | Datos confirmados como fuente de verdad, verificaciones internas y revisión antes de enviar | Pendiente |
 | 5 · Informe y métricas | Informe PDF y DOCX y panel de métricas en Historial | Pendiente |
