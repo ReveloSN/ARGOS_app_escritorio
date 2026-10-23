@@ -123,3 +123,24 @@ Rutas con `pathlib`, nunca con separadores a mano. Sin dependencias exclusivas d
 - No agregues dependencias sin justificarlas.
 - Al terminar una tarea, di en 2-3 líneas qué quedó hecho y qué falta.
 - Si hay una decisión de arquitectura nueva, regístrala en `docs/decisions/NNN-titulo.md` (ADR corto)
+
+## 14. Funciones de la v0.1 (ampliación)
+- **Comparar versiones** palabra por palabra: texto que falta, agregado, cambiado (A → B) y movido.
+- **Inconsistencias entre documentos:** la detección por entidades de las secciones 1 y 7.
+- **Matriz** para comparar 3 o más documentos entre sí.
+- **Expediente:** datos confirmados por el usuario como fuente de verdad; lo que los contradiga se marca y las falsas alarmas ignoradas se recuerdan.
+- **Revisión antes de enviar:** un correo y sus adjuntos antes de mandarlos.
+- **Informe exportable** en PDF y DOCX.
+- **Asistente de IA (mascota):** su estado sale de datos reales del motor y de la revisión, nunca simulados.
+
+## 15. Decisión de IA para la v0.1
+- Embeddings: MiniLM multilingüe local (por defecto).
+- Entidades: spaCy.
+- `ChangeExplainer` opcional: un LLM con su clave en el llavero del sistema operativo. Solo recibe los fragmentos alineados, tiene respaldo por plantillas y su salida siempre va rotulada «Sugerencia de IA», con la cita de su origen.
+- `OcrEngine`: Tesseract local por defecto. Google Document AI es opcional y viene apagado: pide consentimiento explícito, dice cuántas páginas saldrán del equipo y guarda las credenciales en el llavero.
+- Puertos listos, sin implementar todavía, para un embedder Nemotron local y un clasificador NLI.
+
+## 16. Reglas añadidas
+- La detección exacta nunca depende de IA, de internet ni de claves. La IA solo alinea, clasifica y explica.
+- El catálogo de componentes y los datos de ejemplo son solo para desarrollo; la interfaz de producción solo muestra datos reales del motor.
+- Ningún texto de producto menciona «átomos», «moléculas» ni «organismos».
