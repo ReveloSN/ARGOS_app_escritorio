@@ -12,6 +12,7 @@ from argus.domain.document import Document, DocumentFormat, TextFragment
 from argus.domain.entity import EntityType
 from argus.domain.errors import UnreadableDocumentError, UnreadableReason
 from argus.domain.locations import LineLocation
+from argus.domain.ocr import PageCount
 from argus.domain.read_outcome import DocumentReadOutcome
 from argus.domain.risk import RiskLevel
 from tests.application.in_memory_repositories import (
@@ -62,6 +63,9 @@ class RecordingProgress:
 
     def document_finished(self, position: int, outcome: DocumentReadOutcome) -> None:
         self.events.append(f"termina {position} {'leído' if outcome.is_read else outcome.reason}")
+
+    def page_recognized(self, position: int, pages: PageCount) -> None:
+        self.events.append(f"página {pages.done} de {pages.total} del {position}")
 
     def analysis_started(self) -> None:
         self.events.append("analiza")

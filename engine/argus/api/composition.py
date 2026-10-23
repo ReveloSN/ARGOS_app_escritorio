@@ -3,12 +3,18 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from argus.api.ai_composition import AiAdapters, build_ai_settings, build_change_explainer
+from argus.api.ai_composition import build_ai_settings, build_change_explainer
 from argus.api.comparison_composition import (
     ComparisonDependencies,
     ComparisonRepositories,
     ComparisonServices,
     build_comparison_services,
+)
+from argus.api.ocr_composition import (
+    ExternalAdapters,
+    OcrAdapters,
+    build_ocr_reader,
+    build_ocr_settings,
 )
 from argus.api.report_composition import (
     ReportDependencies,
@@ -35,11 +41,13 @@ from argus.application.embedding_similarity import EmbeddingTextSimilarity
 from argus.application.entity_extraction_pipeline import EntityExtractionPipeline
 from argus.application.fact_value_reader import FactValueReader
 from argus.application.feedback_confidence import FeedbackAdjustingReviewAnalyzer
+from argus.application.ocr_settings import ManageOcrSettings
 from argus.application.open_review import OpenReview, StoredReviewRepositories
 from argus.application.out_of_pattern import AmountScaleSource, DateOutlierSource
 from argus.application.ports.document_archive import DocumentArchive, FileOpener
 from argus.application.ports.text_embedder import TextEmbedder
 from argus.application.referenced_period import ReferencedPeriodSource
+from argus.application.reread_review import RereadReview
 from argus.application.review_analyzers import (
     AlertSource,
     EntityReviewAnalyzer,
@@ -49,13 +57,14 @@ from argus.application.review_analyzers import (
 )
 from argus.application.review_decisions import DecisionRepositories, ReviewDecisions
 from argus.application.review_history import (
+    DiscardUnreviewedSession,
     HistoryRepositories,
     PurgeExpiredHistory,
     ReviewHistory,
 )
 from argus.application.review_recording import StoredReviewRecorder
 from argus.application.review_session_use_cases import CloseReviewSession, StartReviewSession
-from argus.application.run_review import RunReview
+from argus.application.run_review import ReviewRunner, RunReview
 from argus.application.suppress_similar_alerts import SuppressSimilarAlerts
 from argus.domain.comparison.comparators_by_type import comparators_for
 from argus.domain.document import DocumentFormat
@@ -103,6 +112,7 @@ from argus.infrastructure.persistence.sqlite_decision_statistics import SqliteDe
 from argus.infrastructure.persistence.sqlite_document_repository import SqliteDocumentRepository
 from argus.infrastructure.persistence.sqlite_preference_repositories import (
     SqliteAiSettingsRepository,
+    SqliteOcrSettingsRepository,
     SqlitePreferencesRepository,
     SqliteSuppressionRuleRepository,
 )
@@ -133,13 +143,14 @@ class ReviewStorage:
     send_reviews: SqliteSendReviewRepository
     send_decisions: SqliteDecisionRepository
     ai_settings: SqliteAiSettingsRepository
+    ocr_settings: SqliteOcrSettingsRepository
 
 
 @dataclass(frozen=True)
 class EngineServices:
     """Casos de uso ya construidos que las rutas HTTP reciben por inyección."""
 
-    run_review: RunReview
+    run_review: ReviewRunner
     open_review: OpenReview
     close_review: CloseReviewSession
     decisions: ReviewDecisions
@@ -155,6 +166,7 @@ class EngineServices:
     sending: SendServices
     reports: ReportServices
     ai_settings: ManageAiSettings
+    ocr_settings: ManageOcrSettings
     storage: ReviewStorage
     data_directory: Path
 
@@ -176,12 +188,14 @@ def build_review_storage(database_path: Path) -> ReviewStorage:
         SqliteSendReviewRepository(database),
         SqliteDecisionRepository(database, SEND_DECISIONS),
         SqliteAiSettingsRepository(database),
+        SqliteOcrSettingsRepository(database),
     )
 
 
 def build_engine_services(
-    settings: EngineSettings, opener: FileOpener, ai: AiAdapters
+    settings: EngineSettings, opener: FileOpener, external: ExternalAdapters
 ) -> EngineServices:
+    ai = external.ai
     data_directory = settings.data_directory
     storage = build_review_storage(data_directory / DATABASE_FILE_NAME)
     archive = FileSystemDocumentArchive(data_directory / ARCHIVE_FOLDER_NAME)
@@ -198,7 +212,12 @@ def build_engine_services(
         build_change_explainer(storage.ai_settings, ai),
     )
     return EngineServices(
-        run_review=build_run_review(storage, archive, analyzer),
+        run_review=RereadReview(
+            build_run_review(
+                storage, archive, ReviewSteps(build_review_loader(storage, external.ocr), analyzer)
+            ),
+            DiscardUnreviewedSession(storage.sessions, storage.decisions, archive),
+        ),
         open_review=OpenReview(
             StoredReviewRepositories(storage.sessions, storage.alerts, storage.documents)
         ),
@@ -240,6 +259,7 @@ def build_engine_services(
             settings.reports_directory,
         ),
         ai_settings=build_ai_settings(storage.ai_settings, ai),
+        ocr_settings=build_ocr_settings(storage.ocr_settings, external.ocr),
         storage=storage,
         data_directory=data_directory,
     )
@@ -349,9 +369,23 @@ def build_fact_check(
     return CheckConfirmedFacts(sources, values, RiskClassifier(DEFAULT_RISK_RULES))
 
 
+@dataclass(frozen=True)
+class ReviewSteps:
+    """Lectura (con OCR si se pidió) y análisis de una revisión."""
+
+    loader: DocumentLoader
+    analyzer: ReviewAnalyzer
+
+
+def build_review_loader(storage: ReviewStorage, ocr: OcrAdapters) -> DocumentLoader:
+    return DocumentLoader(
+        build_document_reader_factory(), build_ocr_reader(storage.ocr_settings, ocr)
+    )
+
+
 def build_run_review(
-    storage: ReviewStorage, archive: DocumentArchive, analyzer: ReviewAnalyzer
+    storage: ReviewStorage, archive: DocumentArchive, steps: ReviewSteps
 ) -> RunReview:
     start_session = StartReviewSession(storage.sessions, storage.alerts, SystemClock())
     recorder = StoredReviewRecorder(start_session, storage.documents, archive)
-    return RunReview(DocumentLoader(build_document_reader_factory()), analyzer, recorder)
+    return RunReview(steps.loader, steps.analyzer, recorder)

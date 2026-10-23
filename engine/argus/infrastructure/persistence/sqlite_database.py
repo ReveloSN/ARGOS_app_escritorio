@@ -129,6 +129,12 @@ MIGRATIONS: tuple[str, ...] = (
         PRIMARY KEY (send_review_id, alert_number)
     );
     """,
+    # Fase 8 del plan v0.1: cómo se obtuvo el texto (con OCR o no) y las páginas de un PDF
+    # escaneado (ADR 026).
+    """
+    ALTER TABLE documents ADD COLUMN read_method TEXT NOT NULL DEFAULT 'text';
+    ALTER TABLE documents ADD COLUMN page_count INTEGER;
+    """,
 )
 SCHEMA_VERSION = len(MIGRATIONS)
 

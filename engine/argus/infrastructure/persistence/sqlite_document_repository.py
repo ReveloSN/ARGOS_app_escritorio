@@ -4,6 +4,7 @@ from collections.abc import Iterator, Sequence
 
 from argus.domain.document import NamedFragment, TextFragment
 from argus.domain.errors import UnreadableReason
+from argus.domain.ocr import ReadMethod
 from argus.domain.read_outcome import DocumentReadOutcome, ReadSummary
 from argus.domain.text_search import fold_for_search
 from argus.infrastructure.persistence.alert_serialization import (
@@ -25,14 +26,14 @@ class SqliteDocumentRepository:
 
     def save_all(self, session_id: str, documents: Sequence[DocumentReadOutcome]) -> None:
         summaries = [
-            (session_id, position, outcome.name, outcome.reason, outcome.fragment_count)
+            (session_id, position, *_summary_columns(outcome))
             for position, outcome in enumerate(documents)
         ]
         fragments = list(_fragment_rows(session_id, documents))
         with self._database.connect() as connection:
             connection.executemany(
-                "INSERT INTO documents (session_id, position, name, reason, fragment_count) "
-                "VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO documents (session_id, position, name, reason, fragment_count, "
+                "read_method, page_count) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 summaries,
             )
             connection.executemany(
@@ -44,14 +45,11 @@ class SqliteDocumentRepository:
     def list_for(self, session_id: str) -> tuple[ReadSummary, ...]:
         with self._database.connect() as connection:
             rows = connection.execute(
-                "SELECT name, reason, fragment_count FROM documents WHERE session_id = ? "
-                "ORDER BY position",
+                "SELECT name, reason, fragment_count, read_method, page_count FROM documents "
+                "WHERE session_id = ? ORDER BY position",
                 (session_id,),
             ).fetchall()
-        return tuple(
-            ReadSummary(name, UnreadableReason(reason) if reason else None, count)
-            for name, reason, count in rows
-        )
+        return tuple(_to_summary(row) for row in rows)
 
     def position_of(self, session_id: str, document_name: str) -> int | None:
         with self._database.connect() as connection:
@@ -84,6 +82,24 @@ class SqliteDocumentRepository:
                 (session_id,),
             ).fetchall()
         return tuple(_to_fragment(row) for row in rows)
+
+
+def _summary_columns(
+    outcome: DocumentReadOutcome,
+) -> tuple[str, str | None, int, str, int | None]:
+    return (
+        outcome.name,
+        outcome.reason,
+        outcome.fragment_count,
+        outcome.method,
+        outcome.page_count,
+    )
+
+
+def _to_summary(row: tuple[str, str | None, int, str, int | None]) -> ReadSummary:
+    name, reason, count, method, page_count = row
+    unreadable = UnreadableReason(reason) if reason else None
+    return ReadSummary(name, unreadable, count, ReadMethod(method), page_count)
 
 
 def _fragment_rows(

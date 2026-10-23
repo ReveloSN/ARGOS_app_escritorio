@@ -6,6 +6,7 @@ from argus.domain.document import Document, DocumentFormat, TextFragment
 from argus.domain.entity import EntityType
 from argus.domain.errors import UnreadableReason
 from argus.domain.locations import LineLocation, PageLocation, SheetCellLocation
+from argus.domain.ocr import ReadMethod
 from argus.domain.read_outcome import DocumentReadOutcome, ReadSummary
 from argus.domain.risk import RiskLevel
 from argus.infrastructure.persistence.sqlite_alert_repository import SqliteAlertRepository
@@ -39,7 +40,7 @@ EMAIL = Document(
 )
 OUTCOMES = (
     DocumentReadOutcome("contrato.pdf", CONTRACT, None),
-    DocumentReadOutcome("escaneado.pdf", None, UnreadableReason.NO_TEXT),
+    DocumentReadOutcome("escaneado.pdf", None, UnreadableReason.NO_TEXT, page_count=4),
     DocumentReadOutcome("correo.eml", EMAIL, None),
 )
 
@@ -57,8 +58,21 @@ def test_read_summaries_are_listed_in_upload_order(database: SqliteDatabase) -> 
 
     assert repository.list_for(session_id) == (
         ReadSummary("contrato.pdf", None, 2),
-        ReadSummary("escaneado.pdf", UnreadableReason.NO_TEXT, 0),
+        ReadSummary("escaneado.pdf", UnreadableReason.NO_TEXT, 0, page_count=4),
         ReadSummary("correo.eml", None, 2),
+    )
+
+
+def test_a_file_read_with_ocr_keeps_how_it_was_read(database: SqliteDatabase) -> None:
+    session = new_session()
+    SqliteSessionRepository(database).save(session)
+    repository = SqliteDocumentRepository(database)
+
+    ocr = DocumentReadOutcome("anexo_ocr.pdf", CONTRACT, None, ReadMethod.CLOUD_OCR, 2)
+    repository.save_all(session.id, (ocr,))
+
+    assert repository.list_for(session.id) == (
+        ReadSummary("anexo_ocr.pdf", None, 2, ReadMethod.CLOUD_OCR, 2),
     )
 
 

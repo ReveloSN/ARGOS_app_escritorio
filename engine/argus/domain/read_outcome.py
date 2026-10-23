@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from argus.domain.document import Document
 from argus.domain.errors import InvalidValueError, UnreadableReason
+from argus.domain.ocr import ReadMethod
 
 
 @dataclass(frozen=True)
@@ -11,6 +12,8 @@ class ReadSummary:
     name: str
     reason: UnreadableReason | None
     fragment_count: int
+    method: ReadMethod = ReadMethod.TEXT
+    page_count: int | None = None
 
     @property
     def is_read(self) -> bool:
@@ -24,6 +27,8 @@ class DocumentReadOutcome:
     name: str
     document: Document | None
     reason: UnreadableReason | None
+    method: ReadMethod = ReadMethod.TEXT
+    page_count: int | None = None
 
     def __post_init__(self) -> None:
         if (self.document is None) == (self.reason is None):
@@ -39,4 +44,6 @@ class DocumentReadOutcome:
 
     @property
     def summary(self) -> ReadSummary:
-        return ReadSummary(self.name, self.reason, self.fragment_count)
+        return ReadSummary(
+            self.name, self.reason, self.fragment_count, self.method, self.page_count
+        )

@@ -59,6 +59,8 @@ def document_response(summary: ReadSummary) -> DocumentResponse:
         status="read" if summary.is_read else "unreadable",
         reason=summary.reason,
         fragment_count=summary.fragment_count,
+        method=summary.method,
+        page_count=summary.page_count,
     )
 
 

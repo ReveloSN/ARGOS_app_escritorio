@@ -24,6 +24,8 @@ def test_progress_is_streamed_file_by_file_before_the_review(
             "status": "unreadable",
             "reason": "no_text",
             "fragmentCount": 0,
+            "method": "text",
+            "pageCount": 1,
         },
     }
 
@@ -36,8 +38,22 @@ def test_review_returns_the_session_and_how_each_file_was_read(
     assert body["session"]["name"] == REVIEW_NAME
     assert body["session"]["closedAt"] is None
     assert body["documents"] == [
-        {"name": "Contrato_4857_v3.pdf", "status": "read", "reason": None, "fragmentCount": 2},
-        {"name": "anexo_3.pdf", "status": "unreadable", "reason": "no_text", "fragmentCount": 0},
+        {
+            "name": "Contrato_4857_v3.pdf",
+            "status": "read",
+            "reason": None,
+            "fragmentCount": 2,
+            "method": "text",
+            "pageCount": None,
+        },
+        {
+            "name": "anexo_3.pdf",
+            "status": "unreadable",
+            "reason": "no_text",
+            "fragmentCount": 0,
+            "method": "text",
+            "pageCount": 1,
+        },
     ]
     assert body["decisions"] == {"decisions": [], "canUndo": False}
 

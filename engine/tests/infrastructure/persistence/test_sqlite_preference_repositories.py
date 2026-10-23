@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from argus.application.ai.ai_settings import AiSettings
+from argus.application.ocr_settings import CloudOcrProcessor, OcrSettings
 from argus.domain.alert import Alert
 from argus.domain.entity import EntityType
 from argus.domain.preferences import ComparedCategory, UserPreferences
@@ -10,6 +11,7 @@ from argus.domain.suppression import SuppressedCase
 from argus.infrastructure.persistence.sqlite_database import SqliteDatabase
 from argus.infrastructure.persistence.sqlite_preference_repositories import (
     SqliteAiSettingsRepository,
+    SqliteOcrSettingsRepository,
     SqlitePreferencesRepository,
     SqliteSuppressionRuleRepository,
 )
@@ -76,3 +78,14 @@ def test_ai_explanations_are_off_until_the_user_turns_them_on(database: SqliteDa
     assert repository.get() == AiSettings(explains_changes=False)
     repository.save(AiSettings(explains_changes=True))
     assert repository.get().explains_changes
+
+
+def test_document_ai_is_off_and_without_processor_until_the_user_sets_it(
+    database: SqliteDatabase,
+) -> None:
+    repository = SqliteOcrSettingsRepository(database)
+    configured = OcrSettings(True, CloudOcrProcessor("proyecto-de-prueba", "us", "a1b2c3d4"))
+
+    assert repository.get() == OcrSettings()
+    repository.save(configured)
+    assert repository.get() == configured

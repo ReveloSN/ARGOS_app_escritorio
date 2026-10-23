@@ -5,9 +5,11 @@ from fastapi.testclient import TestClient
 
 from argus.api.ai_composition import AiAdapters
 from argus.api.app import create_app
+from argus.api.ocr_composition import ExternalAdapters, OcrAdapters
 from argus.api.settings import EngineSettings
 from tests.application.ai_doubles import offline_ai
 from tests.application.in_memory_repositories import RecordingFileOpener
+from tests.application.ocr_doubles import offline_adapters, offline_ocr
 
 TEST_VERSION = "9.9.9"
 TEST_TOKEN = "test-token-0123456789"
@@ -38,8 +40,21 @@ def ai() -> AiAdapters:
 
 
 @pytest.fixture
-def client(settings: EngineSettings, opener: RecordingFileOpener, ai: AiAdapters) -> TestClient:
-    return TestClient(create_app(settings, opener, ai))
+def ocr() -> OcrAdapters:
+    # Nunca Tesseract del equipo, el llavero real ni Document AI en las pruebas.
+    return offline_ocr()
+
+
+@pytest.fixture
+def external(ai: AiAdapters, ocr: OcrAdapters) -> ExternalAdapters:
+    return offline_adapters(ai, ocr)
+
+
+@pytest.fixture
+def client(
+    settings: EngineSettings, opener: RecordingFileOpener, external: ExternalAdapters
+) -> TestClient:
+    return TestClient(create_app(settings, opener, external))
 
 
 @pytest.fixture

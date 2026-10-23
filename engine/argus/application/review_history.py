@@ -10,6 +10,7 @@ from argus.application.ports.repositories import (
 )
 from argus.domain.alert import NumberedAlert
 from argus.domain.decision import Decision
+from argus.domain.errors import SessionNotFoundError
 from argus.domain.review_session import ReviewSession
 from argus.domain.usage_metrics import UsageMetrics, compute_usage_metrics
 
@@ -85,3 +86,28 @@ class PurgeExpiredHistory:
             self._sessions.delete(session.id)
             self._archive.delete_session(session.id)
         return len(expired)
+
+
+class DiscardUnreviewedSession:
+    """«Activar OCR» vuelve a leer la revisión: la lectura anterior, aún sin revisar, sobra.
+
+    Solo se borra si sigue abierta y sin decisiones; cualquier otra queda en el historial.
+    """
+
+    def __init__(
+        self, sessions: SessionRepository, decisions: DecisionRepository, archive: DocumentArchive
+    ) -> None:
+        self._sessions = sessions
+        self._decisions = decisions
+        self._archive = archive
+
+    def execute(self, session_id: str) -> bool:
+        try:
+            session = self._sessions.get(session_id)
+        except SessionNotFoundError:
+            return False
+        if session.closed_at is not None or self._decisions.list_for(session_id):
+            return False
+        self._sessions.delete(session_id)
+        self._archive.delete_session(session_id)
+        return True

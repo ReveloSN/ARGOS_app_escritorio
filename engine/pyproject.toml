@@ -7,15 +7,19 @@ dependencies = [
     "anthropic>=2.1.0",
     "es-core-news-md",
     "fastapi>=0.143.1",
+    "google-auth>=2.62.0",
     "keyring>=25.7.0",
     "numpy>=2.5.4",
     "onnxruntime>=1.31.0",
     "openpyxl>=3.1.5",
+    "pillow>=13.0.0",
     "platformdirs>=4.13.0",
     "pypdf>=6.20.1",
+    "pypdfium2>=5.14.0",
     "python-docx>=1.2.0",
     "python-multipart>=0.0.32",
     "reportlab>=5.1.0",
+    "requests>=2.34.2",
     "spacy>=3.8,<3.9",
     "tokenizers>=0.23.3",
     "uvicorn[standard]>=0.54.0",
@@ -39,6 +43,7 @@ dev = [
     "ruff>=0.17.0",
     "types-openpyxl>=3.1.5.20260827",
     "types-reportlab>=5.0.0.20261008",
+    "types-requests>=2.33.0.20261006",
 ]
 
 [tool.black]
@@ -83,6 +88,17 @@ plugins = ["pydantic.mypy"]
 [[tool.mypy.overrides]]
 module = ["onnxruntime", "onnxruntime.*"]
 ignore_missing_imports = true
+
+# pypdfium2 no publica tipos; se usa solo en su adaptador (infrastructure/ocr).
+[[tool.mypy.overrides]]
+module = ["pypdfium2", "pypdfium2.*"]
+ignore_missing_imports = true
+
+# google-auth tipa sus módulos pero no todas sus funciones; solo el adaptador de Document AI
+# las llama.
+[[tool.mypy.overrides]]
+module = ["argus.infrastructure.ocr.document_ai_ocr_engine"]
+disallow_untyped_calls = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

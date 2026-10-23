@@ -18,13 +18,18 @@ class UnreadableReason(StrEnum):
     TOO_LARGE = "too_large"
     NOT_FOUND = "not_found"
     UNSUPPORTED_FORMAT = "unsupported_format"
+    OCR_UNAVAILABLE = "ocr_unavailable"
 
 
 class UnreadableDocumentError(ArgusDomainError):
-    def __init__(self, document_name: str, reason: UnreadableReason) -> None:
+    def __init__(
+        self, document_name: str, reason: UnreadableReason, page_count: int | None = None
+    ) -> None:
         super().__init__(f"No se pudo leer «{document_name}» ({reason}).")
         self.document_name = document_name
         self.reason = reason
+        # Un PDF escaneado dice cuántas páginas tiene: es lo que saldría del equipo con OCR.
+        self.page_count = page_count
 
 
 class UnsupportedFormatError(UnreadableDocumentError):
@@ -163,3 +168,11 @@ class ExplanationProviderError(ArgusDomainError):
     def __init__(self, reason: str) -> None:
         super().__init__(f"El proveedor de IA no respondió: {reason}.")
         self.reason = reason
+
+
+class OcrUnavailableError(ArgusDomainError):
+    """El OCR pedido no se puede usar: falta Tesseract, la nube no responde o no está configurada."""
+
+
+class InvalidOcrCredentialsError(ArgusDomainError):
+    """Lo que se pegó no es la clave JSON de una cuenta de servicio de Google Cloud."""

@@ -1,6 +1,7 @@
 from typing import Protocol
 
 from argus.application.document_loader import ReadingProgress
+from argus.domain.ocr import PageCount
 from argus.domain.read_outcome import DocumentReadOutcome
 
 
@@ -17,6 +18,9 @@ class SilentReviewProgress:
         pass
 
     def document_finished(self, position: int, outcome: DocumentReadOutcome) -> None:
+        pass
+
+    def page_recognized(self, position: int, pages: PageCount) -> None:
         pass
 
     def analysis_started(self) -> None:

@@ -1,9 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, File, Form, UploadFile
+from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import StreamingResponse
 
 from argus.api.composition import EngineServices
+from argus.api.ocr_options import OcrOptions, ocr_options
 from argus.api.review_events import review_events
 from argus.api.review_response import (
     decisions_response,
@@ -29,8 +30,10 @@ def build_reviews_router(services: EngineServices) -> APIRouter:
     async def create_review(
         name: Annotated[str, Form(min_length=1)],
         files: Annotated[list[UploadFile], File()],
+        ocr: Annotated[OcrOptions, Depends(ocr_options)],
     ) -> StreamingResponse:
-        request = ReviewRequest(name.strip(), await uploaded_sources(files))
+        sources = ocr.apply(await uploaded_sources(files))
+        request = ReviewRequest(name.strip(), sources, ocr.replaces)
         return event_stream_response(
             review_events(services.run_review, request, services.explainer)
         )

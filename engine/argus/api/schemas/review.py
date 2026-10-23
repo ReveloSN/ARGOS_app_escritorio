@@ -25,6 +25,10 @@ class DocumentResponse(CamelModel):
     status: Literal["read", "unreadable"]
     reason: str | None
     fragment_count: int
+    # «text», «local_ocr» o «cloud_ocr»: cómo se obtuvo el texto.
+    method: str
+    # Páginas de un PDF escaneado: lo que leería el OCR (y saldría del equipo con Document AI).
+    page_count: int | None
 
 
 class OccurrenceResponse(CamelModel):
@@ -89,6 +93,12 @@ class DecisionRequestBody(CamelModel):
 class DocumentStartedEvent(CamelModel):
     position: int
     name: str
+
+
+class PageRecognizedEvent(CamelModel):
+    position: int
+    done: int
+    total: int
 
 
 class DocumentFinishedEvent(CamelModel):

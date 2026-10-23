@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Protocol
 
 from argus.application.document_loader import DocumentLoader
 from argus.application.ports.document_reader import DocumentSource
@@ -16,6 +17,8 @@ FIRST_ALERT_NUMBER = 1
 class ReviewRequest:
     name: str
     sources: tuple[DocumentSource, ...]
+    # «Activar OCR» vuelve a leer una revisión aún sin revisar: esta es la que reemplaza.
+    replaces: str | None = None
 
 
 @dataclass(frozen=True)
@@ -23,6 +26,12 @@ class ReviewOutcome:
     session: ReviewSession
     documents: tuple[DocumentReadOutcome, ...]
     alerts: tuple[NumberedAlert, ...]
+
+
+class ReviewRunner(Protocol):
+    def execute(
+        self, request: ReviewRequest, progress: ReviewProgress = SILENT_PROGRESS
+    ) -> ReviewOutcome: ...
 
 
 class RunReview:

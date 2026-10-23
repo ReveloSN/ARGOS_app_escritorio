@@ -7,7 +7,7 @@ from argus.application.ports.document_reader import DocumentSource
 from argus.domain.document import Document, DocumentFormat
 from argus.domain.errors import UnreadableDocumentError, UnreadableReason
 from argus.domain.locations import PageLocation
-from argus.infrastructure.readers.fragments import build_fragments, require_text_found
+from argus.infrastructure.readers.fragments import build_fragments
 
 FIRST_PAGE = 1
 
@@ -24,7 +24,10 @@ class PdfDocumentReader:
             ]
         except PyPdfError:
             raise UnreadableDocumentError(source.name, UnreadableReason.CORRUPTED) from None
-        fragments = require_text_found(source.name, build_fragments(texts))
+        fragments = build_fragments(texts)
+        if not fragments:
+            # Sin capa de texto suele ser un escaneado: se informa cuántas páginas leería el OCR.
+            raise UnreadableDocumentError(source.name, UnreadableReason.NO_TEXT, len(texts))
         return Document(source.name, DocumentFormat.PDF, fragments)
 
     def _open(self, source: DocumentSource) -> PdfReader:

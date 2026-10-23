@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from argus.domain.document import Document
+from argus.domain.ocr import OcrProvider
 
 
 @dataclass(frozen=True)
@@ -13,6 +14,8 @@ class DocumentSource:
 
     name: str
     content: bytes
+    # El usuario pidió leer este archivo con OCR («Activar OCR») y con qué proveedor.
+    ocr: OcrProvider | None = None
 
 
 class DocumentReader(Protocol):
