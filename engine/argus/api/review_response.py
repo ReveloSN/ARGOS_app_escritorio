@@ -106,11 +106,11 @@ def _side(side: AlertSide) -> AlertSideResponse:
     return AlertSideResponse(
         value=side.representative.raw_value,
         normalized_value=side.normalized_value,
-        occurrences=[_occurrence(entity) for entity in side.entities],
+        occurrences=[occurrence_response(entity) for entity in side.entities],
     )
 
 
-def _occurrence(entity: Entity) -> OccurrenceResponse:
+def occurrence_response(entity: Entity) -> OccurrenceResponse:
     occurrence = entity.occurrence
     return OccurrenceResponse(
         document=occurrence.document_name,

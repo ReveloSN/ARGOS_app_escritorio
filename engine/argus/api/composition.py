@@ -12,12 +12,15 @@ from argus.api.comparison_composition import (
 from argus.api.settings import EngineSettings
 from argus.application.alert_explanation import AlertExplainer, TemplateAlertExplainer
 from argus.application.change_history_folder import ChangeHistoryFolder
+from argus.application.check_confirmed_facts import CheckConfirmedFacts, FactCheckSources
+from argus.application.confirmed_facts import ConfirmedFacts, FactRepositories
 from argus.application.detect_inconsistencies import DetectInconsistencies
 from argus.application.document_access import OpenDocument, SearchDocuments
 from argus.application.document_loader import DocumentLoader
 from argus.application.document_reader_factory import DocumentReaderFactory
 from argus.application.embedding_similarity import EmbeddingTextSimilarity
 from argus.application.entity_extraction_pipeline import EntityExtractionPipeline
+from argus.application.fact_value_reader import FactValueReader
 from argus.application.feedback_confidence import FeedbackAdjustingReviewAnalyzer
 from argus.application.open_review import OpenReview, StoredReviewRepositories
 from argus.application.out_of_pattern import AmountScaleSource, DateOutlierSource
@@ -69,6 +72,9 @@ from argus.infrastructure.persistence.sqlite_alert_repository import SqliteAlert
 from argus.infrastructure.persistence.sqlite_comparison_repository import (
     SqliteComparisonRepository,
 )
+from argus.infrastructure.persistence.sqlite_confirmed_fact_repository import (
+    SqliteConfirmedFactRepository,
+)
 from argus.infrastructure.persistence.sqlite_database import SqliteDatabase
 from argus.infrastructure.persistence.sqlite_decision_repository import (
     COMPARISON_DECISIONS,
@@ -100,6 +106,7 @@ class ReviewStorage:
     statistics: SqliteDecisionStatistics
     comparisons: SqliteComparisonRepository
     comparison_decisions: SqliteDecisionRepository
+    facts: SqliteConfirmedFactRepository
 
 
 @dataclass(frozen=True)
@@ -117,6 +124,8 @@ class EngineServices:
     explainer: AlertExplainer
     change_history_folder: ChangeHistoryFolder
     comparisons: ComparisonServices
+    facts: ConfirmedFacts
+    check_facts: CheckConfirmedFacts
     storage: ReviewStorage
     data_directory: Path
 
@@ -134,6 +143,7 @@ def build_review_storage(database_path: Path) -> ReviewStorage:
         SqliteDecisionStatistics(database),
         SqliteComparisonRepository(database),
         SqliteDecisionRepository(database, COMPARISON_DECISIONS),
+        SqliteConfirmedFactRepository(database),
     )
 
 
@@ -173,6 +183,10 @@ def build_engine_services(settings: EngineSettings, opener: FileOpener) -> Engin
             ComparisonRepositories(storage.comparisons, storage.comparison_decisions),
             clock,
         ),
+        facts=ConfirmedFacts(
+            FactRepositories(storage.sessions, storage.facts), FactValueReader(values), clock
+        ),
+        check_facts=build_fact_check(storage, values),
         storage=storage,
         data_directory=data_directory,
     )
@@ -254,6 +268,15 @@ def build_review_analyzer(
     analyzer = EntityReviewAnalyzer(values, sources, storage.preferences)
     suppressing = SuppressingReviewAnalyzer(analyzer, storage.rules)
     return FeedbackAdjustingReviewAnalyzer(suppressing, storage.statistics)
+
+
+def build_fact_check(
+    storage: ReviewStorage, values: EntityExtractionPipeline
+) -> CheckConfirmedFacts:
+    sources = FactCheckSources(
+        storage.documents, storage.alerts, storage.preferences, storage.rules
+    )
+    return CheckConfirmedFacts(sources, values, RiskClassifier(DEFAULT_RISK_RULES))
 
 
 def build_run_review(

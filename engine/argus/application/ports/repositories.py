@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Protocol
 
 from argus.domain.alert import Alert, NumberedAlert
+from argus.domain.confirmed_fact import ConfirmedFact, FactDraft
 from argus.domain.decision import Decision
 from argus.domain.document import NamedFragment
 from argus.domain.read_outcome import DocumentReadOutcome, ReadSummary
@@ -65,6 +66,30 @@ class DocumentRepository(Protocol):
         self, session_id: str, folded_query: str, limit: int
     ) -> tuple[NamedFragment, ...]:
         """Fragmentos cuyo texto, sin tildes ni mayúsculas, contiene la consulta ya plegada."""
+        ...
+
+    def fragments_for(self, session_id: str) -> tuple[NamedFragment, ...]:
+        """Todo el texto leído de la sesión, en orden, con el archivo de cada fragmento."""
+        ...
+
+
+class ConfirmedFactRepository(Protocol):
+    def add(self, session_id: str, draft: FactDraft, confirmed_at: datetime) -> ConfirmedFact:
+        """Guarda el dato nuevo y lo devuelve con su número."""
+        ...
+
+    def get(self, session_id: str, fact_id: int) -> ConfirmedFact:
+        """El dato, o FactNotFoundError si la sesión no lo tiene."""
+        ...
+
+    def save(self, session_id: str, fact: ConfirmedFact) -> None:
+        """Guarda el dato con su número, reemplazando el que hubiera."""
+        ...
+
+    def delete(self, session_id: str, fact_id: int) -> None: ...
+
+    def list_for(self, session_id: str) -> tuple[ConfirmedFact, ...]:
+        """Los datos de la sesión en el orden en que se agregaron."""
         ...
 
 

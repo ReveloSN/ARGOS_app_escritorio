@@ -1,3 +1,4 @@
+from threading import Lock
 from typing import Protocol
 
 
@@ -42,3 +43,30 @@ class CommandHistory:
         command.execute()
         self._done.append(command)
         return True
+
+
+class CommandHistories:
+    """Un historial de deshacer por dueño (revisión o comparación) mientras el motor está abierto.
+
+    El motor atiende peticiones en varios hilos: el candado evita que dos cambios simultáneos
+    desordenen un historial.
+    """
+
+    def __init__(self) -> None:
+        self._histories: dict[str, CommandHistory] = {}
+        self._lock = Lock()
+
+    def execute(self, owner_id: str, command: Command) -> None:
+        with self._lock:
+            self._history(owner_id).execute(command)
+
+    def undo(self, owner_id: str) -> bool:
+        with self._lock:
+            return self._history(owner_id).undo()
+
+    def can_undo(self, owner_id: str) -> bool:
+        history = self._histories.get(owner_id)
+        return history is not None and history.can_undo
+
+    def _history(self, owner_id: str) -> CommandHistory:
+        return self._histories.setdefault(owner_id, CommandHistory())

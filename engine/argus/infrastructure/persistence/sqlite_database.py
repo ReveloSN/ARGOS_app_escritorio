@@ -95,6 +95,21 @@ MIGRATIONS: tuple[str, ...] = (
         PRIMARY KEY (comparison_id, alert_number)
     );
     """,
+    # Fase 4 del plan v0.1: datos confirmados del expediente (ADR 022). Retirar un dato no lo
+    # borra, para poder restaurarlo.
+    """
+    CREATE TABLE confirmed_facts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        session_id TEXT NOT NULL REFERENCES sessions (id) ON DELETE CASCADE,
+        label TEXT NOT NULL,
+        entity_type TEXT NOT NULL,
+        raw_value TEXT NOT NULL,
+        normalized_value TEXT NOT NULL,
+        confirmed_at TEXT NOT NULL,
+        retired_at TEXT
+    );
+    CREATE INDEX confirmed_facts_by_session ON confirmed_facts (session_id);
+    """,
 )
 SCHEMA_VERSION = len(MIGRATIONS)
 

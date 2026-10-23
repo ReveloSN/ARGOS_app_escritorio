@@ -2,27 +2,38 @@
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from typing import Protocol
 
-from argus.domain.alert import AlertCandidate
-from argus.domain.comparison.difference import DifferenceKind
+from argus.domain.comparison.difference import Difference, DifferenceKind
 from argus.domain.entity import EntityType
 from argus.domain.risk import RiskLevel
 from argus.domain.specification import Specification
 
 
-class EntityTypeIs(Specification[AlertCandidate]):
+class ValueContrast(Protocol):
+    """Dos valores de un tipo y cómo difieren: una alerta entre documentos o un documento
+    frente a un dato confirmado del expediente. Las mismas reglas dan el riesgo de ambos."""
+
+    @property
+    def entity_type(self) -> EntityType: ...
+
+    @property
+    def difference(self) -> Difference: ...
+
+
+class EntityTypeIs(Specification[ValueContrast]):
     def __init__(self, *entity_types: EntityType) -> None:
         self._entity_types = frozenset(entity_types)
 
-    def is_satisfied_by(self, candidate: AlertCandidate) -> bool:
+    def is_satisfied_by(self, candidate: ValueContrast) -> bool:
         return candidate.entity_type in self._entity_types
 
 
-class DifferenceIs(Specification[AlertCandidate]):
+class DifferenceIs(Specification[ValueContrast]):
     def __init__(self, *kinds: DifferenceKind) -> None:
         self._kinds = frozenset(kinds)
 
-    def is_satisfied_by(self, candidate: AlertCandidate) -> bool:
+    def is_satisfied_by(self, candidate: ValueContrast) -> bool:
         return candidate.difference.kind in self._kinds
 
 
@@ -62,10 +73,10 @@ class RuleChainClassifier[Candidate]:
         )
 
 
-RiskRule = Rule[AlertCandidate]
+RiskRule = Rule[ValueContrast]
 
 
-class RiskClassifier(RuleChainClassifier[AlertCandidate]):
+class RiskClassifier(RuleChainClassifier[ValueContrast]):
     """Riesgo de una alerta; sin regla que se cumpla no hay alerta. Las decisiones del usuario
     no cambian el riesgo: solo ajustan la confianza (ADR 016)."""
 

@@ -76,6 +76,15 @@ class SqliteDocumentRepository:
             ).fetchall()
         return tuple(_to_fragment(row) for row in rows)
 
+    def fragments_for(self, session_id: str) -> tuple[NamedFragment, ...]:
+        with self._database.connect() as connection:
+            rows = connection.execute(
+                "SELECT document_name, location, text FROM fragments WHERE session_id = ? "
+                "ORDER BY document_position, ordinal",
+                (session_id,),
+            ).fetchall()
+        return tuple(_to_fragment(row) for row in rows)
+
 
 def _fragment_rows(
     session_id: str, documents: Sequence[DocumentReadOutcome]

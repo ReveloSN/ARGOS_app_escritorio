@@ -106,3 +106,19 @@ class ComparisonItemNotFoundError(ArgusDomainError):
         super().__init__(f"La comparación «{comparison_id}» no tiene el elemento {number}.")
         self.comparison_id = comparison_id
         self.number = number
+
+
+class FactNotFoundError(ArgusDomainError):
+    def __init__(self, session_id: str, fact_id: int) -> None:
+        super().__init__(f"La sesión «{session_id}» no tiene el dato {fact_id}.")
+        self.session_id = session_id
+        self.fact_id = fact_id
+
+
+class UnrecognizedFactValueError(ArgusDomainError):
+    """El texto escrito no contiene un valor del tipo elegido (un monto, una fecha…)."""
+
+    def __init__(self, entity_type: str, text: str) -> None:
+        super().__init__(f"No se reconoce un valor de tipo «{entity_type}» en «{text}».")
+        self.entity_type = entity_type
+        self.text = text

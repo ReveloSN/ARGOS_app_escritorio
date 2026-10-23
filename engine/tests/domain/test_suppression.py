@@ -52,3 +52,10 @@ def test_rule_requires_a_date_with_time_zone() -> None:
 
     with pytest.raises(InvalidValueError):
         SuppressionRule(1, case, datetime(2026, 10, 13))
+
+
+def test_matches_a_pair_of_values_in_any_order() -> None:
+    case = SuppressedCase(EntityType.CONTRACT_ID, "4587", "4857", "4587", "4857")
+
+    assert case.matches_values(EntityType.CONTRACT_ID, frozenset({"4857", "4587"}))
+    assert not case.matches_values(EntityType.TAX_ID, frozenset({"4857", "4587"}))

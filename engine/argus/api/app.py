@@ -6,6 +6,7 @@ from argus.api.composition import build_engine_services
 from argus.api.error_handlers import register_error_handlers
 from argus.api.routes.comparisons import build_comparisons_router
 from argus.api.routes.documents import build_documents_router
+from argus.api.routes.facts import build_fact_changes_router, build_facts_router
 from argus.api.routes.health import build_health_router
 from argus.api.routes.history import build_history_router
 from argus.api.routes.preferences import (
@@ -35,6 +36,8 @@ def create_app(settings: EngineSettings, file_opener: FileOpener | None = None) 
         build_preferences_router,
         build_suppression_rules_router,
         build_comparisons_router,
+        build_facts_router,
+        build_fact_changes_router,
     )
     for build_router in routers:
         app.include_router(build_router(services))

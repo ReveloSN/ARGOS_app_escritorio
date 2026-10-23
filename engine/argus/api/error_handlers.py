@@ -14,10 +14,12 @@ from argus.domain.errors import (
     ComparisonItemNotFoundError,
     ComparisonNotFoundError,
     DocumentNotFoundError,
+    FactNotFoundError,
     HistoryFolderError,
     InvalidValueError,
     NotEnoughDocumentsError,
     SessionNotFoundError,
+    UnrecognizedFactValueError,
 )
 
 UNPROCESSABLE = 422
@@ -41,6 +43,8 @@ ERROR_RESPONSES: dict[type[ArgusDomainError], ErrorResponse] = {
     ComparisonNotFoundError: ErrorResponse(404, "comparison_not_found"),
     ComparisonItemNotFoundError: ErrorResponse(404, "comparison_item_not_found"),
     NotEnoughDocumentsError: ErrorResponse(422, "not_enough_documents"),
+    FactNotFoundError: ErrorResponse(404, "fact_not_found"),
+    UnrecognizedFactValueError: ErrorResponse(422, "unrecognized_fact_value"),
 }
 
 

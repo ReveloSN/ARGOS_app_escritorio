@@ -35,10 +35,11 @@ class SuppressedCase:
 
     def matches(self, alert: Alert) -> bool:
         values = {alert.first.normalized_value, alert.second.normalized_value}
-        return alert.entity_type is self.entity_type and values == {
-            self.first_value,
-            self.second_value,
-        }
+        return self.matches_values(alert.entity_type, frozenset(values))
+
+    def matches_values(self, entity_type: EntityType, values: frozenset[str]) -> bool:
+        """El mismo par de valores, en cualquier orden (también un dato del expediente)."""
+        return entity_type is self.entity_type and values == {self.first_value, self.second_value}
 
 
 @dataclass(frozen=True)

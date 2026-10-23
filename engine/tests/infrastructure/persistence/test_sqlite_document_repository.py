@@ -86,6 +86,22 @@ def test_fragments_are_found_by_their_folded_text_with_their_origin(
     assert cell.fragment.location == SheetCellLocation("Hoja1", "C12")
 
 
+def test_all_the_text_of_a_session_comes_back_in_reading_order(
+    database: SqliteDatabase,
+) -> None:
+    repository, session_id = stored(database)
+
+    fragments = repository.fragments_for(session_id)
+
+    assert [named.document_name for named in fragments] == [
+        "contrato.pdf",
+        "contrato.pdf",
+        "correo.eml",
+        "tarifas.xlsx",
+    ]
+    assert fragments[3].fragment.location == SheetCellLocation("Hoja1", "C12")
+
+
 def test_like_wildcards_in_the_query_are_taken_literally(database: SqliteDatabase) -> None:
     repository, session_id = stored(database)
 

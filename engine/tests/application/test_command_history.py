@@ -1,4 +1,4 @@
-from argus.application.command_history import CommandHistory
+from argus.application.command_history import CommandHistories, CommandHistory
 
 
 class AppendCommand:
@@ -56,3 +56,15 @@ def test_nothing_to_undo_or_redo_returns_false() -> None:
     assert not history.can_undo
     assert not history.undo()
     assert not history.redo()
+
+
+def test_each_owner_keeps_its_own_undo_history() -> None:
+    histories = CommandHistories()
+    log: list[str] = []
+    histories.execute("expediente-a", AppendCommand(log, "Canon mensual"))
+
+    assert histories.can_undo("expediente-a")
+    assert not histories.can_undo("expediente-b")
+    assert not histories.undo("expediente-b")
+    assert histories.undo("expediente-a")
+    assert not histories.can_undo("expediente-a")

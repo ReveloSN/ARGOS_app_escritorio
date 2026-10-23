@@ -6,9 +6,10 @@ from pathlib import Path
 
 from argus.application.ports.document_archive import ArchivedFile
 from argus.domain.alert import Alert, NumberedAlert
+from argus.domain.confirmed_fact import ConfirmedFact, FactDraft
 from argus.domain.decision import Decision
 from argus.domain.document import NamedFragment
-from argus.domain.errors import ComparisonNotFoundError, SessionNotFoundError
+from argus.domain.errors import ComparisonNotFoundError, FactNotFoundError, SessionNotFoundError
 from argus.domain.preferences import UserPreferences
 from argus.domain.read_outcome import DocumentReadOutcome, ReadSummary
 from argus.domain.review_session import ReviewSession
@@ -115,6 +116,14 @@ class InMemoryDocumentRepository:
         ]
         return tuple(fragments[:limit])
 
+    def fragments_for(self, session_id: str) -> tuple[NamedFragment, ...]:
+        return tuple(
+            named
+            for outcome in self.documents.get(session_id, ())
+            if outcome.document is not None
+            for named in outcome.document.named_fragments()
+        )
+
 
 def _names_in(outcome: DocumentReadOutcome) -> set[str]:
     if outcome.document is None:
@@ -188,3 +197,30 @@ class InMemoryComparisonRepository:
             return self._reports[comparison_id]
         except KeyError:
             raise ComparisonNotFoundError(comparison_id) from None
+
+
+class InMemoryConfirmedFactRepository:
+    def __init__(self) -> None:
+        self.facts: dict[tuple[str, int], ConfirmedFact] = {}
+        self._last_id = 0
+
+    def add(self, session_id: str, draft: FactDraft, confirmed_at: datetime) -> ConfirmedFact:
+        self._last_id += 1
+        fact = ConfirmedFact(self._last_id, draft.label, draft.value, confirmed_at)
+        self.facts[(session_id, fact.id)] = fact
+        return fact
+
+    def get(self, session_id: str, fact_id: int) -> ConfirmedFact:
+        try:
+            return self.facts[(session_id, fact_id)]
+        except KeyError:
+            raise FactNotFoundError(session_id, fact_id) from None
+
+    def save(self, session_id: str, fact: ConfirmedFact) -> None:
+        self.facts[(session_id, fact.id)] = fact
+
+    def delete(self, session_id: str, fact_id: int) -> None:
+        self.facts.pop((session_id, fact_id), None)
+
+    def list_for(self, session_id: str) -> tuple[ConfirmedFact, ...]:
+        return tuple(f for (owner, _), f in sorted(self.facts.items()) if owner == session_id)
