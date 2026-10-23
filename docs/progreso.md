@@ -26,7 +26,7 @@ Estado al 23/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 | 3 · Interfaz de comparación | Pantalla Comparar: paneles sincronizados, diff en el texto, resumen, minimapa, filtros, decisiones y matriz | ✅ Completa (ADR 021) |
 | 4 · Expediente y prevención | Datos confirmados como fuente de verdad, verificaciones internas y revisión antes de enviar | ✅ Completa (ADR 022) |
 | 5 · Informe y métricas | Informe PDF y DOCX y panel de métricas en Historial | ✅ Completa (ADR 023) |
-| 6 · IA opcional | `ChangeExplainer` con respaldo por plantillas, «reformulado» frente a «cambio de sentido» y benchmark del embedder | Pendiente |
+| 6 · IA opcional | `ChangeExplainer` con respaldo por plantillas, «reformulado» frente a «cambio de sentido» y benchmark del embedder | ✅ Completa (ADR 024) |
 | 7 · Asistente | `ArgusAssistant` con sus estados derivados del motor, onboarding y ajuste «Mostrar asistente» | Pendiente |
 | 8 · OCR | `OcrEngine` con Tesseract local y Google Document AI opcional (revisa el ADR 005) | Pendiente |
 | 9 · Empaquetado y cierre | Instaladores con modelos, arranque sin internet, README y progreso final | Pendiente |
@@ -48,6 +48,7 @@ Estado al 23/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 - **Revisar antes de enviar:** con un borrador `.eml` marca en el texto el periodo citado que no coincide con el adjunto, el adjunto prometido que falta y el destinatario que no es del expediente; propone la corrección con el documento del expediente y «Abrir en el correo» (Ctrl Enter) abre una copia corregida en el programa de correo. ARGUS no envía el correo.
 - **Informe:** «Generar informe» en el Expediente abre la vista previa (resumen, evidencia con el origen de cada valor, decisiones tomadas y nota sobre sugerencias de IA); se eligen las secciones y el formato y «Exportar» (Ctrl E) guarda el PDF o el DOCX en Documentos/ARGUS/<expediente>, con «Abrir informe».
 - **Comparar documentos:** desde la barra lateral o «Comparar dos versiones» en Inicio. Con dos archivos muestra las versiones lado a lado, con desplazamiento sincronizado y cada diferencia marcada en el texto (tachado = falta, subrayado = agregado, punteado = cambiado, y la nota de dónde quedó lo movido), el resumen por tipo, un minimapa y filtros; los cambios solo de mayúsculas, puntuación o formato se pueden ocultar. Cada cambio tiene su detalle con riesgo y «Es correcto / Es un error / Ignorar» con deshacer (J K, C E I, Ctrl Z). «Buscar inconsistencias» muestra cada dato por documento con el valor distinto marcado; con tres o más archivos abre la Matriz de diferencias y desde un par vuelve a las versiones. El motor (`POST /comparisons`) funciona sin el modelo de embeddings; con él, también reconoce las reformulaciones.
+- **IA opcional:** cada cambio de Comparar lleva la sugerencia «IA: Reformulado» o «IA: Cambio de sentido» (local, sin internet). «Explicar este cambio» muestra la explicación local o, si se activa en Ajustes > Inteligencia artificial con una clave de Anthropic guardada en el llavero del sistema, una «Sugerencia de IA» con la cita de su origen; si la IA falla, dice por qué y usa la explicación local.
 - **Instaladores:** `.msi` (Windows), `.deb` y `.AppImage` (Linux) con el motor y los modelos incluidos; funcionan sin internet desde la primera ejecución.
 - Catálogo de componentes, solo en desarrollo: `npm --prefix app run dev` y abrir `http://localhost:1420/dev/design-system`.
 
@@ -63,7 +64,9 @@ Estado al 23/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 
 - Compilar la app de escritorio en Windows requiere Rust y las Build Tools de Visual Studio (enlazador MSVC); en CI ya compila y genera los instaladores.
 - Los instaladores no tienen firma de código: Windows muestra SmartScreen al instalar.
-- La explicación usa plantillas; conectar un proveedor de IA generativa (con consentimiento en Ajustes y clave en el llavero) queda como opción futura detrás del mismo puerto.
+- La explicación de las alertas de una revisión sigue con plantillas; la IA generativa solo explica los cambios de Comparar.
+- Falta verificar que el sidecar de PyInstaller incluya `anthropic` y los backends de `keyring` (Fase 9).
+- Los puertos NLI (`EntailmentModel`) y del embedder Nemotron están listos sin implementar.
 - Deshacer vive mientras el motor está abierto; las decisiones quedan guardadas aunque se reinicie.
 - Un número sin moneda (por ejemplo una celda de Excel) todavía no se toma como monto.
 - «Abrir en Comparar» (contradicción) y «Guardar en el expediente» (Enviar) esperan poder agregar documentos a una revisión existente.
