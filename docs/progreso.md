@@ -1,6 +1,6 @@
 # Progreso de ARGUS
 
-Estado al 22/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verde en CI (ubuntu y windows).
+Estado al 23/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verde en CI (ubuntu y windows).
 
 ## Fases
 
@@ -24,7 +24,7 @@ Estado al 22/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 | 1 · Motor de comparación | Segmentos con origen, alineación por huella y similitud, diff por palabra y carácter, materialidad (número, fecha, monto, parte, negación y cambios de forma), modos y `/comparisons` con progreso | ✅ Completa (ADR 018, 019) |
 | 2 · Sistema de diseño | Tokens del rediseño, ojo de ARGUS (logo y estados del asistente), retícula, marcas de diferencia, contraste 4.5:1 (texto) y 3:1 (trazos) en los dos temas, catálogo solo en desarrollo | ✅ Completa (ADR 020) |
 | 3 · Interfaz de comparación | Pantalla Comparar: paneles sincronizados, diff en el texto, resumen, minimapa, filtros, decisiones y matriz | ✅ Completa (ADR 021) |
-| 4 · Expediente y prevención | Datos confirmados como fuente de verdad, verificaciones internas y revisión antes de enviar | Pendiente |
+| 4 · Expediente y prevención | Datos confirmados como fuente de verdad, verificaciones internas y revisión antes de enviar | ✅ Completa (ADR 022) |
 | 5 · Informe y métricas | Informe PDF y DOCX y panel de métricas en Historial | Pendiente |
 | 6 · IA opcional | `ChangeExplainer` con respaldo por plantillas, «reformulado» frente a «cambio de sentido» y benchmark del embedder | Pendiente |
 | 7 · Asistente | `ArgusAssistant` con sus estados derivados del motor, onboarding y ajuste «Mostrar asistente» | Pendiente |
@@ -43,6 +43,9 @@ Estado al 22/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 - **IA local (sin internet):** nombres de persona con spaCy; un correo que cita un periodo distinto al de su adjunto del mismo tema (embeddings ONNX), mostrado como sugerencia con su confianza; fechas con un año fuera del patrón y montos con un cero de más o de menos; la confianza aprende de sus decisiones anteriores, y cada alerta trae una explicación en el idioma de la interfaz.
 - **Búsqueda global (Ctrl K):** en una revisión busca alertas y fragmentos de los documentos; en Historial, sesiones; en Ajustes, secciones.
 - Si el motor está detenido, Inicio sigue usable y dice qué hacer («Reintentar conexión»).
+- **Expediente:** la revisión es el expediente. La pestaña «Datos confirmados» guarda el número de contrato, las partes, los montos y las fechas que el usuario confirma (Agregar dato, Editar, Retirar, Restaurar y Ctrl Z) y marca al instante qué documento contradice cada dato, con su riesgo y su origen; explica por qué ninguno lo contradice (coincide, otra forma de escribirlo o una regla «No alertar casos similares»). Los pares de valores que ninguna confirmación resuelve aparecen como «Sin confirmar».
+- **Verificaciones internas:** en las alertas del expediente también aparecen el monto en letras que no coincide con el número, el total que no es la suma de sus celdas, la fecha de fin anterior a la de inicio, la fecha que no existe y los campos sin llenar. Las de un solo valor muestran solo el Valor A.
+- **Revisar antes de enviar:** con un borrador `.eml` marca en el texto el periodo citado que no coincide con el adjunto, el adjunto prometido que falta y el destinatario que no es del expediente; propone la corrección con el documento del expediente y «Abrir en el correo» (Ctrl Enter) abre una copia corregida en el programa de correo. ARGUS no envía el correo.
 - **Comparar documentos:** desde la barra lateral o «Comparar dos versiones» en Inicio. Con dos archivos muestra las versiones lado a lado, con desplazamiento sincronizado y cada diferencia marcada en el texto (tachado = falta, subrayado = agregado, punteado = cambiado, y la nota de dónde quedó lo movido), el resumen por tipo, un minimapa y filtros; los cambios solo de mayúsculas, puntuación o formato se pueden ocultar. Cada cambio tiene su detalle con riesgo y «Es correcto / Es un error / Ignorar» con deshacer (J K, C E I, Ctrl Z). «Buscar inconsistencias» muestra cada dato por documento con el valor distinto marcado; con tres o más archivos abre la Matriz de diferencias y desde un par vuelve a las versiones. El motor (`POST /comparisons`) funciona sin el modelo de embeddings; con él, también reconoce las reformulaciones.
 - **Instaladores:** `.msi` (Windows), `.deb` y `.AppImage` (Linux) con el motor y los modelos incluidos; funcionan sin internet desde la primera ejecución.
 - Catálogo de componentes, solo en desarrollo: `npm --prefix app run dev` y abrir `http://localhost:1420/dev/design-system`.
@@ -62,5 +65,6 @@ Estado al 22/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 - La explicación usa plantillas; conectar un proveedor de IA generativa (con consentimiento en Ajustes y clave en el llavero) queda como opción futura detrás del mismo puerto.
 - Deshacer vive mientras el motor está abierto; las decisiones quedan guardadas aunque se reinicie.
 - Un número sin moneda (por ejemplo una celda de Excel) todavía no se toma como monto.
+- «Abrir en Comparar» (contradicción) y «Guardar en el expediente» (Enviar) esperan poder agregar documentos a una revisión existente.
 - Las comparaciones aún no aparecen en el Historial ni se borran con la retención de 90 días; llega con la Fase C.
 - Nemotron-3-Embed-1B solo se integrará en la Fase B si se verifica que existe, su licencia y su tamaño.
