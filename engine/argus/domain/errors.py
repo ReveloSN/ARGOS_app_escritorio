@@ -143,3 +143,11 @@ class NotADraftEmailError(ArgusDomainError):
     def __init__(self, file_name: str) -> None:
         super().__init__(f"«{file_name}» no es un borrador de correo (.eml).")
         self.file_name = file_name
+
+
+class ReportNotFoundError(ArgusDomainError):
+    """El informe exportado ya no está en su carpeta (se movió o se borró)."""
+
+    def __init__(self, file_name: str) -> None:
+        super().__init__(f"No se encontró el informe «{file_name}».")
+        self.file_name = file_name

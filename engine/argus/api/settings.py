@@ -4,6 +4,7 @@ from pathlib import Path
 
 from argus.infrastructure.history_location import default_data_directory
 from argus.infrastructure.nlp.embedding_model import default_models_directory
+from argus.infrastructure.reports.documents_report_folder import default_reports_directory
 
 PACKAGE_NAME = "argus-engine"
 
@@ -29,6 +30,8 @@ class EngineSettings:
     models_directory: Path = field(default_factory=default_models_directory)
     # Donde se recuerda la carpeta elegida por el usuario (siempre la del sistema).
     pointer_directory: Path = field(default_factory=default_data_directory)
+    # Informes exportados: Documentos/ARGUS, una carpeta por expediente (mockup Informe).
+    reports_directory: Path = field(default_factory=default_reports_directory)
 
     @classmethod
     def from_installed_package(cls, access_token: str, data_directory: Path) -> "EngineSettings":

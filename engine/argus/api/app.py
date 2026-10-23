@@ -13,6 +13,7 @@ from argus.api.routes.preferences import (
     build_preferences_router,
     build_suppression_rules_router,
 )
+from argus.api.routes.reports import build_reports_router
 from argus.api.routes.reviews import build_decisions_router, build_reviews_router
 from argus.api.routes.send_reviews import (
     build_send_decisions_router,
@@ -44,6 +45,7 @@ def create_app(settings: EngineSettings, file_opener: FileOpener | None = None) 
         build_fact_changes_router,
         build_send_reviews_router,
         build_send_decisions_router,
+        build_reports_router,
     )
     for build_router in routers:
         app.include_router(build_router(services))

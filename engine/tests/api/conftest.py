@@ -20,6 +20,7 @@ def settings(tmp_path: Path) -> EngineSettings:
         access_token=TEST_TOKEN,
         data_directory=tmp_path / "historial",
         pointer_directory=tmp_path / "sistema",
+        reports_directory=tmp_path / "Documentos",
     )
 
 

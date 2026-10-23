@@ -9,6 +9,11 @@ from argus.api.comparison_composition import (
     ComparisonServices,
     build_comparison_services,
 )
+from argus.api.report_composition import (
+    ReportDependencies,
+    ReportServices,
+    build_report_services,
+)
 from argus.api.send_composition import (
     SendDependencies,
     SendServices,
@@ -144,6 +149,7 @@ class EngineServices:
     facts: ConfirmedFacts
     check_facts: CheckConfirmedFacts
     sending: SendServices
+    reports: ReportServices
     storage: ReviewStorage
     data_directory: Path
 
@@ -216,6 +222,9 @@ def build_engine_services(settings: EngineSettings, opener: FileOpener) -> Engin
                 archive,
             ),
             SendDependencies(build_attachment_readers(), values, clock, opener, data_directory),
+        ),
+        reports=build_report_services(
+            ReportDependencies(storage.sessions, clock, opener), settings.reports_directory
         ),
         storage=storage,
         data_directory=data_directory,

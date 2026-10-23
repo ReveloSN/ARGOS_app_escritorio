@@ -86,7 +86,10 @@ def test_reviews_older_than_90_days_are_deleted_at_startup(tmp_path: Path) -> No
     store_old_session(tmp_path)
 
     services = build_engine_services(
-        EngineSettings("9", "token", tmp_path, pointer_directory=tmp_path), RecordingFileOpener()
+        EngineSettings(
+            "9", "token", tmp_path, pointer_directory=tmp_path, reports_directory=tmp_path
+        ),
+        RecordingFileOpener(),
     )
 
     assert services.storage.sessions.list_created_before(datetime.now(UTC)) == ()
@@ -98,7 +101,10 @@ def test_without_retention_limit_the_history_is_kept(tmp_path: Path) -> None:
     storage.preferences.save(UserPreferences(has_retention_limit=False))
 
     services = build_engine_services(
-        EngineSettings("9", "token", tmp_path, pointer_directory=tmp_path), RecordingFileOpener()
+        EngineSettings(
+            "9", "token", tmp_path, pointer_directory=tmp_path, reports_directory=tmp_path
+        ),
+        RecordingFileOpener(),
     )
 
     assert services.storage.sessions.get(session.id) == session
