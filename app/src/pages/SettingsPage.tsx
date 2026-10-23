@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { Icon } from "../components/atoms/Icon";
 import { AiSection } from "../features/settings/AiSection";
+import { AssistantSection } from "../features/settings/AssistantSection";
 import { DetectionSection } from "../features/settings/DetectionSection";
 import { EngineSettings } from "../features/settings/EngineSettings";
 import { LanguageSection } from "../features/settings/LanguageSection";
@@ -75,6 +76,9 @@ export function SettingsPage() {
           </SettingsSection>
           <SettingsSection id="ai" title={title("ai")}>
             <AiSection onSaved={markSaved} />
+          </SettingsSection>
+          <SettingsSection id="assistant" title={title("assistant")}>
+            <AssistantSection onSaved={markSaved} />
           </SettingsSection>
           <SettingsSection id="shortcuts" title={title("shortcuts")}>
             <ShortcutsSection />

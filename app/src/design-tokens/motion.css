@@ -6,3 +6,10 @@
     --duration-slow: 0ms;
   }
 }
+
+/* Ajustes › Asistente › Reducir movimiento, aunque el sistema no lo pida. */
+:root[data-motion="reduced"] {
+  --duration-fast: 0ms;
+  --duration-base: 0ms;
+  --duration-slow: 0ms;
+}

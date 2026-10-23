@@ -10,6 +10,12 @@ const SESSION = {
   name: "Expediente 2026-118 · Arrendamiento Bodega Fontibón",
   summary: "7 alertas pendientes de 9",
 };
+const ASSISTANT = {
+  eye: "alert" as const,
+  text: "3 alertas de riesgo alto",
+  isHighRisk: true,
+  isEyeShown: true,
+};
 
 function renderSidebar(collapsed = false) {
   const handlers = { onNavigate: vi.fn(), onToggleCollapsed: vi.fn(), onNewReview: vi.fn() };
@@ -19,6 +25,7 @@ function renderSidebar(collapsed = false) {
       collapsed={collapsed}
       session={SESSION}
       reviewBadge="7"
+      assistant={ASSISTANT}
       {...handlers}
     />,
   );
@@ -66,13 +73,47 @@ describe("Sidebar", () => {
   });
 });
 
+describe("Estado del asistente en la barra lateral", () => {
+  it("anuncia el estado con texto y lo conserva aunque el ojo esté oculto", () => {
+    renderWithProviders(
+      <Sidebar
+        active="home"
+        collapsed={false}
+        assistant={{ ...ASSISTANT, isEyeShown: false }}
+        onNavigate={vi.fn()}
+        onToggleCollapsed={vi.fn()}
+        onNewReview={vi.fn()}
+      />,
+    );
+
+    const status = screen.getByRole("status", {
+      name: "Asistente de IA: 3 alertas de riesgo alto",
+    });
+    expect(status).toHaveTextContent("3 alertas de riesgo alto");
+    expect(status.querySelector("svg")).toBeNull();
+  });
+
+  it("contraída deja solo el ojo, con la etiqueta accesible", () => {
+    renderSidebar(true);
+
+    const status = screen.getByRole("status", {
+      name: "Asistente de IA: 3 alertas de riesgo alto",
+    });
+    expect(status.querySelector("svg")).not.toBeNull();
+  });
+});
+
 describe("Topbar", () => {
   it("muestra la sesión, la búsqueda con su atajo y el estado del motor", async () => {
     const onOpenSearch = vi.fn();
     renderWithProviders(
       <Topbar
         sessionName={SESSION.name}
-        engineStatus={{ kind: "analyzing", done: 3, total: 5 }}
+        assistantStatus={{
+          text: "Leyendo 3 de 5 archivos",
+          isHighRisk: false,
+          progress: { done: 3, total: 5 },
+        }}
         onOpenSearch={onOpenSearch}
         onOpenHelp={vi.fn()}
       />,
@@ -81,14 +122,18 @@ describe("Topbar", () => {
     await userEvent.click(screen.getByRole("button", { name: /Buscar en alertas y documentos/ }));
 
     expect(screen.getByRole("banner")).toHaveTextContent(SESSION.name);
-    expect(screen.getByRole("status")).toHaveTextContent("Analizando · 3 de 5 archivos");
+    expect(screen.getByRole("status")).toHaveTextContent("Leyendo 3 de 5 archivos");
     expect(onOpenSearch).toHaveBeenCalledOnce();
   });
 
   it("ofrece la ayuda de atajos", async () => {
     const onOpenHelp = vi.fn();
     renderWithProviders(
-      <Topbar engineStatus={{ kind: "ready" }} onOpenSearch={vi.fn()} onOpenHelp={onOpenHelp} />,
+      <Topbar
+        assistantStatus={{ text: "Asistente de IA: listo", isHighRisk: false }}
+        onOpenSearch={vi.fn()}
+        onOpenHelp={onOpenHelp}
+      />,
     );
 
     await userEvent.click(screen.getByRole("button", { name: "Ayuda y atajos" }));

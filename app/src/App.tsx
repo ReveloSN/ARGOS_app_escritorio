@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Sidebar } from "./components/organisms/Sidebar";
 import { Topbar } from "./components/organisms/Topbar";
 import { AppShell } from "./components/templates/AppShell";
-import { useEngineStatusView } from "./features/engine/useEngineStatusView";
+import { OnboardingGate } from "./features/assistant/OnboardingDialog";
+import { useAssistantChrome } from "./features/assistant/useAssistantChrome";
 import { useShortcuts } from "./features/keyboard/useShortcuts";
 import {
   HOME_ROUTE,
@@ -26,7 +27,7 @@ export function App() {
   const [route, setRoute] = useState<AppRoute>(HOME_ROUTE);
   const [collapsed, setCollapsed] = useState(false);
   const search = useGlobalSearch(route, setRoute);
-  const engineStatus = useEngineStatusView();
+  const assistant = useAssistantChrome();
   const toggleSidebar = () => {
     setCollapsed((current) => !current);
   };
@@ -58,6 +59,7 @@ export function App() {
           collapsed={collapsed}
           session={indicators?.card}
           reviewBadge={indicators?.badge}
+          assistant={assistant.sidebar}
           onNavigate={(section) => {
             setRoute(routeForSection(section));
           }}
@@ -70,7 +72,7 @@ export function App() {
       topbar={
         <Topbar
           sessionName={review?.session.name}
-          engineStatus={engineStatus}
+          assistantStatus={assistant.topbar}
           searchPlaceholder={search.scope?.placeholder}
           onOpenSearch={
             search.open &&
@@ -85,6 +87,7 @@ export function App() {
       {search.scope && search.query !== null && (
         <GlobalSearch scope={search.scope} initialQuery={search.query} onClose={search.close} />
       )}
+      <OnboardingGate />
     </AppShell>
   );
 }

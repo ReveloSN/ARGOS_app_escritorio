@@ -1,7 +1,10 @@
 import { useI18n } from "../../i18n/i18nContext";
 import { Icon } from "../atoms/Icon";
 import { Kbd, MODIFIER_KEY } from "../atoms/Kbd";
-import { EngineStatusIndicator, type EngineStatusView } from "../molecules/EngineStatusIndicator";
+import {
+  AssistantStatusIndicator,
+  type AssistantStatusLine,
+} from "../molecules/AssistantStatusIndicator";
 import styles from "./Topbar.module.css";
 
 const SEARCH_SHORTCUT = [MODIFIER_KEY, "K"];
@@ -9,7 +12,7 @@ const SEARCH_SHORTCUT = [MODIFIER_KEY, "K"];
 interface TopbarProps {
   readonly sessionName?: string | undefined;
   readonly searchPlaceholder?: string | undefined;
-  readonly engineStatus: EngineStatusView;
+  readonly assistantStatus: AssistantStatusLine;
   /** Sin acción no se muestra la búsqueda: nunca un control que no hace nada. */
   readonly onOpenSearch?: (() => void) | undefined;
   readonly onOpenHelp?: () => void;
@@ -18,7 +21,7 @@ interface TopbarProps {
 export function Topbar({
   sessionName,
   searchPlaceholder,
-  engineStatus,
+  assistantStatus,
   onOpenSearch,
   onOpenHelp,
 }: TopbarProps) {
@@ -44,7 +47,7 @@ export function Topbar({
         </button>
       )}
       <div className={styles.spacer} />
-      <EngineStatusIndicator status={engineStatus} />
+      <AssistantStatusIndicator status={assistantStatus} />
       {onOpenHelp && (
         <button
           type="button"

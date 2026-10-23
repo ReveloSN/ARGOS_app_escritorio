@@ -3,6 +3,7 @@ import { ArgusEye } from "../atoms/ArgusEye";
 import { Button } from "../atoms/Button";
 import { Icon } from "../atoms/Icon";
 import { Kbd } from "../atoms/Kbd";
+import { AssistantStatusCard, type AssistantSummary } from "../molecules/AssistantStatusCard";
 import { NavItem } from "../molecules/NavItem";
 import styles from "./Sidebar.module.css";
 import {
@@ -22,6 +23,7 @@ interface SidebarProps {
   readonly collapsed: boolean;
   readonly session?: ActiveSessionSummary | undefined;
   readonly reviewBadge?: string | undefined;
+  readonly assistant: AssistantSummary;
   readonly onNavigate: (section: SidebarSection) => void;
   readonly onToggleCollapsed: () => void;
   readonly onNewReview: () => void;
@@ -81,10 +83,11 @@ function SessionCard({ session }: { session: ActiveSessionSummary }) {
   );
 }
 
-function ExpandedFooter({ onNewReview, onToggleCollapsed }: SidebarProps) {
+function ExpandedFooter({ assistant, onNewReview, onToggleCollapsed }: SidebarProps) {
   const { t } = useI18n();
   return (
     <div className={styles.footer}>
+      <AssistantStatusCard assistant={assistant} isCompact={false} />
       <Button variant="primary" icon="add" shortcut={NEW_REVIEW_SHORTCUT} onClick={onNewReview}>
         {t("navigation.newReview")}
       </Button>
@@ -101,10 +104,11 @@ function ExpandedFooter({ onNewReview, onToggleCollapsed }: SidebarProps) {
   );
 }
 
-function CollapsedFooter({ onNewReview, onToggleCollapsed }: SidebarProps) {
+function CollapsedFooter({ assistant, onNewReview, onToggleCollapsed }: SidebarProps) {
   const { t } = useI18n();
   return (
     <div className={styles.collapsedFooter}>
+      <AssistantStatusCard assistant={assistant} isCompact />
       <button
         type="button"
         title={t("navigation.newReview")}

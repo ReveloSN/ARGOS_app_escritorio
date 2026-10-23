@@ -48,9 +48,16 @@ export function ArgusEye({ state, size = "sm", label }: ArgusEyeProps) {
     : { "aria-hidden": true as const };
   return (
     <svg
+      // Una clave por estado: al cambiar, el ojo se monta de nuevo y parpadea una vez.
+      key={state}
       viewBox={EYE_VIEWBOX}
       data-state={state}
-      className={joinClassNames(styles.eye, styles[size], styles[shape.tone])}
+      className={joinClassNames(
+        styles.eye,
+        styles[size],
+        styles[shape.tone],
+        state !== "logo" && styles.blink,
+      )}
       {...accessibility}
     >
       <EyeParts shape={shape} />

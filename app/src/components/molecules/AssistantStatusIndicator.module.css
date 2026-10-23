@@ -8,11 +8,7 @@
   white-space: nowrap;
 }
 
-.ready .icon {
-  color: var(--color-action-text);
-}
-
-.stopped {
+.high {
   color: var(--color-risk-high);
   font-weight: var(--font-weight-medium);
 }
@@ -20,4 +16,14 @@
 .progress {
   display: block;
   width: var(--size-progress-inline);
+}
+
+.retry {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }

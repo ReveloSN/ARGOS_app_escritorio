@@ -10,7 +10,7 @@ const TICKS = "M360 0 V72 M360 648 V720 M0 360 H72 M648 360 H720";
 
 interface ReticleMotifProps {
   readonly size: "sm" | "lg";
-  readonly className?: string;
+  readonly className?: string | undefined;
 }
 
 /**

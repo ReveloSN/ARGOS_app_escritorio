@@ -1,0 +1,40 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5);
+  padding: var(--spacing-1-5) var(--spacing-2);
+  border: var(--border-width) solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  background: var(--color-background-surface);
+}
+
+.compact {
+  display: grid;
+  place-items: center;
+  width: var(--size-control-xl);
+  height: var(--size-control-xl);
+}
+
+.texts {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.name {
+  font-weight: var(--font-weight-medium);
+}
+
+.text {
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.high {
+  color: var(--color-risk-high);
+}

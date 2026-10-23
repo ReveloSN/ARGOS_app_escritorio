@@ -22,12 +22,12 @@ describe("translate", () => {
   });
 
   it("reemplaza los parámetros entre llaves", () => {
-    const text = translate(MESSAGES_BY_LOCALE.es, "engine.status.analyzing", {
+    const text = translate(MESSAGES_BY_LOCALE.es, "assistant.status.reading", {
       done: 3,
       total: 5,
     });
 
-    expect(text).toBe("Analizando · 3 de 5 archivos");
+    expect(text).toBe("Leyendo 3 de 5 archivos");
   });
 
   it("falla con un error explícito si la clave no existe", () => {

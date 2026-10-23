@@ -66,7 +66,7 @@ export function DesignSystemCatalog() {
           <DecisionTag state="error" />
           <DecisionTag state="ignored" />
         </div>
-        <ProgressBar value={0.64} label={t("engine.status.analyzing", { done: 3, total: 5 })} />
+        <ProgressBar value={0.64} label={t("assistant.status.reading", { done: 3, total: 5 })} />
       </Section>
       <Section title="Identidad">
         <div className={styles.row}>

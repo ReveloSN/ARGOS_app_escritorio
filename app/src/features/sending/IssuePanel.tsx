@@ -1,4 +1,3 @@
-import { ArgusEye } from "../../components/atoms/ArgusEye";
 import { RiskTag } from "../../components/atoms/RiskTag";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
@@ -7,6 +6,7 @@ import type { AlertDecisions } from "../alerts/useAlertDecisions";
 import { issueTexts, summaryTexts } from "./issuePresentation";
 import styles from "./Send.module.css";
 import { decisionOf } from "./sendState";
+import { AssistantEye } from "../assistant/AssistantEye";
 
 interface IssuePanelProps {
   readonly review: SendReviewResult;
@@ -69,7 +69,7 @@ export function IssuePanel({ review, decisions }: IssuePanelProps) {
   return (
     <aside className={styles.panel} aria-label={texts.t("sending.panel.label")}>
       <div className={styles.summary}>
-        <ArgusEye state={summary.eye} size="md" label={summary.headline} />
+        <AssistantEye state={summary.eye} size="md" label={summary.headline} />
         <div className={styles.summaryText}>
           <span className={styles.headline}>{summary.headline}</span>
           <span className={styles.subline}>{summary.subline}</span>

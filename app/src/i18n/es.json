@@ -2,14 +2,6 @@
   "app": {
     "name": "ARGUS"
   },
-  "engine": {
-    "status": {
-      "starting": "Iniciando motor de análisis",
-      "ready": "Motor de análisis: listo",
-      "analyzing": "Analizando · {done} de {total} archivos",
-      "stopped": "Motor de análisis detenido"
-    }
-  },
   "navigation": {
     "label": "Navegación principal",
     "home": "Inicio",
@@ -512,7 +504,8 @@
       "appearance": "Apariencia",
       "privacy": "Privacidad",
       "shortcuts": "Atajos de teclado",
-      "ai": "Inteligencia artificial"
+      "ai": "Inteligencia artificial",
+      "assistant": "Asistente"
     },
     "detection": {
       "sensitivity": "Sensibilidad",
@@ -637,6 +630,13 @@
       "providers": {
         "anthropic": "Anthropic"
       }
+    },
+    "assistant": {
+      "show": "Mostrar asistente",
+      "showHint": "Si lo oculta, el estado se sigue mostrando como texto en la barra lateral.",
+      "reduceMotion": "Reducir movimiento",
+      "reduceMotionHint": "Apagado, se usa la preferencia del sistema.",
+      "onboarding": "Ver primeros pasos"
     }
   },
   "explanation": {
@@ -1123,5 +1123,66 @@
     "reworded": "Cambia la redacción pero el sentido parece el mismo.",
     "meaning_change": "Cambia la redacción y también parece cambiar lo que el texto dice.",
     "wording": "Cambia la redacción; compare las dos versiones para confirmar si el sentido es el mismo."
+  },
+  "assistant": {
+    "name": "Asistente de IA",
+    "label": "Asistente de IA: {status}",
+    "retry": "Reintentar",
+    "status": {
+      "starting": "Iniciando",
+      "paused": "En pausa",
+      "reading": "Leyendo {done} de {total} archivos",
+      "explaining": "Explicando un cambio",
+      "ready": "Listo",
+      "unreadable": {
+        "one": "No pudo leer un archivo",
+        "other": "No pudo leer {count} archivos"
+      },
+      "highRisk": {
+        "one": "{count} alerta de riesgo alto",
+        "other": "{count} alertas de riesgo alto"
+      },
+      "needsConfirmation": "Necesita una confirmación",
+      "clear": "Sin inconsistencias"
+    },
+    "topbar": {
+      "starting": "Asistente de IA: iniciando",
+      "paused": "Asistente de IA detenido",
+      "ready": "Asistente de IA: listo"
+    },
+    "onboarding": {
+      "heading": "Primeros pasos",
+      "step": "{current} de {total}",
+      "skip": "Omitir",
+      "escape": "Esc",
+      "back": "Anterior",
+      "next": "Siguiente",
+      "start": "Empezar",
+      "progress": "Progreso",
+      "dot": "Paso {number}",
+      "dotCurrent": "Paso {number}, actual",
+      "speaker": "Asistente de IA · ",
+      "load": {
+        "say": "Soy un asistente de IA. Leo sus documentos en este equipo.",
+        "title": "1. Cargue los documentos de un expediente",
+        "body": "Arrastre el contrato, sus anexos, la hoja de tarifas o el correo que va a enviar. ARGUS lee PDF, DOCX, XLSX, EML y texto pegado.",
+        "local": "Los archivos no salen de este equipo.",
+        "addMore": "Puede agregar más documentos en cualquier momento."
+      },
+      "confirm": {
+        "say": "Si no estoy seguro de un dato, se lo pregunto.",
+        "title": "2. Confirme lo que se leyó",
+        "body": "Antes de comparar, revise el número de contrato, las partes, los montos y las fechas que se encontraron. Lo que usted confirme queda en el expediente como fuente de verdad.",
+        "reused": "Los datos confirmados se usan en todas las revisiones del expediente.",
+        "editable": "Puede editarlos o retirarlos después."
+      },
+      "decide": {
+        "say": "Puedo explicar un cambio, pero la decisión es suya.",
+        "title": "3. Decida en cada alerta",
+        "body": "Cada alerta muestra los dos valores, el archivo y la página de origen. Marque «Es correcto», «Es un error» o «Ignorar». Las explicaciones de IA siempre citan el fragmento original.",
+        "shortcuts": "Atajos: C, E, I. Deshacer con Ctrl Z.",
+        "hide": "Puede ocultar al asistente en Ajustes."
+      }
+    }
   }
 }

@@ -16,6 +16,8 @@ interface ButtonProps {
   /** Atajo visible junto a la etiqueta (CLAUDE.md §9: atajos visibles). */
   readonly shortcut?: readonly string[];
   readonly disabled?: boolean;
+  /** Para la acción principal de un diálogo: Enter la activa al abrirlo. */
+  readonly autoFocus?: boolean;
   readonly onClick?: () => void;
 }
 
@@ -27,6 +29,7 @@ export function Button({
   icon,
   shortcut,
   disabled = false,
+  autoFocus = false,
   onClick,
 }: ButtonProps) {
   return (
@@ -34,6 +37,7 @@ export function Button({
       type="button"
       className={joinClassNames(styles.button, styles[variant], styles[size])}
       disabled={disabled}
+      autoFocus={autoFocus}
       onClick={onClick}
     >
       {icon && <Icon name={icon} size="sm" />}

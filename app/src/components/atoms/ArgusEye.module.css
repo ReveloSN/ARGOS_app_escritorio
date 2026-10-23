@@ -48,3 +48,15 @@
 .pupil {
   fill: currentcolor;
 }
+
+/* Un parpadeo de 200 ms al cambiar de estado; sin animaciones continuas (mockup de identidad). */
+.blink {
+  transform-origin: center;
+  animation: eye-blink var(--duration-base) var(--easing-standard);
+}
+
+@keyframes eye-blink {
+  50% {
+    transform: scaleY(0.1);
+  }
+}

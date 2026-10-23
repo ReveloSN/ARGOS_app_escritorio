@@ -1,4 +1,3 @@
-import { ArgusEye } from "../../components/atoms/ArgusEye";
 import { useI18n } from "../../i18n/i18nContext";
 import type { FactResult, PendingFactResult } from "../../services/engine/factTypes";
 import { describeLocation, entityTypeLabel } from "../alerts/alertPresentation";
@@ -9,6 +8,7 @@ import { ContradictionCard } from "./ContradictionCard";
 import { agreementNotes } from "./factPresentation";
 import { isContradicted, type FactRow } from "./factRows";
 import styles from "./Facts.module.css";
+import { AssistantEye } from "../assistant/AssistantEye";
 
 interface FactAsideProps {
   readonly row: FactRow | undefined;
@@ -20,7 +20,7 @@ function Agreement({ fact }: { fact: FactResult }) {
   const texts = useI18n();
   return (
     <div className={styles.agreement}>
-      <ArgusEye state="success" size="md" />
+      <AssistantEye state="success" size="md" />
       <span className={styles.agreementTitle}>{texts.t("facts.aside.noneTitle")}</span>
       {agreementNotes(fact, texts).map((note) => (
         <span key={note} className={styles.note}>

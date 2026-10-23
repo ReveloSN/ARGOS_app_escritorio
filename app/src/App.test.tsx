@@ -59,7 +59,7 @@ describe("App", () => {
       });
     });
     expect(screen.getByRole("heading", { name: "Leyendo 1 de 2 archivos" })).toBeInTheDocument();
-    expect(screen.getByRole("banner")).toHaveTextContent("Analizando · 1 de 2 archivos");
+    expect(screen.getByRole("banner")).toHaveTextContent("Leyendo 1 de 2 archivos");
     await act(async () => {
       finish(REVIEW);
       await Promise.resolve();
@@ -70,6 +70,9 @@ describe("App", () => {
     );
     expect(await screen.findByText("Leído · 2 fragmentos con texto")).toBeInTheDocument();
     expect(screen.getByText("No pudimos leer «escaneado.pdf».")).toBeInTheDocument();
+    expect(
+      screen.getByRole("status", { name: "Asistente de IA: No pudo leer un archivo" }),
+    ).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Revisar 2 archivos/ }));
     const table = screen.getByRole("table", { name: "Lista de alertas" });

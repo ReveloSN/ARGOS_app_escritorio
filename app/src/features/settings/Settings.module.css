@@ -262,3 +262,9 @@
   color: var(--color-text-primary);
   font-family: var(--font-family-mono);
 }
+
+.inlineRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}

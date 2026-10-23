@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { ArgusEye } from "../../components/atoms/ArgusEye";
 import { Icon } from "../../components/atoms/Icon";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ChangeExplanationResult } from "../../services/engine/aiTypes";
 import { explanationText } from "../alerts/explanationText";
+import { useAssistantSignals } from "../assistant/assistantContext";
+import { AssistantEye } from "../assistant/AssistantEye";
 import { useEngineServices } from "../engine/EngineServicesContext";
 import { useEngineQuery } from "../engine/useEngineQuery";
 import styles from "./Compare.module.css";
@@ -57,7 +58,7 @@ function ExplanationBody({ target }: { target: ExplainTarget }) {
     return <Explanation result={query.state.data} target={target} />;
   return (
     <div role="status" className={styles.explaining}>
-      <ArgusEye state={query.state.status === "failed" ? "error" : "explaining"} size="sm" />
+      <AssistantEye state={query.state.status === "failed" ? "error" : "explaining"} size="sm" />
       {query.state.status === "failed"
         ? t("comparison.explain.failed")
         : t("comparison.explain.loading")}
@@ -65,10 +66,23 @@ function ExplanationBody({ target }: { target: ExplainTarget }) {
   );
 }
 
+/** Mientras el panel está abierto, la barra lateral dice «Explicando un cambio». */
+function useExplainingSignal(isOpen: boolean) {
+  const { setExplaining } = useAssistantSignals();
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    setExplaining(true);
+    return () => {
+      setExplaining(false);
+    };
+  }, [isOpen, setExplaining]);
+}
+
 /** «Explicar este cambio»: se pide al abrirlo; plantilla local o «Sugerencia de IA» citada. */
 export function ChangeExplanationPanel({ target }: { target: ExplainTarget }) {
   const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
+  useExplainingSignal(isOpen);
   return (
     <div className={styles.explainBox}>
       <button

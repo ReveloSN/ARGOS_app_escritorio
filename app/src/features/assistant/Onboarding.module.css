@@ -1,0 +1,159 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-overlay);
+  display: grid;
+  place-items: center;
+  background: var(--color-backdrop);
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(var(--size-onboarding), calc(100% - var(--spacing-8)));
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+  box-shadow: var(--shadow-overlay);
+}
+
+.header,
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-5);
+}
+
+.header {
+  border-bottom: var(--border-width) solid var(--color-border-default);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.footer {
+  border-top: var(--border-width) solid var(--color-border-default);
+}
+
+.grow {
+  flex: 1;
+}
+
+.mono,
+.kbd {
+  font-family: var(--font-family-mono);
+}
+
+.kbd {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-micro);
+}
+
+.skip {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-action-text);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: var(--size-reticle-sm) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--spacing-6);
+  padding: var(--spacing-6) var(--spacing-6) var(--spacing-5);
+}
+
+.figure {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: var(--size-reticle-sm);
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  background: var(--color-background-subtle);
+}
+
+.reticle {
+  position: absolute;
+  inset: 0;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.bubble {
+  align-self: flex-start;
+  margin: 0;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-subtle);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.bubbleName {
+  color: var(--color-action-text);
+  font-weight: var(--font-weight-semibold);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-title);
+  line-height: var(--line-height-title);
+  font-weight: var(--font-weight-semibold);
+}
+
+.text {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-emphasis);
+}
+
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1-5);
+  margin: 0;
+  padding: var(--spacing-1) 0 0;
+  list-style: none;
+}
+
+.points li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+}
+
+.check {
+  color: var(--color-action-text);
+}
+
+.dots {
+  display: flex;
+  gap: var(--spacing-1-5);
+}
+
+.dot {
+  width: var(--size-onboarding-dot);
+  height: var(--size-onboarding-dot);
+  border-radius: var(--radius-xs);
+  background: var(--color-border-strong);
+  transition: width var(--duration-base) var(--easing-standard);
+}
+
+.dotDone {
+  background: var(--color-action-primary);
+}
+
+.dotCurrent {
+  width: var(--size-onboarding-dot-current);
+}

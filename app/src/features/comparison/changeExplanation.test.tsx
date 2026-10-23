@@ -50,6 +50,10 @@ describe("Explicar este cambio", () => {
     expect(await screen.findByText("Explicación de ARGUS")).toBeInTheDocument();
     expect(screen.getByText(/Cambia un número o identificador/)).toBeInTheDocument();
     expect(screen.getByText(/Contrato_v3.docx · /)).toBeInTheDocument();
+    const navigation = screen.getByRole("navigation", { name: "Navegación principal" });
+    expect(within(navigation).getByRole("status")).toHaveAccessibleName(
+      "Asistente de IA: Explicando un cambio",
+    );
   });
 
   it("rotula el texto del modelo como «Sugerencia de IA»", async () => {

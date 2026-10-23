@@ -3,9 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "../../test/renderWithProviders";
+import { AssistantStatusIndicator } from "./AssistantStatusIndicator";
 import { DiffValue } from "./DiffValue";
 import { EmptyState } from "./EmptyState";
-import { EngineStatusIndicator } from "./EngineStatusIndicator";
 import { ErrorMessage } from "./ErrorMessage";
 import { SourceLine } from "./SourceLine";
 import { Toast } from "./Toast";
@@ -94,15 +94,29 @@ describe("SourceLine", () => {
   });
 });
 
-describe("EngineStatusIndicator", () => {
-  it.each([
-    [{ kind: "starting" } as const, "Iniciando motor de análisis"],
-    [{ kind: "ready" } as const, "Motor de análisis: listo"],
-    [{ kind: "stopped" } as const, "Motor de análisis detenido"],
-    [{ kind: "analyzing", done: 3, total: 5 } as const, "Analizando · 3 de 5 archivos"],
-  ])("anuncia el estado con texto, no solo con color", (status, text) => {
-    renderWithProviders(<EngineStatusIndicator status={status} />);
+describe("AssistantStatusIndicator", () => {
+  it("anuncia el estado con texto, no solo con color", () => {
+    renderWithProviders(
+      <AssistantStatusIndicator status={{ text: "3 alertas de riesgo alto", isHighRisk: true }} />,
+    );
 
-    expect(screen.getByRole("status")).toHaveTextContent(text);
+    expect(screen.getByRole("status")).toHaveTextContent("3 alertas de riesgo alto");
+  });
+
+  it("con el motor detenido ofrece reintentar", async () => {
+    const onClick = vi.fn();
+    renderWithProviders(
+      <AssistantStatusIndicator
+        status={{
+          text: "Asistente de IA detenido",
+          isHighRisk: true,
+          retry: { label: "Reintentar", onClick },
+        }}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "Reintentar" }));
+
+    expect(onClick).toHaveBeenCalledOnce();
   });
 });

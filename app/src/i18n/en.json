@@ -2,14 +2,6 @@
   "app": {
     "name": "ARGUS"
   },
-  "engine": {
-    "status": {
-      "starting": "Starting analysis engine",
-      "ready": "Analysis engine: ready",
-      "analyzing": "Analyzing · {done} of {total} files",
-      "stopped": "Analysis engine stopped"
-    }
-  },
   "navigation": {
     "label": "Main navigation",
     "home": "Home",
@@ -512,7 +504,8 @@
       "appearance": "Appearance",
       "privacy": "Privacy",
       "shortcuts": "Keyboard shortcuts",
-      "ai": "Artificial intelligence"
+      "ai": "Artificial intelligence",
+      "assistant": "Assistant"
     },
     "detection": {
       "sensitivity": "Sensitivity",
@@ -637,6 +630,13 @@
       "providers": {
         "anthropic": "Anthropic"
       }
+    },
+    "assistant": {
+      "show": "Show assistant",
+      "showHint": "If you hide it, the status is still shown as text in the sidebar.",
+      "reduceMotion": "Reduce motion",
+      "reduceMotionHint": "When off, the system preference is used.",
+      "onboarding": "View getting started"
     }
   },
   "explanation": {
@@ -1123,5 +1123,66 @@
     "reworded": "The wording changes but the meaning seems the same.",
     "meaning_change": "The wording changes and what the text says seems to change too.",
     "wording": "The wording changes; compare both versions to confirm the meaning is the same."
+  },
+  "assistant": {
+    "name": "AI assistant",
+    "label": "AI assistant: {status}",
+    "retry": "Retry",
+    "status": {
+      "starting": "Starting",
+      "paused": "Paused",
+      "reading": "Reading {done} of {total} files",
+      "explaining": "Explaining a change",
+      "ready": "Ready",
+      "unreadable": {
+        "one": "Could not read a file",
+        "other": "Could not read {count} files"
+      },
+      "highRisk": {
+        "one": "{count} high-risk alert",
+        "other": "{count} high-risk alerts"
+      },
+      "needsConfirmation": "Needs a confirmation",
+      "clear": "No inconsistencies"
+    },
+    "topbar": {
+      "starting": "AI assistant: starting",
+      "paused": "AI assistant stopped",
+      "ready": "AI assistant: ready"
+    },
+    "onboarding": {
+      "heading": "Getting started",
+      "step": "{current} of {total}",
+      "skip": "Skip",
+      "escape": "Esc",
+      "back": "Back",
+      "next": "Next",
+      "start": "Start",
+      "progress": "Progress",
+      "dot": "Step {number}",
+      "dotCurrent": "Step {number}, current",
+      "speaker": "AI assistant · ",
+      "load": {
+        "say": "I am an AI assistant. I read your documents on this computer.",
+        "title": "1. Load the documents of a case file",
+        "body": "Drag in the contract, its annexes, the rate sheet or the email you are about to send. ARGUS reads PDF, DOCX, XLSX, EML and pasted text.",
+        "local": "Files never leave this computer.",
+        "addMore": "You can add more documents at any time."
+      },
+      "confirm": {
+        "say": "If I am not sure about a value, I ask you.",
+        "title": "2. Confirm what was read",
+        "body": "Before comparing, check the contract number, parties, amounts and dates that were found. What you confirm stays in the case file as the source of truth.",
+        "reused": "Confirmed values are used in every review of the case file.",
+        "editable": "You can edit or retire them later."
+      },
+      "decide": {
+        "say": "I can explain a change, but the decision is yours.",
+        "title": "3. Decide on each alert",
+        "body": "Each alert shows both values, the file and the source page. Mark “It's correct”, “It's a mistake” or “Ignore”. AI explanations always quote the original fragment.",
+        "shortcuts": "Shortcuts: C, E, I. Undo with Ctrl Z.",
+        "hide": "You can hide the assistant in Settings."
+      }
+    }
   }
 }

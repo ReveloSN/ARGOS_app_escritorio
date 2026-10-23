@@ -85,6 +85,7 @@
   --font-size-title: 20px;
   --font-size-metric: 22px;
   --font-size-value: 26px;
+  --font-size-display: 24px;
   --line-height-caption: 16px;
   --line-height-body: 20px;
   --line-height-heading: 22px;
@@ -158,6 +159,13 @@
   --size-send-header-label: 64px;
   /* Informe: ancho de la hoja de la vista previa (mockup «ARGUS Informe»). */
   --size-report-sheet: 680px;
+  /* Primeros pasos (mockup «ARGUS Inicio», onboarding): diálogo y marcas de avance. */
+  --size-onboarding: 640px;
+  --size-onboarding-dot: 6px;
+  --size-onboarding-dot-current: 20px;
+  /* Inicio: la retícula y el contenido suben un poco sobre el centro (mockup «ARGUS Inicio»). */
+  --offset-home-reticle: 40px;
+  --offset-home-content: 56px;
   --layer-menu: 5;
   --layer-overlay: 10;
   --layer-toast: 20;
