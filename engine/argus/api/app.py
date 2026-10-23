@@ -2,8 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from argus.api.access_token import AUTHORIZATION_HEADER, AccessTokenMiddleware
+from argus.api.ai_composition import AiAdapters, default_ai_adapters
 from argus.api.composition import build_engine_services
 from argus.api.error_handlers import register_error_handlers
+from argus.api.routes.ai import build_ai_settings_router, build_change_explanation_router
 from argus.api.routes.comparisons import build_comparisons_router
 from argus.api.routes.documents import build_documents_router
 from argus.api.routes.facts import build_fact_changes_router, build_facts_router
@@ -28,10 +30,16 @@ ALLOWED_METHODS = ["GET", "POST", "PUT", "DELETE"]
 ALLOWED_HEADERS = [AUTHORIZATION_HEADER, "content-type"]
 
 
-def create_app(settings: EngineSettings, file_opener: FileOpener | None = None) -> FastAPI:
+def create_app(
+    settings: EngineSettings,
+    file_opener: FileOpener | None = None,
+    ai: AiAdapters | None = None,
+) -> FastAPI:
     """Raíz de composición: aquí se construyen e inyectan las dependencias del motor."""
     app = FastAPI(title=API_TITLE, version=settings.version)
-    services = build_engine_services(settings, file_opener or SystemFileOpener())
+    services = build_engine_services(
+        settings, file_opener or SystemFileOpener(), ai or default_ai_adapters()
+    )
     app.include_router(build_health_router(settings))
     routers = (
         build_reviews_router,
@@ -46,6 +54,8 @@ def create_app(settings: EngineSettings, file_opener: FileOpener | None = None) 
         build_send_reviews_router,
         build_send_decisions_router,
         build_reports_router,
+        build_change_explanation_router,
+        build_ai_settings_router,
     )
     for build_router in routers:
         app.include_router(build_router(services))

@@ -2,6 +2,7 @@ import json
 import sqlite3
 from datetime import datetime
 
+from argus.application.ai.ai_settings import AiSettings
 from argus.domain.entity import EntityType
 from argus.domain.preferences import ComparedCategory, UserPreferences
 from argus.domain.sensitivity import Sensitivity
@@ -87,3 +88,27 @@ def _to_rule(row: sqlite3.Row | RuleRow) -> SuppressionRule:
     rule_id, entity_type, first, second, first_label, second_label, created_at = row
     case = SuppressedCase(EntityType(entity_type), first, second, first_label, second_label)
     return SuppressionRule(rule_id, case, from_stored_timestamp(created_at))
+
+
+AI_EXPLAINS_CHANGES_KEY = "ai_explains_changes"
+
+
+class SqliteAiSettingsRepository:
+    """Ajustes de IA en la misma tabla clave-valor de los demás ajustes."""
+
+    def __init__(self, database: SqliteDatabase) -> None:
+        self._database = database
+
+    def get(self) -> AiSettings:
+        with self._database.connect() as connection:
+            row = connection.execute(
+                "SELECT value FROM preferences WHERE key = ?", (AI_EXPLAINS_CHANGES_KEY,)
+            ).fetchone()
+        return AiSettings(explains_changes=bool(row and json.loads(row[0])))
+
+    def save(self, settings: AiSettings) -> None:
+        with self._database.connect() as connection:
+            connection.execute(
+                "INSERT OR REPLACE INTO preferences (key, value) VALUES (?, ?)",
+                (AI_EXPLAINS_CHANGES_KEY, json.dumps(settings.explains_changes)),
+            )

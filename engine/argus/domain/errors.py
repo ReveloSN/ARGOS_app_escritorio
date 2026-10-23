@@ -151,3 +151,15 @@ class ReportNotFoundError(ArgusDomainError):
     def __init__(self, file_name: str) -> None:
         super().__init__(f"No se encontró el informe «{file_name}».")
         self.file_name = file_name
+
+
+class KeychainUnavailableError(ArgusDomainError):
+    """El llavero del sistema no está disponible (en Linux, sin Secret Service)."""
+
+
+class ExplanationProviderError(ArgusDomainError):
+    """El proveedor de IA no dio una explicación; `reason` elige el mensaje en la interfaz."""
+
+    def __init__(self, reason: str) -> None:
+        super().__init__(f"El proveedor de IA no respondió: {reason}.")
+        self.reason = reason

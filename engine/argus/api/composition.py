@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+from argus.api.ai_composition import AiAdapters, build_ai_settings, build_change_explainer
 from argus.api.comparison_composition import (
     ComparisonDependencies,
     ComparisonRepositories,
@@ -21,6 +22,7 @@ from argus.api.send_composition import (
     build_send_services,
 )
 from argus.api.settings import EngineSettings
+from argus.application.ai.ai_settings import ManageAiSettings
 from argus.application.alert_explanation import AlertExplainer, TemplateAlertExplainer
 from argus.application.change_history_folder import ChangeHistoryFolder
 from argus.application.check_confirmed_facts import CheckConfirmedFacts, FactCheckSources
@@ -100,6 +102,7 @@ from argus.infrastructure.persistence.sqlite_decision_repository import (
 from argus.infrastructure.persistence.sqlite_decision_statistics import SqliteDecisionStatistics
 from argus.infrastructure.persistence.sqlite_document_repository import SqliteDocumentRepository
 from argus.infrastructure.persistence.sqlite_preference_repositories import (
+    SqliteAiSettingsRepository,
     SqlitePreferencesRepository,
     SqliteSuppressionRuleRepository,
 )
@@ -129,6 +132,7 @@ class ReviewStorage:
     facts: SqliteConfirmedFactRepository
     send_reviews: SqliteSendReviewRepository
     send_decisions: SqliteDecisionRepository
+    ai_settings: SqliteAiSettingsRepository
 
 
 @dataclass(frozen=True)
@@ -150,6 +154,7 @@ class EngineServices:
     check_facts: CheckConfirmedFacts
     sending: SendServices
     reports: ReportServices
+    ai_settings: ManageAiSettings
     storage: ReviewStorage
     data_directory: Path
 
@@ -170,10 +175,13 @@ def build_review_storage(database_path: Path) -> ReviewStorage:
         SqliteConfirmedFactRepository(database),
         SqliteSendReviewRepository(database),
         SqliteDecisionRepository(database, SEND_DECISIONS),
+        SqliteAiSettingsRepository(database),
     )
 
 
-def build_engine_services(settings: EngineSettings, opener: FileOpener) -> EngineServices:
+def build_engine_services(
+    settings: EngineSettings, opener: FileOpener, ai: AiAdapters
+) -> EngineServices:
     data_directory = settings.data_directory
     storage = build_review_storage(data_directory / DATABASE_FILE_NAME)
     archive = FileSystemDocumentArchive(data_directory / ARCHIVE_FOLDER_NAME)
@@ -183,7 +191,11 @@ def build_engine_services(settings: EngineSettings, opener: FileOpener) -> Engin
     values = build_entity_extraction_pipeline()
     analyzer = build_review_analyzer(storage, build_alert_sources(embedder), values)
     comparison = ComparisonDependencies(
-        DocumentLoader(build_document_reader_factory()), values, embedder, analyzer
+        DocumentLoader(build_document_reader_factory()),
+        values,
+        embedder,
+        analyzer,
+        build_change_explainer(storage.ai_settings, ai),
     )
     return EngineServices(
         run_review=build_run_review(storage, archive, analyzer),
@@ -227,6 +239,7 @@ def build_engine_services(settings: EngineSettings, opener: FileOpener) -> Engin
             ReportDependencies(storage.sessions, clock, opener, settings.version),
             settings.reports_directory,
         ),
+        ai_settings=build_ai_settings(storage.ai_settings, ai),
         storage=storage,
         data_directory=data_directory,
     )

@@ -17,6 +17,7 @@ from argus.domain.errors import (
     FactNotFoundError,
     HistoryFolderError,
     InvalidValueError,
+    KeychainUnavailableError,
     NotADraftEmailError,
     NotEnoughDocumentsError,
     ReportNotFoundError,
@@ -54,6 +55,7 @@ ERROR_RESPONSES: dict[type[ArgusDomainError], ErrorResponse] = {
     SendIssueNotFoundError: ErrorResponse(404, "send_issue_not_found"),
     NotADraftEmailError: ErrorResponse(422, "not_a_draft_email"),
     ReportNotFoundError: ErrorResponse(404, "report_not_found"),
+    KeychainUnavailableError: ErrorResponse(503, "keychain_unavailable"),
     # Solo llega hasta aquí el borrador de «Revisar antes de enviar»: en una revisión, un
     # archivo ilegible se informa sin detener el resto.
     UnreadableDocumentError: ErrorResponse(422, "unreadable_draft"),

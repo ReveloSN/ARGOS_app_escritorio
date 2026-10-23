@@ -9,6 +9,7 @@ from argus.domain.preferences import UserPreferences
 from argus.domain.review_session import NewReviewSession, ReviewSession
 from argus.infrastructure.history_location import DATABASE_FILE_NAME
 from tests.api.review_stream import REVIEW_NAME, post_review
+from tests.application.ai_doubles import offline_ai
 from tests.application.in_memory_repositories import RecordingFileOpener
 
 FILES = ("Contrato_4857_v3.pdf", "Anexo_1_condiciones.docx")
@@ -90,6 +91,7 @@ def test_reviews_older_than_90_days_are_deleted_at_startup(tmp_path: Path) -> No
             "9", "token", tmp_path, pointer_directory=tmp_path, reports_directory=tmp_path
         ),
         RecordingFileOpener(),
+        offline_ai(),
     )
 
     assert services.storage.sessions.list_created_before(datetime.now(UTC)) == ()
@@ -105,6 +107,7 @@ def test_without_retention_limit_the_history_is_kept(tmp_path: Path) -> None:
             "9", "token", tmp_path, pointer_directory=tmp_path, reports_directory=tmp_path
         ),
         RecordingFileOpener(),
+        offline_ai(),
     )
 
     assert services.storage.sessions.get(session.id) == session

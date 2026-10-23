@@ -3,8 +3,10 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
+from argus.api.ai_composition import AiAdapters
 from argus.api.app import create_app
 from argus.api.settings import EngineSettings
+from tests.application.ai_doubles import offline_ai
 from tests.application.in_memory_repositories import RecordingFileOpener
 
 TEST_VERSION = "9.9.9"
@@ -30,8 +32,14 @@ def opener() -> RecordingFileOpener:
 
 
 @pytest.fixture
-def client(settings: EngineSettings, opener: RecordingFileOpener) -> TestClient:
-    return TestClient(create_app(settings, opener))
+def ai() -> AiAdapters:
+    # Nunca el llavero real ni la API de Anthropic en las pruebas.
+    return offline_ai()
+
+
+@pytest.fixture
+def client(settings: EngineSettings, opener: RecordingFileOpener, ai: AiAdapters) -> TestClient:
+    return TestClient(create_app(settings, opener, ai))
 
 
 @pytest.fixture

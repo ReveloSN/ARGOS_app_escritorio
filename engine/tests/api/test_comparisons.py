@@ -182,3 +182,18 @@ def test_each_change_is_decided_and_undone(
     assert undone["decisions"] == []
     assert missing.status_code == 404
     assert missing.json() == {"detail": "comparison_item_not_found"}
+
+
+def compare_versions(client: TestClient, headers: dict[str, str]) -> dict[str, Any]:
+    """Las dos versiones del contrato de ejemplo, ya comparadas."""
+    files = [text_file("v1.txt", VERSION_1), text_file("v2.txt", VERSION_2)]
+    return post_comparison(client, headers, ComparisonUpload("versions", files))[-1][1]
+
+
+def test_each_change_brings_its_meaning_suggestion(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    changes = compare_versions(client, auth_headers)["pairs"][0]["changes"]
+
+    cession = next(change for change in changes if "negation" in change["materialities"])
+    assert cession["meaning"] == {"meaning": "meaning_change", "confidence": 0.9}

@@ -10,6 +10,7 @@ from argus.application.ports.repositories import ComparisonRepository, DecisionR
 from argus.application.ports.text_embedder import TextEmbedder
 from argus.application.review_analyzers import ReviewAnalyzer
 from argus.application.text_comparison.change_detector import ChangeDetector
+from argus.application.text_comparison.change_explanation import ChangeExplainer, ExplainChange
 from argus.application.text_comparison.change_facts import ChangeFactsReader
 from argus.application.text_comparison.comparison_decisions import ComparisonDecisions
 from argus.application.text_comparison.document_pair_comparer import DocumentPairComparer
@@ -40,6 +41,7 @@ class ComparisonServices:
     open: OpenComparison
     decisions: ComparisonDecisions
     modes: ComparisonModeFactory
+    explain: ExplainChange
 
 
 @dataclass(frozen=True)
@@ -51,6 +53,8 @@ class ComparisonDependencies:
     values: EntityExtractionPipeline
     embedder: TextEmbedder | None
     inconsistencies: ReviewAnalyzer
+    # «Explicar este cambio»: plantillas o, si el usuario lo activó, el modelo de lenguaje.
+    explainer: ChangeExplainer
 
 
 @dataclass(frozen=True)
@@ -89,4 +93,5 @@ def build_comparison_services(
         open=OpenComparison(repositories.comparisons),
         decisions=ComparisonDecisions(repositories.comparisons, histories),
         modes=ComparisonModeFactory(DEFAULT_MODES),
+        explain=ExplainChange(repositories.comparisons, dependencies.explainer),
     )
