@@ -31,6 +31,7 @@ function notConfigured() {
 export interface FakeEngineOptions {
   readonly checkHealth?: () => Promise<EngineHealth>;
   readonly reviews?: Partial<EngineServices["reviews"]>;
+  readonly comparisons?: Partial<EngineServices["comparisons"]>;
   readonly history?: Partial<EngineServices["history"]>;
   readonly preferences?: Partial<EngineServices["preferences"]>;
   readonly documents?: Partial<EngineServices["documents"]>;
@@ -43,6 +44,18 @@ function fakeReviews(overrides: FakeEngineOptions["reviews"]): EngineServices["r
     startReview: notConfigured(),
     openReview: notConfigured(),
     closeReview: notConfigured(),
+    decide: notConfigured(),
+    undoDecision: notConfigured(),
+    ...overrides,
+  };
+}
+
+function fakeComparisons(
+  overrides: FakeEngineOptions["comparisons"],
+): EngineServices["comparisons"] {
+  return {
+    startComparison: notConfigured(),
+    openComparison: notConfigured(),
     decide: notConfigured(),
     undoDecision: notConfigured(),
     ...overrides,
@@ -68,6 +81,7 @@ export function fakeEngineServices(options: FakeEngineOptions = {}): EngineServi
   return {
     statusMonitor: new EngineStatusMonitor({ checkHealth }),
     reviews: fakeReviews(options.reviews),
+    comparisons: fakeComparisons(options.comparisons),
     history: { history: notConfigured(), records: notConfigured(), ...options.history },
     preferences: fakePreferences(options.preferences),
     documents: {

@@ -2,6 +2,7 @@ import type { AppRoute } from "../features/navigation/appRoute";
 import { usePageNavigation, type PageNavigation } from "../features/navigation/usePageNavigation";
 import { useReview } from "../features/review/reviewContext";
 import { AlertDetailPage } from "./AlertDetailPage";
+import { ComparePage } from "./ComparePage";
 import { HistoryPage } from "./HistoryPage";
 import { HomePage } from "./HomePage";
 import { NewReviewPage } from "./NewReviewPage";
@@ -40,13 +41,15 @@ export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPag
       );
     case "settings":
       return <SettingsPage />;
+    case "compare":
+      return <ComparePage />;
     case "results":
     case "alert":
       return (
         <ReviewPage route={route} navigation={navigation} onSearchDocuments={onSearchDocuments} />
       );
     case "home":
-      return <HomePage onNewReview={navigation.openNewReview} />;
+      return <HomePage onNewReview={navigation.openNewReview} onCompare={navigation.openCompare} />;
   }
 }
 
@@ -59,7 +62,9 @@ interface ReviewPageProps {
 /** Resultados y detalle solo existen con una revisión real; sin ella se vuelve a Inicio. */
 function ReviewPage({ route, navigation, onSearchDocuments }: ReviewPageProps) {
   const { review } = useReview();
-  if (!review) return <HomePage onNewReview={navigation.openNewReview} />;
+  if (!review) {
+    return <HomePage onNewReview={navigation.openNewReview} onCompare={navigation.openCompare} />;
+  }
   if (route.page === "alert") {
     return (
       <AlertDetailPage

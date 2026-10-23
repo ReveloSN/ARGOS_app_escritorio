@@ -8,10 +8,11 @@ import styles from "./Page.module.css";
 
 interface HomePageProps {
   readonly onNewReview: () => void;
+  readonly onCompare: () => void;
 }
 
 /** Inicio, primer uso: estado vacío y «Nueva revisión». Sin datos inventados. */
-export function HomePage({ onNewReview }: HomePageProps) {
+export function HomePage({ onNewReview, onCompare }: HomePageProps) {
   const { t } = useI18n();
   const engineStatus = useEngineStatus();
 
@@ -24,9 +25,12 @@ export function HomePage({ onNewReview }: HomePageProps) {
         description={t("home.description")}
         note={t("home.note")}
         actions={
-          <Button variant="primary" shortcut={NEW_REVIEW_SHORTCUT} onClick={onNewReview}>
-            {t("navigation.newReview")}
-          </Button>
+          <>
+            <Button variant="primary" shortcut={NEW_REVIEW_SHORTCUT} onClick={onNewReview}>
+              {t("navigation.newReview")}
+            </Button>
+            <Button onClick={onCompare}>{t("home.compareVersions")}</Button>
+          </>
         }
       />
     </div>

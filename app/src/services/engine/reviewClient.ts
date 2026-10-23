@@ -1,4 +1,4 @@
-import { EngineUnavailableError, type EngineHttp, type EngineRequest } from "./engineHttp";
+import type { EngineHttp } from "./engineHttp";
 import type {
   DecisionInput,
   DecisionsResult,
@@ -8,7 +8,7 @@ import type {
   ReviewResult,
   SessionResult,
 } from "./reviewTypes";
-import type { ServerSentEvent } from "./serverSentEvents";
+import { progressEventOf, streamUpload } from "./streamedUpload";
 
 const REVIEWS_PATH = "/reviews";
 const REVIEW_FINISHED_EVENT = "review";
@@ -24,21 +24,11 @@ function sessionPath(sessionId: string, suffix = ""): string {
 export class ReviewClient implements ReviewGateway {
   constructor(private readonly http: EngineHttp) {}
 
-  async startReview({ name, files, onProgress }: ReviewRequest): Promise<ReviewResult> {
-    let review: ReviewResult | undefined;
-    const request: EngineRequest = {
-      path: REVIEWS_PATH,
-      timeoutMs: REVIEW_TIMEOUT_MS,
-      method: "POST",
-      body: reviewForm(name, files),
-    };
-    await this.http.stream(request, (event) => {
-      if (event.name === REVIEW_FINISHED_EVENT) review = event.data as ReviewResult;
-      else onProgress?.(toProgressEvent(event));
-    });
-    // Sin el evento final, el análisis se interrumpió en el motor.
-    if (!review) throw new EngineUnavailableError(REVIEWS_PATH);
-    return review;
+  startReview({ name, files, onProgress }: ReviewRequest): Promise<ReviewResult> {
+    const upload = { path: REVIEWS_PATH, fields: { name }, files, timeoutMs: REVIEW_TIMEOUT_MS };
+    return streamUpload(this.http, { ...upload, finishedEvent: REVIEW_FINISHED_EVENT }, (event) =>
+      onProgress?.(progressEventOf(event) as ReviewProgressEvent),
+    );
   }
 
   openReview(sessionId: string): Promise<ReviewResult> {
@@ -59,17 +49,4 @@ export class ReviewClient implements ReviewGateway {
     const path = sessionPath(sessionId, "/decisions/undo");
     return this.http.json({ path, timeoutMs: REQUEST_TIMEOUT_MS, method: "POST" });
   }
-}
-
-function reviewForm(name: string, files: readonly File[]): FormData {
-  const body = new FormData();
-  body.append("name", name);
-  files.forEach((file) => {
-    body.append("files", file, file.name);
-  });
-  return body;
-}
-
-function toProgressEvent(event: ServerSentEvent): ReviewProgressEvent {
-  return { kind: event.name, ...(event.data as object) } as ReviewProgressEvent;
 }

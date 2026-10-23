@@ -5,6 +5,7 @@ import { HOME_ROUTE, type AppRoute } from "./appRoute";
 export interface PageNavigation {
   readonly openHome: () => void;
   readonly openNewReview: () => void;
+  readonly openCompare: () => void;
   readonly openAlert: (number: number) => void;
   /** Resultados en una pestaña concreta: Alertas, Archivos o Decisiones. */
   readonly openTab: (tab: ResultsTab) => void;
@@ -20,6 +21,9 @@ function routeOpeners(navigate: (route: AppRoute) => void) {
     },
     openNewReview: () => {
       navigate({ page: "newReview" });
+    },
+    openCompare: () => {
+      navigate({ page: "compare" });
     },
     openAlert: (number: number) => {
       navigate({ page: "alert", number });

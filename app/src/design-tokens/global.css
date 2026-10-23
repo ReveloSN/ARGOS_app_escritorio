@@ -90,6 +90,8 @@
   --line-height-heading: 22px;
   --line-height-title: 28px;
   --line-height-value: 32px;
+  /* Texto de los documentos en Comparar: lectura larga, más interlineado. */
+  --line-height-reading: 24px;
   --letter-spacing-label: 0.04em;
   --letter-spacing-brand: 0.12em;
 
@@ -141,6 +143,10 @@
   --size-progress-wide: 96px;
   --size-search-field: 300px;
   --size-dialog: 560px;
+  --size-compare-aside: 320px;
+  --size-minimap: 16px;
+  --size-minimap-mark: 4px;
+  --size-minimap-mark-moved: 12px;
   --layer-menu: 5;
   --layer-overlay: 10;
   --layer-toast: 20;

@@ -26,6 +26,8 @@ export function useSearchScope(
     alert: reviewScope,
     history: () => historySearchScope({ history, i18n, navigate }),
     settings: () => settingsSearchScope(i18n),
+    // Comparar todavía no tiene búsqueda propia (Ctrl K no hace nada ahí).
+    compare: () => undefined,
   };
   return scopes[route.page]();
 }

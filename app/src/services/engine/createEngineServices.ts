@@ -2,6 +2,7 @@ import { isTauri } from "@tauri-apps/api/core";
 
 import type { EngineServices } from "../../features/engine/EngineServicesContext";
 import { TauriDesktopShell } from "../desktop/tauriDesktopShell";
+import { ComparisonClient } from "./comparisonClient";
 import { ConfiguredEngineConnectionSource } from "./configuredEngineConnectionSource";
 import { DocumentClient } from "./documentClient";
 import { EngineClient } from "./engineClient";
@@ -19,6 +20,7 @@ export function createEngineServices(): EngineServices {
   return {
     statusMonitor: new EngineStatusMonitor(new EngineClient(http)),
     reviews: new ReviewClient(http),
+    comparisons: new ComparisonClient(http),
     history: new HistoryClient(http),
     preferences: new PreferencesClient(http),
     documents: new DocumentClient(http),

@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 
 import type { DesktopShell } from "../../services/desktop/desktopShell";
+import type { ComparisonGateway } from "../../services/engine/comparisonTypes";
 import type { DocumentAccess } from "../../services/engine/documentTypes";
 import type { EngineStatusMonitor } from "../../services/engine/engineStatusMonitor";
 import type { HistorySource } from "../../services/engine/historyTypes";
@@ -11,6 +12,7 @@ import type { ReviewGateway } from "../../services/engine/reviewTypes";
 export interface EngineServices {
   readonly statusMonitor: EngineStatusMonitor;
   readonly reviews: ReviewGateway;
+  readonly comparisons: ComparisonGateway;
   readonly history: HistorySource;
   readonly preferences: PreferencesStore;
   readonly documents: DocumentAccess;

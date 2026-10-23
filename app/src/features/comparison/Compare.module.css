@@ -1,0 +1,627 @@
+/* Pantalla Comparar documentos (mockup «ARGUS Comparar»). */
+
+.workspace {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2-5);
+  padding: var(--spacing-2-5) var(--spacing-5) var(--spacing-3);
+  border-bottom: var(--border-width) solid var(--color-border-default);
+  background: var(--color-background-surface);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1-5);
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.title {
+  flex: 1;
+  margin: 0;
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-title);
+}
+
+.modes {
+  display: flex;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.mode {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  min-height: var(--size-control-md);
+  padding: 0 var(--spacing-3);
+  border: 0;
+  background: var(--color-background-surface);
+  color: var(--color-text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.mode + .mode {
+  border-left: var(--border-width) solid var(--color-border-strong);
+}
+
+.modeSelected {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-fg);
+}
+
+.modeKey,
+.markNumber,
+.itemNumber,
+.listHint {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-micro);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.documents,
+.counters,
+.ignores {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.ignores {
+  margin-left: auto;
+}
+
+.sideBadge {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--size-control-xs);
+  height: var(--size-control-xs);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-micro);
+  font-weight: var(--font-weight-semibold);
+}
+
+.documentName {
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.counter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--spacing-1);
+}
+
+.counterValue {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-semibold);
+}
+
+.counterLabel {
+  padding: 0 var(--spacing-0-5);
+  border-radius: var(--radius-xs);
+  text-underline-offset: var(--text-underline-offset);
+}
+
+.counterLabel.removed {
+  background: var(--diff-removed-bg);
+  text-decoration: line-through var(--diff-removed-line);
+}
+
+.counterLabel.added {
+  background: var(--diff-added-bg);
+  text-decoration: underline var(--diff-added-line) var(--border-width-strong);
+}
+
+.counterLabel.modified {
+  background: var(--diff-changed-bg);
+  outline: var(--border-width) dashed var(--diff-changed-outline);
+}
+
+.counterLabel.moved {
+  outline: var(--border-width) dashed var(--diff-moved-line);
+}
+
+.ignoreLabel,
+.listCount,
+.legend,
+.intro,
+.legendNote,
+.itemLocation,
+.cellSource {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.versions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--size-compare-aside);
+  min-height: 0;
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) var(--size-minimap);
+  min-height: 0;
+}
+
+.panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  border-right: var(--border-width) solid var(--color-border-default);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-bottom: var(--border-width) solid var(--color-border-default);
+  background: var(--color-background-subtle);
+}
+
+.legend {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.panelBody {
+  overflow: auto;
+  padding: var(--spacing-4) var(--spacing-5);
+  background: var(--color-background-surface);
+  font-family: var(--font-family-serif);
+  font-size: var(--font-size-emphasis);
+  line-height: var(--line-height-reading);
+}
+
+.paragraph,
+.movedParagraph {
+  margin: 0 0 var(--spacing-3);
+}
+
+.movedParagraph {
+  padding-left: var(--spacing-2-5);
+  border-left: var(--border-width-strong) dashed var(--diff-moved-line);
+}
+
+.movedNote {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-action-text);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-caption);
+  cursor: pointer;
+}
+
+.markTarget {
+  cursor: pointer;
+}
+
+.markNumber {
+  color: var(--color-text-tertiary);
+}
+
+.minimap {
+  position: relative;
+  background: var(--color-background-subtle);
+}
+
+.minimapViewport {
+  position: absolute;
+  inset-inline: 0;
+  border: var(--border-width) solid var(--color-border-strong);
+  background: var(--color-background-surface);
+}
+
+.minimapMark {
+  position: absolute;
+  left: var(--spacing-0-5);
+  right: var(--spacing-0-5);
+  height: var(--size-minimap-mark);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+}
+
+.minimapMark.removed {
+  background: var(--diff-removed-line);
+}
+
+.minimapMark.added {
+  background: var(--diff-added-line);
+}
+
+.minimapMark.modified {
+  background: var(--diff-changed-outline);
+}
+
+.minimapMark.moved {
+  height: var(--size-minimap-mark-moved);
+  background: var(--color-text-secondary);
+}
+
+.minimapSelected {
+  left: 0;
+  right: 0;
+  outline: var(--border-width-strong) solid var(--diff-selected-outline);
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+  border-left: var(--border-width) solid var(--color-border-strong);
+  background: var(--color-background-surface);
+}
+
+.listPanel,
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2-5);
+  padding: var(--spacing-3) var(--spacing-4);
+}
+
+.detail {
+  border-top: var(--border-width) solid var(--color-border-default);
+}
+
+.listHeader {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+}
+
+.listTitle,
+.detailTitle {
+  margin: 0;
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-heading);
+}
+
+.listHint {
+  margin-left: auto;
+  color: var(--color-text-tertiary);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-1-5);
+}
+
+.chip {
+  min-height: var(--size-control-sm);
+  padding: 0 var(--spacing-2-5);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-background-surface);
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: var(--font-size-caption);
+  cursor: pointer;
+}
+
+.chipActive {
+  border-color: var(--chip-filter-active-border);
+  background: var(--chip-filter-active-bg);
+  color: var(--chip-filter-active-fg);
+}
+
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--spacing-2);
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-1);
+  border: 0;
+  border-bottom: var(--border-width) solid var(--color-border-default);
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.item:hover {
+  background: var(--alert-row-hover-bg);
+}
+
+.itemSelected,
+.rowSelected {
+  background: var(--chip-filter-active-bg);
+  box-shadow: var(--compare-selected-row-shadow);
+}
+
+.itemNumber {
+  color: var(--color-text-tertiary);
+}
+
+.itemBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5);
+  min-width: 0;
+}
+
+.itemKind,
+.detailKind {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.itemKind.removed {
+  color: var(--color-risk-high);
+}
+
+.itemKind.added {
+  color: var(--color-action-text);
+}
+
+.itemKind.modified {
+  color: var(--color-risk-medium);
+}
+
+.itemKind.moved {
+  color: var(--color-text-secondary);
+}
+
+.itemValues {
+  overflow: hidden;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.before {
+  text-decoration: line-through var(--diff-removed-line);
+}
+
+.after {
+  text-decoration: underline var(--diff-added-line);
+  text-underline-offset: var(--text-underline-offset);
+}
+
+.itemStatus {
+  color: var(--color-action-text);
+  font-size: var(--font-size-caption);
+}
+
+.emptyList {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.detailValues {
+  display: grid;
+  gap: var(--spacing-2);
+  margin: 0;
+}
+
+.detailValue {
+  display: grid;
+  gap: var(--spacing-0-5);
+}
+
+.detailValue dt {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.detailValue dd {
+  margin: 0;
+  font-family: var(--font-family-mono);
+  overflow-wrap: anywhere;
+}
+
+.saved {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  color: var(--color-action-text);
+  font-size: var(--font-size-caption);
+}
+
+.link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-action-text);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tableWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  min-height: 0;
+  overflow: auto;
+  padding: var(--spacing-4) var(--spacing-5);
+}
+
+.intro,
+.legendNote {
+  margin: 0;
+}
+
+.table,
+.matrix {
+  display: grid;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+}
+
+.tableRow {
+  display: contents;
+}
+
+.tableHead {
+  overflow: hidden;
+  padding: var(--spacing-2) var(--spacing-3);
+  background: var(--color-background-subtle);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tableBodyRow > * {
+  border-top: var(--border-width) solid var(--color-border-default);
+  cursor: pointer;
+}
+
+.dataCell,
+.cell,
+.cellMissing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5);
+  padding: var(--spacing-2) var(--spacing-3);
+}
+
+.dataName {
+  font-weight: var(--font-weight-medium);
+}
+
+.cellValue {
+  font-family: var(--font-family-mono);
+}
+
+.cellOdd .cellValue {
+  color: var(--color-risk-high);
+  font-weight: var(--font-weight-semibold);
+}
+
+.cellMissing {
+  color: var(--color-text-tertiary);
+}
+
+.matrixCell,
+.matrixSame {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5);
+  min-height: var(--size-control-xl);
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 0;
+  border-top: var(--border-width) solid var(--color-border-default);
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  text-align: start;
+}
+
+.matrixCell {
+  cursor: pointer;
+}
+
+.matrixSame {
+  background: var(--color-background-subtle);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.matrixCount {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-semibold);
+}
+
+.matrixLabel,
+.matrixClean {
+  font-size: var(--font-size-caption);
+}
+
+.matrixClean {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  color: var(--color-action-text);
+}
+
+.pairNames {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.pairRows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1-5);
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  list-style: none;
+}
+
+.start {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  max-width: var(--size-readable-wide);
+}
+
+.progressLabel {
+  font-weight: var(--font-weight-semibold);
+}

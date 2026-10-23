@@ -20,7 +20,8 @@
     "collapse": "Collapse",
     "expand": "Expand",
     "localAnalysis": "Analyzed locally on this computer",
-    "activeSession": "Active session"
+    "activeSession": "Active session",
+    "compare": "Compare"
   },
   "topbar": {
     "session": "Session",
@@ -118,7 +119,8 @@
   "home": {
     "title": "No reviews yet",
     "description": "Load the documents you are about to send or sign. ARGUS compares them with each other and shows you the differences before you finish.",
-    "note": "Files are analyzed on this computer."
+    "note": "Files are analyzed on this computer.",
+    "compareVersions": "Compare two versions"
   },
   "engineUnavailable": {
     "what": "The analysis engine is not responding.",
@@ -633,6 +635,125 @@
     "feedback": {
       "one": "In previous reviews you marked {errors} of {count} similar alert as an error.",
       "other": "In previous reviews you marked {errors} of {count} similar alerts as an error."
+    }
+  },
+  "comparison": {
+    "title": "Compare documents",
+    "modes": {
+      "label": "Comparison mode",
+      "versions": "Compare versions",
+      "inconsistencies": "Find inconsistencies",
+      "matrix": "Matrix"
+    },
+    "crumb": {
+      "versions": "{first} versus {second}",
+      "inconsistencies": "Inconsistencies between documents",
+      "matrix": "Matrix of {count} documents"
+    },
+    "sideA": "A",
+    "sideB": "B",
+    "counters": {
+      "removed": {
+        "one": "missing",
+        "other": "missing"
+      },
+      "added": {
+        "one": "added",
+        "other": "added"
+      },
+      "modified": {
+        "one": "changed",
+        "other": "changed"
+      },
+      "moved": {
+        "one": "moved",
+        "other": "moved"
+      }
+    },
+    "ignore": {
+      "label": "Ignore",
+      "case": "case",
+      "punctuation": "punctuation",
+      "format": "formatting"
+    },
+    "panel": {
+      "legendFirst": "strikethrough = missing in B",
+      "legendSecond": "underline = added",
+      "moved": "Moved: in {side} it is at {location}"
+    },
+    "minimap": "Change map",
+    "kind": {
+      "removed": "Missing",
+      "added": "Added",
+      "modified": "Changed",
+      "moved": "Moved"
+    },
+    "types": {
+      "all": "All",
+      "removed": "Missing",
+      "added": "Added",
+      "modified": "Changed",
+      "moved": "Moved"
+    },
+    "list": {
+      "title": "Changes",
+      "count": "{visible} of {total}",
+      "navigate": "J K to navigate",
+      "importantOnly": "Important changes only: numbers, dates, names and negations",
+      "empty": "No changes match these filters."
+    },
+    "detail": {
+      "empty": "—",
+      "saved": "Saved: {decision}",
+      "removedTitle": "This text is missing in B",
+      "addedTitle": "This text was added in B",
+      "modifiedTitle": "The text changed between A and B",
+      "movedTitle": "This text moved",
+      "inA": "In A",
+      "inB": "In B"
+    },
+    "decided": "Change {number} marked as “{decision}”.",
+    "unrelated": {
+      "what": "These versions cannot be compared.",
+      "why": "Less than 20% of the text matches; they look like different documents.",
+      "todo": "Use “Find inconsistencies” to cross-check their data.",
+      "action": "Change mode"
+    },
+    "inconsistencies": {
+      "intro": "{data} data points that do not match, searched in {documents} documents. There is no confirmed case data yet.",
+      "data": "Data",
+      "noConfirmed": "No confirmed value",
+      "notFound": "Not present",
+      "odd": "Does not match",
+      "legend": "≠ marks the value that does not match most documents.",
+      "emptyTitle": "No inconsistencies found",
+      "emptyDescription": "The documents match in identifiers, amounts, dates, names and periods."
+    },
+    "matrix": {
+      "label": "Difference matrix",
+      "intro": "{documents} documents · {pairs} pairs · {different} pairs with differences. Select a cell to see the pair.",
+      "axis": "Rows × columns",
+      "same": "same document",
+      "noDifferences": "no differences",
+      "changes": {
+        "one": "change",
+        "other": "changes"
+      },
+      "selectedPair": "Selected pair",
+      "versus": "versus",
+      "open": "Open the pair"
+    },
+    "start": {
+      "title": "Choose two or more documents",
+      "description": "Two to compare versions; three or more for the matrix.",
+      "note": "PDF, DOCX, XLSX, EML or text. They are analyzed on this computer.",
+      "choose": "Choose documents",
+      "reading": "Reading {done} of {total} files",
+      "aligning": "Aligning {count} versions…",
+      "pairs": "Comparing pair {done} of {total}…",
+      "failedWhat": "The documents could not be compared.",
+      "failedWhy": "The analysis engine did not respond or stopped.",
+      "failedTodo": "Choose the documents again to retry."
     }
   }
 }

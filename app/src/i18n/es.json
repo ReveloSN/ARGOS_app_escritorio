@@ -20,7 +20,8 @@
     "collapse": "Contraer",
     "expand": "Expandir",
     "localAnalysis": "Análisis local en este equipo",
-    "activeSession": "Sesión activa"
+    "activeSession": "Sesión activa",
+    "compare": "Comparar"
   },
   "topbar": {
     "session": "Sesión",
@@ -118,7 +119,8 @@
   "home": {
     "title": "Todavía no hay revisiones",
     "description": "Cargue los documentos que va a enviar o firmar. ARGUS los compara entre sí y le muestra las diferencias antes de que finalice.",
-    "note": "Los archivos se analizan en este equipo."
+    "note": "Los archivos se analizan en este equipo.",
+    "compareVersions": "Comparar dos versiones"
   },
   "engineUnavailable": {
     "what": "El motor de análisis no responde.",
@@ -633,6 +635,125 @@
     "feedback": {
       "one": "En revisiones anteriores marcó como error {errors} de {count} alerta parecida.",
       "other": "En revisiones anteriores marcó como error {errors} de {count} alertas parecidas."
+    }
+  },
+  "comparison": {
+    "title": "Comparar documentos",
+    "modes": {
+      "label": "Modo de comparación",
+      "versions": "Comparar versiones",
+      "inconsistencies": "Buscar inconsistencias",
+      "matrix": "Matriz"
+    },
+    "crumb": {
+      "versions": "{first} frente a {second}",
+      "inconsistencies": "Inconsistencias entre documentos",
+      "matrix": "Matriz de {count} documentos"
+    },
+    "sideA": "A",
+    "sideB": "B",
+    "counters": {
+      "removed": {
+        "one": "falta",
+        "other": "faltan"
+      },
+      "added": {
+        "one": "agregada",
+        "other": "agregadas"
+      },
+      "modified": {
+        "one": "cambiada",
+        "other": "cambiadas"
+      },
+      "moved": {
+        "one": "movida",
+        "other": "movidas"
+      }
+    },
+    "ignore": {
+      "label": "Ignorar",
+      "case": "mayúsculas",
+      "punctuation": "puntuación",
+      "format": "formato"
+    },
+    "panel": {
+      "legendFirst": "tachado = falta en B",
+      "legendSecond": "subrayado = agregado",
+      "moved": "Movido: en {side} está en {location}"
+    },
+    "minimap": "Minimapa de cambios",
+    "kind": {
+      "removed": "Falta",
+      "added": "Agregado",
+      "modified": "Cambiado",
+      "moved": "Movido"
+    },
+    "types": {
+      "all": "Todos",
+      "removed": "Faltan",
+      "added": "Agregadas",
+      "modified": "Cambiadas",
+      "moved": "Movidas"
+    },
+    "list": {
+      "title": "Cambios",
+      "count": "{visible} de {total}",
+      "navigate": "J K para navegar",
+      "importantOnly": "Solo cambios importantes: números, fechas, nombres y negaciones",
+      "empty": "Ningún cambio con estos filtros."
+    },
+    "detail": {
+      "empty": "—",
+      "saved": "Se guardó: {decision}",
+      "removedTitle": "Este texto falta en B",
+      "addedTitle": "Este texto se agregó en B",
+      "modifiedTitle": "El texto cambió entre A y B",
+      "movedTitle": "Este texto cambió de lugar",
+      "inA": "En A",
+      "inB": "En B"
+    },
+    "decided": "Cambio {number} marcado como «{decision}».",
+    "unrelated": {
+      "what": "No se pueden comparar estas versiones.",
+      "why": "Coinciden menos del 20 % del texto; parecen documentos distintos.",
+      "todo": "Use «Buscar inconsistencias» para cruzar sus datos.",
+      "action": "Cambiar de modo"
+    },
+    "inconsistencies": {
+      "intro": "{data} datos que no coinciden, buscados en {documents} documentos. Todavía no hay datos confirmados del expediente.",
+      "data": "Dato",
+      "noConfirmed": "Sin dato confirmado",
+      "notFound": "No aparece",
+      "odd": "No coincide",
+      "legend": "≠ marca el valor que no coincide con la mayoría de los documentos.",
+      "emptyTitle": "No se encontraron inconsistencias",
+      "emptyDescription": "Los documentos coinciden en identificadores, montos, fechas, nombres y periodos."
+    },
+    "matrix": {
+      "label": "Matriz de diferencias",
+      "intro": "{documents} documentos · {pairs} pares · {different} pares con diferencias. Seleccione una celda para ver el par.",
+      "axis": "Filas × columnas",
+      "same": "mismo documento",
+      "noDifferences": "sin diferencias",
+      "changes": {
+        "one": "cambio",
+        "other": "cambios"
+      },
+      "selectedPair": "Par seleccionado",
+      "versus": "frente a",
+      "open": "Abrir el par"
+    },
+    "start": {
+      "title": "Elija dos o más documentos",
+      "description": "Dos para comparar versiones; tres o más para la matriz.",
+      "note": "PDF, DOCX, XLSX, EML o texto. Se analizan en este equipo.",
+      "choose": "Elegir documentos",
+      "reading": "Leyendo {done} de {total} archivos",
+      "aligning": "Alineando {count} versiones…",
+      "pairs": "Comparando el par {done} de {total}…",
+      "failedWhat": "No se pudieron comparar los documentos.",
+      "failedWhy": "El motor de análisis no respondió o se detuvo.",
+      "failedTodo": "Vuelva a elegir los documentos para intentarlo de nuevo."
     }
   }
 }
