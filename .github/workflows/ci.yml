@@ -40,6 +40,12 @@ jobs:
       - name: Modelo de embeddings
         run: uv run python -m argus.infrastructure.nlp.embedding_model
 
+      # OCR local (ADR 026): en Ubuntu se instala Tesseract con español e inglés para probar el
+      # adaptador real; en Windows lo trae el instalador de ARGUS (Fase 9).
+      - name: Tesseract
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr tesseract-ocr-spa tesseract-ocr-eng
+
       - name: Lint
         run: uv run ruff check .
 
@@ -54,6 +60,7 @@ jobs:
         run: uv run pytest
         env:
           ARGUS_REQUIRE_MODELS: "1"
+          ARGUS_REQUIRE_TESSERACT: ${{ runner.os == 'Linux' && '1' || '' }}
 
       # CLAUDE.md §11: dominio y aplicación con al menos 85 % de cobertura.
       - name: Cobertura de dominio y aplicación
