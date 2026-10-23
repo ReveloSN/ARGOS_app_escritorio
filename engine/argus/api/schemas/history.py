@@ -37,7 +37,7 @@ class HistoryRecordResponse(CamelModel):
     risk: str
     entity_type: str
     first_value: str
-    second_value: str
+    second_value: str | None
     decision: str | None
     correct_side: str | None
     decided_at: datetime | None

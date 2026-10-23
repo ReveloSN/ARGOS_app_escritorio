@@ -26,14 +26,14 @@ class DateExtractor:
 
 def _dates_in(pattern: re.Pattern[str], text: str) -> Iterator[EntityMatch]:
     for match in pattern.finditer(text):
-        parsed = _parse_date(match)
+        parsed = parse_date_match(match)
         if parsed is not None:
             yield EntityMatch(
                 EntityType.DATE, match.group(), parsed.isoformat(), match.start(), match.end()
             )
 
 
-def _parse_date(match: re.Match[str]) -> date | None:
+def parse_date_match(match: re.Match[str]) -> date | None:
     try:
         month = month_number(match.group("month"))
         return date(int(match.group("year")), month, int(match.group("day")))

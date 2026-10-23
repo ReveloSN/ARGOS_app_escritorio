@@ -34,11 +34,10 @@ def _uncovered(
     alerts: Iterable[Alert], covered: set[tuple[EntityType, str]]
 ) -> Iterator[PendingFact]:
     for alert in alerts:
-        values = (alert.first.normalized_value, alert.second.normalized_value)
-        is_covered = any((alert.entity_type, value) in covered for value in values)
-        # Solo cambia la forma de escribirlo: es el mismo valor y no hay nada que elegir.
-        if not is_covered and alert.difference.kind is not DifferenceKind.FORMAT_ONLY:
-            yield PendingFact(
-                alert.entity_type,
-                (alert.first.representative.raw_value, alert.second.representative.raw_value),
-            )
+        second = alert.second
+        is_covered = any((alert.entity_type, value) in covered for value in alert.normalized_values)
+        # Solo cambia la forma de escribirlo, o hay un solo valor: no hay nada que elegir.
+        if second is None or is_covered or alert.difference.kind is DifferenceKind.FORMAT_ONLY:
+            continue
+        values = (alert.first.representative.raw_value, second.representative.raw_value)
+        yield PendingFact(alert.entity_type, values)

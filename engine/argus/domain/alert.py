@@ -59,12 +59,28 @@ class AlertCandidate:
 
 @dataclass(frozen=True)
 class Alert:
-    """Inconsistencia que el usuario debe revisar: ambos valores con su origen, riesgo y confianza."""
+    """Inconsistencia que el usuario debe revisar: los valores con su origen, riesgo y confianza.
+
+    Casi siempre son dos valores que difieren. Algunas verificaciones internas de un documento
+    señalan un solo valor (una fecha imposible, un campo vacío): entonces `second` es None.
+    """
 
     first: AlertSide
-    second: AlertSide
+    second: AlertSide | None
     difference: Difference
     risk: RiskLevel
+
+    def __post_init__(self) -> None:
+        if self.second is not None and self.second.entity_type is not self.first.entity_type:
+            raise InvalidValueError("Los dos valores de una alerta deben ser del mismo tipo.")
+
+    @property
+    def sides(self) -> tuple[AlertSide, ...]:
+        return (self.first,) if self.second is None else (self.first, self.second)
+
+    @property
+    def normalized_values(self) -> frozenset[str]:
+        return frozenset(side.normalized_value for side in self.sides)
 
     @classmethod
     def from_candidate(cls, candidate: AlertCandidate, risk: RiskLevel) -> "Alert":

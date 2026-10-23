@@ -83,3 +83,12 @@ class TestRiskClassifier:
         classifier = RiskClassifier([RiskRule(EntityTypeIs(EntityType.MONEY), RiskLevel.HIGH)])
 
         assert classifier.classify(candidate(EntityType.DATE)) is None
+
+
+def test_a_blank_field_is_medium_risk_even_for_an_amount() -> None:
+    classifier = RiskClassifier(DEFAULT_RISK_RULES)
+
+    assert (
+        classifier.classify(candidate(EntityType.MONEY, DifferenceKind.BLANK_FIELD))
+        is RiskLevel.MEDIUM
+    )

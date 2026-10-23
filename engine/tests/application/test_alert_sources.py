@@ -17,7 +17,7 @@ from argus.domain.feedback import FeedbackCount, FeedbackCounts
 from argus.domain.preferences import ComparedCategory, UserPreferences
 from argus.domain.risk import RiskLevel
 from tests.application.in_memory_repositories import InMemoryPreferencesRepository
-from tests.domain.alert_builders import candidate
+from tests.domain.alert_builders import candidate, second_side
 
 CONTRACT = Alert.from_candidate(candidate(EntityType.CONTRACT_ID), RiskLevel.HIGH)
 NAME = Alert.from_candidate(candidate(EntityType.PERSON_NAME, confidence=0.8), RiskLevel.MEDIUM)
@@ -75,7 +75,7 @@ def test_types_that_are_not_compared_are_left_out() -> None:
 
 
 def test_the_same_pair_found_twice_counts_once_in_either_order() -> None:
-    swapped = Alert(CONTRACT.second, CONTRACT.first, CONTRACT.difference, CONTRACT.risk)
+    swapped = Alert(second_side(CONTRACT), CONTRACT.first, CONTRACT.difference, CONTRACT.risk)
 
     assert list(unique_alerts([CONTRACT, swapped, MONEY])) == [CONTRACT, MONEY]
 

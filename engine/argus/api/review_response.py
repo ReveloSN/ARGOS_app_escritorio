@@ -88,16 +88,17 @@ def _explanation(explanation: Explanation) -> list[ExplanationPartResponse]:
 def alert_response(item: NumberedAlert, explanation: Explanation) -> AlertResponse:
     alert = item.alert
     first_raw = alert.first.representative.raw_value
-    second_raw = alert.second.representative.raw_value
+    second_raw = None if alert.second is None else alert.second.representative.raw_value
+    positions = () if second_raw is None else differing_positions(first_raw, second_raw)
     return AlertResponse(
         number=item.number,
         risk=alert.risk,
         entity_type=alert.entity_type,
         difference_kind=alert.difference.kind,
         confidence=alert.confidence,
-        highlight_positions=list(differing_positions(first_raw, second_raw)),
+        highlight_positions=list(positions),
         first=_side(alert.first),
-        second=_side(alert.second),
+        second=None if alert.second is None else _side(alert.second),
         explanation=_explanation(explanation),
     )
 

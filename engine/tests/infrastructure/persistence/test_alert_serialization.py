@@ -55,3 +55,14 @@ def test_serialized_alert_keeps_accents_readable() -> None:
     )
 
     assert "«…Contrato" in alert_to_json(alert)
+
+
+def test_a_single_value_alert_survives_a_round_trip() -> None:
+    alert = Alert(
+        AlertSide((contract_entity("____", LineLocation(2)),)),
+        None,
+        Difference(DifferenceKind.BLANK_FIELD, 0.9),
+        RiskLevel.MEDIUM,
+    )
+
+    assert alert_from_json(alert_to_json(alert)) == alert

@@ -10,6 +10,7 @@ from argus.domain.entity_index import EntityIndex
 from argus.domain.risk import RiskLevel
 from argus.domain.risk_rules import DEFAULT_RISK_RULES, RiskClassifier
 from tests.application.analysis_builders import context_with, found, text_document
+from tests.domain.alert_builders import second_side
 
 RATES = text_document("Anexo_2_tarifas.xlsx", "Tarifas mayo 2026", "Canon $ 18.450.000")
 NOTES = text_document("notas.txt", "Informe de gestión de junio 2026")
@@ -47,7 +48,10 @@ def test_email_citing_another_period_than_its_attachment_is_a_high_alert() -> No
 
     assert alert.difference.kind is DifferenceKind.REFERENCED_PERIOD
     assert alert.risk is RiskLevel.HIGH
-    assert (alert.first.normalized_value, alert.second.normalized_value) == ("XXXX-06", "2026-05")
+    assert (alert.first.normalized_value, second_side(alert).normalized_value) == (
+        "XXXX-06",
+        "2026-05",
+    )
     assert alert.confidence == pytest.approx(0.85)
     text, excerpts = similarity.compared[0]
     assert text.startswith("Anexo 2 tarifas Tarifas mayo 2026")

@@ -9,16 +9,8 @@ from argus.domain.confirmed_fact import ConfirmedFact
 from argus.domain.entity import Entity, EntityType
 from argus.domain.entity_index import EntityIndex
 from argus.domain.risk import RiskLevel
-from argus.domain.risk_rules import RiskClassifier
+from argus.domain.risk_rules import RiskClassifier, TypedDifference
 from argus.domain.suppression import SuppressionRule
-
-
-@dataclass(frozen=True)
-class FactContrast:
-    """Un valor de los documentos frente al confirmado, para clasificar su riesgo."""
-
-    entity_type: EntityType
-    difference: Difference
 
 
 @dataclass(frozen=True)
@@ -100,7 +92,7 @@ class FactChecker:
         rule = self._rule_for(entity_type, frozenset({fact.value.normalized_value, other}))
         if rule is not None:
             return AcceptedByRule(side, rule)
-        risk = self._rules.classifier.classify(FactContrast(entity_type, difference))
+        risk = self._rules.classifier.classify(TypedDifference(entity_type, difference))
         return None if risk is None else FactContradiction(side, difference, risk)
 
     def _rule_for(self, entity_type: EntityType, values: frozenset[str]) -> SuppressionRule | None:

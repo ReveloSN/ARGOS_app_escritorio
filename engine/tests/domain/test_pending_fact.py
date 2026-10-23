@@ -1,9 +1,9 @@
 from argus.domain.alert import Alert
-from argus.domain.comparison.difference import DifferenceKind
+from argus.domain.comparison.difference import Difference, DifferenceKind
 from argus.domain.entity import EntityType
 from argus.domain.pending_fact import PendingFact, pending_facts
 from argus.domain.risk import RiskLevel
-from tests.domain.alert_builders import candidate
+from tests.domain.alert_builders import candidate, side
 from tests.domain.fact_builders import CONFIRMED, fact
 
 CONTRACT_ALERT = Alert.from_candidate(candidate(EntityType.CONTRACT_ID), RiskLevel.HIGH)
@@ -35,3 +35,14 @@ def test_the_same_pair_is_pending_once_and_format_differences_never() -> None:
     pending = pending_facts([CONTRACT_ALERT, CONTRACT_ALERT, format_only], [])
 
     assert [item.entity_type for item in pending] == [EntityType.CONTRACT_ID]
+
+
+def test_a_single_value_alert_has_nothing_to_choose() -> None:
+    blank = Alert(
+        side(EntityType.MONEY, "$ ____"),
+        None,
+        Difference(DifferenceKind.BLANK_FIELD, 0.9),
+        RiskLevel.MEDIUM,
+    )
+
+    assert pending_facts([blank], []) == ()

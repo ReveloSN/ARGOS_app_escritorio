@@ -18,6 +18,12 @@ class DifferenceKind(StrEnum):
     OUT_OF_PATTERN = "out_of_pattern"
     # Fase 7: el mismo monto con otra escala («18.450.000» frente a «184.500.000»).
     MAGNITUDE = "magnitude"
+    # Verificaciones internas de un documento (plan v0.1, Fase 4; ADR 022).
+    AMOUNT_IN_WORDS = "amount_in_words"
+    TOTAL_MISMATCH = "total_mismatch"
+    DATE_ORDER = "date_order"
+    IMPOSSIBLE_DATE = "impossible_date"
+    BLANK_FIELD = "blank_field"
 
 
 @dataclass(frozen=True)

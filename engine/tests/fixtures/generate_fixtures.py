@@ -149,6 +149,15 @@ def build_remission_email(rates: bytes) -> bytes:
     return message.as_bytes()
 
 
+# Verificaciones internas (ADR 022): cifra en letras distinta, fecha imposible y campo vacío.
+DRAFT_TEXT = (
+    "Borrador del Contrato No. 4857\n"
+    "Canon mensual de $ 18.450.000 (dieciocho millones quinientos cuarenta mil pesos m/cte).\n"
+    "Fecha de entrega: 31/02/2026.\n"
+    "Depósito en garantía: $ ________\n"
+)
+
+
 def write_office_and_text_fixtures() -> None:
     rates = build_rates_xlsx()
     (FIXTURES_DIR / "Anexo_1_condiciones.docx").write_bytes(build_annex_docx())
@@ -156,6 +165,7 @@ def write_office_and_text_fixtures() -> None:
     (FIXTURES_DIR / "Correo_remision_cliente.eml").write_bytes(build_remission_email(rates))
     (FIXTURES_DIR / "notas_utf8.txt").write_bytes(NOTES_TEXT.encode("utf-8"))
     (FIXTURES_DIR / "notas_windows.txt").write_bytes(NOTES_TEXT.encode("cp1252"))
+    (FIXTURES_DIR / "Borrador_contrato.txt").write_bytes(DRAFT_TEXT.encode("utf-8"))
     (FIXTURES_DIR / "danado.docx").write_bytes(b"PK no es un docx")
     (FIXTURES_DIR / "danado.xlsx").write_bytes(b"PK no es un xlsx")
 

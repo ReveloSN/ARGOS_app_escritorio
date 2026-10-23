@@ -56,7 +56,8 @@ class AlertResponse(CamelModel):
     # Posiciones distintas entre los dos valores tal como están escritos; vacío si miden distinto.
     highlight_positions: list[int]
     first: AlertSideResponse
-    second: AlertSideResponse
+    # Sin segundo valor en las verificaciones de un solo dato (fecha imposible, campo vacío).
+    second: AlertSideResponse | None
     explanation: list[ExplanationPartResponse]
 
 

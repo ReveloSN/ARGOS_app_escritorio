@@ -54,9 +54,7 @@ def rank_alerts(alerts: Iterable[Alert]) -> tuple[Alert, ...]:
 
 
 def _alert_key(alert: Alert) -> AlertKey:
-    return alert.entity_type, frozenset(
-        {alert.first.normalized_value, alert.second.normalized_value}
-    )
+    return alert.entity_type, alert.normalized_values
 
 
 def unique_alerts(alerts: Iterable[Alert]) -> Iterable[Alert]:

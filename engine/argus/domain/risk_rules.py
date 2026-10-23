@@ -21,6 +21,15 @@ class ValueContrast(Protocol):
     def difference(self) -> Difference: ...
 
 
+@dataclass(frozen=True)
+class TypedDifference:
+    """Un tipo de dato y una diferencia, sin los valores: basta para clasificar el riesgo de un
+    valor frente a un dato confirmado o de una verificación de un solo valor."""
+
+    entity_type: EntityType
+    difference: Difference
+
+
 class EntityTypeIs(Specification[ValueContrast]):
     def __init__(self, *entity_types: EntityType) -> None:
         self._entity_types = frozenset(entity_types)
@@ -48,6 +57,8 @@ NameMismatch = EntityTypeIs(EntityType.PERSON_NAME, EntityType.ORGANIZATION_NAME
 PeriodMismatch = EntityTypeIs(EntityType.PERIOD) & ~FormatOnly
 # Un correo que remite un adjunto de otro periodo es el caso guía de CLAUDE.md §1: riesgo alto.
 ReferencedPeriod = DifferenceIs(DifferenceKind.REFERENCED_PERIOD)
+# Un campo sin llenar no es un valor equivocado: hay que completarlo antes de enviar.
+BlankField = DifferenceIs(DifferenceKind.BLANK_FIELD)
 
 
 @dataclass(frozen=True)
@@ -84,6 +95,7 @@ class RiskClassifier(RuleChainClassifier[ValueContrast]):
 # El formato va primero: una diferencia solo de formato nunca es de riesgo alto.
 DEFAULT_RISK_RULES: tuple[RiskRule, ...] = (
     RiskRule(FormatOnly, RiskLevel.LOW),
+    RiskRule(BlankField, RiskLevel.MEDIUM),
     RiskRule(IdentifierMismatch | AmountMismatch | DateMismatch | ReferencedPeriod, RiskLevel.HIGH),
     RiskRule(NameMismatch | PeriodMismatch, RiskLevel.MEDIUM),
 )

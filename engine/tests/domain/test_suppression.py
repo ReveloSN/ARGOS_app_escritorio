@@ -8,13 +8,13 @@ from argus.domain.entity import EntityType
 from argus.domain.errors import InvalidValueError
 from argus.domain.risk import RiskLevel
 from argus.domain.suppression import SuppressedCase, SuppressionRule
-from tests.domain.alert_builders import candidate, side
+from tests.domain.alert_builders import candidate, second_side, side
 
 CONTRACT_ALERT = Alert.from_candidate(candidate(EntityType.CONTRACT_ID), RiskLevel.HIGH)
 
 
 def swapped(alert: Alert) -> Alert:
-    return Alert(alert.second, alert.first, alert.difference, alert.risk)
+    return Alert(second_side(alert), alert.first, alert.difference, alert.risk)
 
 
 def test_case_from_an_alert_stores_both_values_in_a_fixed_order() -> None:
@@ -59,3 +59,17 @@ def test_matches_a_pair_of_values_in_any_order() -> None:
 
     assert case.matches_values(EntityType.CONTRACT_ID, frozenset({"4857", "4587"}))
     assert not case.matches_values(EntityType.TAX_ID, frozenset({"4857", "4587"}))
+
+
+def test_a_single_value_alert_cannot_be_silenced_as_a_pair() -> None:
+    blank = Alert(
+        side(EntityType.MONEY, "$ ____"),
+        None,
+        Difference(DifferenceKind.BLANK_FIELD, 0.9),
+        RiskLevel.MEDIUM,
+    )
+    case = SuppressedCase(EntityType.MONEY, "$ ____", "COP:1", "$ ____", "$ 1")
+
+    assert not case.matches(blank)
+    with pytest.raises(InvalidValueError):
+        SuppressedCase.from_alert(blank)

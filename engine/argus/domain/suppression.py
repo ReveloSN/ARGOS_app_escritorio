@@ -3,6 +3,7 @@ from datetime import datetime
 
 from argus.domain.alert import Alert
 from argus.domain.entity import EntityType
+from argus.domain.errors import InvalidValueError
 from argus.domain.validation import require_text, require_time_zone
 
 
@@ -24,6 +25,8 @@ class SuppressedCase:
 
     @classmethod
     def from_alert(cls, alert: Alert) -> "SuppressedCase":
+        if alert.second is None:
+            raise InvalidValueError("Solo se deja de alertar un par de valores distintos.")
         first, second = sorted([alert.first, alert.second], key=lambda side: side.normalized_value)
         return cls(
             alert.entity_type,
@@ -34,8 +37,7 @@ class SuppressedCase:
         )
 
     def matches(self, alert: Alert) -> bool:
-        values = {alert.first.normalized_value, alert.second.normalized_value}
-        return self.matches_values(alert.entity_type, frozenset(values))
+        return self.matches_values(alert.entity_type, alert.normalized_values)
 
     def matches_values(self, entity_type: EntityType, values: frozenset[str]) -> bool:
         """El mismo par de valores, en cualquier orden (también un dato del expediente)."""

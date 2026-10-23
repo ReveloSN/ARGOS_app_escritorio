@@ -75,7 +75,7 @@ def _record(record: HistoryRecord) -> HistoryRecordResponse:
         risk=alert.risk,
         entity_type=alert.entity_type,
         first_value=alert.first.representative.raw_value,
-        second_value=alert.second.representative.raw_value,
+        second_value=None if alert.second is None else alert.second.representative.raw_value,
         decision=None if decision is None else decision.kind,
         correct_side=None if decision is None else decision.correct_side,
         decided_at=None if decision is None else decision.decided_at,

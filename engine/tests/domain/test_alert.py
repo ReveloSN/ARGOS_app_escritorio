@@ -5,7 +5,7 @@ from argus.domain.comparison.difference import Difference, DifferenceKind
 from argus.domain.entity import EntityType
 from argus.domain.errors import InvalidValueError
 from argus.domain.risk import RiskLevel
-from tests.domain.alert_builders import candidate, entity, side
+from tests.domain.alert_builders import candidate, entity, second_side, side
 
 
 def test_side_groups_every_occurrence_of_one_value() -> None:
@@ -45,8 +45,29 @@ def test_alert_takes_risk_and_keeps_both_values_with_their_origin() -> None:
     assert alert.confidence == 0.95
     assert alert.entity_type is EntityType.CONTRACT_ID
     assert alert.first.document_names == frozenset({"Contrato_4857_v3.pdf"})
-    assert alert.second.document_names == frozenset({"Anexo_1_condiciones.docx"})
+    assert second_side(alert).document_names == frozenset({"Anexo_1_condiciones.docx"})
 
 
 def test_risk_levels_are_ordered_by_priority() -> None:
     assert RiskLevel.HIGH.priority > RiskLevel.MEDIUM.priority > RiskLevel.LOW.priority
+
+
+def test_an_internal_check_can_point_to_a_single_value() -> None:
+    impossible = side(EntityType.DATE, "31/02/2026", "Contrato.docx", "Anexo.pdf")
+
+    alert = Alert(
+        impossible, None, Difference(DifferenceKind.IMPOSSIBLE_DATE, 0.99), RiskLevel.HIGH
+    )
+
+    assert alert.sides == (impossible,)
+    assert alert.normalized_values == {"31/02/2026"}
+
+
+def test_both_values_must_be_of_the_same_type() -> None:
+    with pytest.raises(InvalidValueError):
+        Alert(
+            side(EntityType.CONTRACT_ID, "4857"),
+            side(EntityType.TAX_ID, "4587"),
+            Difference(DifferenceKind.TRANSPOSITION, 0.9),
+            RiskLevel.HIGH,
+        )

@@ -49,6 +49,11 @@ from argus.domain.document import DocumentFormat
 from argus.domain.preferences import HISTORY_RETENTION
 from argus.domain.risk_rules import DEFAULT_RISK_RULES, RiskClassifier
 from argus.domain.sensitivity import DEFAULT_SENSITIVITY, Sensitivity
+from argus.infrastructure.checks.amount_in_words_source import AmountInWordsSource
+from argus.infrastructure.checks.blank_field_source import BlankFieldSource
+from argus.infrastructure.checks.date_order_source import DateOrderSource
+from argus.infrastructure.checks.impossible_date_source import ImpossibleDateSource
+from argus.infrastructure.checks.total_mismatch_source import TotalMismatchSource
 from argus.infrastructure.extraction.contract_id_extractor import ContractIdExtractor
 from argus.infrastructure.extraction.date_extractor import DateExtractor
 from argus.infrastructure.extraction.money_extractor import MoneyExtractor
@@ -259,6 +264,18 @@ def build_alert_sources(embedder: TextEmbedder | None) -> list[AlertSource]:
         *semantic,
         DateOutlierSource(classifier),
         AmountScaleSource(classifier),
+        *build_internal_checks(classifier),
+    ]
+
+
+def build_internal_checks(classifier: RiskClassifier) -> list[AlertSource]:
+    """Verificaciones dentro de cada documento (ADR 022): cifras, totales, fechas y campos."""
+    return [
+        AmountInWordsSource(classifier),
+        TotalMismatchSource(classifier),
+        DateOrderSource(classifier),
+        ImpossibleDateSource(classifier),
+        BlankFieldSource(classifier),
     ]
 
 

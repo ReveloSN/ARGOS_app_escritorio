@@ -11,6 +11,7 @@ from argus.domain.entity import EntityType
 from argus.domain.risk import RiskLevel
 from argus.domain.risk_rules import DEFAULT_RISK_RULES, RiskClassifier
 from tests.application.analysis_builders import context_with, found
+from tests.domain.alert_builders import second_side
 
 CLASSIFIER = RiskClassifier(DEFAULT_RISK_RULES)
 
@@ -42,7 +43,7 @@ def test_date_outlier_source_creates_a_high_alert_with_the_typical_value() -> No
 
     assert alert.difference.kind is DifferenceKind.OUT_OF_PATTERN
     assert alert.risk is RiskLevel.HIGH
-    assert (alert.first.normalized_value, alert.second.normalized_value) == (
+    assert (alert.first.normalized_value, second_side(alert).normalized_value) == (
         "2026-07-01",
         "2062-07-01",
     )

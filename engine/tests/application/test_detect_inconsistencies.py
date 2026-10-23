@@ -7,7 +7,7 @@ from argus.domain.locations import PageLocation
 from argus.domain.risk import RiskLevel
 from argus.domain.risk_rules import DEFAULT_RISK_RULES, RiskClassifier
 from argus.domain.sensitivity import Sensitivity
-from tests.domain.alert_builders import entity
+from tests.domain.alert_builders import entity, second_side
 
 CONTRACT = "Contrato_4857_v3.pdf"
 ANNEX = "Anexo_1_condiciones.docx"
@@ -45,7 +45,7 @@ def test_contract_4857_against_4587_is_a_high_risk_alert() -> None:
     assert alert.risk is RiskLevel.HIGH
     assert alert.difference.kind is DifferenceKind.TRANSPOSITION
     assert alert.difference.positions == (2, 3)
-    assert {alert.first.normalized_value, alert.second.normalized_value} == {"4857", "4587"}
+    assert {alert.first.normalized_value, second_side(alert).normalized_value} == {"4857", "4587"}
 
 
 def test_value_a_is_the_one_that_appears_most() -> None:

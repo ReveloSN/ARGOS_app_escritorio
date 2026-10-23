@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from typing import Protocol
 
 from argus.application.feedback_confidence import DecisionStatistics
-from argus.domain.alert import Alert
+from argus.domain.alert import Alert, AlertSide
 from argus.domain.comparison.damerau_levenshtein import differing_positions
 from argus.domain.comparison.difference import DifferenceKind
 from argus.domain.feedback import NO_FEEDBACK, FeedbackCounts
@@ -40,20 +40,42 @@ class AlertExplainer(Protocol):
         ...
 
 
-def _first_document(alert: Alert, side: str) -> str:
-    entities = alert.first.entities if side == "first" else alert.second.entities
-    return entities[0].occurrence.document_name
+# Verificaciones dentro de un mismo documento: su primera frase dice qué se revisó.
+INTERNAL_CHECKS = frozenset(
+    {
+        DifferenceKind.AMOUNT_IN_WORDS,
+        DifferenceKind.TOTAL_MISMATCH,
+        DifferenceKind.DATE_ORDER,
+        DifferenceKind.IMPOSSIBLE_DATE,
+        DifferenceKind.BLANK_FIELD,
+    }
+)
+
+
+def _document_of(side: AlertSide | None) -> str:
+    return "" if side is None else side.representative.occurrence.document_name
+
+
+def _value_of(side: AlertSide | None) -> str:
+    return "" if side is None else side.representative.raw_value
 
 
 def lead(alert: Alert) -> ExplanationPart:
-    """Qué documentos citan valores distintos y de qué tipo de dato."""
-    params = {"first": _first_document(alert, "first"), "second": _first_document(alert, "second")}
+    """Qué documentos citan valores distintos y de qué tipo de dato, o qué se verificó."""
+    if alert.difference.kind in INTERNAL_CHECKS:
+        params = {
+            "document": _document_of(alert.first),
+            "first": _value_of(alert.first),
+            "second": _value_of(alert.second),
+        }
+        return ExplanationPart(f"explanation.internal.{alert.difference.kind}", params)
+    params = {"first": _document_of(alert.first), "second": _document_of(alert.second)}
     return ExplanationPart(f"explanation.lead.{alert.entity_type}", params)
 
 
 def _changed_characters(alert: Alert) -> list[str]:
     first = alert.first.representative.raw_value
-    second = alert.second.representative.raw_value
+    second = _value_of(alert.second)
     return [first[position - 1] for position in differing_positions(first, second)]
 
 
@@ -69,8 +91,8 @@ def _character_cause(alert: Alert) -> ExplanationPart:
 def _referenced_cause(alert: Alert) -> ExplanationPart:
     params = {
         "mentioned": alert.first.representative.raw_value,
-        "attached": alert.second.representative.raw_value,
-        "attachment": _first_document(alert, "second"),
+        "attached": _value_of(alert.second),
+        "attachment": _document_of(alert.second),
     }
     return ExplanationPart("explanation.cause.referenced_period", params)
 
@@ -96,9 +118,10 @@ def majority(alert: Alert) -> ExplanationPart | None:
     No aplica al periodo citado en un correo: sus repeticiones son el asunto y el cuerpo del
     mismo mensaje, no documentos que coinciden.
     """
-    if alert.difference.kind is DifferenceKind.REFERENCED_PERIOD:
+    second = alert.second
+    if second is None or alert.difference.kind is DifferenceKind.REFERENCED_PERIOD:
         return None
-    if alert.first.occurrence_count < MIN_REPEATED or alert.second.occurrence_count != 1:
+    if alert.first.occurrence_count < MIN_REPEATED or second.occurrence_count != 1:
         return None
     return ExplanationPart("explanation.majority", count=alert.first.occurrence_count)
 

@@ -108,3 +108,20 @@ def test_each_difference_kind_has_its_cause() -> None:
     assert explanations[1][1] == ExplanationPart("explanation.cause.similar_name")
     assert explanations[2][1] == ExplanationPart("explanation.cause.character_change", count=1)
     assert all(len(explanation) == 2 for explanation in explanations)
+
+
+def test_an_internal_check_says_what_was_verified_in_which_document() -> None:
+    impossible = side(EntityType.DATE, "31/02/2026", "Contrato.docx")
+    alert = Alert(
+        impossible, None, Difference(DifferenceKind.IMPOSSIBLE_DATE, 0.99), RiskLevel.HIGH
+    )
+
+    (explanation,) = TemplateAlertExplainer(FixedStatistics()).explain([alert])
+
+    assert explanation == (
+        ExplanationPart(
+            "explanation.internal.impossible_date",
+            {"document": "Contrato.docx", "first": "31/02/2026", "second": ""},
+        ),
+        ExplanationPart("explanation.cause.impossible_date"),
+    )

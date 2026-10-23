@@ -40,7 +40,7 @@ class DifferencePayload(TypedDict):
 
 class AlertPayload(TypedDict):
     first: list[EntityPayload]
-    second: list[EntityPayload]
+    second: list[EntityPayload] | None
     difference: DifferencePayload
     risk: str
 
@@ -68,7 +68,11 @@ LOCATION_BUILDERS: dict[str, Callable[[LocationPayload], SourceLocation]] = {
 def alert_payload(alert: Alert) -> AlertPayload:
     return {
         "first": [_entity_payload(entity) for entity in alert.first.entities],
-        "second": [_entity_payload(entity) for entity in alert.second.entities],
+        "second": (
+            None
+            if alert.second is None
+            else [_entity_payload(entity) for entity in alert.second.entities]
+        ),
         "difference": {
             "kind": alert.difference.kind,
             "confidence": alert.difference.confidence,
@@ -91,7 +95,7 @@ def alert_from_payload(payload: AlertPayload) -> Alert:
     difference = payload["difference"]
     return Alert(
         AlertSide(tuple(_entity(item) for item in payload["first"])),
-        AlertSide(tuple(_entity(item) for item in payload["second"])),
+        _optional_side(payload["second"]),
         Difference(
             DifferenceKind(difference["kind"]),
             difference["confidence"],
@@ -125,6 +129,10 @@ def _entity_payload(entity: Entity) -> EntityPayload:
         "location": location_payload(location),
         "excerpt": entity.occurrence.excerpt,
     }
+
+
+def _optional_side(payload: list[EntityPayload] | None) -> AlertSide | None:
+    return None if payload is None else AlertSide(tuple(_entity(item) for item in payload))
 
 
 def _entity(payload: EntityPayload) -> Entity:

@@ -11,6 +11,7 @@ from argus.domain.alert import Alert
 from argus.domain.comparison.difference import DifferenceKind
 from argus.domain.entity import EntityType
 from argus.domain.risk import RiskLevel
+from tests.domain.alert_builders import second_side
 from tests.infrastructure.conftest import fixture_source
 
 CASE_FILES = ("Contrato_4857_v3.pdf", "Anexo_1_condiciones.docx", "Correo_remision_cliente.eml")
@@ -29,7 +30,7 @@ def summary(alert: Alert) -> tuple[EntityType, RiskLevel, str, str]:
         alert.entity_type,
         alert.risk,
         alert.first.normalized_value,
-        alert.second.normalized_value,
+        second_side(alert).normalized_value,
     )
 
 
@@ -49,7 +50,7 @@ def test_contract_alert_traces_both_values_to_their_files(alerts: tuple[Alert, .
 
     assert contract_alert.difference.kind is DifferenceKind.TRANSPOSITION
     assert contract_alert.first.document_names == frozenset({"Anexo_1_condiciones.docx"})
-    assert contract_alert.second.document_names == frozenset({"Contrato_4857_v3.pdf"})
+    assert second_side(contract_alert).document_names == frozenset({"Contrato_4857_v3.pdf"})
 
 
 def test_rent_value_a_is_the_one_repeated_in_contract_and_email_notes(

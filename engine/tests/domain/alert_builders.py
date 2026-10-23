@@ -1,6 +1,6 @@
 """Constructores de entidades y alertas para las pruebas del dominio y de la aplicación."""
 
-from argus.domain.alert import AlertCandidate, AlertSide
+from argus.domain.alert import Alert, AlertCandidate, AlertSide
 from argus.domain.comparison.difference import Difference, DifferenceKind
 from argus.domain.entity import Entity, EntityType, Occurrence
 from argus.domain.locations import PageLocation
@@ -28,3 +28,9 @@ def candidate(
         side(entity_type, "4587", "Anexo_1_condiciones.docx"),
         Difference(kind, confidence),
     )
+
+
+def second_side(alert: Alert) -> AlertSide:
+    """El segundo valor de una alerta que compara dos (las pruebas lo dan por hecho)."""
+    assert alert.second is not None
+    return alert.second
