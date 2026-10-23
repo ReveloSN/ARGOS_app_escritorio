@@ -9,6 +9,7 @@ from argus.domain.errors import OcrUnavailableError
 EXECUTABLE_ENVIRONMENT = "ARGUS_TESSERACT"
 BUNDLED_FOLDER = "tesseract"
 TESSDATA_FOLDER = "tessdata"
+LIBRARY_FOLDER = "lib"
 LANGUAGES = "spa+eng"
 # Una página de 300 ppp tarda pocos segundos; más de un minuto es un Tesseract colgado.
 PAGE_TIMEOUT_SECONDS = 60
@@ -63,8 +64,15 @@ class TesseractCommand:
         return result.stdout.decode("utf-8", errors="replace")
 
     def _environment(self) -> dict[str, str]:
-        # El Tesseract incluido trae sus idiomas al lado; el del sistema usa los suyos.
+        # El Tesseract incluido trae sus idiomas y, en Linux, sus bibliotecas al lado; el del
+        # sistema usa los suyos.
+        environment = dict(os.environ)
         tessdata = self._executable.parent / TESSDATA_FOLDER
-        if not tessdata.is_dir():
-            return dict(os.environ)
-        return {**os.environ, "TESSDATA_PREFIX": str(tessdata)}
+        if tessdata.is_dir():
+            environment["TESSDATA_PREFIX"] = str(tessdata)
+        libraries = self._executable.parent / LIBRARY_FOLDER
+        if libraries.is_dir():
+            inherited = environment.get("LD_LIBRARY_PATH")
+            paths = [str(libraries), inherited] if inherited else [str(libraries)]
+            environment["LD_LIBRARY_PATH"] = os.pathsep.join(paths)
+        return environment

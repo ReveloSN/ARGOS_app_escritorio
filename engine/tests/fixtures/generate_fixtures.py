@@ -9,6 +9,7 @@ from email.message import EmailMessage
 from io import BytesIO
 from pathlib import Path
 
+import pypdfium2 as pdfium
 from docx import Document as WordDocument
 from openpyxl import Workbook
 from pypdf import PdfWriter
@@ -35,6 +36,16 @@ CONTRACT_PAGES = [
 
 def escape_pdf_text(text: str) -> str:
     return text.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+
+
+SCANNED_ANNEX_LINES = [
+    "ANEXO 4. ACTA DE ENTREGA DE LA BODEGA",
+    "Hace parte del Contrato No. 4587 de arrendamiento.",
+    "Canon mensual: $ 18.450.000",
+]
+# Resolución de un escaneo de oficina: suficiente para el OCR y un archivo liviano.
+SCAN_DPI = 200
+POINTS_PER_INCH = 72
 
 
 def build_content_stream(lines: list[str]) -> bytes:
@@ -91,6 +102,20 @@ def write_pdf_fixtures() -> None:
     scanned.write(FIXTURES_DIR / "anexo_3.pdf")
 
     (FIXTURES_DIR / "danado.pdf").write_bytes(b"%PDF-1.4\nesto no es un PDF completo")
+
+
+def build_scanned_pdf(lines: list[str]) -> bytes:
+    """PDF solo con la imagen de la página, sin capa de texto: como lo entrega un escáner."""
+    page = pdfium.PdfDocument(build_text_pdf([lines]))[0]
+    image = page.render(scale=SCAN_DPI / POINTS_PER_INCH).to_pil().convert("L")
+    output = BytesIO()
+    image.save(output, format="PDF", resolution=SCAN_DPI)
+    return output.getvalue()
+
+
+def write_scanned_fixture() -> None:
+    scanned = build_scanned_pdf(SCANNED_ANNEX_LINES)
+    (FIXTURES_DIR / "Anexo_4_escaneado.pdf").write_bytes(scanned)
 
 
 def build_annex_docx() -> bytes:
@@ -172,4 +197,5 @@ def write_office_and_text_fixtures() -> None:
 
 if __name__ == "__main__":
     write_pdf_fixtures()
+    write_scanned_fixture()
     write_office_and_text_fixtures()

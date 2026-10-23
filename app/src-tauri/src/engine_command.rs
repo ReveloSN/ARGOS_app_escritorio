@@ -6,8 +6,12 @@ const EXIT_ON_STDIN_CLOSE: &str = "--exit-on-stdin-close";
 // Carpetas que tauri.bundle.conf.json copia dentro de los recursos del instalador (ADR 017).
 const BUNDLED_ENGINE_FOLDER: &str = "engine";
 const BUNDLED_MODELS_FOLDER: &str = "models";
+const BUNDLED_TESSERACT_FOLDER: &str = "tesseract";
 const ENGINE_EXECUTABLE: &str = "argus-engine";
+const TESSERACT_EXECUTABLE: &str = "tesseract";
 const MODELS_ENV_VAR: &str = "ARGUS_MODELS_DIR";
+// El OCR local usa el Tesseract incluido en el instalador, con sus idiomas (ADR 027).
+const TESSERACT_ENV_VAR: &str = "ARGUS_TESSERACT";
 
 /// Dónde está el motor: el repositorio en desarrollo o la carpeta empaquetada en la instalación.
 pub enum EngineLocation {
@@ -42,15 +46,20 @@ fn repository_command() -> Command {
     command
 }
 
-/// El ejecutable de PyInstaller con los modelos de embeddings que el instalador copia aparte.
+/// El ejecutable de PyInstaller con los modelos de embeddings y el Tesseract que el instalador
+/// copia aparte.
 fn bundled_command(resources: &Path) -> Command {
     let executable = resources
         .join(BUNDLED_ENGINE_FOLDER)
         .join(format!("{ENGINE_EXECUTABLE}{EXE_SUFFIX}"));
+    let tesseract = resources
+        .join(BUNDLED_TESSERACT_FOLDER)
+        .join(format!("{TESSERACT_EXECUTABLE}{EXE_SUFFIX}"));
     let mut command = Command::new(executable);
     command
         .arg(EXIT_ON_STDIN_CLOSE)
-        .env(MODELS_ENV_VAR, resources.join(BUNDLED_MODELS_FOLDER));
+        .env(MODELS_ENV_VAR, resources.join(BUNDLED_MODELS_FOLDER))
+        .env(TESSERACT_ENV_VAR, tesseract);
     command
 }
 
@@ -79,6 +88,13 @@ mod tests {
         assert!(command.get_args().any(|arg| arg == EXIT_ON_STDIN_CLOSE));
     }
 
+    fn env_value<'a>(command: &'a Command, name: &str) -> Option<&'a OsStr> {
+        command
+            .get_envs()
+            .find(|(key, _)| *key == OsStr::new(name))
+            .and_then(|(_, value)| value)
+    }
+
     #[test]
     fn an_installation_runs_the_bundled_engine_with_its_models() {
         let resources = PathBuf::from("recursos");
@@ -89,10 +105,24 @@ mod tests {
             .join("engine")
             .join(format!("argus-engine{EXE_SUFFIX}"));
         assert_eq!(command.get_program(), executable.as_os_str());
-        let models = command
-            .get_envs()
-            .find(|(name, _)| *name == OsStr::new(MODELS_ENV_VAR))
-            .and_then(|(_, value)| value);
-        assert_eq!(models, Some(resources.join("models").as_os_str()));
+        assert_eq!(
+            env_value(&command, MODELS_ENV_VAR),
+            Some(resources.join("models").as_os_str())
+        );
+    }
+
+    #[test]
+    fn an_installation_reads_scans_with_the_bundled_tesseract() {
+        let resources = PathBuf::from("recursos");
+
+        let command = EngineLocation::Bundled(resources.clone()).command();
+
+        let tesseract = resources
+            .join("tesseract")
+            .join(format!("tesseract{EXE_SUFFIX}"));
+        assert_eq!(
+            env_value(&command, TESSERACT_ENV_VAR),
+            Some(tesseract.as_os_str())
+        );
     }
 }

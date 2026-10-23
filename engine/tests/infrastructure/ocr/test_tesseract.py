@@ -1,3 +1,4 @@
+import os
 import subprocess
 from pathlib import Path
 
@@ -77,6 +78,20 @@ def test_the_bundled_tesseract_uses_its_own_languages(
     TesseractCommand(tmp_path / "tesseract").recognize(b"imagen")
 
     assert run.environments[0]["TESSDATA_PREFIX"] == str(tmp_path / "tessdata")
+
+
+def test_the_bundled_libraries_are_found_before_the_system_ones(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    (tmp_path / "lib").mkdir()
+    monkeypatch.setenv("LD_LIBRARY_PATH", "/usr/lib/sistema")
+    run = RecordingRun(b"texto")
+    monkeypatch.setattr(subprocess, "run", run)
+
+    TesseractCommand(tmp_path / "tesseract").recognize(b"imagen")
+
+    paths = run.environments[0]["LD_LIBRARY_PATH"].split(os.pathsep)
+    assert paths == [str(tmp_path / "lib"), "/usr/lib/sistema"]
 
 
 def test_a_tesseract_that_hangs_is_unavailable(

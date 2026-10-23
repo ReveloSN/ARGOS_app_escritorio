@@ -3,7 +3,8 @@
   "bundle": {
     "resources": {
       "../../engine/dist/argus-engine/": "engine/",
-      "../../engine/models/": "models/"
+      "../../engine/models/": "models/",
+      "../../engine/dist/tesseract/": "tesseract/"
     }
   }
 }
