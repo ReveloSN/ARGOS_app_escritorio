@@ -66,6 +66,23 @@ const TEXT_ON_BACKGROUND: readonly (readonly [string, string])[] = [
   ["--color-risk-medium", "--color-risk-medium-bg"],
   ["--color-risk-low", "--color-risk-low-bg"],
   ["--color-text-inverse", "--color-background-inverse"],
+  ["--color-text-primary", "--diff-added-bg"],
+  ["--color-text-primary", "--diff-changed-bg"],
+  ["--diff-removed-fg", "--diff-removed-bg"],
+];
+
+// WCAG 1.4.11: trazos que comunican algo (marcas de diferencia, el ojo) piden 3:1.
+const MIN_GRAPHIC_CONTRAST = 3;
+const GRAPHIC_ON_BACKGROUND: readonly (readonly [string, string])[] = [
+  ["--diff-removed-line", "--diff-removed-bg"],
+  ["--diff-added-line", "--diff-added-bg"],
+  ["--diff-changed-outline", "--diff-changed-bg"],
+  ["--diff-moved-line", "--color-background-surface"],
+  ["--diff-selected-outline", "--color-background-surface"],
+  ["--eye-accent", "--color-background-surface"],
+  ["--eye-accent", "--color-background-subtle"],
+  ["--eye-alert", "--color-background-surface"],
+  ["--eye-muted", "--color-background-surface"],
 ];
 
 describe.each([
@@ -76,6 +93,12 @@ describe.each([
     const ratio = contrastRatio(resolve(text, theme), resolve(background, theme));
 
     expect(ratio).toBeGreaterThanOrEqual(MIN_TEXT_CONTRAST);
+  });
+
+  it.each(GRAPHIC_ON_BACKGROUND)("%s sobre %s cumple 3:1", (graphic, background) => {
+    const ratio = contrastRatio(resolve(graphic, theme), resolve(background, theme));
+
+    expect(ratio).toBeGreaterThanOrEqual(MIN_GRAPHIC_CONTRAST);
   });
 });
 

@@ -113,8 +113,11 @@
   --size-toggle-width: 32px;
   --size-toggle-height: 18px;
   --size-toggle-thumb: 14px;
-  --size-brand-mark: 18px;
-  --size-brand-dot: 6px;
+  --size-eye-sm: 24px;
+  --size-eye-md: 48px;
+  --size-eye-lg: 128px;
+  --size-reticle-sm: 200px;
+  --size-reticle-lg: 720px;
   --size-step-marker: 20px;
   --size-tab-max: 160px;
   --size-side-panel: 300px;
@@ -141,10 +144,21 @@
   --layer-menu: 5;
   --layer-overlay: 10;
   --layer-toast: 20;
-  --border-width-brand: 1.5px;
+  --border-width-mark: 1.5px;
+  --text-underline-offset: 3px;
+  --outline-offset-mark: 1px;
+  /* Trazo del ojo de ARGUS en unidades de su viewBox de 48: más grueso cuanto más pequeño. */
+  --stroke-width-eye-sm: 3;
+  --stroke-width-eye-md: 2.25;
+  --stroke-width-eye-lg: 1.6;
+  --stroke-dash-eye-error: 4 3;
+  --stroke-dash-reticle-near: 2 6;
+  --stroke-dash-reticle-far: 2 10;
 
   --duration-fast: 150ms;
   --duration-base: 200ms;
   --duration-slow: 250ms;
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  /* Fundidos, salidas y cambios de color (hoja de movimiento). */
+  --easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
 }

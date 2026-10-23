@@ -1,0 +1,31 @@
+.reticle {
+  display: block;
+  flex: none;
+  fill: none;
+  stroke: var(--reticle-stroke);
+  stroke-width: var(--border-width);
+  pointer-events: none;
+}
+
+/* El trazo no se escala con el tamaño: siempre 1 px, como en el mockup. */
+.reticle * {
+  vector-effect: non-scaling-stroke;
+}
+
+.sm {
+  width: var(--size-reticle-sm);
+  height: var(--size-reticle-sm);
+}
+
+.lg {
+  width: var(--size-reticle-lg);
+  height: var(--size-reticle-lg);
+}
+
+.near {
+  stroke-dasharray: var(--stroke-dash-reticle-near);
+}
+
+.far {
+  stroke-dasharray: var(--stroke-dash-reticle-far);
+}

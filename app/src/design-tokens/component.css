@@ -41,6 +41,22 @@
   --decision-selected-bg: var(--color-action-subtle);
   --decision-selected-border: var(--color-action-primary);
 
+  /* Marcas de diferencia en el texto: cada tipo tiene una forma propia, no solo un color. */
+  --diff-removed-bg: var(--color-risk-high-bg);
+  --diff-removed-fg: var(--color-risk-high);
+  --diff-removed-line: var(--color-risk-high);
+  --diff-added-bg: var(--color-action-subtle);
+  --diff-added-line: var(--color-action-primary);
+  --diff-changed-bg: var(--color-risk-medium-bg);
+  --diff-changed-outline: var(--color-risk-medium);
+  --diff-moved-line: var(--color-action-primary);
+  --diff-selected-outline: var(--color-action-primary);
+
+  --eye-accent: var(--color-action-text);
+  --eye-alert: var(--color-risk-high);
+  --eye-muted: var(--color-text-tertiary);
+  --reticle-stroke: var(--color-border-strong);
+
   --toast-bg: var(--color-background-inverse);
   --toast-fg: var(--color-text-inverse);
 

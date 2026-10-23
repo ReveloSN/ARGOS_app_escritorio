@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "../../test/renderWithProviders";
-import { BrandMark } from "./BrandMark";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
 import { Kbd } from "./Kbd";
@@ -73,13 +72,5 @@ describe("Kbd", () => {
 
     expect(screen.getByText("⌘ Z")).toBeInTheDocument();
     userAgent.mockRestore();
-  });
-});
-
-describe("BrandMark", () => {
-  it("es decorativo y no anuncia texto", () => {
-    const { container } = renderWithProviders(<BrandMark />);
-
-    expect(container.firstElementChild).toHaveAttribute("aria-hidden", "true");
   });
 });

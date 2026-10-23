@@ -1,0 +1,50 @@
+.eye {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+.sm {
+  width: var(--size-eye-sm);
+  height: var(--size-eye-sm);
+  stroke-width: var(--stroke-width-eye-sm);
+}
+
+.md {
+  width: var(--size-eye-md);
+  height: var(--size-eye-md);
+  stroke-width: var(--stroke-width-eye-md);
+}
+
+.lg {
+  width: var(--size-eye-lg);
+  height: var(--size-eye-lg);
+  stroke-width: var(--stroke-width-eye-lg);
+}
+
+.accent {
+  color: var(--eye-accent);
+}
+
+.alert {
+  color: var(--eye-alert);
+}
+
+.muted {
+  color: var(--eye-muted);
+}
+
+.stroke {
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dashed {
+  stroke-dasharray: var(--stroke-dash-eye-error);
+}
+
+.pupil {
+  fill: currentcolor;
+}

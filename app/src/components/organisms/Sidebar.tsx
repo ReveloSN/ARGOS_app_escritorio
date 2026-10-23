@@ -1,5 +1,5 @@
 import { useI18n } from "../../i18n/i18nContext";
-import { BrandMark } from "../atoms/BrandMark";
+import { ArgusEye } from "../atoms/ArgusEye";
 import { Button } from "../atoms/Button";
 import { Icon } from "../atoms/Icon";
 import { Kbd } from "../atoms/Kbd";
@@ -35,7 +35,8 @@ export function Sidebar(props: SidebarProps) {
       className={props.collapsed ? styles.collapsed : styles.expanded}
     >
       <div className={styles.brand}>
-        <BrandMark />
+        {/* Contraída no se ve el nombre: entonces el logo lo anuncia. */}
+        <ArgusEye state="logo" label={props.collapsed ? t("app.name") : undefined} />
         {!props.collapsed && <span className={styles.name}>{t("app.name")}</span>}
       </div>
       <SectionList {...props} />

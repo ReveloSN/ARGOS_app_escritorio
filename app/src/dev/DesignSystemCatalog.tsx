@@ -1,8 +1,12 @@
 import { useState, type ReactNode } from "react";
 
+import { ArgusEye } from "../components/atoms/ArgusEye";
 import { Button } from "../components/atoms/Button";
 import { DecisionTag } from "../components/atoms/DecisionTag";
+import { DiffMark } from "../components/atoms/DiffMark";
+import { EYE_SHAPES, type EyeState } from "../components/atoms/eyeShapes";
 import { ProgressBar } from "../components/atoms/ProgressBar";
+import { ReticleMotif } from "../components/atoms/ReticleMotif";
 import { RiskTag } from "../components/atoms/RiskTag";
 import { EmptyState } from "../components/molecules/EmptyState";
 import { ErrorMessage } from "../components/molecules/ErrorMessage";
@@ -18,6 +22,7 @@ import * as samples from "./catalogSamples";
 import styles from "./DesignSystemCatalog.module.css";
 
 const IGNORE = () => undefined;
+const EYE_STATES = Object.keys(EYE_SHAPES) as EyeState[];
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -62,6 +67,25 @@ export function DesignSystemCatalog() {
           <DecisionTag state="ignored" />
         </div>
         <ProgressBar value={0.64} label={t("engine.status.analyzing", { done: 3, total: 5 })} />
+      </Section>
+      <Section title="Identidad">
+        <div className={styles.row}>
+          {EYE_STATES.map((state) => (
+            <ArgusEye key={state} state={state} size="md" label={state} />
+          ))}
+        </div>
+        <div className={styles.row}>
+          <ArgusEye state="reading" size="lg" label="reading" />
+          <ReticleMotif size="sm" />
+        </div>
+        <p className={styles.row}>
+          <DiffMark kind="removed">{"podrá terminar"}</DiffMark>
+          <DiffMark kind="added">{"no podrá terminar"}</DiffMark>
+          <DiffMark kind="changed">{"$ 18.540.000"}</DiffMark>
+          <DiffMark kind="changed" isSelected>
+            {"36 meses"}
+          </DiffMark>
+        </p>
       </Section>
       <Section title="Moléculas">
         <div className={styles.row}>

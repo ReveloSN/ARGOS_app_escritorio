@@ -1,0 +1,33 @@
+.mark {
+  border-radius: var(--radius-xs);
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: var(--text-underline-offset);
+  transition: background-color var(--duration-fast) var(--easing-decelerate);
+}
+
+.removed {
+  background: var(--diff-removed-bg);
+  color: var(--diff-removed-fg);
+  text-decoration: line-through;
+  text-decoration-color: var(--diff-removed-line);
+  text-decoration-thickness: var(--border-width-mark);
+}
+
+.added {
+  background: var(--diff-added-bg);
+  text-decoration: underline;
+  text-decoration-color: var(--diff-added-line);
+  text-decoration-thickness: var(--border-width-strong);
+}
+
+.changed {
+  background: var(--diff-changed-bg);
+  outline: var(--border-width) dashed var(--diff-changed-outline);
+  outline-offset: var(--outline-offset-mark);
+}
+
+.selected {
+  outline: var(--border-width-strong) solid var(--diff-selected-outline);
+  outline-offset: var(--outline-offset-mark);
+}
