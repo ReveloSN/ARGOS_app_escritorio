@@ -156,6 +156,8 @@
   --size-send-panel: 380px;
   --size-send-draft: 680px;
   --size-send-header-label: 64px;
+  /* Informe: ancho de la hoja de la vista previa (mockup «ARGUS Informe»). */
+  --size-report-sheet: 680px;
   --layer-menu: 5;
   --layer-overlay: 10;
   --layer-toast: 20;

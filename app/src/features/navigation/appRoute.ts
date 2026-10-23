@@ -6,6 +6,7 @@ export type AppRoute =
   | { readonly page: "newReview" }
   | { readonly page: "results" }
   | { readonly page: "alert"; readonly number: number }
+  | { readonly page: "report" }
   | { readonly page: "compare" }
   | { readonly page: "send" }
   | { readonly page: "history"; readonly sessionId?: string }
@@ -18,6 +19,7 @@ const SECTION_BY_PAGE: Readonly<Record<AppRoute["page"], SidebarSection>> = {
   newReview: "home",
   results: "review",
   alert: "review",
+  report: "review",
   compare: "compare",
   send: "send",
   history: "history",

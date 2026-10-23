@@ -6,6 +6,8 @@ export interface PageNavigation {
   readonly openHome: () => void;
   readonly openNewReview: () => void;
   readonly openCompare: () => void;
+  /** «Generar informe» del expediente. */
+  readonly openReport: () => void;
   readonly openAlert: (number: number) => void;
   /** Resultados en una pestaña concreta: Alertas, Archivos o Decisiones. */
   readonly openTab: (tab: ResultsTab) => void;
@@ -42,5 +44,8 @@ export function usePageNavigation(navigate: (route: AppRoute) => void): PageNavi
     setTab(tab);
     navigate({ page: "results" });
   };
-  return { ...openers, openTab, closer: useCloseReview(openers.openHistory) };
+  const openReport = () => {
+    navigate({ page: "report" });
+  };
+  return { ...openers, openTab, openReport, closer: useCloseReview(openers.openHistory) };
 }

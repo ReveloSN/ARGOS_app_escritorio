@@ -8,6 +8,7 @@ import { ComparePage } from "./ComparePage";
 import { HistoryPage } from "./HistoryPage";
 import { HomePage } from "./HomePage";
 import { NewReviewPage } from "./NewReviewPage";
+import { ReportPage } from "./ReportPage";
 import { ResultsPage } from "./ResultsPage";
 import { SendPage } from "./SendPage";
 import { SettingsPage } from "./SettingsPage";
@@ -53,6 +54,7 @@ export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPag
       );
     case "results":
     case "alert":
+    case "report":
       return (
         <ReviewPage route={route} navigation={navigation} onSearchDocuments={onSearchDocuments} />
       );
@@ -62,7 +64,7 @@ export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPag
 }
 
 interface ReviewPageProps {
-  readonly route: Extract<AppRoute, { page: "results" | "alert" }>;
+  readonly route: Extract<AppRoute, { page: "results" | "alert" | "report" }>;
   readonly navigation: PageNavigation;
   readonly onSearchDocuments?: ((query: string) => void) | undefined;
 }
@@ -72,6 +74,16 @@ function ReviewPage({ route, navigation, onSearchDocuments }: ReviewPageProps) {
   const { review } = useReview();
   if (!review) {
     return <HomePage onNewReview={navigation.openNewReview} onCompare={navigation.openCompare} />;
+  }
+  if (route.page === "report") {
+    return (
+      <ReportPage
+        review={review}
+        onBack={() => {
+          navigation.openTab("decisions");
+        }}
+      />
+    );
   }
   if (route.page === "alert") {
     return (
@@ -88,6 +100,7 @@ function ReviewPage({ route, navigation, onSearchDocuments }: ReviewPageProps) {
     <ResultsPage
       review={review}
       closer={navigation.closer}
+      onReport={navigation.openReport}
       onOpenAlert={navigation.openAlert}
       onSearchDocuments={onSearchDocuments}
     />

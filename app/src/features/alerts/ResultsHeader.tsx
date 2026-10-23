@@ -15,10 +15,12 @@ interface ResultsHeaderProps {
   readonly closer: ReviewCloser;
   /** «Agregar dato», solo en la pestaña «Datos confirmados» de un expediente abierto. */
   readonly onAddFact: () => void;
+  /** «Generar informe»: también en una revisión cerrada, que se puede documentar. */
+  readonly onReport: () => void;
 }
 
 /** Encabezado del expediente: ruta, nombre, resumen, «Agregar dato», «Cerrar revisión» y pestañas. */
-export function ResultsHeader({ review, closer, onAddFact }: ResultsHeaderProps) {
+export function ResultsHeader({ review, closer, onAddFact, onReport }: ResultsHeaderProps) {
   const { t } = useI18n();
   const { tab, setTab } = useResultsView();
   const tabs = [
@@ -43,6 +45,9 @@ export function ResultsHeader({ review, closer, onAddFact }: ResultsHeaderProps)
           <h1 className={styles.title}>{review.session.name}</h1>
           <ReviewSummaryLine review={review} />
         </div>
+        <Button size="md" icon="description" onClick={onReport}>
+          {t("report.generate")}
+        </Button>
         {!isReadOnly(review) && tab === "facts" && (
           <Button variant="primary" size="md" icon="add" onClick={onAddFact}>
             {t("facts.add")}

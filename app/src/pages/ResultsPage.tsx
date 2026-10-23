@@ -16,12 +16,19 @@ import styles from "./ResultsPage.module.css";
 interface ResultsPageProps {
   readonly review: ReviewResult;
   readonly closer: ReviewCloser;
+  readonly onReport: () => void;
   readonly onOpenAlert: (number: number) => void;
   readonly onSearchDocuments?: ((query: string) => void) | undefined;
 }
 
 /** Expediente: datos confirmados, alertas, archivos y decisiones de la revisión real del motor. */
-export function ResultsPage({ review, closer, onOpenAlert, onSearchDocuments }: ResultsPageProps) {
+export function ResultsPage({
+  review,
+  closer,
+  onReport,
+  onOpenAlert,
+  onSearchDocuments,
+}: ResultsPageProps) {
   const { tab } = useResultsView();
   const decisions = useAlertDecisions();
   const [isAddingFact, setIsAddingFact] = useState(false);
@@ -32,7 +39,7 @@ export function ResultsPage({ review, closer, onOpenAlert, onSearchDocuments }: 
 
   return (
     <div className={styles.layout}>
-      <ResultsHeader review={review} closer={closer} onAddFact={startAdding} />
+      <ResultsHeader review={review} closer={closer} onAddFact={startAdding} onReport={onReport} />
       {tab === "facts" && (
         <FactsTab
           review={review}

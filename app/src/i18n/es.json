@@ -980,5 +980,90 @@
       "correct": "Problema {number} marcado como «Es correcto».",
       "ignored": "Problema {number} ignorado."
     }
+  },
+  "report": {
+    "generate": "Generar informe",
+    "crumb": "Informe",
+    "previewTitle": "Vista previa del informe",
+    "previewLabel": "Vista previa del informe",
+    "title": "Informe de revisión documental",
+    "reviewedOn": "Revisado el {date}",
+    "heading": "{number}. {title}",
+    "footer": "Generado con ARGUS {version} · {date}",
+    "pageLabel": "Página {page} de {total}",
+    "parts": {
+      "summary": "Resumen",
+      "evidence": "Evidencia",
+      "decisions": "Decisiones tomadas",
+      "ai": "Nota sobre sugerencias de IA"
+    },
+    "hints": {
+      "summary": "Conteo de alertas y estado",
+      "evidence": "Cada valor con archivo y ubicación",
+      "decisions": "Qué se decidió, cuándo y el valor correcto",
+      "ai": "Recomendado si el informe se comparte"
+    },
+    "metrics": {
+      "alerts": {
+        "one": "alerta",
+        "other": "alertas"
+      },
+      "errors": {
+        "one": "error real",
+        "other": "errores reales"
+      },
+      "correct": {
+        "one": "correcta",
+        "other": "correctas"
+      },
+      "ignored": {
+        "one": "ignorada",
+        "other": "ignoradas"
+      },
+      "pending": {
+        "one": "pendiente",
+        "other": "pendientes"
+      }
+    },
+    "summary": {
+      "documents": {
+        "one": "Se revisó {count} documento el {date}.",
+        "other": "Se revisaron {count} documentos el {date}."
+      },
+      "errors": "Se marcaron como error: {data}.",
+      "pending": "Quedan pendientes: {data}."
+    },
+    "evidence": {
+      "data": "Dato",
+      "valueA": "Valor A · origen",
+      "valueB": "Valor B · origen"
+    },
+    "decisions": {
+      "decision": "Decisión",
+      "note": "Nota",
+      "when": "Fecha"
+    },
+    "aiNote": "Las explicaciones marcadas «Sugerencia de IA» fueron generadas por el asistente y verificadas por la persona que tomó la decisión.",
+    "formats": {
+      "pdf": "PDF",
+      "docx": "DOCX"
+    },
+    "options": {
+      "label": "Opciones del informe",
+      "format": "Formato",
+      "include": "Incluir",
+      "saveIn": "Guardar en",
+      "locating": "Buscando la carpeta…",
+      "export": "Exportar {format}"
+    },
+    "saved": "Se guardó {name} en {folder}.",
+    "open": "Abrir informe",
+    "openFailed": "No se pudo abrir el informe. Ábralo desde la carpeta.",
+    "failed": {
+      "what": "No se pudo exportar el informe.",
+      "why": "El motor de análisis no respondió o la carpeta Documentos no admite cambios.",
+      "todo": "Revise que pueda guardar en Documentos e inténtelo de nuevo.",
+      "retry": "Reintentar"
+    }
   }
 }

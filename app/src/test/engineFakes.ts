@@ -34,6 +34,7 @@ export interface FakeEngineOptions {
   readonly comparisons?: Partial<EngineServices["comparisons"]>;
   readonly facts?: Partial<EngineServices["facts"]>;
   readonly sending?: Partial<EngineServices["sending"]>;
+  readonly reports?: Partial<EngineServices["reports"]>;
   readonly history?: Partial<EngineServices["history"]>;
   readonly preferences?: Partial<EngineServices["preferences"]>;
   readonly documents?: Partial<EngineServices["documents"]>;
@@ -86,6 +87,15 @@ function fakeSending(overrides: FakeEngineOptions["sending"]): EngineServices["s
   };
 }
 
+function fakeReports(overrides: FakeEngineOptions["reports"]): EngineServices["reports"] {
+  return {
+    planReport: notConfigured(),
+    exportReport: notConfigured(),
+    openReport: notConfigured(),
+    ...overrides,
+  };
+}
+
 function fakePreferences(
   overrides: FakeEngineOptions["preferences"],
 ): EngineServices["preferences"] {
@@ -108,6 +118,7 @@ export function fakeEngineServices(options: FakeEngineOptions = {}): EngineServi
     comparisons: fakeComparisons(options.comparisons),
     facts: fakeFacts(options.facts),
     sending: fakeSending(options.sending),
+    reports: fakeReports(options.reports),
     history: { history: notConfigured(), records: notConfigured(), ...options.history },
     preferences: fakePreferences(options.preferences),
     documents: {

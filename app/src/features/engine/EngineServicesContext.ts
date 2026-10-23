@@ -7,6 +7,7 @@ import type { EngineStatusMonitor } from "../../services/engine/engineStatusMoni
 import type { FactGateway } from "../../services/engine/factTypes";
 import type { HistorySource } from "../../services/engine/historyTypes";
 import type { PreferencesStore } from "../../services/engine/preferencesTypes";
+import type { ReportGateway } from "../../services/engine/reportTypes";
 import type { ReviewGateway } from "../../services/engine/reviewTypes";
 import type { SendGateway } from "../../services/engine/sendTypes";
 
@@ -17,6 +18,7 @@ export interface EngineServices {
   readonly comparisons: ComparisonGateway;
   readonly facts: FactGateway;
   readonly sending: SendGateway;
+  readonly reports: ReportGateway;
   readonly history: HistorySource;
   readonly preferences: PreferencesStore;
   readonly documents: DocumentAccess;

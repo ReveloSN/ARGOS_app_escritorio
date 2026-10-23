@@ -31,6 +31,7 @@ export function useSearchScope(
     ...NO_SEARCH,
     results: reviewScope,
     alert: reviewScope,
+    report: reviewScope,
     history: () => historySearchScope({ history, i18n, navigate }),
     settings: () => settingsSearchScope(i18n),
   };

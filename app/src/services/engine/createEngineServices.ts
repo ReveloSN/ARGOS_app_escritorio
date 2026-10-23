@@ -12,6 +12,7 @@ import { EngineStatusMonitor } from "./engineStatusMonitor";
 import { FactClient } from "./factClient";
 import { HistoryClient } from "./historyClient";
 import { PreferencesClient } from "./preferencesClient";
+import { ReportClient } from "./reportClient";
 import { ReviewClient } from "./reviewClient";
 import { SendClient } from "./sendClient";
 import { TauriEngineConnectionSource } from "./tauriEngineConnectionSource";
@@ -25,6 +26,7 @@ export function createEngineServices(): EngineServices {
     comparisons: new ComparisonClient(http),
     facts: new FactClient(http),
     sending: new SendClient(http),
+    reports: new ReportClient(http),
     history: new HistoryClient(http),
     preferences: new PreferencesClient(http),
     documents: new DocumentClient(http),

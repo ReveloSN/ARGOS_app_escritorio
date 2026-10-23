@@ -1,0 +1,231 @@
+/* Informe exportable (mockup «ARGUS Informe»): vista previa y opciones de exportación. */
+
+.page {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2-5) var(--spacing-6) var(--spacing-3);
+  border-bottom: var(--border-width) solid var(--color-border-default);
+  background: var(--color-background-surface);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-title);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--size-side-panel);
+  min-height: 0;
+}
+
+.previewColumn {
+  min-height: 0;
+  padding: var(--spacing-5) var(--spacing-6);
+  overflow: auto;
+  background: var(--color-background-subtle);
+}
+
+.sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+  max-width: var(--size-report-sheet);
+  margin: 0 auto;
+  padding: var(--spacing-8) var(--spacing-7);
+  border: var(--border-width) solid var(--color-border-strong);
+  background: var(--color-background-surface);
+}
+
+.sheetHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+  padding-bottom: var(--spacing-3);
+  border-bottom: var(--border-width-strong) solid var(--color-text-primary);
+}
+
+.titles {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-0-5);
+}
+
+.sheetTitle {
+  font-size: var(--font-size-section);
+  font-weight: var(--font-weight-semibold);
+}
+
+.subtitle,
+.cellDetail,
+.metricLabel,
+.partHint,
+.fileName,
+.sheetFooter {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  font-weight: var(--font-weight-semibold);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.sectionHeading {
+  margin: 0;
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-semibold);
+}
+
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-5);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+}
+
+.metricValue {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-metric);
+  font-weight: var(--font-weight-semibold);
+}
+
+.paragraph {
+  margin: 0;
+  line-height: var(--line-height-body);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-caption);
+}
+
+.table th,
+.table td {
+  padding: var(--spacing-1-5) var(--spacing-2);
+  border-bottom: var(--border-width) solid var(--color-border-default);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table th {
+  background: var(--color-background-subtle);
+  font-weight: var(--font-weight-medium);
+}
+
+.cellText,
+.cellValue {
+  display: block;
+}
+
+/* Los valores con su origen van en monoespaciada, como en el resto de la app. */
+.cellValue {
+  font-family: var(--font-family-mono);
+}
+
+.cellDetail {
+  display: block;
+}
+
+.sheetFooter {
+  padding-top: var(--spacing-3);
+  border-top: var(--border-width) solid var(--color-border-default);
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  min-height: 0;
+  padding: var(--spacing-4);
+  overflow: auto;
+  border-left: var(--border-width) solid var(--color-border-strong);
+  background: var(--color-background-surface);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2-5);
+}
+
+.optionsTitle {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-micro);
+  text-transform: uppercase;
+}
+
+.formats {
+  display: flex;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.format {
+  flex: 1;
+  min-height: var(--size-control-md);
+  border: 0;
+  background: var(--color-background-surface);
+  color: var(--color-text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.format + .format {
+  border-left: var(--border-width) solid var(--color-border-strong);
+}
+
+.formatOn {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-fg);
+}
+
+.part {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5);
+}
+
+.folder {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  overflow-wrap: anywhere;
+}
+
+.saved {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+  overflow-wrap: anywhere;
+}
+
+.openFailed {
+  color: var(--color-risk-high);
+  font-size: var(--font-size-caption);
+}
