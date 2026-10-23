@@ -17,7 +17,7 @@ const ERROR_ON_FIRST: DecisionsResult = {
 
 async function openCurrentReview() {
   await act(() => Promise.resolve());
-  await userEvent.click(screen.getByRole("button", { name: /Revisión actual/ }));
+  await userEvent.click(screen.getByRole("button", { name: /^Expediente/ }));
 }
 
 async function openFirstAlert() {

@@ -147,6 +147,11 @@
   --size-minimap: 16px;
   --size-minimap-mark: 4px;
   --size-minimap-mark-moved: 12px;
+  /* Expediente: columnas de la tabla de datos y panel lateral (mockup «ARGUS Expediente»). */
+  --size-facts-aside: 360px;
+  --size-facts-column-confirmed: 140px;
+  --size-facts-column-status: 150px;
+  --size-facts-column-actions: 160px;
   --layer-menu: 5;
   --layer-overlay: 10;
   --layer-toast: 20;

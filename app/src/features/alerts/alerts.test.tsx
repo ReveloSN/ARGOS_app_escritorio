@@ -8,7 +8,7 @@ import { CLOSED_REVIEW, REVIEW } from "../../test/reviewFixtures";
 
 async function openCurrentReview() {
   await act(() => Promise.resolve());
-  await userEvent.click(screen.getByRole("button", { name: /Revisión actual/ }));
+  await userEvent.click(screen.getByRole("button", { name: /^Expediente/ }));
 }
 
 describe("Resultados: filtros, búsqueda y acciones por fila", () => {

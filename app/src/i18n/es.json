@@ -13,7 +13,7 @@
   "navigation": {
     "label": "Navegación principal",
     "home": "Inicio",
-    "currentReview": "Revisión actual",
+    "caseFile": "Expediente",
     "history": "Historial",
     "settings": "Ajustes",
     "newReview": "Nueva revisión",
@@ -229,6 +229,7 @@
     },
     "tabsLabel": "Vistas de la revisión",
     "tabs": {
+      "facts": "Datos confirmados",
       "alerts": "Alertas",
       "files": "Archivos",
       "decisions": "Decisiones"
@@ -754,6 +755,100 @@
       "failedWhat": "No se pudieron comparar los documentos.",
       "failedWhy": "El motor de análisis no respondió o se detuvo.",
       "failedTodo": "Vuelva a elegir los documentos para intentarlo de nuevo."
+    }
+  },
+  "facts": {
+    "intro": "Los datos confirmados son la fuente de verdad del expediente. Cada documento se compara contra ellos.",
+    "add": "Agregar dato",
+    "filtersLabel": "Filtrar datos",
+    "filters": {
+      "all": "Todos",
+      "contradicted": "Con contradicciones",
+      "pending": "Sin confirmar"
+    },
+    "tableLabel": "Datos confirmados",
+    "columns": {
+      "data": "Dato",
+      "value": "Valor confirmado",
+      "confirmed": "Confirmado",
+      "documents": "Documentos",
+      "actions": "Acciones"
+    },
+    "retiredValue": "{value} (retirado)",
+    "pendingValue": "Sin confirmar: {values}",
+    "retired": "Retirado",
+    "notCompared": "No se compara",
+    "contradictedBy": {
+      "one": "{count} lo contradice",
+      "other": "{count} lo contradicen"
+    },
+    "noContradictions": "Sin contradicciones",
+    "differentValues": "Valores distintos",
+    "newValue": "Nuevo valor",
+    "actions": {
+      "edit": "Editar",
+      "retire": "Retirar",
+      "restore": "Restaurar",
+      "confirm": "Confirmar valor",
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    },
+    "actionTitles": {
+      "edit": "Editar valor",
+      "retire": "Dejar de usar como fuente de verdad",
+      "restore": "Volver a usar este dato",
+      "confirm": "Elegir el valor correcto"
+    },
+    "form": {
+      "label": "Nombre del dato",
+      "labelPlaceholder": "Ej.: Canon mensual",
+      "type": "Tipo de dato",
+      "value": "Valor confirmado",
+      "valuePlaceholder": "Ej.: $ 18.450.000"
+    },
+    "aside": {
+      "title": "Documentos que lo contradicen",
+      "unconfirmed": "Sin confirmar",
+      "viewDocument": "Ver documento",
+      "noneTitle": "Ningún documento lo contradice",
+      "appearsIn": "Aparece en",
+      "pendingText": "Los documentos dan dos valores: {values}. Confirme el correcto para usarlo como fuente de verdad."
+    },
+    "notes": {
+      "retired": "El dato está retirado y no se usa en las comparaciones.",
+      "matches": {
+        "one": "El valor coincide en el documento donde aparece.",
+        "other": "El valor coincide en los {count} documentos donde aparece."
+      },
+      "notFound": "El valor no aparece en los documentos de este expediente.",
+      "variant": "«{value}» en {document} se acepta como el mismo valor.",
+      "rule": "«{value}» se acepta por una regla «No alertar casos similares» creada el {date}."
+    },
+    "notice": {
+      "saved": "Se guardó «{label}»: {value}",
+      "retired": "Se retiró «{label}». Ya no se compara.",
+      "restored": "Se restauró «{label}»",
+      "undone": "Se deshizo el último cambio."
+    },
+    "empty": {
+      "title": "Aún no hay datos confirmados",
+      "description": "Confirme el número de contrato, las partes, los montos y las fechas para usarlos como fuente de verdad."
+    },
+    "loading": "Cargando el expediente",
+    "loadFailed": {
+      "what": "No se pudieron cargar los datos confirmados.",
+      "why": "El motor de análisis no respondió.",
+      "todo": "Inténtelo de nuevo.",
+      "retry": "Reintentar"
+    },
+    "failed": {
+      "what": "No se guardó el cambio en «{label}».",
+      "unrecognized": "«{value}» no se reconoce como un valor del tipo elegido.",
+      "unavailable": "El motor de análisis no respondió.",
+      "todoUnrecognized": "Escríbalo como aparece en los documentos, por ejemplo $ 18.450.000 o 01/07/2026.",
+      "todoUnavailable": "Inténtelo de nuevo.",
+      "retry": "Reintentar",
+      "dismiss": "Entendido"
     }
   }
 }

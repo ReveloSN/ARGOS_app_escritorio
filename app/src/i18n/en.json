@@ -13,7 +13,7 @@
   "navigation": {
     "label": "Main navigation",
     "home": "Home",
-    "currentReview": "Current review",
+    "caseFile": "Case file",
     "history": "History",
     "settings": "Settings",
     "newReview": "New review",
@@ -229,6 +229,7 @@
     },
     "tabsLabel": "Review views",
     "tabs": {
+      "facts": "Confirmed data",
       "alerts": "Alerts",
       "files": "Files",
       "decisions": "Decisions"
@@ -754,6 +755,100 @@
       "failedWhat": "The documents could not be compared.",
       "failedWhy": "The analysis engine did not respond or stopped.",
       "failedTodo": "Choose the documents again to retry."
+    }
+  },
+  "facts": {
+    "intro": "Confirmed data is the source of truth for the case file. Every document is compared against it.",
+    "add": "Add data",
+    "filtersLabel": "Filter data",
+    "filters": {
+      "all": "All",
+      "contradicted": "With contradictions",
+      "pending": "Unconfirmed"
+    },
+    "tableLabel": "Confirmed data",
+    "columns": {
+      "data": "Data",
+      "value": "Confirmed value",
+      "confirmed": "Confirmed",
+      "documents": "Documents",
+      "actions": "Actions"
+    },
+    "retiredValue": "{value} (retired)",
+    "pendingValue": "Unconfirmed: {values}",
+    "retired": "Retired",
+    "notCompared": "Not compared",
+    "contradictedBy": {
+      "one": "{count} contradicts it",
+      "other": "{count} contradict it"
+    },
+    "noContradictions": "No contradictions",
+    "differentValues": "Different values",
+    "newValue": "New value",
+    "actions": {
+      "edit": "Edit",
+      "retire": "Retire",
+      "restore": "Restore",
+      "confirm": "Confirm value",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "actionTitles": {
+      "edit": "Edit value",
+      "retire": "Stop using it as the source of truth",
+      "restore": "Use this data again",
+      "confirm": "Choose the correct value"
+    },
+    "form": {
+      "label": "Data name",
+      "labelPlaceholder": "E.g.: Monthly rent",
+      "type": "Data type",
+      "value": "Confirmed value",
+      "valuePlaceholder": "E.g.: $ 18,450,000"
+    },
+    "aside": {
+      "title": "Documents that contradict it",
+      "unconfirmed": "Unconfirmed",
+      "viewDocument": "View document",
+      "noneTitle": "No document contradicts it",
+      "appearsIn": "Appears in",
+      "pendingText": "The documents give two values: {values}. Confirm the correct one to use it as the source of truth."
+    },
+    "notes": {
+      "retired": "This data is retired and is not used in comparisons.",
+      "matches": {
+        "one": "The value matches in the document where it appears.",
+        "other": "The value matches in the {count} documents where it appears."
+      },
+      "notFound": "The value does not appear in the documents of this case file.",
+      "variant": "“{value}” in {document} is accepted as the same value.",
+      "rule": "“{value}” is accepted by a “Don't alert similar cases” rule created on {date}."
+    },
+    "notice": {
+      "saved": "“{label}” saved: {value}",
+      "retired": "“{label}” retired. It is no longer compared.",
+      "restored": "“{label}” restored",
+      "undone": "The last change was undone."
+    },
+    "empty": {
+      "title": "No confirmed data yet",
+      "description": "Confirm the contract number, the parties, the amounts and the dates to use them as the source of truth."
+    },
+    "loading": "Loading the case file",
+    "loadFailed": {
+      "what": "The confirmed data could not be loaded.",
+      "why": "The analysis engine did not respond.",
+      "todo": "Try again.",
+      "retry": "Retry"
+    },
+    "failed": {
+      "what": "The change to “{label}” was not saved.",
+      "unrecognized": "“{value}” is not recognized as a value of the chosen type.",
+      "unavailable": "The analysis engine did not respond.",
+      "todoUnrecognized": "Write it as it appears in the documents, for example $ 18,450,000 or 07/01/2026.",
+      "todoUnavailable": "Try again.",
+      "retry": "Retry",
+      "dismiss": "Got it"
     }
   }
 }

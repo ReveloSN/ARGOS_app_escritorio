@@ -4,6 +4,7 @@ import type { DesktopShell } from "../../services/desktop/desktopShell";
 import type { ComparisonGateway } from "../../services/engine/comparisonTypes";
 import type { DocumentAccess } from "../../services/engine/documentTypes";
 import type { EngineStatusMonitor } from "../../services/engine/engineStatusMonitor";
+import type { FactGateway } from "../../services/engine/factTypes";
 import type { HistorySource } from "../../services/engine/historyTypes";
 import type { PreferencesStore } from "../../services/engine/preferencesTypes";
 import type { ReviewGateway } from "../../services/engine/reviewTypes";
@@ -13,6 +14,7 @@ export interface EngineServices {
   readonly statusMonitor: EngineStatusMonitor;
   readonly reviews: ReviewGateway;
   readonly comparisons: ComparisonGateway;
+  readonly facts: FactGateway;
   readonly history: HistorySource;
   readonly preferences: PreferencesStore;
   readonly documents: DocumentAccess;

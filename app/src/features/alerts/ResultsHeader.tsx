@@ -13,13 +13,16 @@ import { useResultsView, type ResultsTab } from "./resultsViewContext";
 interface ResultsHeaderProps {
   readonly review: ReviewResult;
   readonly closer: ReviewCloser;
+  /** «Agregar dato», solo en la pestaña «Datos confirmados» de un expediente abierto. */
+  readonly onAddFact: () => void;
 }
 
-/** Encabezado de la revisión: ruta, nombre, resumen, «Cerrar revisión» y pestañas. */
-export function ResultsHeader({ review, closer }: ResultsHeaderProps) {
+/** Encabezado del expediente: ruta, nombre, resumen, «Agregar dato», «Cerrar revisión» y pestañas. */
+export function ResultsHeader({ review, closer, onAddFact }: ResultsHeaderProps) {
   const { t } = useI18n();
   const { tab, setTab } = useResultsView();
   const tabs = [
+    { id: "facts", label: t("results.tabs.facts") },
     { id: "alerts", label: t("results.tabs.alerts"), count: review.alerts.length },
     { id: "files", label: t("results.tabs.files"), count: review.documents.length },
     { id: "decisions", label: t("results.tabs.decisions"), count: decidedCount(review) },
@@ -40,6 +43,11 @@ export function ResultsHeader({ review, closer }: ResultsHeaderProps) {
           <h1 className={styles.title}>{review.session.name}</h1>
           <ReviewSummaryLine review={review} />
         </div>
+        {!isReadOnly(review) && tab === "facts" && (
+          <Button variant="primary" size="md" icon="add" onClick={onAddFact}>
+            {t("facts.add")}
+          </Button>
+        )}
         {!isReadOnly(review) && (
           <Button size="md" onClick={closer.close}>
             {t("results.closeReview")}

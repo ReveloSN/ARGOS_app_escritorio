@@ -34,7 +34,7 @@ describe("Búsqueda global (Ctrl K)", () => {
     const openDocument = vi.fn(() => Promise.resolve());
     renderApp(fakeEngineServices({ documents: { searchDocuments, openDocument } }), REVIEW);
     await act(() => Promise.resolve());
-    await userEvent.click(screen.getByRole("button", { name: /Revisión actual/ }));
+    await userEvent.click(screen.getByRole("button", { name: /^Expediente/ }));
 
     await userEvent.keyboard("{Control>}k{/Control}");
     await userEvent.type(screen.getByRole("combobox"), "1324");
@@ -55,7 +55,7 @@ describe("Búsqueda global (Ctrl K)", () => {
       REVIEW,
     );
     await act(() => Promise.resolve());
-    await userEvent.click(screen.getByRole("button", { name: /Revisión actual/ }));
+    await userEvent.click(screen.getByRole("button", { name: /^Expediente/ }));
 
     await userEvent.click(screen.getByRole("button", { name: /Buscar en alertas y documentos/ }));
     await userEvent.type(screen.getByRole("combobox"), "peña");
@@ -78,7 +78,7 @@ describe("Búsqueda global (Ctrl K)", () => {
       REVIEW,
     );
     await act(() => Promise.resolve());
-    await userEvent.click(screen.getByRole("button", { name: /Revisión actual/ }));
+    await userEvent.click(screen.getByRole("button", { name: /^Expediente/ }));
     await userEvent.keyboard("{Control>}k{/Control}");
 
     expect(screen.getByText("Escriba al menos 2 letras.")).toBeInTheDocument();

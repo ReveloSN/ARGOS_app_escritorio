@@ -116,7 +116,7 @@ describe("explicación en el detalle", () => {
     const review: ReviewResult = { ...REVIEW, alerts: [REFERENCED] };
     renderApp(fakeEngineServices(), review);
     await act(() => Promise.resolve());
-    await userEvent.click(screen.getByRole("button", { name: /Revisión actual/ }));
+    await userEvent.click(screen.getByRole("button", { name: /^Expediente/ }));
     const table = screen.getByRole("table", { name: "Lista de alertas" });
     await userEvent.click(within(table).getAllByRole("row")[2] ?? table);
 

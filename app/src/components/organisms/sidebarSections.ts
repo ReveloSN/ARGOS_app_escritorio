@@ -9,10 +9,10 @@ export interface SidebarSectionItem {
   readonly label: TranslationKey;
 }
 
-/** Navegación global de los mockups: Inicio, Revisión actual, Comparar, Historial y Ajustes. */
+/** Navegación global de los mockups: Inicio, Expediente, Comparar, Historial y Ajustes. */
 export const SIDEBAR_SECTIONS: readonly SidebarSectionItem[] = [
   { section: "home", icon: "home", label: "navigation.home" },
-  { section: "review", icon: "fact_check", label: "navigation.currentReview" },
+  { section: "review", icon: "folder_open", label: "navigation.caseFile" },
   { section: "compare", icon: "difference", label: "navigation.compare" },
   { section: "history", icon: "history", label: "navigation.history" },
   { section: "settings", icon: "tune", label: "navigation.settings" },

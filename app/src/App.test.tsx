@@ -23,7 +23,7 @@ describe("App", () => {
     expect(screen.queryByRole("group", { name: /Comparar/ })).not.toBeInTheDocument();
     expect(screen.queryByText("Sesión activa")).not.toBeInTheDocument();
     expect(screen.queryByText(/pendiente/)).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Revisión actual/ })).not.toHaveTextContent(/\d/);
+    expect(screen.getByRole("button", { name: /^Expediente/ })).not.toHaveTextContent(/\d/);
     expect(screen.getByRole("banner")).not.toHaveTextContent("Sesión");
   });
 

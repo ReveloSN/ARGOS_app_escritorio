@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { AlertsTab } from "../features/alerts/AlertsTab";
 import { DecisionCardList } from "../features/alerts/DecisionCardList";
 import { DecisionFeedback } from "../features/alerts/DecisionFeedback";
@@ -5,6 +7,7 @@ import { NoInconsistencies } from "../features/alerts/NoInconsistencies";
 import { ResultsHeader } from "../features/alerts/ResultsHeader";
 import { useResultsView } from "../features/alerts/resultsViewContext";
 import { useAlertDecisions } from "../features/alerts/useAlertDecisions";
+import { FactsTab } from "../features/facts/FactsTab";
 import { DocumentStatusList } from "../features/review/DocumentStatusList";
 import type { ReviewCloser } from "../features/review/useCloseReview";
 import type { ReviewResult } from "../services/engine/reviewTypes";
@@ -17,15 +20,29 @@ interface ResultsPageProps {
   readonly onSearchDocuments?: ((query: string) => void) | undefined;
 }
 
-/** Resultados de la revisión: solo existe con datos reales devueltos por el motor. */
+/** Expediente: datos confirmados, alertas, archivos y decisiones de la revisión real del motor. */
 export function ResultsPage({ review, closer, onOpenAlert, onSearchDocuments }: ResultsPageProps) {
   const { tab } = useResultsView();
   const decisions = useAlertDecisions();
+  const [isAddingFact, setIsAddingFact] = useState(false);
   const hasAlerts = review.alerts.length > 0;
+  const startAdding = () => {
+    setIsAddingFact(true);
+  };
 
   return (
     <div className={styles.layout}>
-      <ResultsHeader review={review} closer={closer} />
+      <ResultsHeader review={review} closer={closer} onAddFact={startAdding} />
+      {tab === "facts" && (
+        <FactsTab
+          review={review}
+          isAdding={isAddingFact}
+          onAdd={startAdding}
+          onAddDone={() => {
+            setIsAddingFact(false);
+          }}
+        />
+      )}
       {tab === "alerts" && hasAlerts && (
         <AlertsTab
           review={review}

@@ -31,7 +31,7 @@ describe("Sidebar", () => {
 
     const navigation = screen.getByRole("navigation", { name: "Navegación principal" });
     expect(navigation).toHaveTextContent("Inicio");
-    expect(screen.getByRole("button", { name: /Revisión actual/ })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: /^Expediente/ })).toHaveAttribute(
       "aria-current",
       "page",
     );

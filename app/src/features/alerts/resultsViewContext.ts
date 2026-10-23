@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 import type { AlertFilters } from "./alertFilters";
 
-export type ResultsTab = "alerts" | "files" | "decisions";
+export type ResultsTab = "facts" | "alerts" | "files" | "decisions";
 
 /** Cómo dejó el usuario la vista de Resultados: se conserva al ir al detalle y volver. */
 export interface ResultsViewState {

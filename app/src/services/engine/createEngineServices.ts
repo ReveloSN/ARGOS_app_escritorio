@@ -9,6 +9,7 @@ import { EngineClient } from "./engineClient";
 import type { EngineConnectionSource } from "./engineConnection";
 import { EngineHttp } from "./engineHttp";
 import { EngineStatusMonitor } from "./engineStatusMonitor";
+import { FactClient } from "./factClient";
 import { HistoryClient } from "./historyClient";
 import { PreferencesClient } from "./preferencesClient";
 import { ReviewClient } from "./reviewClient";
@@ -21,6 +22,7 @@ export function createEngineServices(): EngineServices {
     statusMonitor: new EngineStatusMonitor(new EngineClient(http)),
     reviews: new ReviewClient(http),
     comparisons: new ComparisonClient(http),
+    facts: new FactClient(http),
     history: new HistoryClient(http),
     preferences: new PreferencesClient(http),
     documents: new DocumentClient(http),
