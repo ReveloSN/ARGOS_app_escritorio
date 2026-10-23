@@ -511,7 +511,8 @@
       "language": "Idioma y región",
       "appearance": "Apariencia",
       "privacy": "Privacidad",
-      "shortcuts": "Atajos de teclado"
+      "shortcuts": "Atajos de teclado",
+      "ai": "Inteligencia artificial"
     },
     "detection": {
       "sensitivity": "Sensibilidad",
@@ -613,6 +614,28 @@
         "what": "No pudimos mover el historial.",
         "why": "El motor de análisis no respondió.",
         "todo": "Espere a que el motor esté listo y vuelva a elegir la carpeta."
+      }
+    },
+    "ai": {
+      "toggle": "Explicar cambios con IA",
+      "description": "Al pedir «Explicar este cambio», ARGUS envía a {provider} solo los dos fragmentos de ese cambio. La detección y el análisis siguen siendo locales.",
+      "model": "Proveedor: {provider} · modelo {model}",
+      "keyLabel": "Clave de la API de {provider}",
+      "keyPlaceholder": "sk-ant-…",
+      "saveKey": "Guardar clave",
+      "removeKey": "Quitar clave",
+      "keyStored": "Clave guardada en el llavero del sistema.",
+      "keyMissing": "Sin clave, «Explicar este cambio» usa la explicación local.",
+      "loading": "Cargando los ajustes de IA…",
+      "failed": "No se pudieron cargar los ajustes de IA: el motor de análisis no respondió.",
+      "keychain": {
+        "what": "No se puede usar el llavero del sistema.",
+        "why": "En Linux hace falta un servicio de llavero (Secret Service) activo.",
+        "todo": "Inicie el llavero de su escritorio y vuelva a intentarlo. Mientras tanto se usa la explicación local.",
+        "retry": "Reintentar"
+      },
+      "providers": {
+        "anthropic": "Anthropic"
       }
     }
   },
@@ -778,6 +801,25 @@
       "failedWhat": "No se pudieron comparar los documentos.",
       "failedWhy": "El motor de análisis no respondió o se detuvo.",
       "failedTodo": "Vuelva a elegir los documentos para intentarlo de nuevo."
+    },
+    "meaning": {
+      "label": "IA: {meaning}",
+      "reworded": "Reformulado",
+      "meaning_change": "Cambio de sentido"
+    },
+    "explain": {
+      "toggle": "Explicar este cambio",
+      "loading": "Preparando la explicación…",
+      "failed": "No se pudo explicar el cambio: el motor de análisis no respondió. Ciérrelo y ábralo de nuevo.",
+      "aiLabel": "Sugerencia de IA",
+      "templateLabel": "Explicación de ARGUS",
+      "fallback": {
+        "no_key": "La IA está activada pero falta la clave: guárdela en Ajustes > Inteligencia artificial.",
+        "keychain_unavailable": "No se pudo leer el llavero del sistema; se muestra la explicación local.",
+        "provider_unavailable": "El proveedor de IA no respondió; se muestra la explicación local. Inténtelo más tarde.",
+        "invalid_key": "El proveedor rechazó la clave: revísela en Ajustes > Inteligencia artificial.",
+        "refused": "El proveedor de IA no quiso explicar este fragmento; se muestra la explicación local."
+      }
     }
   },
   "facts": {
@@ -1065,5 +1107,21 @@
       "todo": "Revise que pueda guardar en Documentos e inténtelo de nuevo.",
       "retry": "Reintentar"
     }
+  },
+  "changeExplanation": {
+    "negation": "Aparece o desaparece una negación: lo que el texto permite pasa a estar prohibido, o al revés.",
+    "amount": "Cambia un monto: revise que el nuevo valor sea el acordado.",
+    "date": "Cambia una fecha: revise plazos, vigencia y vencimientos.",
+    "number": "Cambia un número o identificador: puede referirse a otro contrato o a otra cantidad.",
+    "party": "Cambia una de las partes o su identificación.",
+    "case": "Solo cambian las mayúsculas: el sentido es el mismo.",
+    "punctuation": "Solo cambia la puntuación: el sentido es el mismo.",
+    "format": "Solo cambian los espacios o el formato: el sentido es el mismo.",
+    "added": "Se agrega texto nuevo: puede crear una obligación o un derecho que antes no existía.",
+    "removed": "Se quita texto: puede eliminar una obligación, un derecho o una condición.",
+    "moved": "El texto es el mismo, solo cambió de lugar en el documento.",
+    "reworded": "Cambia la redacción pero el sentido parece el mismo.",
+    "meaning_change": "Cambia la redacción y también parece cambiar lo que el texto dice.",
+    "wording": "Cambia la redacción; compare las dos versiones para confirmar si el sentido es el mismo."
   }
 }

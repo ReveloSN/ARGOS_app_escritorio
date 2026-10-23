@@ -4,6 +4,7 @@ import { useI18n } from "../../i18n/i18nContext";
 import type { DecisionResult } from "../../services/engine/reviewTypes";
 import type { AlertDecisions } from "../alerts/useAlertDecisions";
 import { DECISION_LABELS } from "../alerts/useAlertDecisions";
+import { ChangeExplanationPanel, type ExplainTarget } from "./ChangeExplanationPanel";
 import styles from "./Compare.module.css";
 
 /** Lo que muestra el detalle de un cambio o de una inconsistencia. */
@@ -14,6 +15,10 @@ export interface ItemDetailContent {
   readonly location: string;
   readonly title: string;
   readonly values: readonly { readonly label: string; readonly value: string }[];
+  /** «IA: Cambio de sentido» de un cambio; las inconsistencias no lo tienen. */
+  readonly meaning?: string | undefined;
+  /** Solo los cambios se pueden explicar. */
+  readonly explain?: ExplainTarget | undefined;
 }
 
 interface ItemDetailProps {
@@ -33,6 +38,7 @@ export function ItemDetail({ content, decision, decisions }: ItemDetailProps) {
         <span className={styles.itemLocation}> · {content.location}</span>
       </span>
       <h2 className={styles.detailTitle}>{content.title}</h2>
+      {content.meaning && <span className={styles.detailMeaning}>{content.meaning}</span>}
       <dl className={styles.detailValues}>
         {content.values.map((item) => (
           <div key={item.label} className={styles.detailValue}>
@@ -41,6 +47,7 @@ export function ItemDetail({ content, decision, decisions }: ItemDetailProps) {
           </div>
         ))}
       </dl>
+      {content.explain && <ChangeExplanationPanel target={content.explain} />}
       {decision && (
         <div role="status" className={styles.saved}>
           <Icon name="check" size="sm" />

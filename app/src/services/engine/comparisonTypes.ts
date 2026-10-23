@@ -66,6 +66,15 @@ export interface ChangeResult {
   readonly first: SegmentResult | null;
   readonly second: SegmentResult | null;
   readonly edits: readonly WordEditResult[];
+  /** «IA: Reformulado» o «IA: Cambio de sentido»; null si no hay sugerencia. */
+  readonly meaning: MeaningResult | null;
+}
+
+export type MeaningValue = "reworded" | "meaning_change";
+
+export interface MeaningResult {
+  readonly meaning: MeaningValue;
+  readonly confidence: number;
 }
 
 export interface ChangeSummaryResult {

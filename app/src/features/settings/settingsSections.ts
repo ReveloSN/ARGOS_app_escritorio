@@ -11,6 +11,7 @@ export const SETTINGS_SECTIONS: readonly SettingsSectionItem[] = [
   { id: "language", title: "settings.sections.language" },
   { id: "appearance", title: "settings.sections.appearance" },
   { id: "privacy", title: "settings.sections.privacy" },
+  { id: "ai", title: "settings.sections.ai" },
   { id: "shortcuts", title: "settings.sections.shortcuts" },
 ];
 

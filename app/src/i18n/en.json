@@ -511,7 +511,8 @@
       "language": "Language and region",
       "appearance": "Appearance",
       "privacy": "Privacy",
-      "shortcuts": "Keyboard shortcuts"
+      "shortcuts": "Keyboard shortcuts",
+      "ai": "Artificial intelligence"
     },
     "detection": {
       "sensitivity": "Sensitivity",
@@ -613,6 +614,28 @@
         "what": "We could not move the history.",
         "why": "The analysis engine did not respond.",
         "todo": "Wait until the engine is ready and choose the folder again."
+      }
+    },
+    "ai": {
+      "toggle": "Explain changes with AI",
+      "description": "When you ask to “Explain this change”, ARGUS sends {provider} only the two fragments of that change. Detection and analysis stay local.",
+      "model": "Provider: {provider} · model {model}",
+      "keyLabel": "{provider} API key",
+      "keyPlaceholder": "sk-ant-…",
+      "saveKey": "Save key",
+      "removeKey": "Remove key",
+      "keyStored": "Key saved in the system keychain.",
+      "keyMissing": "Without a key, “Explain this change” uses the local explanation.",
+      "loading": "Loading AI settings…",
+      "failed": "AI settings could not be loaded: the analysis engine did not respond.",
+      "keychain": {
+        "what": "The system keychain cannot be used.",
+        "why": "On Linux a keychain service (Secret Service) must be running.",
+        "todo": "Start your desktop keychain and try again. Meanwhile the local explanation is used.",
+        "retry": "Retry"
+      },
+      "providers": {
+        "anthropic": "Anthropic"
       }
     }
   },
@@ -778,6 +801,25 @@
       "failedWhat": "The documents could not be compared.",
       "failedWhy": "The analysis engine did not respond or stopped.",
       "failedTodo": "Choose the documents again to retry."
+    },
+    "meaning": {
+      "label": "AI: {meaning}",
+      "reworded": "Reworded",
+      "meaning_change": "Change of meaning"
+    },
+    "explain": {
+      "toggle": "Explain this change",
+      "loading": "Preparing the explanation…",
+      "failed": "The change could not be explained: the analysis engine did not respond. Close it and open it again.",
+      "aiLabel": "AI suggestion",
+      "templateLabel": "ARGUS explanation",
+      "fallback": {
+        "no_key": "AI is on but the key is missing: save it in Settings > Artificial intelligence.",
+        "keychain_unavailable": "The system keychain could not be read; the local explanation is shown.",
+        "provider_unavailable": "The AI provider did not respond; the local explanation is shown. Try again later.",
+        "invalid_key": "The provider rejected the key: check it in Settings > Artificial intelligence.",
+        "refused": "The AI provider declined to explain this fragment; the local explanation is shown."
+      }
     }
   },
   "facts": {
@@ -1065,5 +1107,21 @@
       "todo": "Check that you can save in Documents and try again.",
       "retry": "Retry"
     }
+  },
+  "changeExplanation": {
+    "negation": "A negation appears or disappears: what the text allowed becomes forbidden, or the other way around.",
+    "amount": "An amount changes: check that the new value is the agreed one.",
+    "date": "A date changes: check deadlines, term and due dates.",
+    "number": "A number or identifier changes: it may refer to another contract or another quantity.",
+    "party": "One of the parties or its identification changes.",
+    "case": "Only capitalization changes: the meaning is the same.",
+    "punctuation": "Only punctuation changes: the meaning is the same.",
+    "format": "Only spacing or formatting changes: the meaning is the same.",
+    "added": "New text is added: it may create an obligation or a right that did not exist before.",
+    "removed": "Text is removed: it may remove an obligation, a right or a condition.",
+    "moved": "The text is the same, it only moved within the document.",
+    "reworded": "The wording changes but the meaning seems the same.",
+    "meaning_change": "The wording changes and what the text says seems to change too.",
+    "wording": "The wording changes; compare both versions to confirm the meaning is the same."
   }
 }

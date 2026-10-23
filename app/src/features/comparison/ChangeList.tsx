@@ -1,14 +1,11 @@
 import { Checkbox } from "../../components/atoms/Checkbox";
-import { Icon } from "../../components/atoms/Icon";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { TranslationKey } from "../../i18n/translate";
 import type { ChangeResult } from "../../services/engine/comparisonTypes";
 import type { DecisionResult } from "../../services/engine/reviewTypes";
-import { describeLocation } from "../alerts/alertPresentation";
-import { DECISION_LABELS } from "../alerts/useAlertDecisions";
+import { ChangeItem } from "./ChangeItem";
 import { countByKind, type ChangeFilters, type ChangeTypeFilter } from "./changeFilters";
-import { CHANGE_KIND_APPEARANCE, changeSegment, changeValues } from "./changePresentation";
 import styles from "./Compare.module.css";
 
 const TYPE_CHIPS: readonly { readonly type: ChangeTypeFilter; readonly label: TranslationKey }[] = [
@@ -28,57 +25,6 @@ interface ChangeListProps {
   readonly selected: number | undefined;
   readonly onFilters: (filters: ChangeFilters) => void;
   readonly onSelect: (number: number) => void;
-}
-
-function ChangeItem({
-  change,
-  decision,
-  isSelected,
-  onSelect,
-}: {
-  change: ChangeResult;
-  decision: DecisionResult | undefined;
-  isSelected: boolean;
-  onSelect: (number: number) => void;
-}) {
-  const { t } = useI18n();
-  const appearance = CHANGE_KIND_APPEARANCE[change.kind];
-  const values = changeValues(change);
-  const segment = changeSegment(change);
-  return (
-    <li>
-      <button
-        type="button"
-        aria-current={isSelected}
-        className={joinClassNames(styles.item, isSelected && styles.itemSelected)}
-        onClick={() => {
-          onSelect(change.number);
-        }}
-      >
-        <span className={styles.itemNumber}>{change.number}</span>
-        <span className={styles.itemBody}>
-          <span className={joinClassNames(styles.itemKind, styles[change.kind])}>
-            <Icon name={appearance.icon} size="xs" />
-            {t(appearance.label)}
-            {segment && (
-              <span className={styles.itemLocation}>
-                {" "}
-                · {describeLocation(segment.location, t)}
-              </span>
-            )}
-          </span>
-          <span className={styles.itemValues}>
-            {values.before && <span className={styles.before}>{values.before}</span>}
-            {values.before && values.after && " → "}
-            {values.after && <span className={styles.after}>{values.after}</span>}
-          </span>
-          {decision && (
-            <span className={styles.itemStatus}>{t(DECISION_LABELS[decision.kind])}</span>
-          )}
-        </span>
-      </button>
-    </li>
-  );
 }
 
 /** Lista de cambios con «Solo cambios importantes» y filtro por tipo (J / K para navegar). */

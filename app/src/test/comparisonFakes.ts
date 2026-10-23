@@ -52,6 +52,7 @@ export const NUMBER_CHANGE: ChangeResult = {
   first: V2[0] ?? null,
   second: V3[0] ?? null,
   edits: [replaced([13, 17, "4857"], [13, 17, "4587"])],
+  meaning: { meaning: "meaning_change", confidence: 0.9 },
 };
 export const NEGATION_CHANGE: ChangeResult = {
   number: 2,
@@ -71,6 +72,7 @@ export const NEGATION_CHANGE: ChangeResult = {
       characters: [],
     },
   ],
+  meaning: { meaning: "meaning_change", confidence: 0.9 },
 };
 export const MOVED_CHANGE: ChangeResult = {
   number: 3,
@@ -81,6 +83,7 @@ export const MOVED_CHANGE: ChangeResult = {
   first: V2[2] ?? null,
   second: V3[1] ?? null,
   edits: [],
+  meaning: null,
 };
 export const ADDED_CHANGE: ChangeResult = {
   number: 4,
@@ -91,12 +94,14 @@ export const ADDED_CHANGE: ChangeResult = {
   first: null,
   second: V3[3] ?? null,
   edits: [],
+  meaning: { meaning: "meaning_change", confidence: 0.7 },
 };
 export const CASE_CHANGE: ChangeResult = {
   ...NUMBER_CHANGE,
   number: 5,
   risk: "low",
   materialities: ["case"],
+  meaning: { meaning: "reworded", confidence: 0.95 },
 };
 
 export const VERSION_CHANGES = [NUMBER_CHANGE, NEGATION_CHANGE, MOVED_CHANGE, ADDED_CHANGE];
