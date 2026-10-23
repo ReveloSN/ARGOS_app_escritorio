@@ -14,41 +14,44 @@
 <sc-if value="{{ expanded }}" hint-placeholder-val="{{ true }}">
 <nav aria-label="Navegación principal" style="width:216px;height:100%;box-sizing:border-box;background:var(--surface-2);border-right:1px solid var(--border);display:flex;flex-direction:column;font-family:'IBM Plex Sans',sans-serif;color:var(--text);font-size:13px">
   <div style="height:48px;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--border);flex:none">
-    <div style="width:18px;height:18px;border:1.5px solid var(--accent);border-radius:4px;display:grid;place-items:center;box-sizing:border-box"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></div></div>
-    <span style="font-weight:600;letter-spacing:0.12em;font-size:14px">ARGUS</span>
+    <dc-import name="ARGUS Ojo" estado="logo" tema="auto" size="24" label="ARGUS" hint-size="24px,24px"></dc-import>
+    <span style="font-weight:600;letter-spacing:0.14em;font-size:14px">ARGUS</span>
     <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3);margin-left:auto">1.4</span>
   </div>
   <div style="padding:10px 8px;display:flex;flex-direction:column;gap:2px">
-    <sc-for list="{{ items }}" as="item" hint-placeholder-count="4">
-      <div title="{{ item.label }}" style="display:flex;align-items:center;gap:10px;min-height:32px;padding:0 8px;border-radius:4px;box-sizing:border-box;border:1px solid {{ item.bd }};background:{{ item.bg }};color:{{ item.fg }};font-weight:{{ item.fw }};cursor:pointer">
+    <sc-for list="{{ items }}" as="item" hint-placeholder-count="6">
+      <div title="{{ item.label }}" aria-current="{{ item.current }}" style="display:flex;align-items:center;gap:10px;min-height:32px;padding:4px 8px;border-radius:4px;box-sizing:border-box;border:1px solid {{ item.bd }};background:{{ item.bg }};color:{{ item.fg }};font-weight:{{ item.fw }};cursor:pointer">
         <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;color:{{ item.ic }};font-variation-settings:'wght' 400,'opsz' 20">{{ item.icon }}</span>
-        <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ item.label }}</span>
+        <span style="flex:1;min-width:0;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ item.label }}</span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">{{ item.badge }}</span>
       </div>
     </sc-for>
   </div>
   <sc-if value="{{ hasSession }}" hint-placeholder-val="{{ true }}">
   <div style="margin:4px 8px 0;padding:10px;border:1px solid var(--border);border-radius:4px;background:var(--surface);display:flex;flex-direction:column;gap:4px">
-    <span style="font-size:11px;color:var(--text-3);letter-spacing:0.04em;text-transform:uppercase">Sesión activa</span>
+    <span style="font-size:11px;color:var(--text-3);letter-spacing:0.04em;text-transform:uppercase">Expediente activo</span>
     <span title="{{ session }}" style="font-weight:500;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ session }}</span>
     <span style="font-size:12px;color:var(--text-2)">{{ pending }}</span>
   </div>
   </sc-if>
   <div style="flex:1"></div>
-  <div style="padding:10px 8px;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--border)">
+  <div style="padding:10px 8px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border)">
+    <div role="status" aria-label="{{ aLabel }}" style="display:flex;align-items:center;gap:10px;padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--surface)">
+      <sc-if value="{{ showOjo }}" hint-placeholder-val="{{ true }}"><dc-import name="ARGUS Ojo" estado="{{ ojo }}" tema="auto" size="24" label="" hint-size="24px,24px"></dc-import></sc-if>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3">
+        <span style="font-size:12px;font-weight:500">Asistente de IA</span>
+        <span style="font-size:12px;color:{{ aColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ aText }}</span>
+      </div>
+    </div>
     <button style="display:flex;align-items:center;gap:8px;min-height:32px;padding:0 10px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif;cursor:pointer">
       <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1">add</span>
       <span style="flex:1;text-align:left;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Nueva revisión</span>
       <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.85">Ctrl N</span>
     </button>
-    <div style="display:flex;align-items:center;gap:8px;min-height:30px;padding:0 10px;color:var(--text-2);font-size:12px;cursor:pointer">
+    <div style="display:flex;align-items:center;gap:8px;min-height:28px;padding:0 10px;color:var(--text-2);font-size:12px;cursor:pointer">
       <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1">left_panel_close</span>
       <span style="flex:1">Contraer</span>
       <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">Ctrl B</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:0 10px;color:var(--text-3);font-size:11.5px">
-      <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1">lock</span>
-      <span>Análisis local en este equipo</span>
     </div>
   </div>
 </nav>
@@ -56,16 +59,19 @@
 <sc-if value="{{ collapsed }}" hint-placeholder-val="{{ false }}">
 <nav aria-label="Navegación principal" style="width:56px;height:100%;box-sizing:border-box;background:var(--surface-2);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;font-family:'IBM Plex Sans',sans-serif;color:var(--text)">
   <div style="height:48px;display:grid;place-items:center;border-bottom:1px solid var(--border);width:100%">
-    <div style="width:18px;height:18px;border:1.5px solid var(--accent);border-radius:4px;display:grid;place-items:center;box-sizing:border-box"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></div></div>
+    <dc-import name="ARGUS Ojo" estado="logo" tema="auto" size="24" label="ARGUS" hint-size="24px,24px"></dc-import>
   </div>
   <div style="padding:10px 0;display:flex;flex-direction:column;gap:4px">
-    <sc-for list="{{ items }}" as="item" hint-placeholder-count="4">
+    <sc-for list="{{ items }}" as="item" hint-placeholder-count="6">
       <div title="{{ item.label }}" style="width:40px;height:36px;display:grid;place-items:center;border-radius:4px;box-sizing:border-box;border:1px solid {{ item.bd }};background:{{ item.bg }};color:{{ item.ic }}">
         <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1">{{ item.icon }}</span>
       </div>
     </sc-for>
   </div>
   <div style="flex:1"></div>
+  <div role="status" title="{{ aLabel }}" aria-label="{{ aLabel }}" style="width:40px;height:36px;display:grid;place-items:center;margin-bottom:6px">
+    <dc-import name="ARGUS Ojo" estado="{{ ojo }}" tema="auto" size="24" label="" hint-size="24px,24px"></dc-import>
+  </div>
   <div title="Nueva revisión (Ctrl N)" style="width:40px;height:36px;display:grid;place-items:center;border-radius:4px;background:var(--accent);color:var(--accent-fg);margin-bottom:6px">
     <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1">add</span>
   </div>
@@ -75,23 +81,44 @@
 </nav>
 </sc-if>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:216,&quot;height&quot;:800},&quot;active&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;inicio&quot;,&quot;revision&quot;,&quot;historial&quot;,&quot;ajustes&quot;],&quot;default&quot;:&quot;revision&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;collapsed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;session&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Expediente 2026-118 · Arrendamiento Bodega Fontibón&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;pending&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;7 alertas pendientes de 9&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:216,&quot;height&quot;:800},&quot;active&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;inicio&quot;,&quot;expediente&quot;,&quot;comparar&quot;,&quot;enviar&quot;,&quot;historial&quot;,&quot;ajustes&quot;],&quot;default&quot;:&quot;expediente&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;collapsed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;asistente&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dormido&quot;,&quot;atento&quot;,&quot;leyendo&quot;,&quot;exito&quot;,&quot;duda&quot;,&quot;alerta&quot;,&quot;explicando&quot;,&quot;error&quot;],&quot;default&quot;:&quot;atento&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mostrarAsistente&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;session&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Expediente 2026-118 · Arrendamiento bodega Fontibón&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;pending&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;7 alertas pendientes de 9&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const ASIS = {
+  dormido: ['En pausa', 'var(--text-2)'],
+  atento: ['Listo', 'var(--text-2)'],
+  leyendo: ['Leyendo 3 de 5 archivos', 'var(--text-2)'],
+  exito: ['Sin inconsistencias', 'var(--text-2)'],
+  duda: ['Necesita una confirmación', 'var(--text-2)'],
+  alerta: ['3 alertas de riesgo alto', 'var(--high)'],
+  explicando: ['Explicando un cambio', 'var(--text-2)'],
+  error: ['No pudo leer un archivo', 'var(--text-2)']
+};
 class Component extends DCLogic {
   renderVals() {
-    const active = this.props.active ?? 'revision';
+    let active = this.props.active ?? 'expediente';
+    if (active === 'revision') active = 'expediente';
     const base = [
       { key: 'inicio', icon: 'home', label: this.props.labelInicio ?? 'Inicio' },
-      { key: 'revision', icon: 'fact_check', label: this.props.labelRevision ?? 'Revisión actual', badge: this.props.badge ?? '7' },
+      { key: 'expediente', icon: 'folder_open', label: this.props.labelExpediente ?? this.props.labelRevision ?? 'Expediente', badge: this.props.badge ?? '7' },
+      { key: 'comparar', icon: 'difference', label: this.props.labelComparar ?? 'Comparar' },
+      { key: 'enviar', icon: 'outgoing_mail', label: this.props.labelEnviar ?? 'Revisar antes de enviar' },
       { key: 'historial', icon: 'history', label: this.props.labelHistorial ?? 'Historial' },
-      { key: 'ajustes', icon: 'tune', label: this.props.labelAjustes ?? 'Ajustes' },
+      { key: 'ajustes', icon: 'tune', label: this.props.labelAjustes ?? 'Ajustes' }
     ];
     const items = base.map(i => {
       const on = i.key === active;
-      return { ...i, badge: i.badge || '', bg: on ? 'var(--surface)' : 'transparent', bd: on ? 'var(--border-strong)' : 'transparent', fg: on ? 'var(--text)' : 'var(--text-2)', ic: on ? 'var(--accent-text)' : 'var(--text-2)', fw: on ? 500 : 400 };
+      return { ...i, badge: i.badge || '', current: on ? 'page' : undefined, bg: on ? 'var(--surface)' : 'transparent', bd: on ? 'var(--border-strong)' : 'transparent', fg: on ? 'var(--text)' : 'var(--text-2)', ic: on ? 'var(--accent-text)' : 'var(--text-2)', fw: on ? 500 : 400 };
     });
     const collapsed = !!this.props.collapsed;
-    const session = this.props.session ?? 'Expediente 2026-118 · Arrendamiento Bodega Fontibón';
-    return { items, collapsed, expanded: !collapsed, session, hasSession: !!session, pending: this.props.pending ?? '7 alertas pendientes de 9' };
+    const session = this.props.session ?? 'Expediente 2026-118 · Arrendamiento bodega Fontibón';
+    const key = this.props.asistente ?? 'atento';
+    const [txt, col] = ASIS[key] || ASIS.atento;
+    const aText = this.props.asistenteTexto ?? txt;
+    return {
+      items, collapsed, expanded: !collapsed, session, hasSession: !!session,
+      pending: this.props.pending ?? '7 alertas pendientes de 9',
+      ojo: key === 'leyendo' ? 'atento' : key, aText, aColor: col,
+      aLabel: 'Asistente de IA: ' + aText, showOjo: this.props.mostrarAsistente ?? true
+    };
   }
 }
 </script>

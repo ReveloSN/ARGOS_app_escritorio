@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block" rel="stylesheet">
+</helmet>
+<div ref="{{ rootRef }}" data-screen-label="08 Revisar antes de enviar" style="width:1280px;height:800px;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:48px minmax(0,1fr);background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:13px;overflow:hidden">
+  <div style="grid-row:1 / 3;display:flex"><dc-import name="ARGUS Sidebar" active="enviar" asistente="{{ asis }}" hint-size="216px,800px"></dc-import></div>
+  <dc-import name="ARGUS Topbar" engine="{{ engine }}" placeholder="Buscar en el borrador" hint-size="100%,48px"></dc-import>
+  <main style="display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-height:0">
+    <div style="padding:10px 24px 12px;display:flex;flex-direction:column;gap:8px;background:var(--surface);border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span>Expediente 2026-118</span><span style="color:var(--text-3)">›</span><span style="color:var(--text);font-weight:500">Revisar antes de enviar</span></div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <h1 style="margin:0;font-size:20px;line-height:28px;font-weight:600;flex:1">Revisar antes de enviar</h1>
+        <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px">mail</span><span style="font-family:'IBM Plex Mono',monospace">Remision_contrato_4857.eml</span> · arrastrado desde Thunderbird</span>
+        <button style="min-width:120px;min-height:30px;padding:0 12px;border-radius:4px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">Cambiar borrador</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 380px;min-height:0">
+      <div style="overflow:auto;min-height:0;padding:20px 24px">
+        <article style="max-width:680px;background:var(--surface);border:1px solid var(--border-strong);border-radius:6px;overflow:hidden">
+          <div style="display:grid;grid-template-columns:64px minmax(0,1fr);row-gap:6px;column-gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);font-size:12.5px">
+            <span style="color:var(--text-3)">Para</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">jgomez@logisticaandina.com.co</span>
+            <span style="color:var(--text-3)">CC</span><span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;padding:0 3px;border-radius:2px;background:{{ m3.bg }};text-decoration:{{ m3.td }};text-decoration-color:var(--med);text-decoration-thickness:2px;text-underline-offset:3px">{{ ccText }}</span><sup style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3)">{{ m3.n }}</sup></span>
+            <span style="color:var(--text-3)">Asunto</span><span style="font-weight:500">Contrato 4857 · informe de junio y póliza</span>
+          </div>
+          <div style="padding:18px;font-family:'IBM Plex Serif',serif;font-size:14px;line-height:1.7;display:flex;flex-direction:column;gap:10px">
+            <p style="margin:0">Buenos días, Juliana:</p>
+            <p style="margin:0;text-wrap:pretty">Le comparto el <span style="padding:0 2px;border-radius:2px;background:{{ m1.bg }};text-decoration:{{ m1.td }};text-decoration-color:var(--high);text-decoration-thickness:2px;text-underline-offset:3px">informe de junio</span><sup style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3)">{{ m1.n }}</sup> con el estado de la bodega de la Calle 17 y, como lo hablamos el martes, <span style="padding:0 2px;border-radius:2px;background:{{ m2.bg }};text-decoration:{{ m2.td }};text-decoration-color:var(--high);text-decoration-thickness:2px;text-underline-offset:3px">adjunto también la póliza</span><sup style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3)">{{ m2.n }}</sup> de responsabilidad civil vigente.</p>
+            <p style="margin:0;text-wrap:pretty">Quedo atenta a sus comentarios sobre el Contrato No. 4857 antes de la firma.</p>
+            <p style="margin:0">Cordialmente,<br>Laura Martínez<br><span style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--text-2)">Inversiones Caldas S.A.S.</span></p>
+          </div>
+          <div style="padding:12px 18px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;background:var(--surface-2)">
+            <span style="font-size:12px;color:var(--text-2)">Adjuntos ({{ attCount }})</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <sc-for list="{{ atts }}" as="a" hint-placeholder-count="2">
+                <span style="display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid {{ a.bd }};border-radius:4px;background:var(--surface)"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);border:1px solid var(--border-strong);border-radius:3px;padding:0 4px">{{ a.type }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ a.name }}</span><sup style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3)">{{ a.n }}</sup><span style="font-size:11px;color:var(--text-3)">{{ a.size }}</span></span>
+              </sc-for>
+            </div>
+          </div>
+        </article>
+      </div>
+      <aside style="border-left:1px solid var(--border-strong);background:var(--surface);display:flex;flex-direction:column;min-height:0">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+          <dc-import name="ARGUS Ojo" estado="{{ ojo }}" tema="auto" size="48" hint-size="48px,48px"></dc-import>
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:15px">{{ headline }}</span><span style="font-size:12px;color:var(--text-2)">{{ subline }}</span></div>
+        </div>
+        <div style="flex:1;overflow:auto;min-height:0">
+          <sc-for list="{{ issues }}" as="i" hint-placeholder-count="3">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:8px;opacity:{{ i.op }}">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">{{ i.n }}</span>
+                <span style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:0 6px;border-radius:3px;border:1px solid {{ i.tbd }};background:{{ i.tbg }};color:{{ i.tfg }}"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:14px">{{ i.icon }}</span>{{ i.risk }}</span>
+                <span style="font-size:12px;color:var(--text-3)">{{ i.tipo }}</span>
+                <span style="margin-left:auto;font-size:12px;font-weight:500;color:var(--accent-text)">{{ i.status }}</span>
+              </div>
+              <span style="font-weight:600;line-height:1.4;text-wrap:pretty">{{ i.title }}</span>
+              <span style="font-size:12.5px;color:var(--text-2);line-height:1.5;text-wrap:pretty">{{ i.body }}</span>
+              <sc-if value="{{ i.open }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <button onClick="{{ i.fix }}" style="min-width:120px;min-height:30px;padding:0 10px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font:500 12.5px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ i.fixLabel }}</button>
+                <button onClick="{{ i.ok }}" style="min-width:96px;min-height:30px;padding:0 10px;border-radius:4px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:400 12.5px 'IBM Plex Sans',sans-serif;cursor:pointer">Es correcto</button>
+                <button onClick="{{ i.ign }}" style="min-width:72px;min-height:30px;padding:0 10px;border-radius:4px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:400 12.5px 'IBM Plex Sans',sans-serif;cursor:pointer">Ignorar</button>
+              </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </aside>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 24px;border-top:1px solid var(--border-strong);background:var(--surface)">
+      <span style="flex:1;font-size:12.5px;color:{{ footFg }}">{{ footText }}</span>
+      <sc-if value="{{ anyDone }}" hint-placeholder-val="{{ false }}"><span onClick="{{ undo }}" style="font-size:12.5px;color:var(--accent-text);text-decoration:underline;cursor:pointer">Deshacer</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">Ctrl Z</span></sc-if>
+      <button style="min-width:160px;min-height:32px;padding:0 14px;border-radius:4px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif">Guardar en el expediente</button>
+      <button style="min-width:180px;min-height:32px;padding:0 14px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:4px;border:1px solid {{ sendBd }};background:{{ sendBg }};color:{{ sendFg }};font:500 13px 'IBM Plex Sans',sans-serif">Abrir en el correo<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.85">Ctrl Enter</span></button>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+const THEME = {bg:'#F7F6F3',surface:'#FFFFFF','surface-2':'#F3F1EC','surface-3':'#EBE8E1',border:'#E2DFD8','border-strong':'#CFCBC2',text:'#1C1A17','text-2':'#4F4B44','text-3':'#6B665D',accent:'#1F5F6B','accent-fg':'#FFFFFF','accent-soft':'#E3EEF0','accent-text':'#1F5F6B',high:'#B42318','high-bg':'#FBEAE8','high-border':'#F0C2BC',med:'#8A5300','med-bg':'#FBF0DC','med-border':'#C9A266',low:'#4F4B44','low-bg':'#EFEDE8','low-border':'#CFCBC2'};
+const ISSUES = [
+  { id: 'm1', risk: 'alto', tipo: 'Periodo', title: 'Menciona el informe de junio y adjunta el de mayo', body: 'El texto dice «informe de junio». El único informe adjunto es Informe_gestion_mayo_2026.pdf. En la carpeta del expediente está Informe_gestion_junio_2026.pdf, del 03/07/2026.', fixLabel: 'Cambiar por el de junio', fixed: 'Se cambió el adjunto' },
+  { id: 'm2', risk: 'alto', tipo: 'Adjunto', title: 'Dice «adjunto también la póliza» y no hay póliza adjunta', body: 'Ningún adjunto es una póliza. En el expediente está Poliza_RCE_21-44-101005873.pdf, vigente hasta el 30/06/2027.', fixLabel: 'Adjuntar la póliza', fixed: 'Se adjuntó la póliza' },
+  { id: 'm3', risk: 'medio', tipo: 'Destinatario', title: 'Un destinatario no corresponde al expediente', body: 'contabilidad@inmobiliariaprisma.co no aparece entre los contactos del expediente 2026-118. Los contactos registrados son de Logística Andina S.A.S. e Inversiones Caldas S.A.S.', fixLabel: 'Quitar destinatario', fixed: 'Se quitó el destinatario' }
+];
+const RK = { alto: ['Alto', 'report', 'var(--high)', 'var(--high-bg)', 'var(--high-border)'], medio: ['Medio', 'warning', 'var(--med)', 'var(--med-bg)', 'var(--med-border)'] };
+class Component extends DCLogic {
+  state = { done: {}, hist: [] };
+  rootRef = React.createRef();
+  componentDidMount() { const el = this.rootRef.current; if (el) Object.entries(THEME).forEach(([k, v]) => { if (!getComputedStyle(el).getPropertyValue('--' + k)) el.style.setProperty('--' + k, v); }); }
+  set(id, v) { this.setState(s => ({ done: { ...s.done, [id]: v }, hist: [...s.hist, s.done] })); }
+  renderVals() {
+    const d = this.state.done;
+    const mark = (id, n, risk) => d[id] ? { n: '', bg: 'transparent', td: 'none' } : { n: String(n), bg: risk === 'alto' ? 'var(--high-bg)' : 'var(--med-bg)', td: 'underline wavy' };
+    const issues = ISSUES.map((i, k) => {
+      const R = RK[i.risk]; const st = d[i.id];
+      return { ...i, n: k + 1, risk: R[0], icon: R[1], tfg: R[2], tbg: R[3], tbd: R[4], open: !st, op: st ? 0.6 : 1,
+        status: st === 'fix' ? i.fixed : st === 'ok' ? 'Es correcto' : st === 'ign' ? 'Ignorado' : '',
+        fix: () => this.set(i.id, 'fix'), ok: () => this.set(i.id, 'ok'), ign: () => this.set(i.id, 'ign') };
+    });
+    const pendingHigh = ISSUES.filter(i => i.risk === 'alto' && !d[i.id]).length;
+    const pending = ISSUES.filter(i => !d[i.id]).length;
+    const atts = [
+      d.m1 === 'fix' ? { type: 'PDF', name: 'Informe_gestion_junio_2026.pdf', size: '1,2 MB', n: '', bd: 'var(--accent)' } : { type: 'PDF', name: 'Informe_gestion_mayo_2026.pdf', size: '1,1 MB', n: d.m1 ? '' : '1', bd: d.m1 ? 'var(--border-strong)' : 'var(--high-border)' },
+      { type: 'DOCX', name: 'Contrato_4857_v3.docx', size: '86 KB', n: '', bd: 'var(--border-strong)' }
+    ];
+    if (d.m2 === 'fix') atts.push({ type: 'PDF', name: 'Poliza_RCE_21-44-101005873.pdf', size: '412 KB', n: '', bd: 'var(--accent)' });
+    return {
+      rootRef: this.rootRef, issues, atts, attCount: atts.length,
+      m1: mark('m1', 1, 'alto'), m2: mark('m2', 2, 'alto'), m3: mark('m3', 3, 'medio'),
+      ccText: d.m3 === 'fix' ? '(sin copia)' : 'contabilidad@inmobiliariaprisma.co',
+      ojo: pendingHigh ? 'alerta' : pending ? 'duda' : 'exito', asis: pendingHigh ? 'alerta' : 'atento', engine: pendingHigh ? 'alerta' : 'listo',
+      headline: pending ? pending + (pending === 1 ? ' problema en el borrador' : ' problemas en el borrador') : 'El borrador está listo',
+      subline: pending ? 'Revise cada uno antes de enviar. ARGUS no envía el correo.' : 'Adjuntos, periodo y destinatarios coinciden con el expediente.',
+      footText: pendingHigh ? pendingHigh + ' de riesgo alto sin resolver. Puede abrir el correo de todas formas.' : pending ? 'Queda 1 problema de riesgo medio.' : 'Sin problemas pendientes.',
+      footFg: pendingHigh ? 'var(--high)' : 'var(--text-2)',
+      sendBd: pendingHigh ? 'var(--border-strong)' : 'var(--accent)', sendBg: pendingHigh ? 'var(--surface)' : 'var(--accent)', sendFg: pendingHigh ? 'var(--text)' : 'var(--accent-fg)',
+      anyDone: this.state.hist.length > 0,
+      undo: () => this.setState(s => { const h = s.hist.slice(); const p = h.pop(); return p ? { done: p, hist: h } : null; })
+    };
+  }
+}
+</script>
+</body>
+</html>

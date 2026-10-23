@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block" rel="stylesheet">
+</helmet>
+<div ref="{{ rootRef }}" data-screen-label="09 Informe exportable" style="width:1280px;height:800px;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:48px minmax(0,1fr);background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:13px;overflow:hidden">
+  <div style="grid-row:1 / 3;display:flex"><dc-import name="ARGUS Sidebar" active="expediente" hint-size="216px,800px"></dc-import></div>
+  <dc-import name="ARGUS Topbar" engine="listo" placeholder="Buscar en el informe" hint-size="100%,48px"></dc-import>
+  <main style="display:grid;grid-template-rows:auto minmax(0,1fr);min-height:0">
+    <div style="padding:10px 24px 12px;display:flex;flex-direction:column;gap:8px;background:var(--surface);border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span>Expediente 2026-118</span><span style="color:var(--text-3)">›</span><span>Decisiones</span><span style="color:var(--text-3)">›</span><span style="color:var(--text);font-weight:500">Informe</span></div>
+      <h1 style="margin:0;font-size:20px;line-height:28px;font-weight:600">Vista previa del informe</h1>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px;min-height:0">
+      <div style="overflow:auto;min-height:0;padding:24px;background:var(--surface-3);display:flex;justify-content:center">
+        <article aria-label="Página 1 de 2" style="width:620px;flex:none;min-height:877px;box-sizing:border-box;background:#FFFFFF;color:#1C1A17;border:1px solid #CFCBC2;padding:48px 52px;display:flex;flex-direction:column;gap:20px;font-size:11.5px;line-height:1.5">
+          <header style="display:flex;align-items:flex-start;gap:12px;padding-bottom:14px;border-bottom:1px solid #1C1A17">
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#4F4B44">Informe de revisión documental</span><span style="font-size:17px;font-weight:600;line-height:1.3">Expediente 2026-118 · Arrendamiento bodega Fontibón</span><span style="color:#4F4B44">Contrato No. 4857 · Inversiones Caldas S.A.S. y Logística Andina S.A.S.</span></div>
+            <div style="display:flex;align-items:center;gap:6px"><dc-import name="ARGUS Ojo" estado="logo" tema="claro" size="24" hint-size="24px,24px"></dc-import><span style="font-weight:600;letter-spacing:0.14em;font-size:11px">ARGUS</span></div>
+          </header>
+          <sc-if value="{{ inc.resumen }}" hint-placeholder-val="{{ true }}">
+          <section style="display:flex;flex-direction:column;gap:8px">
+            <h2 style="margin:0;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase">1. Resumen</h2>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid #CFCBC2">
+              <div style="padding:8px 10px;display:flex;flex-direction:column"><span style="font-family:'IBM Plex Mono',monospace;font-size:18px">9</span><span style="color:#4F4B44">alertas</span></div>
+              <div style="padding:8px 10px;border-left:1px solid #CFCBC2;display:flex;flex-direction:column"><span style="font-family:'IBM Plex Mono',monospace;font-size:18px">4</span><span style="color:#4F4B44">errores reales</span></div>
+              <div style="padding:8px 10px;border-left:1px solid #CFCBC2;display:flex;flex-direction:column"><span style="font-family:'IBM Plex Mono',monospace;font-size:18px">3</span><span style="color:#4F4B44">correctas</span></div>
+              <div style="padding:8px 10px;border-left:1px solid #CFCBC2;display:flex;flex-direction:column"><span style="font-family:'IBM Plex Mono',monospace;font-size:18px">2</span><span style="color:#4F4B44">pendientes</span></div>
+            </div>
+            <p style="margin:0;text-wrap:pretty">Se revisaron 5 documentos del 13/10/2026 al 22/10/2026. Se corrigieron el número de contrato del Anexo 1, el canon de la hoja de tarifas, el NIT del arrendador y la vigencia del Anexo 1. Quedan pendientes la fecha de inicio y el apellido del representante legal.</p>
+          </section>
+          </sc-if>
+          <sc-if value="{{ inc.evidencia }}" hint-placeholder-val="{{ true }}">
+          <section style="display:flex;flex-direction:column;gap:8px">
+            <h2 style="margin:0;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase">2. Evidencia</h2>
+            <div style="border:1px solid #CFCBC2">
+              <div style="display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1fr);background:#F3F1EC;font-weight:500"><span style="padding:5px 8px">Dato</span><span style="padding:5px 8px;border-left:1px solid #CFCBC2">Valor A · origen</span><span style="padding:5px 8px;border-left:1px solid #CFCBC2">Valor B · origen</span></div>
+              <sc-for list="{{ ev }}" as="e" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1fr);border-top:1px solid #CFCBC2">
+                  <span style="padding:5px 8px">{{ e.dato }}</span>
+                  <span style="padding:5px 8px;border-left:1px solid #CFCBC2;display:flex;flex-direction:column"><span style="font-family:'IBM Plex Mono',monospace">{{ e.a }}</span><span style="font-size:10px;color:#4F4B44">{{ e.as }}</span></span>
+                  <span style="padding:5px 8px;border-left:1px solid #CFCBC2;display:flex;flex-direction:column"><span style="font-family:'IBM Plex Mono',monospace">{{ e.b }}</span><span style="font-size:10px;color:#4F4B44">{{ e.bs }}</span></span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          </sc-if>
+          <sc-if value="{{ inc.decisiones }}" hint-placeholder-val="{{ true }}">
+          <section style="display:flex;flex-direction:column;gap:8px">
+            <h2 style="margin:0;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase">3. Decisiones tomadas</h2>
+            <sc-for list="{{ decs }}" as="d" hint-placeholder-count="4">
+              <div style="display:grid;grid-template-columns:110px 90px minmax(0,1fr);gap:8px;padding:5px 0;border-top:1px solid #E2DFD8">
+                <span>{{ d.dato }}</span><span style="font-weight:600">{{ d.dec }}</span><span style="color:#4F4B44;text-wrap:pretty">{{ d.note }} <span style="font-family:'IBM Plex Mono',monospace;font-size:10px">{{ d.who }}</span></span>
+              </div>
+            </sc-for>
+          </section>
+          </sc-if>
+          <sc-if value="{{ inc.ia }}" hint-placeholder-val="{{ true }}">
+          <p style="margin:0;font-size:10px;color:#4F4B44;border-top:1px solid #CFCBC2;padding-top:8px">Las explicaciones marcadas «Sugerencia de IA» fueron generadas por el asistente y verificadas por la persona que tomó la decisión.</p>
+          </sc-if>
+          <footer style="margin-top:auto;display:flex;justify-content:space-between;font-size:10px;color:#4F4B44;font-family:'IBM Plex Mono',monospace"><span>Generado con ARGUS 1.4 · 22/10/2026 10:14</span><span>Página 1 de 2</span></footer>
+        </article>
+      </div>
+      <aside style="border-left:1px solid var(--border-strong);background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:16px;overflow:auto;min-height:0">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;font-weight:500;color:var(--text-2)">Formato</span>
+          <div role="radiogroup" style="display:flex;border:1px solid var(--border-strong);border-radius:4px;overflow:hidden">
+            <sc-for list="{{ formats }}" as="f" hint-placeholder-count="2">
+              <button role="radio" aria-checked="{{ f.on }}" onClick="{{ f.go }}" style="flex:1;min-height:32px;border:none;border-left:{{ f.bl }};background:{{ f.bg }};color:{{ f.fg }};font:500 13px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ f.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:12px;font-weight:500;color:var(--text-2)">Incluir</span>
+          <sc-for list="{{ secs }}" as="s" hint-placeholder-count="4">
+            <label onClick="{{ s.toggle }}" style="display:flex;align-items:flex-start;gap:8px;cursor:pointer">
+              <span aria-hidden="true" style="margin-top:2px;width:14px;height:14px;flex:none;box-sizing:border-box;border-radius:3px;border:1px solid {{ s.bd }};background:{{ s.bg }};color:var(--accent-fg);display:grid;place-items:center;font-family:'Material Symbols Outlined';font-size:12px;line-height:1">{{ s.mark }}</span>
+              <span style="display:flex;flex-direction:column"><span>{{ s.label }}</span><span style="font-size:12px;color:var(--text-3)">{{ s.hint }}</span></span>
+            </label>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;font-weight:500;color:var(--text-2)">Guardar en</span>
+          <span style="min-height:32px;box-sizing:border-box;display:flex;align-items:center;padding:0 8px;border:1px solid var(--border-strong);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">~/Documentos/ARGUS/2026-118/</span>
+        </div>
+        <div style="flex:1"></div>
+        <button style="min-height:36px;padding:0 14px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif">Exportar {{ fmt }}<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.85">Ctrl E</span></button>
+        <span style="font-size:12px;color:var(--text-2);text-align:center">2 páginas · Informe_2026-118_221026.{{ ext }}</span>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+const THEME = {bg:'#F7F6F3',surface:'#FFFFFF','surface-2':'#F3F1EC','surface-3':'#EBE8E1',border:'#E2DFD8','border-strong':'#CFCBC2',text:'#1C1A17','text-2':'#4F4B44','text-3':'#6B665D',accent:'#1F5F6B','accent-fg':'#FFFFFF','accent-soft':'#E3EEF0','accent-text':'#1F5F6B',high:'#B42318','high-bg':'#FBEAE8','high-border':'#F0C2BC',med:'#8A5300','med-bg':'#FBF0DC','med-border':'#C9A266',low:'#4F4B44','low-bg':'#EFEDE8','low-border':'#CFCBC2'};
+class Component extends DCLogic {
+  state = { fmt: 'PDF', inc: { resumen: true, evidencia: true, decisiones: true, ia: true } };
+  rootRef = React.createRef();
+  componentDidMount() { const el = this.rootRef.current; if (el) Object.entries(THEME).forEach(([k, v]) => { if (!getComputedStyle(el).getPropertyValue('--' + k)) el.style.setProperty('--' + k, v); }); }
+  renderVals() {
+    const s = this.state;
+    return {
+      rootRef: this.rootRef, inc: s.inc, fmt: s.fmt, ext: s.fmt.toLowerCase(),
+      formats: ['PDF', 'DOCX'].map((f, i) => { const on = s.fmt === f; return { label: f, on: on ? 'true' : 'false', go: () => this.setState({ fmt: f }), bl: i ? '1px solid var(--border-strong)' : 'none', bg: on ? 'var(--accent)' : 'var(--surface)', fg: on ? 'var(--accent-fg)' : 'var(--text)' }; }),
+      secs: [['resumen', 'Resumen', 'Conteo de alertas y estado'], ['evidencia', 'Evidencia', 'Cada valor con archivo y página'], ['decisiones', 'Decisiones', 'Quién decidió, cuándo y por qué'], ['ia', 'Nota sobre sugerencias de IA', 'Recomendado si el informe se comparte']].map(([k, label, hint]) => {
+        const on = s.inc[k]; return { label, hint, mark: on ? 'check' : '', bd: on ? 'var(--accent)' : 'var(--border-strong)', bg: on ? 'var(--accent)' : 'var(--surface)', toggle: () => this.setState(st => ({ inc: { ...st.inc, [k]: !st.inc[k] } })) };
+      }),
+      ev: [
+        { dato: 'Número de contrato', a: '4857', as: 'Contrato_4857_v3.docx · pág. 1', b: '4587', bs: 'Anexo_1_condiciones.pdf · pág. 1' },
+        { dato: 'Canon mensual', a: '$ 18.450.000', as: 'Contrato_4857_v3.docx · cl. Canon', b: '$ 18.540.000', bs: 'Anexo_2_tarifas.xlsx · Tarifas C12' },
+        { dato: 'Fecha de inicio', a: '01/07/2026', as: 'Contrato_4857_v3.docx · cl. Vigencia', b: '01/08/2026', bs: 'Correo_remision_cliente.eml · párr. 2' },
+        { dato: 'Razón social', a: 'S.A.S.', as: 'Contrato_4857_v3.docx · pág. 1', b: 'SAS', bs: 'Anexo_1_condiciones.pdf · pág. 1' },
+        { dato: 'Terminación', a: 'podrá terminar', as: 'Contrato_4857_v2.docx · pág. 2', b: 'no podrá terminar', bs: 'Contrato_4857_v3.docx · pág. 2' }
+      ],
+      decs: [
+        { dato: 'Número de contrato', dec: 'Es un error', note: 'Se pidió corregir el Anexo 1 a 4857.', who: 'L. Martínez · 13/10 09:58' },
+        { dato: 'Canon mensual', dec: 'Es un error', note: 'Valor correcto $ 18.450.000, según el contrato firmado.', who: 'L. Martínez · 13/10 10:04' },
+        { dato: 'Razón social', dec: 'Es correcto', note: 'Misma empresa; se creó una regla de equivalencia.', who: 'L. Martínez · 13/10 10:06' },
+        { dato: 'Terminación', dec: 'Es correcto', note: 'La negación fue acordada en la reunión del 01/10/2026.', who: 'C. Herrera · 15/10 16:30' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

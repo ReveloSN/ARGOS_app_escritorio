@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#E4E1DA;font-family:'IBM Plex Sans',sans-serif;color:#1C1A17}a{color:#1F5F6B}a:hover{color:#184C56}</style>
+</helmet>
+<div data-screen-label="Justificación" style="max-width:1100px;padding:56px 64px 96px;display:flex;flex-direction:column;gap:32px;font-size:14px;line-height:1.55">
+  <header style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;align-items:center;gap:12px"><dc-import name="ARGUS Ojo" estado="logo" size="24" hint-size="24px,24px"></dc-import><span style="font-weight:600;letter-spacing:0.14em">ARGUS</span><span style="color:#4F4B44">Justificación de diseño</span></div>
+    <h1 style="margin:0;font-size:24px;line-height:32px;font-weight:600">Cada decisión y el concepto del curso que la sustenta</h1>
+    <p style="margin:0;max-width:760px;color:#4F4B44;text-wrap:pretty">ARGUS ayuda a evitar errores costosos en contratos, anexos y correos. Las decisiones siguientes buscan que el usuario confíe en lo que ve y que cada alerta se pueda verificar en su origen.</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap"><a href="ARGUS Identidad.dc.html">Identidad</a><a href="ARGUS Design System.dc.html">Design system</a><a href="ARGUS.dc.html">Pantallas</a><a href="ARGUS Estados y Mensajes.dc.html">Navegación y mensajes</a><a href="ARGUS Movimiento.dc.html">Movimiento</a></div>
+  </header>
+  <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="8">
+    <section style="display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px;padding-top:20px;border-top:1px solid #CFCBC2">
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6B665D">{{ b.n }}</span><h2 style="margin:0;font-size:17px;font-weight:600">{{ b.concept }}</h2><span style="font-size:12.5px;color:#4F4B44;text-wrap:pretty">{{ b.def }}</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:16px;background:#FFFFFF;border:1px solid #E2DFD8;border-radius:6px;padding:12px 16px">
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">{{ it.d }}</span><span style="color:#4F4B44;text-wrap:pretty">{{ it.why }}</span></div>
+            <span style="font-size:12px;color:#6B665D;text-align:right">{{ it.where }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const B = [
+      ['Conexión emocional', 'Lo que el usuario siente al usar el producto: alivio, confianza, control.', [
+        ['Inicio vacío con el asistente y una sola acción', 'La primera vez no hay cifras inventadas. El usuario ve qué hacer y que el análisis es local, lo que reduce la ansiedad de cargar documentos sensibles.', 'Pantalla 01'],
+        ['Parpadeo de éxito al no encontrar inconsistencias', 'Cierra la tarea con alivio y sin celebración exagerada.', 'Identidad · estados'],
+        ['Deshacer siempre visible (Ctrl Z)', 'Equivocarse al decidir no tiene costo, así que el usuario decide más rápido.', 'Pantallas 05, 06, 07, 08']]],
+      ['Personalidad', 'Rasgos estables que hacen reconocible al producto.', [
+        ['Ojo geométrico con retícula de encuadre', 'Remite a Argos, el gigante de los cien ojos: vigilar sin juzgar. El mismo trazo forma el logo, el asistente y el motivo de fondo.', 'Identidad 01, 02'],
+        ['Neutros cálidos y un solo acento petróleo', 'Sobrio y confiable, sin la frialdad del azul corporativo ni los degradados del software de marketing.', 'Design system · color'],
+        ['Asistente sin rostro ni nombre humano', 'Queda claro que es una IA. Su papel es señalar, y la decisión queda en manos del usuario.', 'Identidad 04']]],
+      ['Voz y tono', 'La voz no cambia; el tono se adapta a la situación.', [
+        ['Voz de auditor que ayuda', 'Trata de usted, nombra el dato exacto, el archivo y la página. Sin exclamaciones.', 'Identidad 03'],
+        ['Tono serio en riesgo alto, tranquilizador sin errores y neutro en errores de lectura', 'Ajusta la urgencia del mensaje a lo que está en juego.', 'Pantalla 08 · mensajes'],
+        ['Errores en tres partes: qué pasó, por qué y qué hacer', 'Cada error termina en un botón con una acción concreta, nunca en un código.', 'Estados y mensajes']]],
+      ['Arquitectura de información', 'Organización, etiquetado, navegación y búsqueda.', [
+        ['Expediente → archivos → revisiones → alertas → decisiones', 'Coincide con la forma en que un abogado o contador organiza su trabajo.', 'Mapa de navegación'],
+        ['Barra lateral con 6 destinos y tabs internos', 'Navegación global estable; la contextual (breadcrumbs, tabs, acciones por fila) vive dentro de cada pantalla.', 'Pantallas 04, 07'],
+        ['Vocabulario único', 'Siempre «alerta», «dato confirmado» y «Es correcto / Es un error / Ignorar», en todas las pantallas.', 'Todas'],
+        ['Filtros combinables y búsqueda Ctrl K', 'Riesgo, tipo, archivo y estado se combinan entre sí, y en Comparar se puede pedir «solo cambios importantes».', 'Pantallas 04, 06']]],
+      ['Design tokens', 'Decisiones de diseño con nombre, en tres niveles.', [
+        ['Globales → semánticos → de componente', 'color.neutral.900 → color.text.primary → alert.row.high.border. El tema oscuro solo reasigna los semánticos.', 'Design system · tokens'],
+        ['Rejilla de 8 px y esquinas de 4 a 6 px', 'Densidad media-alta y consistencia entre pantallas.', 'Design system']]],
+      ['Atomic Design', 'Construir de átomos a páginas.', [
+        ['Átomos, moléculas, organismos, templates y páginas', 'Botón con atajo → fila de alerta → barra lateral → plantilla de comparación → pantalla Comparar. La jerarquía se documenta solo en la hoja para desarrolladores y nunca aparece en el producto.', 'Design system'],
+        ['Componentes compartidos', 'La barra lateral, la barra superior y el asistente son un solo componente reutilizado en todas las pantallas.', 'Todas']]],
+      ['Internacionalización', 'Preparar la interfaz para otros idiomas y regiones.', [
+        ['Botones con ancho mínimo y relleno, no con el ancho exacto del texto', 'El inglés y el alemán pueden ocupar hasta un 30 % más.', 'Design system · prueba en inglés'],
+        ['Barra lateral y tabs con salto de línea o truncamiento', 'Las etiquetas largas no rompen el diseño.', 'Barra lateral'],
+        ['Fechas y montos según la configuración regional', 'Por defecto es-CO: 01/07/2026 y $ 18.450.000. Se configura en Ajustes.', 'Pantalla 11']]],
+      ['Accesibilidad', 'Que funcione para todas las personas.', [
+        ['El riesgo nunca se comunica solo con color', 'Cada nivel tiene un icono con otra forma, una etiqueta de texto y un color. En las diferencias se usa tachado, subrayado, resaltado con borde punteado y marcas de desplazamiento.', 'Pantallas 04, 06'],
+        ['Contraste mínimo de 4.5:1 en los dos temas', 'Medido en texto, etiquetas de riesgo y diferencias.', 'Design system'],
+        ['Teclado completo y atajos visibles', 'C, E, I, X, J/K, 1/2/3 y Ctrl Z aparecen junto a cada botón.', 'Pantallas 05, 06'],
+        ['Etiquetas accesibles en el asistente y movimiento reducido', 'Cada estado del ojo tiene aria-label, y todas las transiciones tienen una alternativa estática.', 'Identidad · Movimiento']]]
+    ];
+    return { blocks: B.map(([concept, def, items], i) => ({ n: String(i + 1).padStart(2, '0'), concept, def, items: items.map(([d, why, where]) => ({ d, why, where })) })) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block" rel="stylesheet">
+</helmet>
+<div ref="{{ rootRef }}" data-screen-label="{{ label }}" style="position:relative;width:1280px;height:800px;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:48px minmax(0,1fr);background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:13px;overflow:hidden">
+  <div style="grid-row:1 / 3;display:flex"><dc-import name="ARGUS Sidebar" active="inicio" session="" asistente="{{ asis }}" badge="" hint-size="216px,800px"></dc-import></div>
+  <dc-import name="ARGUS Topbar" engine="listo" session="Ninguno abierto" placeholder="Buscar expedientes y documentos" hint-size="100%,48px"></dc-import>
+  <main style="position:relative;display:grid;place-items:center;min-height:0;overflow:hidden">
+    <svg width="720" height="720" viewBox="0 0 720 720" aria-hidden="true" style="position:absolute;left:50%;top:50%;margin:-400px 0 0 -360px">
+      <g fill="none" stroke="var(--border-strong)" stroke-width="1"><circle cx="360" cy="360" r="104"></circle><circle cx="360" cy="360" r="184"></circle><circle cx="360" cy="360" r="264" stroke-dasharray="2 6"></circle><circle cx="360" cy="360" r="344" stroke-dasharray="2 10"></circle><path d="M360 0 V72 M360 648 V720 M0 360 H72 M648 360 H720"></path></g>
+    </svg>
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;max-width:520px;text-align:center;margin-top:-56px">
+      <dc-import name="ARGUS Ojo" estado="atento" tema="auto" size="128" label="Asistente de IA: listo" hint-size="128px,128px"></dc-import>
+      <h1 style="margin:8px 0 0;font-size:24px;line-height:32px;font-weight:600">Todavía no hay revisiones</h1>
+      <p style="margin:0;font-size:15px;line-height:1.55;color:var(--text-2);text-wrap:pretty">Cargue los documentos que va a enviar o firmar. ARGUS los compara, le muestra lo que no coincide y recuerda lo que usted confirme.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+        <button style="min-width:160px;min-height:36px;padding:0 16px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font:500 14px 'IBM Plex Sans',sans-serif;cursor:pointer"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px">add</span>Nueva revisión<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.85">Ctrl N</span></button>
+        <button style="min-width:160px;min-height:36px;padding:0 16px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:4px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:400 14px 'IBM Plex Sans',sans-serif;cursor:pointer">Comparar dos versiones</button>
+      </div>
+      <span style="font-size:12px;color:var(--text-3)">También puede arrastrar archivos a esta ventana · PDF, DOCX, XLSX, EML</span>
+    </div>
+    <div style="position:absolute;left:0;right:0;bottom:20px;display:flex;justify-content:center;gap:6px;font-size:12px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px">lock</span>El análisis se hace en este equipo. Los archivos no se envían a ningún servidor.</div>
+  </main>
+
+  <sc-if value="{{ onb }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:rgba(28,26,23,0.48);display:grid;place-items:center">
+    <div role="dialog" aria-modal="true" aria-labelledby="onb-t" style="width:640px;max-width:calc(100% - 64px);background:var(--surface);border:1px solid var(--border-strong);border-radius:6px;box-shadow:0 8px 24px rgba(28,26,23,0.18);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:8px;padding:12px 20px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text-2)">
+        <span>Primeros pasos</span><span style="font-family:'IBM Plex Mono',monospace">{{ stepLabel }}</span>
+        <div style="flex:1"></div>
+        <span onClick="{{ skip }}" style="cursor:pointer;color:var(--accent-text);text-decoration:underline">Omitir</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">Esc</span>
+      </div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:24px 24px 20px;align-items:start">
+        <div style="height:200px;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);position:relative;overflow:hidden;display:grid;place-items:center">
+          <svg width="200" height="200" viewBox="0 0 200 200" aria-hidden="true" style="position:absolute;inset:0"><g fill="none" stroke="var(--border-strong)" stroke-width="1"><circle cx="100" cy="100" r="40"></circle><circle cx="100" cy="100" r="72" stroke-dasharray="2 6"></circle></g></svg>
+          <div style="position:relative"><dc-import name="ARGUS Ojo" estado="{{ step.ojo }}" tema="auto" size="128" hint-size="128px,128px"></dc-import></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="align-self:flex-start;position:relative;border:1px solid var(--border-strong);border-radius:6px;padding:8px 12px;background:var(--surface-2);font-size:12.5px;color:var(--text-2)"><span style="font-weight:600;color:var(--accent-text)">Asistente de IA · </span>{{ step.say }}</div>
+          <h2 id="onb-t" style="margin:0;font-size:18px;line-height:26px;font-weight:600">{{ step.title }}</h2>
+          <p style="margin:0;font-size:14px;line-height:1.55;color:var(--text-2);text-wrap:pretty">{{ step.body }}</p>
+          <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px">
+            <sc-for list="{{ step.points }}" as="pt" hint-placeholder-count="2">
+              <div style="display:flex;gap:8px;align-items:flex-start"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;color:var(--accent-text)">check</span><span>{{ pt }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:12px 20px;border-top:1px solid var(--border)">
+        <div role="list" aria-label="Progreso" style="display:flex;gap:6px">
+          <sc-for list="{{ dots }}" as="d" hint-placeholder-count="3"><span role="listitem" aria-label="{{ d.aria }}" style="width:{{ d.w }};height:6px;border-radius:3px;background:{{ d.bg }}"></span></sc-for>
+        </div>
+        <div style="flex:1"></div>
+        <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ back }}" style="min-width:96px;min-height:32px;padding:0 14px;border-radius:4px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif;cursor:pointer">Anterior</button></sc-if>
+        <button onClick="{{ next }}" style="min-width:120px;min-height:32px;padding:0 14px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ nextLabel }}<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.85">Enter</span></button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800},&quot;vista&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;inicio&quot;,&quot;onboarding&quot;],&quot;default&quot;:&quot;inicio&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;paso&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;1&quot;,&quot;2&quot;,&quot;3&quot;],&quot;default&quot;:&quot;1&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const THEME = {bg:'#F7F6F3',surface:'#FFFFFF','surface-2':'#F3F1EC','surface-3':'#EBE8E1',border:'#E2DFD8','border-strong':'#CFCBC2',text:'#1C1A17','text-2':'#4F4B44','text-3':'#6B665D',accent:'#1F5F6B','accent-fg':'#FFFFFF','accent-soft':'#E3EEF0','accent-text':'#1F5F6B',high:'#B42318','high-bg':'#FBEAE8','high-border':'#F0C2BC',med:'#8A5300','med-bg':'#FBF0DC','med-border':'#C9A266',low:'#4F4B44','low-bg':'#EFEDE8','low-border':'#CFCBC2'};
+const STEPS = [
+  { ojo: 'atento', say: 'Soy un asistente de IA. Leo sus documentos en este equipo.', title: '1. Cargue los documentos de un expediente', body: 'Arrastre el contrato, sus anexos, la hoja de tarifas o el correo que va a enviar. ARGUS lee PDF, DOCX, XLSX, EML y texto pegado.', points: ['Los archivos no salen de este equipo.', 'Puede agregar más documentos en cualquier momento.'] },
+  { ojo: 'duda', say: 'Si no estoy seguro de un dato, se lo pregunto.', title: '2. Confirme lo que se leyó', body: 'Antes de comparar, revise el número de contrato, las partes, los montos y las fechas que se encontraron. Lo que usted confirme queda en el expediente como fuente de verdad.', points: ['Los datos confirmados se usan en todas las revisiones del expediente.', 'Puede editarlos o retirarlos después.'] },
+  { ojo: 'explicando', say: 'Puedo explicar un cambio, pero la decisión es suya.', title: '3. Decida en cada alerta', body: 'Cada alerta muestra los dos valores, el archivo y la página de origen. Marque «Es correcto», «Es un error» o «Ignorar». Las explicaciones de IA siempre citan el fragmento original.', points: ['Atajos: C, E, I. Deshacer con Ctrl Z.', 'Puede ocultar al asistente en Ajustes.'] }
+];
+class Component extends DCLogic {
+  state = { step: Number(this.props.paso ?? 1) - 1, open: true };
+  rootRef = React.createRef();
+  componentDidMount() { const el = this.rootRef.current; if (el && !this.props.heredarTema) Object.entries(THEME).forEach(([k, v]) => { if (!getComputedStyle(el).getPropertyValue('--' + k)) el.style.setProperty('--' + k, v); }); }
+  renderVals() {
+    const onb = (this.props.vista ?? 'inicio') === 'onboarding' && this.state.open;
+    const i = this.state.step;
+    return {
+      rootRef: this.rootRef, onb, label: onb ? '02 Onboarding' : '01 Inicio', asis: 'atento',
+      step: STEPS[i], stepLabel: (i + 1) + ' de 3',
+      dots: STEPS.map((_, k) => ({ w: k === i ? '20px' : '6px', bg: k <= i ? 'var(--accent)' : 'var(--border-strong)', aria: 'Paso ' + (k + 1) + (k === i ? ', actual' : '') })),
+      canBack: i > 0, back: () => this.setState({ step: i - 1 }),
+      next: () => (i < 2 ? this.setState({ step: i + 1 }) : this.setState({ open: false })),
+      nextLabel: i < 2 ? 'Siguiente' : 'Empezar', skip: () => this.setState({ open: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

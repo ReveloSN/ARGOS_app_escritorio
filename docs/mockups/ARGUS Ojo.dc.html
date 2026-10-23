@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<svg width="{{ px }}" height="{{ px }}" viewBox="0 0 48 48" role="img" aria-label="{{ label }}" style="display:block;flex:none;overflow:visible">
+  <path d="{{ frame }}" fill="none" stroke="{{ c2 }}" stroke-width="{{ sw }}" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="{{ outline }}" fill="none" stroke="{{ c }}" stroke-width="{{ sw }}" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="{{ dash }}"></path>
+  <circle cx="{{ ix }}" cy="24" r="{{ ir }}" fill="none" stroke="{{ c }}" stroke-width="{{ sw }}"></circle>
+  <circle cx="{{ ix }}" cy="24" r="{{ pr }}" fill="{{ c }}"></circle>
+  <path d="{{ extra }}" fill="none" stroke="{{ c }}" stroke-width="{{ sw }}" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:128,&quot;height&quot;:128},&quot;estado&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;logo&quot;,&quot;dormido&quot;,&quot;atento&quot;,&quot;exito&quot;,&quot;duda&quot;,&quot;alerta&quot;,&quot;explicando&quot;,&quot;error&quot;],&quot;default&quot;:&quot;atento&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;size&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;24&quot;,&quot;48&quot;,&quot;128&quot;],&quot;default&quot;:&quot;48&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;tema&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;claro&quot;,&quot;oscuro&quot;],&quot;default&quot;:&quot;claro&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;label&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:null,&quot;tsType&quot;:&quot;string&quot;}}">
+const OPEN = 'M4 24 C12 12 36 12 44 24 C36 36 12 36 4 24 Z';
+const WIDE = 'M3 24 C11 8 37 8 45 24 C37 40 11 40 3 24 Z';
+const SQUINT = 'M5 24 C13 18 35 18 43 24 C35 30 13 30 5 24 Z';
+const FRAME = 'M2 10 V2 H10 M38 2 H46 V10 M46 38 V46 H38 M10 46 H2 V38';
+const PAL = {
+  claro: { accent: '#1F5F6B', high: '#B42318', mute: '#6B665D', frame: '#1F5F6B' },
+  oscuro: { accent: '#7BBAC5', high: '#F2877C', mute: '#A39E94', frame: '#7BBAC5' },
+  auto: { accent: 'var(--accent-text, #1F5F6B)', high: 'var(--high, #B42318)', mute: 'var(--text-3, #6B665D)', frame: 'var(--accent-text, #1F5F6B)' }
+};
+const S = {
+  logo:       { o: OPEN, pr: 5, frame: 1, k: 'accent', l: 'ARGUS' },
+  dormido:    { extra: 'M6 22 C14 31 34 31 42 22 M14 28.5 L12 33 M24 30.5 V35 M34 28.5 L36 33', k: 'mute', l: 'Asistente de IA: dormido' },
+  atento:     { o: OPEN, ir: 8, pr: 3.5, frame: 1, k: 'accent', l: 'Asistente de IA: leyendo archivos' },
+  exito:      { extra: 'M9 28 C15 16 33 16 39 28 M24 7 V11 M12 11 L14.5 14.5 M36 11 L33.5 14.5', k: 'accent', l: 'Asistente de IA: revisión sin inconsistencias' },
+  duda:       { o: SQUINT, ir: 5, pr: 2.5, extra: 'M29 12 L40 15', k: 'accent', l: 'Asistente de IA: duda, requiere confirmación' },
+  alerta:     { o: WIDE, ir: 9, pr: 2, frame: 1, k: 'high', l: 'Asistente de IA: riesgo alto detectado' },
+  explicando: { o: OPEN, ir: 7, pr: 3, ix: 28, k: 'accent', l: 'Asistente de IA: explicando' },
+  error:      { o: OPEN, dash: '4 3', extra: 'M18 24 H30', k: 'mute', l: 'Asistente de IA: error de lectura' }
+};
+class Component extends DCLogic {
+  renderVals() {
+    const st = S[this.props.estado] || S.atento;
+    const p = PAL[this.props.tema] || PAL.claro;
+    const px = Number(this.props.size ?? 48);
+    const sw = px <= 24 ? 3 : px <= 48 ? 2.25 : 1.6;
+    const c = p[st.k];
+    return {
+      px, sw, c, c2: st.k === 'high' ? p.high : p.frame,
+      label: this.props.label ?? st.l,
+      outline: st.o || '', frame: st.frame ? FRAME : '', extra: st.extra || '',
+      ir: st.ir || 0, pr: st.pr || 0, ix: st.ix || 24, dash: st.dash || 'none'
+    };
+  }
+}
+</script>
+</body>
+</html>

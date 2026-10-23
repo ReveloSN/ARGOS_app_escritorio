@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block" rel="stylesheet">
+</helmet>
+<div ref="{{ rootRef }}" tabindex="0" onKeyDown="{{ onKey }}" data-screen-label="06 Comparar documentos" style="width:1280px;height:800px;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:48px minmax(0,1fr);background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:13px;overflow:hidden;outline:none">
+  <div style="grid-row:1 / 3;display:flex"><dc-import name="ARGUS Sidebar" active="comparar" asistente="{{ asis }}" hint-size="216px,800px"></dc-import></div>
+  <dc-import name="ARGUS Topbar" engine="listo" placeholder="Buscar en los documentos comparados" hint-size="100%,48px"></dc-import>
+  <main style="display:grid;grid-template-rows:auto minmax(0,1fr);min-height:0">
+    <div style="padding:10px 20px 12px;display:flex;flex-direction:column;gap:10px;background:var(--surface);border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span>Expediente 2026-118</span><span style="color:var(--text-3)">›</span><span>Comparar</span><span style="color:var(--text-3)">›</span><span style="color:var(--text);font-weight:500">{{ crumb }}</span></div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <h1 style="margin:0;font-size:20px;line-height:28px;font-weight:600">Comparar documentos</h1>
+        <div style="flex:1"></div>
+        <div role="tablist" aria-label="Modo de comparación" style="flex:none;display:flex;border:1px solid var(--border-strong);border-radius:4px;overflow:hidden">
+          <sc-for list="{{ modes }}" as="m" hint-placeholder-count="3">
+            <button role="tab" aria-selected="{{ m.on }}" onClick="{{ m.go }}" style="white-space:nowrap;display:flex;align-items:center;gap:8px;min-height:32px;padding:0 14px;border:none;border-left:{{ m.bl }};background:{{ m.bg }};color:{{ m.fg }};font:{{ m.fw }} 13px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ m.label }}<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ m.kc }}">{{ m.key }}</span></button>
+          </sc-for>
+        </div>
+      </div>
+
+      <sc-if value="{{ isVers }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;min-width:0">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;padding:1px 6px;border:1px solid var(--border-strong);border-radius:3px">A</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">Contrato_4857_v2.docx</span>
+          <span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:18px;color:var(--text-3)">arrow_forward</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;padding:1px 6px;border:1px solid var(--border-strong);border-radius:3px">B</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">Contrato_4857_v3.docx</span>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:20px">
+          <sc-for list="{{ counters }}" as="k" hint-placeholder-count="4">
+            <div style="display:flex;align-items:baseline;gap:6px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:28px;line-height:32px;font-weight:500">{{ k.n }}</span>
+              <span style="font-size:13px;color:var(--text);padding:0 2px;border-radius:2px;background:{{ k.bg }};text-decoration:{{ k.td }};text-decoration-color:{{ k.tc }};text-decoration-thickness:2px;text-underline-offset:3px;outline:{{ k.ol }}">{{ k.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex:1"></div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--text-2)">
+          <span>Ignorar</span>
+          <sc-for list="{{ ignores }}" as="g" hint-placeholder-count="3">
+            <label onClick="{{ g.toggle }}" style="display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--text)">
+              <span aria-hidden="true" style="width:14px;height:14px;box-sizing:border-box;border-radius:3px;border:1px solid {{ g.bd }};background:{{ g.bg }};color:var(--accent-fg);display:grid;place-items:center;font-family:'Material Symbols Outlined';font-size:12px;line-height:1">{{ g.mark }}</span>{{ g.label }}
+            </label>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isInc }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;min-height:32px">
+        <span style="color:var(--text-2)">6 datos del expediente buscados en 4 documentos. Se compara contra el dato confirmado cuando existe.</span>
+        <div style="flex:1"></div>
+        <sc-for list="{{ riskCount }}" as="r" hint-placeholder-count="3">
+          <span style="display:flex;align-items:center;gap:6px;white-space:nowrap"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px;color:{{ r.fg }}">{{ r.icon }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500">{{ r.n }}</span><span style="color:var(--text-2)">{{ r.label }}</span></span>
+        </sc-for>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isMat }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:24px;min-height:32px">
+        <span style="color:var(--text-2)">5 documentos · 10 pares · {{ matPairs }} pares con diferencias. Seleccione una celda para ver el par.</span>
+      </div>
+      </sc-if>
+    </div>
+
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 320px;min-height:0">
+      <sc-if value="{{ isVers }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 16px;min-height:0">
+        <div style="display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--border)">
+          <div style="height:32px;flex:none;display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:12px;color:var(--text-2)"><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--text)">A</span><span>Versión 2 · <span style="font-family:'IBM Plex Mono',monospace">14/09/2026</span></span><span style="margin-left:auto">tachado = falta en B</span></div>
+          <div ref="{{ aRef }}" onScroll="{{ onScrollA }}" style="position:relative;flex:1;min-height:0;overflow:auto;padding:16px 20px 120px;background:var(--surface);font-family:'IBM Plex Serif',serif;font-size:14px;line-height:1.75">
+            <sc-for list="{{ parasA }}" as="p" hint-placeholder-count="6">
+              <p data-c="{{ p.mid }}" style="margin:0 0 12px;padding:{{ p.pad }};border-left:{{ p.bl }};background:{{ p.bg }};text-wrap:pretty">
+                <sc-if value="{{ p.moved }}" hint-placeholder-val="{{ false }}"><span onClick="{{ p.pick }}" style="display:flex;align-items:center;gap:4px;font:500 11px 'IBM Plex Sans',sans-serif;color:var(--accent-text);cursor:pointer"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px">{{ p.icon }}</span>{{ p.note }}</span></sc-if>
+                <strong style="font-weight:600;letter-spacing:0.02em;font-size:{{ p.ts }}">{{ p.title }}</strong>
+                <sc-for list="{{ p.segs }}" as="s" hint-placeholder-count="3"><span data-c="{{ s.id }}" onClick="{{ s.pick }}" style="background:{{ s.bg }};color:{{ s.fg }};text-decoration:{{ s.td }};text-decoration-color:{{ s.tc }};text-decoration-thickness:{{ s.tt }};text-underline-offset:3px;outline:{{ s.ol }};outline-offset:1px;border-radius:2px;cursor:{{ s.cur }}">{{ s.t }}</span><sup style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);padding:0 1px">{{ s.n }}</sup></sc-for>
+              </p>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;min-height:0">
+          <div style="height:32px;flex:none;display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:12px;color:var(--text-2)"><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--text)">B</span><span>Versión 3 · <span style="font-family:'IBM Plex Mono',monospace">02/10/2026</span></span><span style="margin-left:auto">subrayado = agregado</span></div>
+          <div ref="{{ bRef }}" onScroll="{{ onScrollB }}" style="position:relative;flex:1;min-height:0;overflow:auto;padding:16px 20px 120px;background:var(--surface);font-family:'IBM Plex Serif',serif;font-size:14px;line-height:1.75">
+            <sc-for list="{{ parasB }}" as="p" hint-placeholder-count="6">
+              <p data-c="{{ p.mid }}" style="margin:0 0 12px;padding:{{ p.pad }};border-left:{{ p.bl }};background:{{ p.bg }};text-wrap:pretty">
+                <sc-if value="{{ p.moved }}" hint-placeholder-val="{{ false }}"><span onClick="{{ p.pick }}" style="display:flex;align-items:center;gap:4px;font:500 11px 'IBM Plex Sans',sans-serif;color:var(--accent-text);cursor:pointer"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px">{{ p.icon }}</span>{{ p.note }}</span></sc-if>
+                <strong style="font-weight:600;letter-spacing:0.02em;font-size:{{ p.ts }}">{{ p.title }}</strong>
+                <sc-for list="{{ p.segs }}" as="s" hint-placeholder-count="3"><span data-c="{{ s.id }}" onClick="{{ s.pick }}" style="background:{{ s.bg }};color:{{ s.fg }};text-decoration:{{ s.td }};text-decoration-color:{{ s.tc }};text-decoration-thickness:{{ s.tt }};text-underline-offset:3px;outline:{{ s.ol }};outline-offset:1px;border-radius:2px;cursor:{{ s.cur }}">{{ s.t }}</span><sup style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);padding:0 1px">{{ s.n }}</sup></sc-for>
+              </p>
+            </sc-for>
+          </div>
+        </div>
+        <div aria-label="Minimapa de cambios" style="display:flex;flex-direction:column;border-left:1px solid var(--border);background:var(--surface-2)">
+          <div style="height:32px;flex:none;border-bottom:1px solid var(--border)"></div>
+          <div style="position:relative;flex:1;margin:6px 0">
+            <div style="position:absolute;left:1px;right:1px;top:{{ vpTop }};height:{{ vpH }};border:1px solid var(--text-3);border-radius:2px;box-sizing:border-box"></div>
+            <sc-for list="{{ marks }}" as="m" hint-placeholder-count="6">
+              <div title="{{ m.title }}" onClick="{{ m.pick }}" style="position:absolute;left:{{ m.l }};right:{{ m.l }};top:{{ m.top }};height:{{ m.h }};background:{{ m.c }};border-radius:1px;cursor:pointer"></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isInc }}" hint-placeholder-val="{{ false }}">
+      <div style="overflow:auto;min-height:0;padding:16px 20px">
+        <div role="table" style="border:1px solid var(--border-strong);border-radius:6px;background:var(--surface);overflow:hidden">
+          <div role="row" style="display:grid;grid-template-columns:170px repeat(4,minmax(0,1fr));background:var(--surface-2);border-bottom:1px solid var(--border)">
+            <span style="padding:8px 12px;font-size:12px;font-weight:500;color:var(--text-2)">Dato del expediente</span>
+            <sc-for list="{{ docs }}" as="d" hint-placeholder-count="4">
+              <span title="{{ d.name }}" style="padding:8px 10px;border-left:1px solid var(--border);display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3)">{{ d.type }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.name }}</span></span>
+            </sc-for>
+          </div>
+          <sc-for list="{{ incRows }}" as="r" hint-placeholder-count="6">
+            <div role="row" onClick="{{ r.pick }}" style="display:grid;grid-template-columns:170px repeat(4,minmax(0,1fr));border-top:1px solid var(--border);cursor:pointer;outline:{{ r.ol }};outline-offset:-2px;background:{{ r.bg }}">
+              <div style="padding:10px 12px;display:flex;flex-direction:column;gap:4px">
+                <span style="align-self:flex-start;display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:0 6px;border-radius:3px;border:1px solid {{ r.tagBd }};background:{{ r.tagBg }};color:{{ r.tagFg }}"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:14px">{{ r.icon }}</span>{{ r.risk }}</span>
+                <span style="font-weight:500">{{ r.dato }}</span>
+                <span style="font-size:11.5px;color:var(--text-2)">{{ r.confLabel }}</span>
+                <span style="font-size:11.5px;color:var(--accent-text);font-weight:500">{{ r.status }}</span>
+              </div>
+              <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4">
+                <div style="margin:6px;padding:6px 8px;border-radius:4px;border:1px solid {{ c.bd }};background:{{ c.bg }};display:flex;flex-direction:column;gap:2px;min-width:0">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:{{ c.fw }};color:{{ c.fg }};overflow-wrap:anywhere">{{ c.mark }}{{ c.v }}</span>
+                  <span style="font-size:11px;color:var(--text-3)">{{ c.src }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+        <span style="display:block;margin-top:10px;font-size:12px;color:var(--text-2)">≠ marca el valor que no coincide con el dato confirmado o con la mayoría de documentos.</span>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isMat }}" hint-placeholder-val="{{ false }}">
+      <div style="overflow:auto;min-height:0;padding:16px 20px">
+        <div role="grid" aria-label="Matriz de discrepancias" style="display:grid;grid-template-columns:150px repeat(5,minmax(0,1fr));border:1px solid var(--border-strong);border-radius:6px;background:var(--surface);overflow:hidden">
+          <span style="padding:8px 10px;background:var(--surface-2);font-size:11px;color:var(--text-3)">Filas × columnas</span>
+          <sc-for list="{{ matDocs }}" as="d" hint-placeholder-count="5">
+            <span title="{{ d.name }}" style="padding:8px 8px;background:var(--surface-2);border-left:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.35;overflow-wrap:anywhere">{{ d.short }}</span>
+          </sc-for>
+          <sc-for list="{{ matRows }}" as="row" hint-placeholder-count="5">
+            <span title="{{ row.name }}" style="padding:10px;border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.35;overflow-wrap:anywhere;background:var(--surface-2)">{{ row.short }}</span>
+            <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="5">
+              <div role="gridcell" title="{{ c.title }}" onClick="{{ c.pick }}" style="min-height:76px;border-top:1px solid var(--border);border-left:1px solid var(--border);padding:8px;display:flex;flex-direction:column;justify-content:center;gap:2px;background:{{ c.bg }};outline:{{ c.ol }};outline-offset:-2px;cursor:{{ c.cur }}">
+                <span style="display:flex;align-items:center;gap:4px;color:{{ c.fg }}"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px">{{ c.icon }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:500">{{ c.n }}</span></span>
+                <span style="font-size:11px;color:var(--text-2)">{{ c.label }}</span>
+              </div>
+            </sc-for>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--text-2);flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:4px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;color:var(--high)">report</span>Riesgo alto</span>
+          <span style="display:flex;align-items:center;gap:4px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;color:var(--med)">warning</span>Riesgo medio</span>
+          <span style="display:flex;align-items:center;gap:4px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;color:var(--low)">info</span>Riesgo bajo</span>
+          <span style="display:flex;align-items:center;gap:4px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;color:var(--accent-text)">check</span>Sin diferencias</span>
+        </div>
+      </div>
+      </sc-if>
+
+      <aside style="display:flex;flex-direction:column;min-height:0;border-left:1px solid var(--border-strong);background:var(--surface)">
+        <sc-if value="{{ isVers }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:10px 14px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-weight:600">Cambios</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-2)">{{ listCount }}</span><span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">J K para navegar</span></div>
+          <label onClick="{{ toggleImp }}" style="display:flex;align-items:flex-start;gap:6px;cursor:pointer;font-size:12px">
+            <span aria-hidden="true" style="width:14px;height:14px;box-sizing:border-box;border-radius:3px;border:1px solid {{ impBd }};background:{{ impBg }};color:var(--accent-fg);display:grid;place-items:center;font-family:'Material Symbols Outlined';font-size:12px;line-height:1">{{ impMark }}</span><span style="display:flex;flex-direction:column;line-height:1.35"><span>Solo cambios importantes</span><span style="color:var(--text-3)">números, fechas, nombres, negaciones</span></span>
+          </label>
+          <div style="display:flex;gap:4px;flex-wrap:wrap">
+            <sc-for list="{{ typeChips }}" as="t" hint-placeholder-count="5">
+              <button onClick="{{ t.go }}" style="white-space:nowrap;min-height:24px;padding:0 8px;border-radius:4px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};font:400 12px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ t.label }} <span style="font-family:'IBM Plex Mono',monospace;font-size:11px">{{ t.n }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="flex:1;min-height:80px;overflow:auto">
+          <sc-for list="{{ items }}" as="it" hint-placeholder-count="6">
+            <div onClick="{{ it.pick }}" aria-selected="{{ it.on }}" style="display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);background:{{ it.bg }};box-shadow:{{ it.sh }};cursor:pointer;opacity:{{ it.op }}">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3);padding-top:2px">{{ it.n }}</span>
+              <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;color:{{ it.kc }}">{{ it.icon }}</span><span style="font-weight:500">{{ it.kind }}</span><span style="color:var(--text-3)">· {{ it.loc }}</span></div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><span style="text-decoration:{{ it.atd }};text-decoration-color:var(--high)">{{ it.at }}</span><span style="color:var(--text-3)">{{ it.arrow }}</span><span style="text-decoration:{{ it.btd }};text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px">{{ it.bt }}</span></div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-2)"><span>IA: {{ it.cls }}</span><span style="margin-left:auto;font-weight:500;color:var(--accent-text)">{{ it.status }}</span></div>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ emptyList }}" hint-placeholder-val="{{ false }}"><div style="padding:24px 14px;color:var(--text-2);text-align:center">Ningún cambio con estos filtros.</div></sc-if>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ isMat }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto;min-height:0">
+          <span style="font-size:11px;color:var(--text-3);letter-spacing:0.04em;text-transform:uppercase">Par seleccionado</span>
+          <div style="display:flex;flex-direction:column;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:12px"><span>{{ pair.a }}</span><span style="color:var(--text-3)">frente a</span><span>{{ pair.b }}</span></div>
+          <span style="font-weight:600">{{ pair.summary }}</span>
+          <sc-for list="{{ pair.rows }}" as="r" hint-placeholder-count="3">
+            <div style="display:flex;flex-direction:column;gap:4px;padding-top:10px;border-top:1px solid var(--border)">
+              <span style="display:flex;align-items:center;gap:6px;font-size:12px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;color:{{ r.fg }}">{{ r.icon }}</span><span style="font-weight:500">{{ r.dato }}</span><span style="color:var(--text-3)">· {{ r.risk }}</span></span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ r.a }} <span style="color:var(--text-3)">≠</span> {{ r.b }}</span>
+            </div>
+          </sc-for>
+          <button onClick="{{ openPair }}" style="align-self:flex-start;min-width:140px;min-height:32px;padding:0 14px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif;cursor:pointer">Abrir el par <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.85">Enter</span></button>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ hasDet }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:none;border-top:1px solid var(--border-strong);padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:var(--surface);overflow:auto;max-height:{{ detMax }}">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;color:{{ det.kc }}">{{ det.icon }}</span><span style="font-weight:500;color:var(--text)">{{ det.kind }}</span><span>· {{ det.loc }}</span></div>
+          <span style="font-weight:600;font-size:14px;line-height:1.35;text-wrap:pretty">{{ det.title }}</span>
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px">
+            <div style="border:1px solid var(--border);border-radius:4px;padding:6px 8px;display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:11px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ det.aLabel }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;overflow-wrap:anywhere">{{ det.aVal }}</span></div>
+            <div style="border:1px solid var(--border);border-radius:4px;padding:6px 8px;display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:11px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ det.bLabel }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;overflow-wrap:anywhere">{{ det.bVal }}</span></div>
+          </div>
+          <sc-if value="{{ det.hasStatus }}" hint-placeholder-val="{{ false }}">
+            <div role="status" style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 8px;border-radius:4px;background:var(--accent-soft);color:var(--text)"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:15px;color:var(--accent-text)">check</span><span style="flex:1">Se guardó: {{ det.status }}</span><span onClick="{{ undo }}" style="color:var(--accent-text);text-decoration:underline;cursor:pointer">Deshacer</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">Ctrl Z</span></div>
+          </sc-if>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ actions }}" as="a" hint-placeholder-count="3">
+              <button onClick="{{ a.go }}" style="white-space:nowrap;flex:1 1 auto;min-width:84px;min-height:32px;padding:0 10px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:4px;border:1px solid {{ a.bd }};background:{{ a.bg }};color:{{ a.fg }};font:500 12.5px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ a.label }}<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.8">{{ a.key }}</span></button>
+            </sc-for>
+          </div>
+          <button onClick="{{ toggleExplain }}" aria-expanded="{{ explain }}" style="align-self:flex-start;min-height:28px;padding:0 8px;display:flex;align-items:center;gap:6px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);color:var(--text);font:400 12.5px 'IBM Plex Sans',sans-serif;cursor:pointer"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;color:var(--accent-text)">{{ explainIcon }}</span><span style="white-space:nowrap">Explicar este cambio</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">X</span></button>
+          <sc-if value="{{ explain }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <dc-import name="ARGUS Ojo" estado="explicando" tema="auto" size="24" hint-size="24px,24px"></dc-import>
+              <div style="flex:1;min-width:0;border:1px solid var(--border-strong);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:10.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--accent-text);background:var(--accent-soft);border-radius:3px;padding:1px 6px">Sugerencia de IA</span><span style="font-size:12px;font-weight:500">{{ det.cls }}</span></div>
+                <span style="font-size:12.5px;line-height:1.5;text-wrap:pretty">{{ det.why }}</span>
+                <div style="border-left:2px solid var(--border-strong);padding-left:8px;display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Serif',serif;font-size:12.5px;color:var(--text-2)">{{ det.quote }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-3)">{{ det.src }}</span></div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        </sc-if>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;claro&quot;,&quot;oscuro&quot;],&quot;default&quot;:&quot;claro&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;versiones&quot;,&quot;inconsistencias&quot;,&quot;matriz&quot;],&quot;default&quot;:&quot;versiones&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const THEMES = {
+  claro: {bg:'#F7F6F3',surface:'#FFFFFF','surface-2':'#F3F1EC','surface-3':'#EBE8E1',border:'#E2DFD8','border-strong':'#CFCBC2',text:'#1C1A17','text-2':'#4F4B44','text-3':'#6B665D',accent:'#1F5F6B','accent-hover':'#184C56','accent-fg':'#FFFFFF','accent-soft':'#E3EEF0','accent-text':'#1F5F6B',high:'#B42318','high-bg':'#FBEAE8','high-border':'#F0C2BC',med:'#8A5300','med-bg':'#FBF0DC','med-border':'#C9A266',low:'#4F4B44','low-bg':'#EFEDE8','low-border':'#CFCBC2'},
+  oscuro: {bg:'#141311',surface:'#1C1A17','surface-2':'#23211D','surface-3':'#2D2A26',border:'#34312C','border-strong':'#4A463F',text:'#ECE9E3','text-2':'#C4BFB5','text-3':'#9C978D',accent:'#7BBAC5','accent-hover':'#93C8D1','accent-fg':'#0E1F22','accent-soft':'#1B3236','accent-text':'#8CC6D0',high:'#F2877C','high-bg':'#3A1D19','high-border':'#6B2C25',med:'#E7B35A','med-bg':'#33270F','med-border':'#8A6A2A',low:'#C4BFB5','low-bg':'#2B2925','low-border':'#4A463F'}
+};
+const KIND = {
+  del: { label: 'Falta', plural: 'faltan', icon: 'remove', c: 'var(--high)' },
+  add: { label: 'Agregado', plural: 'agregadas', icon: 'add', c: 'var(--accent-text)' },
+  chg: { label: 'Cambiado', plural: 'cambiadas', icon: 'swap_horiz', c: 'var(--med)' },
+  mov: { label: 'Movido', plural: 'movida', icon: 'swap_vert', c: 'var(--text-2)' }
+};
+const CH = [
+  { id: 'razon', kind: 'chg', cat: 'punt', a: 'S.A.S.', b: 'SAS', cls: 'Reformulado', loc: 'Partes · pág. 1', para: 'partes', why: 'Es la misma razón social escrita sin puntos. Verifique que coincida con el certificado de existencia y representación legal.' },
+  { id: 'mayus', kind: 'chg', cat: 'mayus', a: 'Arrendatario', b: 'ARRENDATARIO', cls: 'Reformulado', loc: 'Partes · pág. 1', para: 'partes', why: 'Solo cambia el uso de mayúsculas. No afecta el contenido.' },
+  { id: 'distrib', kind: 'del', cat: 'texto', a: 'y distribución ', cls: 'Cambio de sentido', loc: 'Objeto · pág. 1', para: 'objeto', why: 'El uso autorizado se reduce a almacenamiento. Distribuir mercancía desde la bodega dejaría de estar permitido.' },
+  { id: 'iva', kind: 'add', cat: 'numero', b: ' más IVA', cls: 'Cambio de sentido', loc: 'Canon · pág. 1', para: 'canon', why: 'El canon pasa a cobrarse más IVA. Con la tarifa general del 19 %, el pago mensual sería de $ 21.955.500.' },
+  { id: 'plazo', kind: 'chg', cat: 'numero', a: 'cinco (5)', b: 'diez (10)', cls: 'Cambio de sentido', loc: 'Canon · pág. 1', para: 'canon', why: 'El plazo de pago pasa de 5 a 10 días. Cambia la fecha a partir de la cual el pago se considera en mora.' },
+  { id: 'seguros', kind: 'mov', cat: 'texto', a: 'Cláusula Seguros', b: 'Cláusula Seguros', cls: 'Reformulado', loc: 'Seguros · pág. 1 → pág. 2', para: 'seguros', why: 'La cláusula cambió de lugar y su texto es idéntico. El valor asegurado sigue siendo $ 500.000.000.' },
+  { id: 'locativas', kind: 'chg', cat: 'texto', a: 'reparaciones locativas', b: 'reparaciones menores', cls: 'Reformulado', loc: 'Mantenimiento · pág. 2', para: 'mant', why: 'Las dos expresiones se usan como equivalentes, pero «reparaciones locativas» es el término del Código Civil. Confirme si el cambio es intencional.' },
+  { id: 'quince', kind: 'add', cat: 'numero', b: ', en un plazo no mayor a quince (15) días hábiles', cls: 'Cambio de sentido', loc: 'Mantenimiento · pág. 2', para: 'mant', why: 'Se agrega un plazo de 15 días hábiles para hacer las reparaciones. Antes no había plazo.' },
+  { id: 'negacion', kind: 'add', cat: 'negacion', b: 'no ', cls: 'Cambio de sentido', loc: 'Terminación anticipada · pág. 2', para: 'term', why: 'Se agregó una negación: el arrendatario pierde el derecho a terminar el contrato antes del vencimiento. La cláusula conserva el preaviso, lo que la vuelve contradictoria.' },
+  { id: 'salvo', kind: 'del', cat: 'texto', a: 'salvo pacto en contrario, ', cls: 'Cambio de sentido', loc: 'Terminación anticipada · pág. 2', para: 'term', why: 'Se elimina la excepción. Ya no queda una vía para acordar una terminación anticipada.' },
+  { id: 'preaviso', kind: 'chg', cat: 'numero', a: 'treinta (30)', b: 'sesenta (60)', cls: 'Cambio de sentido', loc: 'Terminación anticipada · pág. 2', para: 'term', why: 'El preaviso se duplica, de 30 a 60 días calendario.' },
+  { id: 'escrito', kind: 'del', cat: 'texto', a: 'por escrito ', cls: 'Cambio de sentido', loc: 'Notificaciones · pág. 2', para: 'notif', why: 'Sin «por escrito», una comunicación verbal podría considerarse una notificación válida.' }
+];
+CH.forEach((c, i) => { c.n = i + 1; });
+const CHM = Object.fromEntries(CH.map(c => [c.id, c]));
+const IMPORTANT = ['numero', 'fecha', 'nombre', 'negacion'];
+const P = {
+  h: { title: 'CONTRATO DE ARRENDAMIENTO DE BODEGA No. 4857', ts: '13px', segs: [] },
+  partes: { title: '', segs: ['Entre INVERSIONES CALDAS S.A.S., NIT 900.482.315-7, en adelante EL ARRENDADOR, y LOGÍSTICA ANDINA ', { c: 'razon' }, ', NIT 901.237.884-2, en adelante EL ', { c: 'mayus' }, ', se celebra el presente contrato de arrendamiento, que se regirá por las cláusulas siguientes.'] },
+  objeto: { title: 'OBJETO. ', segs: ['EL ARRENDADOR entrega a título de arrendamiento la bodega ubicada en la Calle 17 No. 68D-52, Fontibón, Bogotá D.C., con un área de 1.240 m², destinada al almacenamiento ', { c: 'distrib' }, 'de mercancía no perecedera.'] },
+  canon: { title: 'CANON. ', segs: ['El canon mensual es de $ 18.450.000', { c: 'iva' }, ', pagadero dentro de los ', { c: 'plazo' }, ' primeros días de cada mes en la cuenta que indique EL ARRENDADOR.'] },
+  vigencia: { title: 'VIGENCIA. ', segs: ['El contrato tendrá una duración de treinta y seis (36) meses contados a partir del 01/07/2026, prorrogables por periodos iguales si ninguna de las partes manifiesta lo contrario.'] },
+  seguros: { title: 'SEGUROS. ', move: 'seguros', segs: ['EL ARRENDATARIO mantendrá vigente durante el contrato una póliza de responsabilidad civil extracontractual con un valor asegurado de $ 500.000.000, en la que figure EL ARRENDADOR como beneficiario.'] },
+  mant: { title: 'MANTENIMIENTO. ', segs: ['Corren por cuenta de EL ARRENDATARIO las ', { c: 'locativas' }, ' del inmueble', { c: 'quince' }, '. Las reparaciones estructurales corresponden a EL ARRENDADOR.'] },
+  term: { title: 'TERMINACIÓN ANTICIPADA. ', segs: ['EL ARRENDATARIO ', { c: 'negacion' }, 'podrá terminar el contrato antes de su vencimiento, ', { c: 'salvo' }, 'dando un preaviso de ', { c: 'preaviso' }, ' días calendario.'] },
+  notif: { title: 'NOTIFICACIONES. ', segs: ['Toda comunicación entre las partes se hará ', { c: 'escrito' }, 'a las direcciones registradas en este contrato.'] }
+};
+const ORDER_A = ['h', 'partes', 'objeto', 'canon', 'vigencia', 'seguros', 'mant', 'term', 'notif'];
+const ORDER_B = ['h', 'partes', 'objeto', 'canon', 'vigencia', 'mant', 'term', 'seguros', 'notif'];
+const RISK = {
+  alto: { risk: 'Alto', icon: 'report', fg: 'var(--high)', tagBg: 'var(--high-bg)', tagFg: 'var(--high)', tagBd: 'var(--high-border)', w: 3 },
+  medio: { risk: 'Medio', icon: 'warning', fg: 'var(--med)', tagBg: 'var(--med-bg)', tagFg: 'var(--med)', tagBd: 'var(--med-border)', w: 2 },
+  bajo: { risk: 'Bajo', icon: 'info', fg: 'var(--low)', tagBg: 'var(--low-bg)', tagFg: 'var(--low)', tagBd: 'var(--low-border)', w: 1 }
+};
+const DOCS = [
+  { id: 'v3', name: 'Contrato_4857_v3.docx', type: 'DOCX' },
+  { id: 'an1', name: 'Anexo_1_condiciones.pdf', type: 'PDF' },
+  { id: 'an2', name: 'Anexo_2_tarifas.xlsx', type: 'XLSX' },
+  { id: 'mail', name: 'Correo_remision_cliente.eml', type: 'EML' }
+];
+const INC = [
+  { id: 'num', dato: 'Número de contrato', risk: 'alto', conf: '4857', cells: { v3: ['4857', 'pág. 1'], an1: ['4587', 'pág. 1', 1], an2: ['4857', 'hoja Resumen, A2'], mail: ['4857', 'asunto'] }, why: 'Tres documentos dicen 4857 y el Anexo 1 dice 4587. El 5 y el 8 están invertidos, un patrón típico de error de digitación.', quote: '«…condiciones particulares del Contrato No. 4587 suscrito entre…»', src: 'Anexo_1_condiciones.pdf · pág. 1' },
+  { id: 'canon', dato: 'Canon mensual', risk: 'alto', conf: '$ 18.450.000', cells: { v3: ['$ 18.450.000', 'cláusula Canon'], an1: null, an2: ['$ 18.540.000', 'hoja Tarifas, C12', 1], mail: null }, why: 'La hoja de tarifas tiene $ 90.000 más que el contrato. El 4 y el 5 están invertidos.', quote: 'Canon mensual bodega Fontibón | 18.540.000', src: 'Anexo_2_tarifas.xlsx · hoja Tarifas · C12' },
+  { id: 'fecha', dato: 'Fecha de inicio', risk: 'medio', conf: null, cells: { v3: ['01/07/2026', 'cláusula Vigencia'], an1: ['01/07/2026', 'pág. 2'], an2: null, mail: ['01/08/2026', 'párrafo 2', 1] }, why: 'El correo ubica el inicio un mes después que el contrato y el Anexo 1. Si el correo es posterior, puede reflejar un acuerdo nuevo; confírmelo antes de enviar.', quote: '«…la entrega de la bodega queda programada para el 01/08/2026…»', src: 'Correo_remision_cliente.eml · párrafo 2' },
+  { id: 'vig', dato: 'Vigencia', risk: 'medio', conf: '36 meses', cells: { v3: ['36 meses', 'cláusula Vigencia'], an1: ['30 meses', 'pág. 1', 1], an2: null, mail: null }, why: 'El Anexo 1 indica 6 meses menos. La terminación pasaría del 30/06/2029 al 31/12/2028.', quote: '«…por un término de treinta (30) meses…»', src: 'Anexo_1_condiciones.pdf · pág. 1' },
+  { id: 'nit', dato: 'NIT del arrendador', risk: 'medio', conf: '900.482.315-7', cells: { v3: ['900.482.315-7', 'pág. 1'], an1: ['900.482.315-7', 'pág. 1'], an2: ['900.482.315-1', 'hoja Resumen, A4', 1], mail: null }, why: 'Cambia el dígito de verificación. Con un NIT mal escrito, la factura electrónica podría ser rechazada.', quote: 'NIT arrendador | 900.482.315-1', src: 'Anexo_2_tarifas.xlsx · hoja Resumen · A4' },
+  { id: 'razon', dato: 'Razón social del arrendatario', risk: 'bajo', conf: 'LOGÍSTICA ANDINA S.A.S.', cells: { v3: ['LOGÍSTICA ANDINA S.A.S.', 'pág. 1'], an1: ['LOGISTICA ANDINA SAS', 'pág. 1', 1], an2: ['LOGÍSTICA ANDINA S.A.S.', 'hoja Resumen, A3'], mail: ['Logística Andina SAS', 'firma', 1] }, why: 'Es la misma razón social escrita con y sin puntos o tildes. Solo importa si el documento se radica ante una entidad que exige el nombre exacto.', quote: '«…y LOGISTICA ANDINA SAS, en calidad de arrendatario…»', src: 'Anexo_1_condiciones.pdf · pág. 1' }
+];
+const MAT = [{ id: 'v2', name: 'Contrato_4857_v2.docx' }, ...DOCS];
+const LABELS = { correcto: 'Es correcto', error: 'Es un error', ignorar: 'Ignorado' };
+const OFF = ['', 'none', 'transparent', 'inherit'];
+class Component extends DCLogic {
+  state = {
+    mode: this.props.mode ?? 'versiones', sel: 'negacion', inc: 'num', pair: [1, 2],
+    explain: true, imp: false, type: 'all', ign: { mayus: false, punt: false, formato: true },
+    dec: { razon_inc: 'correcto' }, hist: [], vp: [0, 0.6]
+  };
+  rootRef = React.createRef(); aRef = React.createRef(); bRef = React.createRef();
+  applyTheme() {
+    const el = this.rootRef.current; if (!el) return;
+    const t = THEMES[this.props.theme ?? 'claro'] || THEMES.claro;
+    Object.entries(t).forEach(([k, v]) => el.style.setProperty('--' + k, v));
+  }
+  componentDidMount() { this.applyTheme(); setTimeout(() => this.updVp(), 300); }
+  componentDidUpdate(p) { if (p.theme !== this.props.theme) this.applyTheme(); }
+  updVp() {
+    const a = this.aRef.current; if (!a) return;
+    const max = a.scrollHeight - a.clientHeight;
+    const vis = a.clientHeight / a.scrollHeight;
+    const r = max > 0 ? a.scrollTop / max : 0;
+    this.setState({ vp: [r * (1 - vis), Math.min(1, vis)] });
+  }
+  sync(from, to) {
+    if (this.lock) return;
+    const a = from.current, b = to.current; if (!a || !b) return;
+    const max = a.scrollHeight - a.clientHeight;
+    const r = max > 0 ? a.scrollTop / max : 0;
+    this.lock = true; b.scrollTop = r * (b.scrollHeight - b.clientHeight);
+    clearTimeout(this.lt); this.lt = setTimeout(() => { this.lock = false; }, 60);
+    this.updVp();
+  }
+  hiddenByToggle(c) { const g = this.state.ign; return (c.cat === 'mayus' && g.mayus) || (c.cat === 'punt' && g.punt) || (c.cat === 'formato' && g.formato); }
+  visible() {
+    const s = this.state;
+    return CH.filter(c => !this.hiddenByToggle(c) && (!s.imp || IMPORTANT.includes(c.cat)) && (s.type === 'all' || s.type === c.kind));
+  }
+  select(id) {
+    this.setState({ sel: id }, () => {
+      this.lock = true;
+      [this.aRef, this.bRef].forEach(r => {
+        const pane = r.current; if (!pane) return;
+        const el = pane.querySelector('[data-c="' + id + '"]');
+        if (el) pane.scrollTop = Math.max(0, el.offsetTop - 120);
+      });
+      clearTimeout(this.lt); this.lt = setTimeout(() => { this.lock = false; this.updVp(); }, 80);
+    });
+  }
+  move(d) {
+    const s = this.state;
+    if (s.mode === 'inconsistencias') {
+      const i = INC.findIndex(r => r.id === s.inc); const n = INC[i + d]; if (n) this.setState({ inc: n.id }); return;
+    }
+    const v = this.visible(); const i = v.findIndex(c => c.id === s.sel); const n = v[i + d]; if (n) this.select(n.id);
+  }
+  key() { const s = this.state; return s.mode === 'inconsistencias' ? s.inc + '_inc' : s.sel; }
+  decide(d) {
+    const k = this.key();
+    this.setState(s => ({ dec: { ...s.dec, [k]: d }, hist: [...s.hist, [k, s.dec[k]]] }), () => {
+      if (this.state.mode === 'versiones') {
+        const v = this.visible(); const i = v.findIndex(c => c.id === this.state.sel);
+        const next = v.slice(i + 1).find(c => !this.state.dec[c.id]);
+        if (next) setTimeout(() => this.select(next.id), 450);
+      }
+    });
+  }
+  undo() {
+    this.setState(s => {
+      if (!s.hist.length) return null;
+      const h = s.hist.slice(); const [k, prev] = h.pop(); const dec = { ...s.dec };
+      if (prev) dec[k] = prev; else delete dec[k];
+      return { dec, hist: h, sel: k.endsWith('_inc') ? s.sel : k };
+    });
+  }
+  setMode(m) { this.setState({ mode: m }, () => setTimeout(() => this.updVp(), 50)); }
+  openPair() {
+    const [i, j] = this.state.pair; const ids = [MAT[i].id, MAT[j].id];
+    if (ids.includes('v2') && ids.includes('v3')) this.setMode('versiones');
+    else {
+      const rows = this.pairRows(i, j);
+      this.setState({ inc: rows[0] ? rows[0].id : this.state.inc }); this.setMode('inconsistencias');
+    }
+  }
+  pairRows(i, j) {
+    const a = MAT[i].id === 'v2' ? 'v3' : MAT[i].id, b = MAT[j].id === 'v2' ? 'v3' : MAT[j].id;
+    return INC.filter(r => r.cells[a] && r.cells[b] && r.cells[a][0] !== r.cells[b][0]).map(r => ({ ...r, va: r.cells[a][0], vb: r.cells[b][0] }));
+  }
+  onKey = (e) => {
+    const k = e.key.toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && k === 'z') { e.preventDefault(); this.undo(); return; }
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (k === '1') this.setMode('versiones'); else if (k === '2') this.setMode('inconsistencias'); else if (k === '3') this.setMode('matriz');
+    else if (this.state.mode === 'matriz') { if (k === 'enter') this.openPair(); }
+    else if (k === 'c') this.decide('correcto'); else if (k === 'e') this.decide('error'); else if (k === 'i') this.decide('ignorar');
+    else if (k === 'x') this.setState(s => ({ explain: !s.explain }));
+    else if (k === 'j' || k === 'arrowdown') { e.preventDefault(); this.move(1); }
+    else if (k === 'k' || k === 'arrowup') { e.preventDefault(); this.move(-1); }
+  };
+  segStyle(c, side, on) {
+    const base = { bg: 'transparent', fg: 'inherit', td: 'none', tc: 'currentColor', tt: '1px', ol: 'none', cur: 'pointer' };
+    if (c.kind === 'del') Object.assign(base, { bg: 'var(--high-bg)', fg: 'var(--high)', td: 'line-through', tc: 'var(--high)', tt: '1.5px' });
+    if (c.kind === 'add') Object.assign(base, { bg: 'var(--accent-soft)', td: 'underline', tc: 'var(--accent)', tt: '2px' });
+    if (c.kind === 'chg') Object.assign(base, { bg: 'var(--med-bg)', ol: '1px dashed var(--med-border)' });
+    if (on) base.ol = '2px solid var(--accent)';
+    return base;
+  }
+  buildParas(order, side) {
+    const s = this.state;
+    return order.map(key => {
+      const p = P[key]; const segs = [];
+      p.segs.forEach(sg => {
+        if (typeof sg === 'string') { segs.push({ t: sg, id: '', n: '', bg: 'transparent', fg: 'inherit', td: 'none', tc: 'currentColor', tt: '1px', ol: 'none', cur: 'text', pick: undefined }); return; }
+        const c = CHM[sg.c];
+        const t = side === 'A' ? (c.kind === 'add' ? '' : c.a) : (c.kind === 'del' ? '' : c.b);
+        if (!t) return;
+        if (this.hiddenByToggle(c) || s.dec[c.id] === 'ignorar') { segs.push({ t, id: c.id, n: '', bg: 'transparent', fg: 'inherit', td: 'none', tc: 'currentColor', tt: '1px', ol: 'none', cur: 'text' }); return; }
+        segs.push({ t, id: c.id, n: String(c.n), pick: () => this.select(c.id), ...this.segStyle(c, side, s.sel === c.id) });
+      });
+      const mv = p.move ? CHM[p.move] : null; const on = mv && s.sel === mv.id;
+      return {
+        title: p.title, ts: p.ts || '14px', segs, mid: mv ? mv.id : '', moved: !!mv,
+        icon: side === 'A' ? 'move_down' : 'move_up',
+        note: side === 'A' ? 'Movida: en B está después de «Terminación anticipada»' : 'Movida: en A estaba después de «Vigencia»',
+        pick: mv ? () => this.select(mv.id) : undefined,
+        pad: mv ? '4px 0 4px 10px' : '0', bl: mv ? (on ? '3px solid var(--accent)' : '2px dashed var(--accent)') : 'none', bg: on ? 'var(--accent-soft)' : 'transparent'
+      };
+    });
+  }
+  renderVals() {
+    const s = this.state;
+    const mode = s.mode;
+    const modes = [['versiones', 'Comparar versiones', '1'], ['inconsistencias', 'Buscar inconsistencias', '2'], ['matriz', 'Matriz', '3']].map(([id, label, key], i) => {
+      const on = mode === id;
+      return { label, key, on: on ? 'true' : 'false', go: () => this.setMode(id), bl: i ? '1px solid var(--border-strong)' : 'none', bg: on ? 'var(--accent)' : 'var(--surface)', fg: on ? 'var(--accent-fg)' : 'var(--text)', kc: on ? 'var(--accent-fg)' : 'var(--text-3)', fw: on ? 500 : 400 };
+    });
+    const shown = CH.filter(c => !this.hiddenByToggle(c));
+    const cnt = k => shown.filter(c => c.kind === k).length;
+    const counters = [
+      { n: cnt('del'), label: 'faltan', bg: 'var(--high-bg)', td: 'line-through', tc: 'var(--high)', ol: 'none' },
+      { n: cnt('add'), label: 'agregadas', bg: 'var(--accent-soft)', td: 'underline', tc: 'var(--accent)', ol: 'none' },
+      { n: cnt('chg'), label: 'cambiadas', bg: 'var(--med-bg)', td: 'none', tc: 'currentColor', ol: '1px dashed var(--med-border)' },
+      { n: cnt('mov'), label: cnt('mov') === 1 ? 'movida' : 'movidas', bg: 'transparent', td: 'none', tc: 'currentColor', ol: '1px dashed var(--accent)' }
+    ];
+    const ignores = [['mayus', 'mayúsculas'], ['punt', 'puntuación'], ['formato', 'formato']].map(([k, label]) => {
+      const on = s.ign[k];
+      return { label, mark: on ? 'check' : '', bd: on ? 'var(--accent)' : 'var(--border-strong)', bg: on ? 'var(--accent)' : 'var(--surface)', toggle: () => this.setState(st => ({ ign: { ...st.ign, [k]: !st.ign[k] } })) };
+    });
+    const vis = this.visible();
+    const items = vis.map(c => {
+      const on = s.sel === c.id; const d = s.dec[c.id];
+      return {
+        n: c.n, kind: KIND[c.kind].label, icon: KIND[c.kind].icon, kc: KIND[c.kind].c, loc: c.loc, cls: c.cls,
+        at: c.kind === 'add' ? '' : c.a, atd: c.kind === 'del' ? 'line-through' : 'none',
+        arrow: c.kind === 'chg' ? ' → ' : '', bt: c.kind === 'del' || c.kind === 'mov' ? '' : c.b, btd: c.kind === 'add' ? 'underline' : 'none',
+        status: d ? LABELS[d] : '', op: d === 'ignorar' ? 0.6 : 1,
+        on: on ? 'true' : 'false', bg: on ? 'var(--accent-soft)' : 'transparent', sh: on ? 'inset 3px 0 0 var(--accent)' : 'none', pick: () => this.select(c.id)
+      };
+    });
+    const typeChips = [['all', 'Todos', shown.length], ['del', 'Faltan', cnt('del')], ['add', 'Agregadas', cnt('add')], ['chg', 'Cambiadas', cnt('chg')], ['mov', 'Movidas', cnt('mov')]].map(([k, label, n]) => {
+      const on = s.type === k;
+      return { label, n, go: () => this.setState({ type: k }), bd: on ? 'var(--accent)' : 'var(--border-strong)', bg: on ? 'var(--accent-soft)' : 'var(--surface)', fg: on ? 'var(--accent-text)' : 'var(--text)' };
+    });
+    const N = ORDER_B.length;
+    const marks = shown.map(c => {
+      const pi = ORDER_B.indexOf(c.para); const segIdx = P[c.para].segs.findIndex(sg => sg.c === c.id);
+      const frac = c.kind === 'mov' ? 0.1 : (segIdx + 0.5) / Math.max(1, P[c.para].segs.length);
+      const on = s.sel === c.id;
+      return { title: c.n + '. ' + KIND[c.kind].label + ' · ' + c.loc, top: (((pi + frac) / N) * 92 + 2) + '%', h: c.kind === 'mov' ? '12px' : '4px', c: KIND[c.kind].c, l: on ? '0px' : '3px', pick: () => this.select(c.id) };
+    });
+    // detail
+    let det = null;
+    if (mode === 'versiones') {
+      const c = CHM[s.sel];
+      if (c) {
+        const d = s.dec[c.id];
+        const plainB = P[c.para].segs.map(sg => typeof sg === 'string' ? sg : (CHM[sg.c].kind === 'del' ? '' : CHM[sg.c].b)).join('');
+        const plainA = P[c.para].segs.map(sg => typeof sg === 'string' ? sg : (CHM[sg.c].kind === 'add' ? '' : CHM[sg.c].a)).join('');
+        const src = c.kind === 'del' ? plainA : plainB; const needle = c.kind === 'del' ? c.a : c.b;
+        const at = Math.max(0, src.indexOf(needle)); const st0 = Math.max(0, at - 50);
+        const quote = '«' + (st0 > 0 ? '…' : '') + P[c.para].title + (st0 > 0 ? '' : '') + src.slice(st0, at + needle.length + 50).trim() + '…»';
+        det = {
+          kind: KIND[c.kind].label, icon: KIND[c.kind].icon, kc: KIND[c.kind].c, loc: c.loc,
+          title: c.kind === 'mov' ? 'La cláusula Seguros cambió de posición' : c.kind === 'del' ? 'Falta en B: «' + c.a.trim() + '»' : c.kind === 'add' ? 'Agregado en B: «' + c.b.replace(/^,\s*/, '').trim() + '»' : '«' + c.a + '» cambió a «' + c.b + '»',
+          aLabel: 'A · Contrato_4857_v2.docx', aVal: c.kind === 'add' ? '(no aparece)' : c.kind === 'mov' ? 'después de Vigencia' : c.a.trim(),
+          bLabel: 'B · Contrato_4857_v3.docx', bVal: c.kind === 'del' ? '(no aparece)' : c.kind === 'mov' ? 'después de Terminación anticipada' : c.b.replace(/^,\s*/, '').trim(),
+          cls: c.cls, why: c.why, quote: c.kind === 'mov' ? '«SEGUROS. EL ARRENDATARIO mantendrá vigente durante el contrato una póliza…»' : quote,
+          src: (c.kind === 'del' ? 'Contrato_4857_v2.docx · ' : 'Contrato_4857_v3.docx · ') + c.loc, status: d ? LABELS[d] : '', hasStatus: !!d
+        };
+      }
+    } else if (mode === 'inconsistencias') {
+      const r = INC.find(x => x.id === s.inc);
+      const bad = DOCS.find(dd => r.cells[dd.id] && r.cells[dd.id][2]); const good = DOCS.find(dd => r.cells[dd.id] && !r.cells[dd.id][2]);
+      const d = s.dec[r.id + '_inc']; const R = RISK[r.risk];
+      det = {
+        kind: 'Riesgo ' + R.risk.toLowerCase(), icon: R.icon, kc: R.fg, loc: bad.name, title: r.dato + ' no coincide',
+        aLabel: r.conf ? 'Dato confirmado' : good.name, aVal: r.conf || r.cells[good.id][0],
+        bLabel: bad.name, bVal: r.cells[bad.id][0], cls: r.risk === 'bajo' ? 'Probable diferencia de formato' : 'Probable error', why: r.why, quote: r.quote, src: r.src,
+        status: d ? LABELS[d] : '', hasStatus: !!d
+      };
+    }
+    const actions = [['correcto', 'Es correcto', 'C'], ['error', 'Es un error', 'E'], ['ignorar', 'Ignorar', 'I']].map(([k, label, key]) => {
+      const cur = det && det.status === LABELS[k];
+      return { label, key, go: () => this.decide(k), bd: cur ? 'var(--accent)' : 'var(--border-strong)', bg: cur ? 'var(--accent)' : 'var(--surface)', fg: cur ? 'var(--accent-fg)' : 'var(--text)' };
+    });
+    // inconsistencias table
+    const incRows = INC.map(r => {
+      const R = RISK[r.risk]; const on = s.inc === r.id; const d = s.dec[r.id + '_inc'];
+      return {
+        ...R, dato: r.dato, confLabel: r.conf ? 'Confirmado: ' + r.conf : 'Sin dato confirmado', status: d ? LABELS[d] : '',
+        ol: on ? '2px solid var(--accent)' : 'none', bg: on ? 'var(--accent-soft)' : 'transparent', pick: () => this.setState({ inc: r.id }),
+        cells: DOCS.map(dd => {
+          const c = r.cells[dd.id];
+          if (!c) return { v: '—', mark: '', src: 'No aparece', fw: 400, fg: 'var(--text-3)', bd: 'transparent', bg: 'transparent' };
+          const badc = !!c[2];
+          return { v: c[0], mark: badc ? '≠ ' : '', src: c[1], fw: badc ? 600 : 400, fg: badc ? R.fg : 'var(--text)', bd: badc ? R.tagBd : 'var(--border)', bg: badc ? R.tagBg : 'var(--surface)' };
+        })
+      };
+    });
+    const riskCount = ['alto', 'medio', 'bajo'].map(k => ({ ...RISK[k], n: INC.filter(r => r.risk === k).length, label: 'riesgo ' + RISK[k].risk.toLowerCase() }));
+    // matriz
+    const short = n => n.replace(/_/g, '_\u200b');
+    let matPairs = 0;
+    const matRows = MAT.map((row, i) => ({
+      name: row.name, short: short(row.name),
+      cells: MAT.map((col, j) => {
+        if (i === j) return { n: '', icon: '', label: 'mismo documento', title: row.name, bg: 'repeating-linear-gradient(135deg, var(--surface-2) 0 6px, var(--surface) 6px 12px)', fg: 'var(--text-3)', ol: 'none', cur: 'default' };
+        const ids = [row.id, col.id]; const on = (s.pair[0] === i && s.pair[1] === j) || (s.pair[0] === j && s.pair[1] === i);
+        let n, R, label;
+        if (ids.includes('v2') && ids.includes('v3')) { n = CH.length; R = RISK.alto; label = 'cambios entre versiones'; }
+        else {
+          const rows = this.pairRows(i, j); n = rows.length;
+          R = rows.reduce((m, r) => (RISK[r.risk].w > m.w ? RISK[r.risk] : m), { w: 0 });
+          label = n === 1 ? 'discrepancia' : 'discrepancias';
+        }
+        if (i < j && n) matPairs++;
+        const pick = () => this.setState({ pair: [i, j] });
+        if (!n) return { n: '0', icon: 'check', label: 'sin diferencias', title: row.name + ' × ' + col.name, bg: on ? 'var(--accent-soft)' : 'transparent', fg: 'var(--accent-text)', ol: on ? '2px solid var(--accent)' : 'none', cur: 'pointer', pick };
+        return { n: String(n), icon: R.icon, label, title: row.name + ' × ' + col.name, bg: on ? 'var(--accent-soft)' : (i > j ? 'var(--surface-2)' : 'transparent'), fg: R.fg, ol: on ? '2px solid var(--accent)' : 'none', cur: 'pointer', pick };
+      })
+    }));
+    const [pi, pj] = s.pair; const isVer = [MAT[pi].id, MAT[pj].id].sort().join() === 'v2,v3';
+    const prs = isVer ? [] : this.pairRows(pi, pj);
+    const pair = {
+      a: MAT[pi].name, b: MAT[pj].name,
+      summary: isVer ? CH.length + ' cambios entre versiones' : prs.length ? prs.length + (prs.length === 1 ? ' discrepancia' : ' discrepancias') : 'Sin diferencias',
+      rows: prs.map(r => ({ ...RISK[r.risk], dato: r.dato, a: r.va, b: r.vb }))
+    };
+    return {
+      rootRef: this.rootRef, aRef: this.aRef, bRef: this.bRef, onKey: this.onKey,
+      onScrollA: () => this.sync(this.aRef, this.bRef), onScrollB: () => this.sync(this.bRef, this.aRef),
+      crumb: { versiones: 'Contrato v2 frente a v3', inconsistencias: 'Inconsistencias entre documentos', matriz: 'Matriz de 5 documentos' }[mode],
+      isVers: mode === 'versiones', isInc: mode === 'inconsistencias', isMat: mode === 'matriz',
+      asis: s.explain && mode !== 'matriz' ? 'explicando' : 'atento',
+      modes, counters, ignores, parasA: this.buildParas(ORDER_A, 'A'), parasB: this.buildParas(ORDER_B, 'B'), marks,
+      vpTop: (s.vp[0] * 100) + '%', vpH: (s.vp[1] * 100) + '%',
+      listCount: vis.length + ' de ' + shown.length, items, emptyList: !vis.length, typeChips,
+      toggleImp: () => this.setState(st => ({ imp: !st.imp })), impMark: s.imp ? 'check' : '', impBd: s.imp ? 'var(--accent)' : 'var(--border-strong)', impBg: s.imp ? 'var(--accent)' : 'var(--surface)',
+      hasDet: !!det, det: det || {}, detMax: mode === 'versiones' ? '62%' : '100%', actions, undo: () => this.undo(),
+      explain: s.explain, explainIcon: s.explain ? 'expand_less' : 'expand_more', toggleExplain: () => this.setState(st => ({ explain: !st.explain })),
+      docs: DOCS, incRows, riskCount, matDocs: MAT.map(d => ({ name: d.name, short: short(d.name) })), matRows, matPairs, pair, openPair: () => this.openPair()
+    };
+  }
+}
+</script>
+</body>
+</html>

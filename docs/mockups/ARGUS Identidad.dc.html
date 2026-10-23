@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#E4E1DA;font-family:'IBM Plex Sans',sans-serif;color:#1C1A17}a{color:#1F5F6B}a:hover{color:#184C56}</style>
+</helmet>
+<div style="width:1280px;padding:56px 64px 96px;box-sizing:border-box;display:flex;flex-direction:column;gap:64px;font-size:13px;line-height:1.5">
+
+  <header style="position:relative;overflow:hidden;background:#FFFFFF;border:1px solid #CFCBC2;border-radius:6px;padding:48px;display:flex;flex-direction:column;gap:24px">
+    <svg width="560" height="560" viewBox="0 0 560 560" aria-hidden="true" style="position:absolute;right:-120px;top:-150px;opacity:0.5">
+      <g fill="none" stroke="#CFCBC2" stroke-width="1"><circle cx="280" cy="280" r="96"></circle><circle cx="280" cy="280" r="176"></circle><circle cx="280" cy="280" r="256" stroke-dasharray="2 6"></circle><path d="M280 0 V64 M280 496 V560 M0 280 H64 M496 280 H560 M88 88 L120 120 M472 88 L440 120 M88 472 L120 440 M472 472 L440 440"></path></g>
+    </svg>
+    <div style="display:flex;gap:16px;font-size:13px"><a href="ARGUS.dc.html">Pantallas</a><a href="ARGUS Design System.dc.html">Design system</a><a href="ARGUS Estados y Mensajes.dc.html">Estados y mensajes</a><a href="ARGUS Movimiento.dc.html">Movimiento</a><a href="ARGUS Justificacion.dc.html">Justificación</a></div>
+    <div style="display:flex;align-items:center;gap:16px;position:relative">
+      <dc-import name="ARGUS Ojo" estado="logo" size="48" hint-size="48px,48px"></dc-import>
+      <span style="font-size:32px;font-weight:600;letter-spacing:0.18em">ARGUS</span>
+    </div>
+    <p style="margin:0;max-width:620px;font-size:16px;line-height:1.6;color:#4F4B44;position:relative;text-wrap:pretty">Argos Panoptes, el gigante de los cien ojos, vigilaba sin dormir. ARGUS hace lo mismo con sus documentos: compara versiones, encuentra lo que no coincide entre archivos y recuerda lo que usted ya confirmó.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;position:relative">
+      <span style="border:1px solid #CFCBC2;border-radius:4px;padding:2px 10px;background:#FFFFFF">Precisa</span>
+      <span style="border:1px solid #CFCBC2;border-radius:4px;padding:2px 10px;background:#FFFFFF">Sobria</span>
+      <span style="border:1px solid #CFCBC2;border-radius:4px;padding:2px 10px;background:#FFFFFF">Confiable</span>
+      <span style="border:1px solid #CFCBC2;border-radius:4px;padding:2px 10px;background:#FFFFFF">Calmada</span>
+      <span style="border:1px solid #1F5F6B;color:#1F5F6B;border-radius:4px;padding:2px 10px;background:#E3EEF0">Atenta al detalle</span>
+    </div>
+  </header>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:12px"><span style="font-family:'IBM Plex Mono',monospace;color:#6B665D">01</span><h2 style="margin:0;font-size:18px;font-weight:600">Logo</h2></div>
+    <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:16px">
+      <div style="background:#FFFFFF;border:1px solid #E2DFD8;border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:16px">
+        <span style="font-weight:600">Construcción</span>
+        <div style="align-self:center;width:192px;height:192px;display:grid;place-items:center;background-color:#FFFFFF;background-image:linear-gradient(#EBE8E1 1px,transparent 1px),linear-gradient(90deg,#EBE8E1 1px,transparent 1px);background-size:16px 16px;border:1px solid #E2DFD8">
+          <dc-import name="ARGUS Ojo" estado="logo" size="128" hint-size="128px,128px"></dc-import>
+        </div>
+        <span style="color:#4F4B44;text-wrap:pretty">Retícula de observación (cuatro esquinas de encuadre) + ojo de dos curvas + pupila. Trazo uniforme, sin rellenos de color. Se construye sobre la rejilla de 8 px.</span>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid #E2DFD8;border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:20px;justify-content:space-between">
+        <span style="font-weight:600">Tema claro</span>
+        <div style="display:flex;align-items:center;gap:12px"><dc-import name="ARGUS Ojo" estado="logo" size="48" hint-size="48px,48px"></dc-import><span style="font-size:22px;font-weight:600;letter-spacing:0.18em">ARGUS</span></div>
+        <div style="display:flex;align-items:flex-end;gap:20px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><dc-import name="ARGUS Ojo" estado="logo" size="24" hint-size="24px,24px"></dc-import><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B665D">24</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:48px;height:48px;border-radius:6px;background:#1F5F6B;display:grid;place-items:center"><dc-import name="ARGUS Ojo" estado="logo" tema="oscuro" size="24" label="Icono de aplicación ARGUS" hint-size="24px,24px"></dc-import></div><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B665D">ícono app</span></div>
+        </div>
+      </div>
+      <div style="background:#161513;border:1px solid #3A3732;border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:20px;justify-content:space-between;color:#EDEAE4">
+        <span style="font-weight:600">Tema oscuro</span>
+        <div style="display:flex;align-items:center;gap:12px"><dc-import name="ARGUS Ojo" estado="logo" tema="oscuro" size="48" hint-size="48px,48px"></dc-import><span style="font-size:22px;font-weight:600;letter-spacing:0.18em">ARGUS</span></div>
+        <span style="color:#A39E94;text-wrap:pretty">Tamaño mínimo 16 px. Área de respeto igual a la esquina de encuadre (8 px a 48 px).</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:12px"><span style="font-family:'IBM Plex Mono',monospace;color:#6B665D">02</span><h2 style="margin:0;font-size:18px;font-weight:600">Motivo gráfico · retícula</h2></div>
+    <p style="margin:0;max-width:720px;color:#4F4B44;text-wrap:pretty">Círculos concéntricos y marcas de encuadre en trazo de 1 px, con neutro de borde. Aparece detrás de la mascota en tres lugares: Inicio, estados vacíos y errores. Nunca detrás de documentos ni de tablas.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+      <sc-for list="{{ motifUses }}" as="m" hint-placeholder-count="3">
+        <div style="background:#FFFFFF;border:1px solid #E2DFD8;border-radius:6px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="position:relative;height:184px;display:grid;place-items:center;background:#F7F6F3;border-bottom:1px solid #E2DFD8;overflow:hidden">
+            <svg width="320" height="320" viewBox="0 0 320 320" aria-hidden="true" style="position:absolute;left:50%;top:50%;margin:-160px 0 0 -160px"><g fill="none" stroke="#CFCBC2" stroke-width="1"><circle cx="160" cy="160" r="48"></circle><circle cx="160" cy="160" r="88"></circle><circle cx="160" cy="160" r="128" stroke-dasharray="2 6"></circle><path d="M160 0 V24 M160 296 V320 M0 160 H24 M296 160 H320"></path></g></svg>
+            <div style="position:relative"><dc-import name="ARGUS Ojo" estado="{{ m.estado }}" size="48" hint-size="48px,48px"></dc-import></div>
+          </div>
+          <div style="padding:12px 16px;display:flex;flex-direction:column;gap:2px">
+            <span style="font-weight:600">{{ m.title }}</span>
+            <span style="color:#4F4B44">{{ m.copy }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:12px"><span style="font-family:'IBM Plex Mono',monospace;color:#6B665D">03</span><h2 style="margin:0;font-size:18px;font-weight:600">Voz y tono</h2></div>
+    <p style="margin:0;max-width:720px;color:#4F4B44;text-wrap:pretty">La voz no cambia: un auditor que ayuda. Trata de usted, nombra el dato exacto y dice qué hacer. Sin exclamaciones, sin adjetivos de venta, sin culpar al usuario. El tono sí cambia según lo que está en juego.</p>
+    <div style="background:#FFFFFF;border:1px solid #CFCBC2;border-radius:6px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:180px 150px minmax(0,1fr) 220px;gap:16px;padding:8px 16px;background:#F3F1EC;border-bottom:1px solid #E2DFD8;font-size:12px;font-weight:500;color:#4F4B44"><span>Contexto</span><span>Tono</span><span>Así lo decimos</span><span>Evitamos</span></div>
+      <sc-for list="{{ tones }}" as="t" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:180px 150px minmax(0,1fr) 220px;gap:16px;padding:14px 16px;border-top:1px solid #E2DFD8;align-items:start">
+          <div style="display:flex;align-items:center;gap:10px"><dc-import name="ARGUS Ojo" estado="{{ t.estado }}" size="24" hint-size="24px,24px"></dc-import><span style="font-weight:600">{{ t.ctx }}</span></div>
+          <span style="color:#4F4B44">{{ t.tone }}</span>
+          <span style="text-wrap:pretty">{{ t.say }}</span>
+          <span style="color:#6B665D;text-decoration:line-through;text-decoration-color:#B42318">{{ t.avoid }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:12px"><span style="font-family:'IBM Plex Mono',monospace;color:#6B665D">04</span><h2 style="margin:0;font-size:18px;font-weight:600">Asistente de IA · hoja de estados</h2></div>
+    <p style="margin:0;max-width:720px;color:#4F4B44;text-wrap:pretty">El asistente es el mismo ojo del logo, sin rostro ni nombre propio. Se presenta siempre como «Asistente de IA». Cada estado cambia la forma del ojo, no solo el color, y lleva una etiqueta accesible.</p>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border:1px solid #CFCBC2;border-radius:6px;overflow:hidden">
+      <div style="background:#FFFFFF;display:flex;flex-direction:column">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 40px 64px 144px;gap:12px;align-items:center;padding:8px 20px;background:#F3F1EC;border-bottom:1px solid #E2DFD8;font-size:12px;font-weight:500;color:#4F4B44"><span>Estado · claro</span><span style="font-family:'IBM Plex Mono',monospace;text-align:center">24</span><span style="font-family:'IBM Plex Mono',monospace;text-align:center">48</span><span style="font-family:'IBM Plex Mono',monospace;text-align:center">128</span></div>
+        <sc-for list="{{ states }}" as="s" hint-placeholder-count="7">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 40px 64px 144px;gap:12px;align-items:center;padding:12px 20px;border-top:1px solid #E2DFD8;min-height:152px;box-sizing:border-box">
+            <div style="display:flex;flex-direction:column;gap:4px"><span style="font-weight:600">{{ s.name }}</span><span style="color:#4F4B44;text-wrap:pretty">{{ s.when }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B665D">{{ s.aria }}</span></div>
+            <div style="display:grid;place-items:center"><dc-import name="ARGUS Ojo" estado="{{ s.id }}" size="24" hint-size="24px,24px"></dc-import></div>
+            <div style="display:grid;place-items:center"><dc-import name="ARGUS Ojo" estado="{{ s.id }}" size="48" hint-size="48px,48px"></dc-import></div>
+            <div style="display:grid;place-items:center"><dc-import name="ARGUS Ojo" estado="{{ s.id }}" size="128" hint-size="128px,128px"></dc-import></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="background:#161513;color:#EDEAE4;display:flex;flex-direction:column;border-left:1px solid #3A3732">
+        <div style="display:grid;grid-template-columns:40px 64px 144px minmax(0,1fr);gap:12px;align-items:center;padding:8px 20px;background:#22201D;border-bottom:1px solid #3A3732;font-size:12px;font-weight:500;color:#A39E94"><span style="font-family:'IBM Plex Mono',monospace;text-align:center">24</span><span style="font-family:'IBM Plex Mono',monospace;text-align:center">48</span><span style="font-family:'IBM Plex Mono',monospace;text-align:center">128</span><span>Oscuro</span></div>
+        <sc-for list="{{ states }}" as="s" hint-placeholder-count="7">
+          <div style="display:grid;grid-template-columns:40px 64px 144px minmax(0,1fr);gap:12px;align-items:center;padding:12px 20px;border-top:1px solid #3A3732;min-height:152px;box-sizing:border-box">
+            <div style="display:grid;place-items:center"><dc-import name="ARGUS Ojo" estado="{{ s.id }}" tema="oscuro" size="24" hint-size="24px,24px"></dc-import></div>
+            <div style="display:grid;place-items:center"><dc-import name="ARGUS Ojo" estado="{{ s.id }}" tema="oscuro" size="48" hint-size="48px,48px"></dc-import></div>
+            <div style="display:grid;place-items:center"><dc-import name="ARGUS Ojo" estado="{{ s.id }}" tema="oscuro" size="128" hint-size="128px,128px"></dc-import></div>
+            <span style="color:#A39E94;text-wrap:pretty">{{ s.shape }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:12px"><span style="font-family:'IBM Plex Mono',monospace;color:#6B665D">05</span><h2 style="margin:0;font-size:18px;font-weight:600">Usos del asistente</h2></div>
+    <div style="display:grid;grid-template-columns:240px minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start">
+      <div style="background:#FFFFFF;border:1px solid #E2DFD8;border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:12px">
+        <span style="font-weight:600">Barra lateral</span>
+        <div style="background:#F3F1EC;border:1px solid #E2DFD8;border-radius:4px;padding:8px 10px;display:flex;align-items:center;gap:10px">
+          <dc-import name="ARGUS Ojo" estado="atento" size="24" hint-size="24px,24px"></dc-import>
+          <div style="display:flex;flex-direction:column"><span style="font-size:12px;font-weight:500">Asistente de IA</span><span style="font-size:12px;color:#4F4B44">Leyendo 2 de 5 archivos</span></div>
+        </div>
+        <div style="background:#F3F1EC;border:1px solid #E2DFD8;border-radius:4px;padding:8px 10px;display:flex;align-items:center;gap:10px">
+          <dc-import name="ARGUS Ojo" estado="dormido" size="24" hint-size="24px,24px"></dc-import>
+          <div style="display:flex;flex-direction:column"><span style="font-size:12px;font-weight:500">Asistente de IA</span><span style="font-size:12px;color:#4F4B44">En pausa</span></div>
+        </div>
+        <span style="color:#4F4B44;text-wrap:pretty">Reemplaza «Motor de análisis listo/detenido». La etiqueta de texto se mantiene visible para lectores de pantalla y para quien oculta el asistente.</span>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid #E2DFD8;border-radius:6px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #E2DFD8"><span style="font-weight:600">Explicar este cambio</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B665D;border:1px solid #CFCBC2;border-radius:3px;padding:0 5px">X</span></div>
+        <div style="padding:16px;display:flex;gap:12px;align-items:flex-start">
+          <dc-import name="ARGUS Ojo" estado="explicando" size="48" hint-size="48px,48px"></dc-import>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;border:1px solid #CFCBC2;border-radius:6px;padding:12px;position:relative;background:#FFFFFF">
+            <span style="align-self:flex-start;font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#1F5F6B;background:#E3EEF0;border-radius:3px;padding:1px 6px">Sugerencia de IA</span>
+            <span style="text-wrap:pretty">Posible cambio de sentido. Se agregó «no» antes de «podrá terminar»: el arrendatario pierde el derecho a terminar el contrato de forma anticipada.</span>
+            <div style="border-left:2px solid #CFCBC2;padding-left:10px;display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:12px;color:#4F4B44">«El ARRENDATARIO <span style="text-decoration:underline;text-decoration-thickness:2px;text-decoration-color:#1F5F6B">no</span> podrá terminar el contrato antes de los 12 meses…»</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B665D">Contrato_4857_v3.docx · cláusula 9 · pág. 4</span>
+            </div>
+            <span style="font-size:12px;color:#6B665D">Verifique la cita antes de decidir.</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid #E2DFD8;border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:10px">
+        <span style="font-weight:600">Reglas</span>
+        <sc-for list="{{ rules }}" as="r" hint-placeholder-count="5">
+          <div style="display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px;align-items:start;padding-top:8px;border-top:1px solid #E2DFD8"><span style="font-family:'IBM Plex Mono',monospace;color:#6B665D">{{ r.n }}</span><span style="text-wrap:pretty">{{ r.t }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      motifUses: [
+        { estado: 'dormido', title: 'Inicio', copy: 'Sin revisiones todavía. Botón «Nueva revisión».' },
+        { estado: 'exito', title: 'Estado vacío', copy: 'Sin alertas pendientes en este expediente.' },
+        { estado: 'error', title: 'Error', copy: 'No se pudo leer un archivo. Retícula punteada.' }
+      ],
+      tones: [
+        { estado: 'alerta', ctx: 'Riesgo alto', tone: 'Serio, directo', say: 'El canon no coincide: $ 18.450.000 en el contrato y $ 18.540.000 en Anexo_2_tarifas.xlsx. Confirme cuál es el valor correcto antes de firmar.', avoid: '¡Cuidado! Encontramos un error grave.' },
+        { estado: 'exito', ctx: 'Sin inconsistencias', tone: 'Tranquilizador', say: 'Los 4 archivos coinciden en partes, montos y fechas. Puede enviarlos.', avoid: '¡Todo perfecto! Su documento está impecable.' },
+        { estado: 'error', ctx: 'Error de lectura', tone: 'Neutro', say: 'No se pudo leer Anexo_2.pdf porque está protegido con contraseña. Quite la protección y vuelva a cargarlo.', avoid: 'Ups, algo salió mal.' },
+        { estado: 'duda', ctx: 'Duda del asistente', tone: 'Prudente', say: 'La fecha aparece como 03/04/2026. No es claro si es 3 de abril o 4 de marzo. ¿Cuál corresponde?', avoid: 'Creemos que probablemente hay un error.' }
+      ],
+      states: [
+        { id: 'dormido', name: 'Dormido', when: 'Sin expediente abierto o asistente en pausa.', aria: 'aria-label: «Asistente de IA: dormido»', shape: 'Párpado cerrado con tres pestañas. Gris neutro.' },
+        { id: 'atento', name: 'Atento', when: 'Leyendo archivos o analizando.', aria: 'aria-label: «Asistente de IA: leyendo archivos»', shape: 'Ojo abierto, iris y pupila, encuadre activo.' },
+        { id: 'exito', name: 'Parpadeo de éxito', when: 'Revisión terminada sin inconsistencias.', aria: 'aria-label: «Asistente de IA: sin inconsistencias»', shape: 'Párpado cerrado hacia arriba con tres marcas de brillo.' },
+        { id: 'duda', name: 'Duda', when: 'Dato ambiguo que necesita confirmación.', aria: 'aria-label: «Asistente de IA: requiere confirmación»', shape: 'Ojo entrecerrado y ceja inclinada.' },
+        { id: 'alerta', name: 'Alerta alta', when: 'Hay al menos una alerta de riesgo alto.', aria: 'aria-label: «Asistente de IA: riesgo alto»', shape: 'Ojo muy abierto, pupila mínima, encuadre en color de riesgo.' },
+        { id: 'explicando', name: 'Explicando', when: 'Panel «Explicar este cambio», junto al globo.', aria: 'aria-label: «Asistente de IA: explicando»', shape: 'Mirada desplazada hacia el globo de texto.' },
+        { id: 'error', name: 'Error', when: 'Archivo ilegible o fallo de lectura.', aria: 'aria-label: «Asistente de IA: error de lectura»', shape: 'Contorno punteado y pupila reemplazada por una línea.' }
+      ],
+      rules: [
+        { n: '1', t: 'Nunca flota sobre los documentos ni tapa contenido. Vive en la barra lateral, en paneles y en estados vacíos.' },
+        { n: '2', t: 'Todo texto generado lleva la etiqueta «Sugerencia de IA» y cita archivo, cláusula y página de origen.' },
+        { n: '3', t: 'La decisión siempre es del usuario: el asistente sugiere, no marca alertas como resueltas.' },
+        { n: '4', t: 'Ajustes › Mostrar asistente lo oculta. Se conservan las etiquetas de estado en texto.' },
+        { n: '5', t: 'Sin animaciones continuas. Un parpadeo de 200 ms al cambiar de estado; se desactiva con «Reducir movimiento».' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

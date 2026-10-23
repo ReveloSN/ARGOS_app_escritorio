@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block" rel="stylesheet">
+</helmet>
+<div ref="{{ rootRef }}" data-screen-label="07 Expediente" style="width:1280px;height:800px;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:48px minmax(0,1fr);background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:13px;overflow:hidden">
+  <div style="grid-row:1 / 3;display:flex"><dc-import name="ARGUS Sidebar" active="expediente" asistente="alerta" hint-size="216px,800px"></dc-import></div>
+  <dc-import name="ARGUS Topbar" engine="listo" placeholder="Buscar en el expediente" hint-size="100%,48px"></dc-import>
+  <main style="display:grid;grid-template-rows:auto minmax(0,1fr);min-height:0">
+    <div style="padding:10px 24px 0;display:flex;flex-direction:column;gap:10px;background:var(--surface);border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)"><span>Expediente</span><span style="color:var(--text-3)">›</span><span style="color:var(--text);font-weight:500">2026-118</span></div>
+      <div style="display:flex;align-items:flex-end;gap:16px">
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+          <h1 style="margin:0;font-size:20px;line-height:28px;font-weight:600">Arrendamiento bodega Fontibón</h1>
+          <span style="font-size:12px;color:var(--text-2)"><span style="font-family:'IBM Plex Mono',monospace">2026-118</span> · Inversiones Caldas S.A.S. y Logística Andina S.A.S. · abierto el <span style="font-family:'IBM Plex Mono',monospace">14/09/2026</span></span>
+        </div>
+        <button style="min-width:150px;min-height:32px;padding:0 12px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:4px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:400 13px 'IBM Plex Sans',sans-serif"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px">description</span>Generar informe</button>
+        <button style="min-width:150px;min-height:32px;padding:0 12px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font:500 13px 'IBM Plex Sans',sans-serif"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:17px">add</span>Agregar dato</button>
+      </div>
+      <div role="tablist" style="display:flex;gap:4px">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <span role="tab" aria-selected="{{ t.sel }}" style="display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:2px solid {{ t.bd }};color:{{ t.fg }};font-weight:{{ t.fw }}">{{ t.label }}<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">{{ t.n }}</span></span>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 360px;min-height:0">
+      <div style="overflow:auto;padding:16px 24px;display:flex;flex-direction:column;gap:12px;min-height:0">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <span style="color:var(--text-2);flex:1;min-width:240px;text-wrap:pretty">Los datos confirmados son la fuente de verdad del expediente. Cada documento nuevo se compara contra ellos.</span>
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+            <button onClick="{{ f.go }}" style="min-height:28px;padding:0 10px;border-radius:4px;border:1px solid {{ f.bd }};background:{{ f.bg }};color:{{ f.fg }};font:400 12px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ f.label }} <span style="font-family:'IBM Plex Mono',monospace;font-size:11px">{{ f.n }}</span></button>
+          </sc-for>
+        </div>
+        <div role="table" style="border:1px solid var(--border-strong);border-radius:6px;background:var(--surface);overflow:hidden">
+          <div role="row" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) 140px 150px 140px;gap:12px;padding:8px 14px;background:var(--surface-2);font-size:12px;font-weight:500;color:var(--text-2)"><span>Dato</span><span>Valor confirmado</span><span>Confirmado</span><span>Documentos</span><span style="text-align:right">Acciones</span></div>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+            <div role="row" onClick="{{ r.pick }}" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) 140px 150px 140px;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid var(--border);background:{{ r.bg }};box-shadow:{{ r.sh }};cursor:pointer;opacity:{{ r.op }}">
+              <div style="display:flex;flex-direction:column;gap:1px;min-width:0"><span style="font-weight:500">{{ r.dato }}</span><span style="font-size:11.5px;color:var(--text-3)">{{ r.tipo }}</span></div>
+              <sc-if value="{{ r.editing }}" hint-placeholder-val="{{ false }}">
+                <input value="{{ r.draft }}" onChange="{{ r.onDraft }}" onKeyDown="{{ r.onEditKey }}" aria-label="Nuevo valor" style="min-width:0;height:30px;box-sizing:border-box;padding:0 8px;border:1px solid var(--accent);border-radius:4px;font:400 12.5px 'IBM Plex Mono',monospace;color:var(--text);background:var(--surface);outline:2px solid var(--accent-soft)">
+              </sc-if>
+              <sc-if value="{{ r.notEditing }}" hint-placeholder-val="{{ true }}">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;overflow-wrap:anywhere;color:{{ r.vfg }};text-decoration:{{ r.vtd }}">{{ r.valor }}</span>
+              </sc-if>
+              <span style="font-size:12px;color:var(--text-2)">{{ r.quien }}</span>
+              <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:{{ r.cfg }};font-weight:{{ r.cfw }}"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px">{{ r.cicon }}</span>{{ r.clabel }}</span>
+              <div style="display:flex;justify-content:flex-end;gap:4px">
+                <sc-for list="{{ r.acts }}" as="a" hint-placeholder-count="2">
+                  <button onClick="{{ a.go }}" title="{{ a.title }}" style="min-height:26px;padding:0 8px;border-radius:4px;border:1px solid var(--border-strong);background:var(--surface);color:{{ a.fg }};font:400 12px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ a.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="align-self:flex-start;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;background:var(--text);color:var(--bg);font-size:12.5px"><span>{{ toastText }}</span><span onClick="{{ undo }}" style="text-decoration:underline;cursor:pointer;font-weight:500">Deshacer</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.7">Ctrl Z</span></div>
+        </sc-if>
+      </div>
+      <aside style="border-left:1px solid var(--border-strong);background:var(--surface);overflow:auto;min-height:0;padding:16px;display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:11px;color:var(--text-3);letter-spacing:0.04em;text-transform:uppercase">Documentos que lo contradicen</span>
+        <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:15px">{{ sel.dato }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{ sel.valor }}</span></div>
+        <sc-for list="{{ sel.contra }}" as="c" hint-placeholder-count="1">
+          <div style="border:1px solid {{ c.bd }};border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:{{ c.bg }}">
+            <div style="display:flex;align-items:center;gap:6px"><span aria-hidden="true" style="font-family:'Material Symbols Outlined';font-size:16px;color:{{ c.fg }}">{{ c.icon }}</span><span style="font-size:12px;font-weight:500;color:{{ c.fg }}">Riesgo {{ c.risk }}</span></div>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ c.doc }}</span>
+            <span style="font-size:12px;color:var(--text-2)">{{ c.where }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600">≠ {{ c.v }}</span>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:4px">
+              <button style="min-width:120px;min-height:28px;padding:0 10px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font:500 12px 'IBM Plex Sans',sans-serif">Abrir en Comparar</button>
+              <button style="min-width:100px;min-height:28px;padding:0 10px;border-radius:4px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:400 12px 'IBM Plex Sans',sans-serif">Ver documento</button>
+            </div>
+          </div>
+        </sc-for>
+        <sc-if value="{{ sel.none }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px 8px;text-align:center;border:1px dashed var(--border-strong);border-radius:6px">
+            <dc-import name="ARGUS Ojo" estado="exito" tema="auto" size="48" hint-size="48px,48px"></dc-import>
+            <span style="font-weight:500">Ningún documento lo contradice</span>
+            <span style="font-size:12px;color:var(--text-2)">{{ sel.noneText }}</span>
+          </div>
+        </sc-if>
+        <div style="border-top:1px solid var(--border);padding-top:12px;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;font-weight:500;color:var(--text-2)">Aparece en</span>
+          <sc-for list="{{ sel.en }}" as="e" hint-placeholder-count="3">
+            <span style="display:flex;gap:8px;font-size:12px"><span style="font-family:'IBM Plex Mono',monospace;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ e.doc }}</span><span style="color:var(--text-3)">{{ e.where }}</span></span>
+          </sc-for>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+const THEME = {bg:'#F7F6F3',surface:'#FFFFFF','surface-2':'#F3F1EC','surface-3':'#EBE8E1',border:'#E2DFD8','border-strong':'#CFCBC2',text:'#1C1A17','text-2':'#4F4B44','text-3':'#6B665D',accent:'#1F5F6B','accent-fg':'#FFFFFF','accent-soft':'#E3EEF0','accent-text':'#1F5F6B',high:'#B42318','high-bg':'#FBEAE8','high-border':'#F0C2BC',med:'#8A5300','med-bg':'#FBF0DC','med-border':'#C9A266',low:'#4F4B44','low-bg':'#EFEDE8','low-border':'#CFCBC2'};
+const RISK = { alto: ['alto', 'report', 'var(--high)', 'var(--high-bg)', 'var(--high-border)'], medio: ['medio', 'warning', 'var(--med)', 'var(--med-bg)', 'var(--med-border)'] };
+const DATA = [
+  { id: 'num', dato: 'Número de contrato', tipo: 'Identificador', valor: '4857', quien: 'L. Martínez · 14/09', contra: [['alto', 'Anexo_1_condiciones.pdf', 'pág. 1, encabezado', '4587']], en: [['Contrato_4857_v3.docx', 'pág. 1'], ['Anexo_2_tarifas.xlsx', 'Resumen A2'], ['Correo_remision_cliente.eml', 'asunto']] },
+  { id: 'arr', dato: 'Arrendador', tipo: 'Parte', valor: 'INVERSIONES CALDAS S.A.S. · NIT 900.482.315-7', quien: 'L. Martínez · 14/09', contra: [['medio', 'Anexo_2_tarifas.xlsx', 'hoja Resumen, A4', 'NIT 900.482.315-1']], en: [['Contrato_4857_v3.docx', 'pág. 1'], ['Anexo_1_condiciones.pdf', 'pág. 1']] },
+  { id: 'arrt', dato: 'Arrendatario', tipo: 'Parte', valor: 'LOGÍSTICA ANDINA S.A.S. · NIT 901.237.884-2', quien: 'L. Martínez · 14/09', contra: [], none: 'Las variantes «SAS» y «LOGISTICA» se aceptan por una regla de equivalencia creada el 02/10/2026.', en: [['Contrato_4857_v3.docx', 'pág. 1'], ['Anexo_1_condiciones.pdf', 'pág. 1'], ['Correo_remision_cliente.eml', 'firma']] },
+  { id: 'canon', dato: 'Canon mensual', tipo: 'Monto', valor: '$ 18.450.000', quien: 'L. Martínez · 02/10', contra: [['alto', 'Anexo_2_tarifas.xlsx', 'hoja Tarifas, celda C12', '$ 18.540.000']], en: [['Contrato_4857_v3.docx', 'cláusula Canon']] },
+  { id: 'fecha', dato: 'Fecha de inicio', tipo: 'Fecha', valor: '', pend: '01/07/2026 o 01/08/2026', quien: '—', contra: [['medio', 'Correo_remision_cliente.eml', 'párrafo 2', '01/08/2026']], en: [['Contrato_4857_v3.docx', 'cláusula Vigencia · 01/07/2026'], ['Anexo_1_condiciones.pdf', 'pág. 2 · 01/07/2026']] },
+  { id: 'vig', dato: 'Vigencia', tipo: 'Periodo', valor: '36 meses', quien: 'C. Herrera · 02/10', contra: [['medio', 'Anexo_1_condiciones.pdf', 'pág. 1', '30 meses']], en: [['Contrato_4857_v3.docx', 'cláusula Vigencia']] },
+  { id: 'inm', dato: 'Inmueble', tipo: 'Dirección', valor: 'Calle 17 No. 68D-52, Fontibón, Bogotá D.C.', quien: 'L. Martínez · 14/09', contra: [], none: 'La dirección coincide en los 4 documentos donde aparece.', en: [['Contrato_4857_v3.docx', 'cláusula Objeto'], ['Anexo_1_condiciones.pdf', 'pág. 1'], ['Anexo_2_tarifas.xlsx', 'Resumen A6'], ['Correo_remision_cliente.eml', 'párrafo 1']] },
+  { id: 'dep', dato: 'Depósito en garantía', tipo: 'Monto', valor: '$ 36.900.000', quien: 'L. Martínez · 13/10', contra: [], none: '«36,9 millones» en el correo se acepta como el mismo valor.', en: [['Contrato_4857_v3.docx', 'cláusula Garantías'], ['Correo_remision_cliente.eml', 'párrafo 3']] }
+];
+class Component extends DCLogic {
+  state = { sel: 'canon', vals: {}, retired: {}, editing: null, draft: '', filter: 'all', toast: null, hist: [] };
+  rootRef = React.createRef();
+  componentDidMount() { const el = this.rootRef.current; if (el) Object.entries(THEME).forEach(([k, v]) => { if (!getComputedStyle(el).getPropertyValue('--' + k)) el.style.setProperty('--' + k, v); }); }
+  push(text, patch) { this.setState(s => ({ ...patch(s), toast: text, hist: [...s.hist, { vals: s.vals, retired: s.retired }] })); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 6000); }
+  undo() { this.setState(s => { const h = s.hist.slice(); const p = h.pop(); return p ? { ...p, hist: h, toast: null } : null; }); }
+  renderVals() {
+    const s = this.state;
+    const val = d => s.vals[d.id] ?? d.valor;
+    const list = DATA.filter(d => s.filter === 'all' || (s.filter === 'contra' ? d.contra.length && !s.retired[d.id] : !val(d)));
+    const rows = list.map(d => {
+      const on = s.sel === d.id, ret = !!s.retired[d.id], v = val(d), ed = s.editing === d.id;
+      const n = d.contra.length;
+      const R = n ? RISK[d.contra[0][0]] : null;
+      const acts = ret ? [{ label: 'Restaurar', title: 'Volver a usar este dato', fg: 'var(--text)', go: e => { e.stopPropagation(); this.push('Se restauró «' + d.dato + '»', st => ({ retired: { ...st.retired, [d.id]: false } })); } }]
+        : !v ? [{ label: 'Confirmar valor', title: 'Elegir el valor correcto', fg: 'var(--accent-text)', go: e => { e.stopPropagation(); this.setState({ editing: d.id, draft: '01/07/2026', sel: d.id }); } }]
+        : [{ label: 'Editar', title: 'Editar valor', fg: 'var(--text)', go: e => { e.stopPropagation(); this.setState({ editing: d.id, draft: v, sel: d.id }); } },
+           { label: 'Retirar', title: 'Dejar de usar como fuente de verdad', fg: 'var(--high)', go: e => { e.stopPropagation(); this.push('Se retiró «' + d.dato + '». Ya no se compara.', st => ({ retired: { ...st.retired, [d.id]: true } })); } }];
+      return {
+        dato: d.dato, tipo: d.tipo, valor: ret ? v + ' (retirado)' : v || 'Sin confirmar: ' + d.pend, vfg: v ? 'var(--text)' : 'var(--med)', vtd: ret ? 'line-through' : 'none',
+        quien: ret ? 'Retirado' : d.quien, editing: ed, notEditing: !ed, draft: s.draft,
+        onDraft: e => this.setState({ draft: e.target.value }),
+        onEditKey: e => {
+          if (e.key === 'Enter') { const nv = s.draft; this.push('Se guardó «' + d.dato + '»: ' + nv, st => ({ vals: { ...st.vals, [d.id]: nv }, editing: null })); }
+          if (e.key === 'Escape') this.setState({ editing: null });
+        },
+        cicon: ret ? 'block' : n ? R[1] : 'check', clabel: ret ? 'No se compara' : n ? n + ' lo contradice' : 'Sin contradicciones',
+        cfg: ret ? 'var(--text-3)' : n ? R[2] : 'var(--accent-text)', cfw: n && !ret ? 500 : 400,
+        acts, op: ret ? 0.65 : 1, bg: on ? 'var(--accent-soft)' : 'transparent', sh: on ? 'inset 3px 0 0 var(--accent)' : 'none',
+        pick: () => this.setState({ sel: d.id })
+      };
+    });
+    const d = DATA.find(x => x.id === s.sel) || DATA[0];
+    const sel = {
+      dato: d.dato, valor: val(d) || 'Sin confirmar',
+      contra: s.retired[d.id] ? [] : d.contra.map(([r, doc, where, v]) => { const R = RISK[r]; return { risk: R[0], icon: R[1], fg: R[2], bg: R[3], bd: R[4], doc, where, v }; }),
+      none: !d.contra.length || !!s.retired[d.id], noneText: s.retired[d.id] ? 'El dato está retirado y no se usa en las comparaciones.' : d.none,
+      en: d.en.map(([doc, where]) => ({ doc, where }))
+    };
+    const cnt = { all: DATA.length, contra: DATA.filter(x => x.contra.length).length, pend: DATA.filter(x => !x.valor).length };
+    const filters = [['all', 'Todos'], ['contra', 'Con contradicciones'], ['pend', 'Sin confirmar']].map(([k, label]) => {
+      const on = s.filter === k; return { label, n: cnt[k], go: () => this.setState({ filter: k }), bd: on ? 'var(--accent)' : 'var(--border-strong)', bg: on ? 'var(--accent-soft)' : 'var(--surface)', fg: on ? 'var(--accent-text)' : 'var(--text)' };
+    });
+    const tabs = [['Datos confirmados', '8', 1], ['Alertas', '7'], ['Archivos', '5'], ['Decisiones', '2']].map(([label, n, on]) => ({ label, n, sel: on ? 'true' : 'false', bd: on ? 'var(--accent)' : 'transparent', fg: on ? 'var(--text)' : 'var(--text-2)', fw: on ? 600 : 400 }));
+    return { rootRef: this.rootRef, rows, sel, filters, tabs, toast: !!s.toast, toastText: s.toast, undo: () => this.undo() };
+  }
+}
+</script>
+</body>
+</html>

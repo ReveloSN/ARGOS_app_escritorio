@@ -29,16 +29,18 @@
           <span style="padding:8px 12px;border:1px solid var(--text);border-radius:4px;font-weight:600">Barra lateral</span>
           <span style="color:var(--text-3)">→</span>
           <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Inicio</span>
-          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Revisión actual</span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Expediente</span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Comparar</span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Revisar antes de enviar</span>
           <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Historial</span>
           <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Ajustes</span>
           <span style="padding:8px 12px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent-text);border-radius:4px">Nueva revisión <span style="font-family:'IBM Plex Mono',monospace;font-size:11px">Ctrl N</span></span>
           <span style="width:24px"></span>
           <span style="padding:8px 12px;border:1px solid var(--text);border-radius:4px;font-weight:600">Barra superior</span>
           <span style="color:var(--text-3)">→</span>
-          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Sesión activa</span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Expediente activo</span>
           <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Búsqueda <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">Ctrl K</span></span>
-          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Estado del motor</span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Estado del asistente de IA</span>
         </div>
       </div>
       <div style="height:1px;background:var(--border)"></div>
@@ -49,7 +51,7 @@
           <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface-2)"><span style="font-family:'IBM Plex Mono',monospace;color:var(--text-3)">1</span> Cargar</span><span style="color:var(--text-3)">→</span>
           <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface-2)"><span style="font-family:'IBM Plex Mono',monospace;color:var(--text-3)">2</span> Confirmar lectura</span><span style="color:var(--text-3)">→</span>
           <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface-2)"><span style="font-family:'IBM Plex Mono',monospace;color:var(--text-3)">3</span> Revisar</span><span style="color:var(--text-3)">→</span>
-          <span style="padding:8px 12px;border:1px solid var(--text);border-radius:4px;font-weight:600">Revisión actual</span>
+          <span style="padding:8px 12px;border:1px solid var(--text);border-radius:4px;font-weight:600">Resultados del expediente</span>
           <span style="font-size:12px;color:var(--text-3);flex-basis:100%;padding-top:4px">Si un archivo no se lee, el paso 2 lo muestra con su error; se puede continuar sin él o corregirlo.</span>
         </div>
       </div>
@@ -57,7 +59,7 @@
       <div style="display:grid;grid-template-columns:180px minmax(0,1fr);gap:20px;align-items:start">
         <span style="font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.04em;padding-top:8px">Jerárquica · contextual</span>
         <div style="display:grid;grid-template-columns:auto auto auto auto auto auto auto;gap:10px;align-items:start;justify-content:start">
-          <span style="padding:8px 12px;border:1px solid var(--text);border-radius:4px;font-weight:600">Revisión actual<br><span style="font-weight:400;font-size:12px;color:var(--text-2)">= Sesión</span></span>
+          <span style="padding:8px 12px;border:1px solid var(--text);border-radius:4px;font-weight:600">Expediente<br><span style="font-weight:400;font-size:12px;color:var(--text-2)">2026-118</span></span>
           <span style="color:var(--text-3);padding-top:8px">→</span>
           <div style="display:flex;flex-direction:column;gap:6px">
             <span style="font-size:11.5px;color:var(--text-3)">Tabs del mismo nivel</span>
@@ -81,17 +83,25 @@
       </div>
       <div style="display:grid;grid-template-columns:180px minmax(0,1fr);gap:20px;align-items:center">
         <span style="font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.04em">Breadcrumb</span>
-        <span style="font-size:13px;color:var(--text-2)">Sesión <span style="color:var(--text-3)">›</span> <span style="font-family:'IBM Plex Mono',monospace">Contrato_4857.pdf</span> <span style="color:var(--text-3)">›</span> <span style="color:var(--text);font-weight:500">Alerta 3</span> <span style="color:var(--text-3)">· cada nivel es un enlace de regreso</span></span>
+        <span style="font-size:13px;color:var(--text-2)">Expediente 2026-118 <span style="color:var(--text-3)">›</span> <span style="font-family:'IBM Plex Mono',monospace">Contrato_4857_v3.docx</span> <span style="color:var(--text-3)">›</span> <span style="color:var(--text);font-weight:500">Alerta 3</span> <span style="color:var(--text-3)">· cada nivel es un enlace de regreso</span></span>
       </div>
       <div style="height:1px;background:var(--border)"></div>
       <div style="display:grid;grid-template-columns:180px minmax(0,1fr);gap:20px;align-items:center">
         <span style="font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.04em">Otras rutas</span>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Historial</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Sesión anterior · solo lectura</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Detalle de alerta</span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Comparar</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Versiones · Inconsistencias · Matriz <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">1 2 3</span></span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Celda de la matriz → par</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Explicar este cambio <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">X</span></span>
+          <span style="width:24px"></span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Expediente</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Datos confirmados</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Documentos que lo contradicen</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Comparar</span>
+          <span style="width:24px"></span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Revisar antes de enviar</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Borrador .eml</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Problemas · corregir o ignorar</span>
+          <span style="width:24px"></span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Expediente · Decisiones</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Informe PDF / DOCX</span>
+          <span style="width:24px"></span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Historial</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Revisión anterior · solo lectura</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Detalle de alerta</span>
           <span style="width:24px"></span>
           <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Búsqueda</span><span style="color:var(--text-3)">→</span><span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Alerta o fragmento de documento</span>
           <span style="width:24px"></span>
-          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Ajustes</span><span style="color:var(--text-3)">→</span><span style="font-size:12px;color:var(--text-2)">Detección · Idioma y región · Apariencia · Privacidad · Atajos</span>
+          <span style="padding:8px 12px;border:1px solid var(--border-strong);border-radius:4px">Ajustes</span><span style="color:var(--text-3)">→</span><span style="font-size:12px;color:var(--text-2)">Detección · Idioma y región · Apariencia · Privacidad · Asistente · Atajos</span>
         </div>
       </div>
     </div>
@@ -152,6 +162,33 @@
     </div>
   </section>
 
+  <!-- POR PANTALLA -->
+  <section data-screen-label="Estados por pantalla" style="display:flex;flex-direction:column;gap:16px;width:1280px">
+    <h2 style="margin:0;font-size:18px;font-weight:600">Vacío, carga y error en cada pantalla</h2>
+    <span style="font-size:13px;color:#4F4B44">La carga siempre usa esqueletos con la forma del contenido final. El error sigue la estructura qué pasó · por qué · qué hacer.</span>
+    <div style="display:grid;grid-template-columns:150px repeat(3,minmax(0,1fr));border:1px solid var(--border-strong);border-radius:6px;background:var(--surface);overflow:hidden">
+      <span style="padding:8px 12px;background:var(--surface-2);font-size:12px;font-weight:500;color:var(--text-2)">Pantalla</span>
+      <span style="padding:8px 12px;background:var(--surface-2);font-size:12px;font-weight:500;color:var(--text-2);border-left:1px solid var(--border)">Vacío</span>
+      <span style="padding:8px 12px;background:var(--surface-2);font-size:12px;font-weight:500;color:var(--text-2);border-left:1px solid var(--border)">Carga</span>
+      <span style="padding:8px 12px;background:var(--surface-2);font-size:12px;font-weight:500;color:var(--text-2);border-left:1px solid var(--border)">Error</span>
+      <sc-for list="{{ perScreen }}" as="p" hint-placeholder-count="11">
+        <div style="padding:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3)">{{ p.n }}</span><span style="font-weight:600">{{ p.name }}</span></div>
+        <div style="padding:12px;border-top:1px solid var(--border);border-left:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">
+          <dc-import name="ARGUS Ojo" estado="{{ p.emptyOjo }}" tema="auto" size="24" hint-size="24px,24px"></dc-import>
+          <div style="display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font-weight:500">{{ p.empty }}</span><span style="font-size:12px;color:var(--text-2);text-wrap:pretty">{{ p.emptyTxt }}</span><span style="align-self:flex-start;font-size:12px;color:var(--accent-text);border:1px solid var(--border-strong);border-radius:4px;padding:2px 8px">{{ p.emptyBtn }}</span></div>
+        </div>
+        <div style="padding:12px;border-top:1px solid var(--border);border-left:1px solid var(--border);display:flex;flex-direction:column;gap:6px" aria-busy="true">
+          <sc-for list="{{ p.skel }}" as="s" hint-placeholder-count="3"><span style="display:block;height:{{ s.h }};width:{{ s.w }};border-radius:3px;background:var(--surface-3)"></span></sc-for>
+          <span style="font-size:11.5px;color:var(--text-3)">{{ p.loadTxt }}</span>
+        </div>
+        <div style="padding:12px;border-top:1px solid var(--border);border-left:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">
+          <dc-import name="ARGUS Ojo" estado="error" tema="auto" size="24" hint-size="24px,24px"></dc-import>
+          <div style="display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font-weight:500">{{ p.errWhat }}</span><span style="font-size:12px;color:var(--text-2);text-wrap:pretty">{{ p.errWhy }} {{ p.errDo }}</span><span style="align-self:flex-start;font-size:12px;color:var(--accent-fg);background:var(--accent);border-radius:4px;padding:2px 8px">{{ p.errBtn }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
   <!-- ERRORES -->
   <section data-screen-label="Mensajes de error" style="display:flex;flex-direction:column;gap:16px;width:1280px">
     <h2 style="margin:0;font-size:18px;font-weight:600">Mensajes de error</h2>
@@ -192,6 +229,20 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
+const SK = (...w) => w.map(x => ({ w: x, h: '10px' }));
+const PER = [
+  ['01','Inicio','dormido','Todavía no hay revisiones','Cargue los documentos que va a enviar o firmar.','Nueva revisión',SK('60%','90%','40%'),'Abriendo ARGUS…','No se pudo abrir la carpeta de datos.','La carpeta ya no existe.','Elija otra en Ajustes.','Elegir carpeta'],
+  ['02','Onboarding','atento','—','El onboarding solo aparece la primera vez; siempre tiene contenido.','Ver de nuevo en Ajustes',SK('30%','80%','70%'),'Cargando paso 1 de 3','No se pudo cargar la guía.','Falta un archivo de la instalación.','Omítala o reinstale ARGUS.','Omitir guía'],
+  ['03','Nueva revisión','dormido','Ningún archivo cargado','Arrastre PDF, DOCX, XLSX, EML o pegue texto.','Elegir archivos',SK('100%','100%','100%'),'Leyendo 3 de 5 archivos','No pudimos leer «anexo_3.pdf».','Es una imagen escaneada sin texto.','Actívelo para lectura por OCR.','Activar OCR'],
+  ['04','Resultados','exito','No se encontraron inconsistencias','Los 4 archivos coinciden en partes, montos y fechas.','Cerrar revisión',SK('100%','100%','100%','70%'),'Comparando archivos','El análisis se detuvo en el archivo 3 de 5.','Lo ya leído se conserva.','Reinícielo para continuar.','Reiniciar análisis'],
+  ['05','Detalle de alerta','exito','No quedan alertas pendientes','Decidió las 9 alertas de este expediente.','Generar informe',SK('45%','100%','100%'),'Cargando valores A y B','No se encontró la página de origen.','El archivo cambió desde la revisión.','Vuelva a leerlo.','Volver a leer'],
+  ['06','Comparar','dormido','Elija dos o más documentos','Dos para comparar versiones; tres o más para la matriz.','Elegir documentos',SK('48%','48%','100%','100%'),'Alineando 2 versiones…','No se pueden comparar estas versiones.','Coinciden menos del 20 % del texto; parecen documentos distintos.','Use «Buscar inconsistencias».','Cambiar de modo'],
+  ['07','Expediente','duda','Aún no hay datos confirmados','Confirme el número de contrato, las partes, los montos y las fechas para usarlos como fuente de verdad.','Agregar dato',SK('100%','100%','100%'),'Cargando el expediente','No se guardó el cambio en «Canon mensual».','La carpeta del expediente es de solo lectura.','Elija otra carpeta.','Elegir carpeta'],
+  ['08','Revisar antes de enviar','dormido','Arrastre un borrador de correo','Acepta .eml y .msg con sus adjuntos.','Elegir borrador',SK('70%','100%','40%'),'Leyendo 2 adjuntos','No se pudo leer «Remision.msg».','El archivo está dañado.','Guárdelo de nuevo desde su programa de correo.','Elegir otro'],
+  ['09','Informe','dormido','No hay decisiones para el informe','Decida al menos una alerta para generar el informe.','Ir a Resultados',SK('60%','100%','100%','100%'),'Preparando vista previa','No se exportó el PDF.','El disco está lleno.','Libere espacio o elija otra carpeta.','Elegir carpeta'],
+  ['10','Historial','dormido','Todavía no hay revisiones cerradas','Aquí aparecerán las revisiones y sus métricas.','Nueva revisión',SK('30%','30%','30%','100%'),'Cargando historial','No pudimos abrir «Conciliación septiembre».','El archivo se movió.','Búsquelo en otra ubicación.','Buscar archivo'],
+  ['11','Ajustes','atento','—','Ajustes siempre tiene valores por defecto.','Restablecer',SK('40%','100%','100%'),'Cargando ajustes','No se pudo conectar el explicador de IA.','El modelo local no está instalado.','Instálelo o desactive el explicador.','Desactivar explicador']
+];
 const INLINE = { bd: 'var(--high-border)', bg: 'var(--high-bg)', ic: 'var(--high)', icon: 'report', shadow: 'none' };
 const NEUTRAL = { bd: 'var(--border-strong)', bg: 'var(--surface)', ic: 'var(--text-2)', icon: 'error', shadow: 'none' };
 const DIALOG = { bd: 'var(--border-strong)', bg: 'var(--surface)', ic: 'var(--text-2)', icon: 'lock', shadow: '0 4px 12px rgba(28,26,23,0.12)' };
@@ -207,7 +258,7 @@ const ERRORS = [
 ];
 class Component extends DCLogic {
   renderVals() {
-    return { errors: ERRORS.map(e => ({ hasField: false, hasCode: false, code: '', ...e, hasSecondary: !!e.secondary })) };
+    return { perScreen: PER.map(([n,name,emptyOjo,empty,emptyTxt,emptyBtn,skel,loadTxt,errWhat,errWhy,errDo,errBtn]) => ({n,name,emptyOjo,empty,emptyTxt,emptyBtn,skel,loadTxt,errWhat,errWhy,errDo,errBtn})), errors: ERRORS.map(e => ({ hasField: false, hasCode: false, code: '', ...e, hasSecondary: !!e.secondary })) };
   }
 }
 </script>
