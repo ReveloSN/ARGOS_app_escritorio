@@ -110,6 +110,25 @@ MIGRATIONS: tuple[str, ...] = (
     );
     CREATE INDEX confirmed_facts_by_session ON confirmed_facts (session_id);
     """,
+    # Fase 4 del plan v0.1: borradores revisados antes de enviar, con el original para armar la
+    # copia corregida, y sus decisiones (ADR 022).
+    """
+    CREATE TABLE send_reviews (
+        id TEXT PRIMARY KEY,
+        session_id TEXT REFERENCES sessions (id) ON DELETE SET NULL,
+        created_at TEXT NOT NULL,
+        payload TEXT NOT NULL,
+        original BLOB NOT NULL
+    );
+    CREATE TABLE send_decisions (
+        send_review_id TEXT NOT NULL REFERENCES send_reviews (id) ON DELETE CASCADE,
+        alert_number INTEGER NOT NULL,
+        kind TEXT NOT NULL,
+        decided_at TEXT NOT NULL,
+        correct_side TEXT,
+        PRIMARY KEY (send_review_id, alert_number)
+    );
+    """,
 )
 SCHEMA_VERSION = len(MIGRATIONS)
 

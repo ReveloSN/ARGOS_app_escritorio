@@ -3,7 +3,12 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from argus.domain.decision import CorrectSide, Decision, DecisionKind
-from argus.domain.errors import AlertNotFoundError, ArgusDomainError, ComparisonNotFoundError
+from argus.domain.errors import (
+    AlertNotFoundError,
+    ArgusDomainError,
+    ComparisonNotFoundError,
+    SendReviewNotFoundError,
+)
 from argus.infrastructure.persistence.sqlite_database import SqliteDatabase
 from argus.infrastructure.persistence.timestamps import from_stored_timestamp, to_stored_timestamp
 
@@ -23,6 +28,9 @@ class DecisionTable:
 REVIEW_DECISIONS = DecisionTable("decisions", "session_id", AlertNotFoundError)
 COMPARISON_DECISIONS = DecisionTable(
     "comparison_decisions", "comparison_id", lambda owner, _number: ComparisonNotFoundError(owner)
+)
+SEND_DECISIONS = DecisionTable(
+    "send_decisions", "send_review_id", lambda owner, _number: SendReviewNotFoundError(owner)
 )
 
 

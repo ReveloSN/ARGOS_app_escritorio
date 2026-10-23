@@ -29,25 +29,47 @@ class EmlDocumentReader:
         self._attachment_readers = attachment_readers
 
     def read(self, source: DocumentSource) -> Document:
-        message = BytesParser(policy=policy.default).parsebytes(source.content)
-        if not isinstance(message, EmailMessage):
-            raise UnreadableDocumentError(source.name, UnreadableReason.CORRUPTED)
+        message = parse_email(source)
         fragments = build_fragments(chain(_subject_texts(message), _body_texts(message)))
-        outcomes = [self._read_attachment(part) for part in message.iter_attachments()]
+        outcomes = [
+            read_attachment(self._attachment_readers, part) for part in message.iter_attachments()
+        ]
         attachments = tuple(item for item in outcomes if isinstance(item, Document))
         if not fragments and not attachments:
             raise UnreadableDocumentError(source.name, UnreadableReason.NO_TEXT)
         failures = tuple(item for item in outcomes if isinstance(item, AttachmentFailure))
         return Document(source.name, DocumentFormat.EML, fragments, attachments, failures)
 
-    def _read_attachment(self, part: MIMEPart) -> Document | AttachmentFailure:
-        name = part.get_filename() or UNNAMED_ATTACHMENT
-        payload = part.get_payload(decode=True)
-        content = payload if isinstance(payload, bytes) else b""
-        try:
-            return self._attachment_readers.reader_for(name).read(DocumentSource(name, content))
-        except UnreadableDocumentError as error:
-            return AttachmentFailure(name, error.reason)
+
+def parse_email(source: DocumentSource) -> EmailMessage:
+    """El correo como mensaje; UnreadableDocumentError si no lo es."""
+    message = BytesParser(policy=policy.default).parsebytes(source.content)
+    if not isinstance(message, EmailMessage):
+        raise UnreadableDocumentError(source.name, UnreadableReason.CORRUPTED)
+    return message
+
+
+def attachment_name(part: MIMEPart) -> str:
+    return part.get_filename() or UNNAMED_ATTACHMENT
+
+
+def attachment_bytes(part: MIMEPart) -> bytes:
+    payload = part.get_payload(decode=True)
+    return payload if isinstance(payload, bytes) else b""
+
+
+def read_attachment(readers: DocumentReaderFactory, part: MIMEPart) -> Document | AttachmentFailure:
+    """El adjunto leído con el lector de su formato, o por qué no se pudo leer."""
+    name = attachment_name(part)
+    try:
+        return readers.reader_for(name).read(DocumentSource(name, attachment_bytes(part)))
+    except UnreadableDocumentError as error:
+        return AttachmentFailure(name, error.reason)
+
+
+def body_text(message: EmailMessage) -> str:
+    """El cuerpo en texto plano; si solo hay HTML, su texto."""
+    return "\n".join(text for text, _ in _body_texts(message))
 
 
 def _subject_texts(message: EmailMessage) -> Iterator[tuple[str, SourceLocation]]:

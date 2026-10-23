@@ -9,6 +9,12 @@ from argus.api.comparison_composition import (
     ComparisonServices,
     build_comparison_services,
 )
+from argus.api.send_composition import (
+    SendDependencies,
+    SendServices,
+    SendStorage,
+    build_send_services,
+)
 from argus.api.settings import EngineSettings
 from argus.application.alert_explanation import AlertExplainer, TemplateAlertExplainer
 from argus.application.change_history_folder import ChangeHistoryFolder
@@ -83,6 +89,7 @@ from argus.infrastructure.persistence.sqlite_confirmed_fact_repository import (
 from argus.infrastructure.persistence.sqlite_database import SqliteDatabase
 from argus.infrastructure.persistence.sqlite_decision_repository import (
     COMPARISON_DECISIONS,
+    SEND_DECISIONS,
     SqliteDecisionRepository,
 )
 from argus.infrastructure.persistence.sqlite_decision_statistics import SqliteDecisionStatistics
@@ -90,6 +97,9 @@ from argus.infrastructure.persistence.sqlite_document_repository import SqliteDo
 from argus.infrastructure.persistence.sqlite_preference_repositories import (
     SqlitePreferencesRepository,
     SqliteSuppressionRuleRepository,
+)
+from argus.infrastructure.persistence.sqlite_send_review_repository import (
+    SqliteSendReviewRepository,
 )
 from argus.infrastructure.persistence.sqlite_session_repository import SqliteSessionRepository
 from argus.infrastructure.readers.docx_reader import DocxDocumentReader
@@ -112,6 +122,8 @@ class ReviewStorage:
     comparisons: SqliteComparisonRepository
     comparison_decisions: SqliteDecisionRepository
     facts: SqliteConfirmedFactRepository
+    send_reviews: SqliteSendReviewRepository
+    send_decisions: SqliteDecisionRepository
 
 
 @dataclass(frozen=True)
@@ -131,6 +143,7 @@ class EngineServices:
     comparisons: ComparisonServices
     facts: ConfirmedFacts
     check_facts: CheckConfirmedFacts
+    sending: SendServices
     storage: ReviewStorage
     data_directory: Path
 
@@ -149,6 +162,8 @@ def build_review_storage(database_path: Path) -> ReviewStorage:
         SqliteComparisonRepository(database),
         SqliteDecisionRepository(database, COMPARISON_DECISIONS),
         SqliteConfirmedFactRepository(database),
+        SqliteSendReviewRepository(database),
+        SqliteDecisionRepository(database, SEND_DECISIONS),
     )
 
 
@@ -192,6 +207,16 @@ def build_engine_services(settings: EngineSettings, opener: FileOpener) -> Engin
             FactRepositories(storage.sessions, storage.facts), FactValueReader(values), clock
         ),
         check_facts=build_fact_check(storage, values),
+        sending=build_send_services(
+            SendStorage(
+                storage.sessions,
+                storage.documents,
+                storage.send_reviews,
+                storage.send_decisions,
+                archive,
+            ),
+            SendDependencies(build_attachment_readers(), values, clock, opener, data_directory),
+        ),
         storage=storage,
         data_directory=data_directory,
     )
@@ -204,8 +229,9 @@ def apply_history_retention(storage: ReviewStorage, archive: DocumentArchive) ->
     return PurgeExpiredHistory(storage.sessions, archive, SystemClock()).execute(HISTORY_RETENTION)
 
 
-def build_document_reader_factory() -> DocumentReaderFactory:
-    attachment_readers = DocumentReaderFactory(
+def build_attachment_readers() -> DocumentReaderFactory:
+    """Los lectores de lo que puede venir adjunto a un correo (un correo dentro de otro, no)."""
+    return DocumentReaderFactory(
         {
             DocumentFormat.PDF: PdfDocumentReader(),
             DocumentFormat.DOCX: DocxDocumentReader(),
@@ -213,6 +239,10 @@ def build_document_reader_factory() -> DocumentReaderFactory:
             DocumentFormat.TEXT: PlainTextReader(),
         }
     )
+
+
+def build_document_reader_factory() -> DocumentReaderFactory:
+    attachment_readers = build_attachment_readers()
     return attachment_readers.with_reader(DocumentFormat.EML, EmlDocumentReader(attachment_readers))
 
 

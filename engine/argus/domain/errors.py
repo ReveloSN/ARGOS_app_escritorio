@@ -122,3 +122,24 @@ class UnrecognizedFactValueError(ArgusDomainError):
         super().__init__(f"No se reconoce un valor de tipo «{entity_type}» en «{text}».")
         self.entity_type = entity_type
         self.text = text
+
+
+class SendReviewNotFoundError(ArgusDomainError):
+    def __init__(self, review_id: str) -> None:
+        super().__init__(f"No existe la revisión del borrador «{review_id}».")
+        self.review_id = review_id
+
+
+class SendIssueNotFoundError(ArgusDomainError):
+    def __init__(self, review_id: str, number: int) -> None:
+        super().__init__(f"El borrador «{review_id}» no tiene el problema {number}.")
+        self.review_id = review_id
+        self.number = number
+
+
+class NotADraftEmailError(ArgusDomainError):
+    """Lo que se eligió para revisar antes de enviar no es un correo (.eml)."""
+
+    def __init__(self, file_name: str) -> None:
+        super().__init__(f"«{file_name}» no es un borrador de correo (.eml).")
+        self.file_name = file_name
