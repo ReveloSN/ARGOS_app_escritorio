@@ -1,0 +1,12 @@
+# 023 · Informe exportable en PDF y DOCX (Fase 5)
+
+- **Estado:** aceptada · 23/10/2026
+- **Contexto:** el mockup «ARGUS Informe» muestra una vista previa del informe del expediente (resumen, evidencia con el origen de cada valor, decisiones tomadas y una nota sobre las sugerencias de IA), la elección de formato (PDF o DOCX) y de secciones, y la carpeta donde se guarda.
+- **Decisión:**
+  - **La interfaz redacta y el motor maqueta.** El informe se arma en la interfaz con los datos reales de la revisión, en el idioma elegido (`reportDocument`), y se envía al motor como un documento ya redactado (`ReportDocument`: título, subtítulos, secciones con métricas, párrafos y tablas, pie y la etiqueta «Página {page} de {total}»). Así ningún texto vive fuera de `i18n/*.json` y la vista previa es exactamente lo que se exporta.
+  - **PDF con reportlab** (decidido con el usuario). Licencia BSD, sin dependencias nativas y con hooks para PyInstaller. Usa su fuente Helvetica integrada, que cubre tildes, eñes y comillas españolas, así no hay que descargar ni incluir otra fuente. Se maqueta dos veces para escribir «Página N de M». Se agregan `reportlab` y, en desarrollo, `types-reportlab`.
+  - **DOCX con python-docx**, que ya se usaba para leer: el informe queda editable y numera las páginas con campos de Word (`PAGE` y `NUMPAGES`).
+  - **Guardar en Documentos/ARGUS/<expediente>** (decidido con el usuario), por medio de `platformdirs.user_documents_dir()` y un nombre seguro en Windows y Linux. El archivo se llama `Informe_<expediente>_<ddmmaa>.<pdf|docx>`. «Abrir informe» lo abre con la aplicación del sistema y nunca abre algo fuera de la carpeta del expediente. La carpeta se puede cambiar en `EngineSettings.reports_directory` (las pruebas usan una temporal).
+  - **Sin nombres de personas:** como en el Expediente (ADR 022), las decisiones muestran la fecha y el valor correcto, no quién decidió, porque ARGUS es local y de un solo usuario.
+  - **Métricas del Historial:** ya existían desde la Fase 6 anterior (alertas resueltas, tiempo medio de revisión y porcentaje marcado como error real) y coinciden con el mockup del rediseño; no se cambian.
+- **Consecuencias:** el pie del informe dice la versión del motor que lo generó. No se muestra el número de páginas antes de exportar (habría que maquetar en cada cambio). Los caracteres fuera de Latin-1 (por ejemplo «≠») no se usan en el contenido del informe.
