@@ -5,6 +5,8 @@ export type FileReadStatus = "waiting" | "reading" | "read" | "unreadable";
 export interface FileProgress {
   readonly name: string;
   readonly status: FileReadStatus;
+  /** Con OCR: página que se terminó de leer y total del archivo. */
+  readonly pages?: { readonly done: number; readonly total: number };
 }
 
 /** Cómo va la lectura de una revisión nueva, según los eventos del motor (SSE). */
@@ -37,6 +39,16 @@ function withStatus(state: ReadingState, position: number, status: FileReadStatu
   return { ...state, files };
 }
 
+function withPages(
+  state: ReadingState,
+  { position, done, total }: { position: number; done: number; total: number },
+): ReadingState {
+  const files = state.files.map((file, index) =>
+    index === position ? { ...file, pages: { done, total } } : file,
+  );
+  return { ...state, files };
+}
+
 function estimateRemaining(state: ReadingState, now: number): number | undefined {
   const done = finishedCount(state);
   if (done === 0) return undefined;
@@ -52,6 +64,7 @@ export function applyProgress(
   if (event.kind === "analysis_started")
     return { ...state, isComparing: true, remainingSeconds: undefined };
   if (event.kind === "document_started") return withStatus(state, event.position, "reading");
+  if (event.kind === "page_recognized") return withPages(state, event);
   const status = event.document.status === "read" ? "read" : "unreadable";
   const updated = withStatus(state, event.position, status);
   return { ...updated, remainingSeconds: estimateRemaining(updated, now) };

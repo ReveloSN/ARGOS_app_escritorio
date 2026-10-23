@@ -40,7 +40,9 @@ export function ReadingProgressPanel({ reading }: { readonly reading: ReadingSta
             <span className={styles.fileName}>{file.name}</span>
             <span className={styles.status}>
               <Icon name={STATUS_APPEARANCE[file.status].icon} size="sm" />
-              {t(STATUS_APPEARANCE[file.status].label)}
+              {file.status === "reading" && file.pages
+                ? t("reading.ocrPage", { done: file.pages.done, total: file.pages.total })
+                : t(STATUS_APPEARANCE[file.status].label)}
             </span>
           </li>
         ))}

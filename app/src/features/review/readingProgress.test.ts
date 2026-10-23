@@ -2,12 +2,21 @@ import { describe, expect, it } from "vitest";
 
 import { applyProgress, finishedCount, startReading } from "./readingProgress";
 
-const READ = { name: "a.pdf", status: "read" as const, reason: null, fragmentCount: 3 };
+const READ = {
+  name: "a.pdf",
+  status: "read" as const,
+  reason: null,
+  fragmentCount: 3,
+  method: "text" as const,
+  pageCount: null,
+};
 const UNREADABLE = {
   name: "b.pdf",
   status: "unreadable" as const,
   reason: "no_text" as const,
   fragmentCount: 0,
+  method: "text" as const,
+  pageCount: null,
 };
 
 describe("avance de la lectura", () => {
@@ -42,5 +51,18 @@ describe("avance de la lectura", () => {
 
     expect(state.isComparing).toBe(true);
     expect(state.remainingSeconds).toBeUndefined();
+  });
+
+  it("con OCR anota la página que va leyendo de cada archivo", () => {
+    let state = startReading(["anexo_3.pdf"], 0);
+    state = applyProgress(state, { kind: "document_started", position: 0, name: "anexo_3.pdf" }, 0);
+
+    state = applyProgress(state, { kind: "page_recognized", position: 0, done: 2, total: 4 }, 0);
+
+    expect(state.files[0]).toEqual({
+      name: "anexo_3.pdf",
+      status: "reading",
+      pages: { done: 2, total: 4 },
+    });
   });
 });

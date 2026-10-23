@@ -3,11 +3,13 @@ import { useState } from "react";
 import { Breadcrumb } from "../components/molecules/Breadcrumb";
 import { StepIndicator } from "../components/molecules/StepIndicator";
 import { WizardLayout } from "../components/templates/WizardLayout";
+import { CloudOcrConsent } from "../features/review/CloudOcrConsent";
 import { FileSelectionStep } from "../features/review/FileSelectionStep";
 import { ReadConfirmationStep } from "../features/review/ReadConfirmationStep";
 import { ReadingProgressPanel } from "../features/review/ReadingProgressPanel";
 import { ReadSummaryAside, SessionNameAside } from "../features/review/ReviewAside";
 import { useReview } from "../features/review/reviewContext";
+import { useActivateOcr } from "../features/review/useActivateOcr";
 import { useStartReview } from "../features/review/useStartReview";
 import { ConfirmationFooter, SelectionFooter } from "../features/review/WizardFooters";
 import { useI18n } from "../i18n/i18nContext";
@@ -27,6 +29,9 @@ export function NewReviewPage({ onCancel, onReviewed }: NewReviewPageProps) {
   const [name, setName] = useState("");
   const [isNameMissing, setIsNameMissing] = useState(false);
   const { documents, reading } = review;
+  const ocr = useActivateOcr((options) => {
+    review.start(name.trim(), files, options);
+  });
 
   const analyze = () => {
     setIsNameMissing(!name.trim());
@@ -62,7 +67,27 @@ export function NewReviewPage({ onCancel, onReviewed }: NewReviewPageProps) {
     return (
       <WizardLayout
         header={header}
-        content={<ReadConfirmationStep documents={documents} onReplace={backToSelection} />}
+        content={
+          <>
+            <ReadConfirmationStep
+              documents={documents}
+              onReplace={backToSelection}
+              onActivateOcr={ocr.activate}
+            />
+            {ocr.awaitingConsent && (
+              <CloudOcrConsent
+                document={ocr.awaitingConsent}
+                onSendToCloud={() => {
+                  ocr.readWith("cloud");
+                }}
+                onUseLocal={() => {
+                  ocr.readWith("local");
+                }}
+                onCancel={ocr.cancel}
+              />
+            )}
+          </>
+        }
         aside={<ReadSummaryAside documents={documents} />}
         footer={
           <ConfirmationFooter

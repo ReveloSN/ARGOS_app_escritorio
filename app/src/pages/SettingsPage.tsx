@@ -6,6 +6,7 @@ import { AssistantSection } from "../features/settings/AssistantSection";
 import { DetectionSection } from "../features/settings/DetectionSection";
 import { EngineSettings } from "../features/settings/EngineSettings";
 import { LanguageSection } from "../features/settings/LanguageSection";
+import { OcrSection } from "../features/settings/OcrSection";
 import { PrivacySection } from "../features/settings/PrivacySection";
 import styles from "../features/settings/Settings.module.css";
 import { SettingsSection } from "../features/settings/SettingsSection";
@@ -76,6 +77,9 @@ export function SettingsPage() {
           </SettingsSection>
           <SettingsSection id="ai" title={title("ai")}>
             <AiSection onSaved={markSaved} />
+          </SettingsSection>
+          <SettingsSection id="ocr" title={title("ocr")}>
+            <OcrSection onSaved={markSaved} />
           </SettingsSection>
           <SettingsSection id="assistant" title={title("assistant")}>
             <AssistantSection onSaved={markSaved} />

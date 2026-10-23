@@ -1,5 +1,6 @@
 /** Comparaciones de prueba con la forma exacta que entrega el motor. */
 
+import type { DocumentReadResult } from "../services/engine/reviewTypes";
 import type {
   ChangeResult,
   ComparisonResult,
@@ -126,16 +127,17 @@ export function pair(
   };
 }
 
+function readDocument(name: string, fragmentCount: number): DocumentReadResult {
+  return { name, status: "read", reason: null, fragmentCount, method: "text", pageCount: null };
+}
+
 export function comparison(overrides: Partial<ComparisonResult> = {}): ComparisonResult {
   return {
     id: "c1",
     name: "Arrendamiento Fontibón",
     mode: "versions",
     createdAt: "2026-10-22T10:00:00+00:00",
-    documents: [
-      { name: "Contrato_v2.docx", status: "read", reason: null, fragmentCount: 3 },
-      { name: "Contrato_v3.docx", status: "read", reason: null, fragmentCount: 4 },
-    ],
+    documents: [readDocument("Contrato_v2.docx", 3), readDocument("Contrato_v3.docx", 4)],
     summary: pair("a", "b").summary,
     pairs: [pair("Contrato_v2.docx", "Contrato_v3.docx", VERSION_CHANGES)],
     inconsistencies: [],

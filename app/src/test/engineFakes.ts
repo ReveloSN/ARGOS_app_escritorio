@@ -36,6 +36,7 @@ export interface FakeEngineOptions {
   readonly sending?: Partial<EngineServices["sending"]>;
   readonly reports?: Partial<EngineServices["reports"]>;
   readonly ai?: Partial<EngineServices["ai"]>;
+  readonly ocr?: Partial<EngineServices["ocr"]>;
   readonly history?: Partial<EngineServices["history"]>;
   readonly preferences?: Partial<EngineServices["preferences"]>;
   readonly documents?: Partial<EngineServices["documents"]>;
@@ -108,6 +109,17 @@ function fakeAi(overrides: FakeEngineOptions["ai"]): EngineServices["ai"] {
   };
 }
 
+function fakeOcr(overrides: FakeEngineOptions["ocr"]): EngineServices["ocr"] {
+  return {
+    ocrSettings: notConfigured(),
+    setUsesCloud: notConfigured(),
+    setProcessor: notConfigured(),
+    storeCredentials: notConfigured(),
+    removeCredentials: notConfigured(),
+    ...overrides,
+  };
+}
+
 function fakePreferences(
   overrides: FakeEngineOptions["preferences"],
 ): EngineServices["preferences"] {
@@ -121,6 +133,10 @@ function fakePreferences(
   };
 }
 
+function fakeDocuments(overrides: FakeEngineOptions["documents"]): EngineServices["documents"] {
+  return { searchDocuments: notConfigured(), openDocument: notConfigured(), ...overrides };
+}
+
 /** Servicios del motor para pruebas de interfaz: solo responden lo que cada prueba configura. */
 export function fakeEngineServices(options: FakeEngineOptions = {}): EngineServices {
   const checkHealth = options.checkHealth ?? (() => Promise.resolve(HEALTHY));
@@ -132,13 +148,10 @@ export function fakeEngineServices(options: FakeEngineOptions = {}): EngineServi
     sending: fakeSending(options.sending),
     reports: fakeReports(options.reports),
     ai: fakeAi(options.ai),
+    ocr: fakeOcr(options.ocr),
     history: { history: notConfigured(), records: notConfigured(), ...options.history },
     preferences: fakePreferences(options.preferences),
-    documents: {
-      searchDocuments: notConfigured(),
-      openDocument: notConfigured(),
-      ...options.documents,
-    },
+    documents: fakeDocuments(options.documents),
     desktop: options.desktop ?? null,
   };
 }

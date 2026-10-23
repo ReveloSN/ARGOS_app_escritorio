@@ -55,7 +55,14 @@ describe("App", () => {
       request?.onProgress?.({
         kind: "document_finished",
         position: 0,
-        document: { name: "contrato.txt", status: "read", reason: null, fragmentCount: 2 },
+        document: {
+          name: "contrato.txt",
+          status: "read",
+          reason: null,
+          fragmentCount: 2,
+          method: "text",
+          pageCount: null,
+        },
       });
     });
     expect(screen.getByRole("heading", { name: "Leyendo 1 de 2 archivos" })).toBeInTheDocument();

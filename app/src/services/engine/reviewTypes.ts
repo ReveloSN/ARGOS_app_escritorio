@@ -1,12 +1,23 @@
 /** Revisión tal como la entrega el motor (engine/argus/api/schemas/review.py). */
 
+import type { OcrProviderValue } from "./ocrTypes";
+
 export type RiskLevelValue = "high" | "medium" | "low";
 
 export type EntityTypeValue =
   "contract_id" | "date" | "money" | "tax_id" | "person_name" | "organization_name" | "period";
 
 export type UnreadableReasonValue =
-  "no_text" | "encrypted" | "corrupted" | "too_large" | "not_found" | "unsupported_format";
+  | "no_text"
+  | "encrypted"
+  | "corrupted"
+  | "too_large"
+  | "not_found"
+  | "unsupported_format"
+  | "ocr_unavailable";
+
+/** Cómo se obtuvo el texto: directo del archivo, con OCR local o con Document AI. */
+export type ReadMethodValue = "text" | "local_ocr" | "cloud_ocr";
 
 export type DifferenceKindValue =
   | "transposition"
@@ -77,6 +88,9 @@ export interface DocumentReadResult {
   readonly status: "read" | "unreadable";
   readonly reason: UnreadableReasonValue | null;
   readonly fragmentCount: number;
+  readonly method: ReadMethodValue;
+  /** Páginas de un PDF escaneado: lo que leería el OCR (y saldría del equipo con Document AI). */
+  readonly pageCount: number | null;
 }
 
 export interface SessionResult {
@@ -113,12 +127,27 @@ export type ReviewProgressEvent =
       readonly position: number;
       readonly document: DocumentReadResult;
     }
+  | {
+      readonly kind: "page_recognized";
+      readonly position: number;
+      readonly done: number;
+      readonly total: number;
+    }
   | { readonly kind: "analysis_started" };
+
+/** «Activar OCR»: qué archivos se leen con OCR y quién lo hace. */
+export interface OcrRequest {
+  readonly fileNames: readonly string[];
+  readonly provider: OcrProviderValue;
+}
 
 export interface ReviewRequest {
   readonly name: string;
   readonly files: readonly File[];
   readonly onProgress?: (event: ReviewProgressEvent) => void;
+  readonly ocr?: OcrRequest;
+  /** La lectura anterior, aún sin revisar, que esta reemplaza (se descarta en el motor). */
+  readonly replaces?: string;
 }
 
 export interface DecisionInput {

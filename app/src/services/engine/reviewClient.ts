@@ -14,18 +14,32 @@ const REVIEWS_PATH = "/reviews";
 const REVIEW_FINISHED_EVENT = "review";
 // Leer y comparar varios archivos tarda; pasado este límite se informa que el análisis se detuvo.
 const REVIEW_TIMEOUT_MS = 120_000;
+// Con OCR cada página se convierte en imagen y se reconoce: unos segundos por página.
+const OCR_REVIEW_TIMEOUT_MS = 600_000;
 const REQUEST_TIMEOUT_MS = 10_000;
 
 function sessionPath(sessionId: string, suffix = ""): string {
   return `${REVIEWS_PATH}/${encodeURIComponent(sessionId)}${suffix}`;
 }
 
+/** Nombre y, con «Activar OCR», qué archivos leer con OCR, quién y qué lectura reemplaza. */
+function reviewFields({ name, ocr, replaces }: ReviewRequest): Record<string, string | string[]> {
+  return {
+    name,
+    ...(ocr && { ocr: [...ocr.fileNames], ocrProvider: ocr.provider }),
+    ...(replaces && { replaces }),
+  };
+}
+
 /** Revisiones en el motor: iniciar con avance por archivo, reabrir, cerrar y decidir. */
 export class ReviewClient implements ReviewGateway {
   constructor(private readonly http: EngineHttp) {}
 
-  startReview({ name, files, onProgress }: ReviewRequest): Promise<ReviewResult> {
-    const upload = { path: REVIEWS_PATH, fields: { name }, files, timeoutMs: REVIEW_TIMEOUT_MS };
+  startReview(request: ReviewRequest): Promise<ReviewResult> {
+    const { files, onProgress } = request;
+    const fields = reviewFields(request);
+    const timeoutMs = request.ocr ? OCR_REVIEW_TIMEOUT_MS : REVIEW_TIMEOUT_MS;
+    const upload = { path: REVIEWS_PATH, fields, files, timeoutMs };
     return streamUpload(this.http, { ...upload, finishedEvent: REVIEW_FINISHED_EVENT }, (event) =>
       onProgress?.(progressEventOf(event) as ReviewProgressEvent),
     );

@@ -67,6 +67,23 @@ describe("ReviewClient", () => {
     expect(progress[0]).toEqual({ kind: "document_started", position: 0, name: "notas.txt" });
   });
 
+  it("con «Activar OCR» envía qué archivos leer con OCR, quién y qué lectura reemplaza", async () => {
+    const body = event("review", REVIEW);
+    const fetchResource = vi.fn<FetchResource>(() => Promise.resolve(streamResponse(body)));
+
+    await clientWith(fetchResource).startReview({
+      name: "Revisión",
+      files: [new File(["%PDF"], "anexo_3.pdf")],
+      ocr: { fileNames: ["anexo_3.pdf"], provider: "cloud" },
+      replaces: "s-anterior",
+    });
+
+    const form = fetchResource.mock.calls[0]?.[1]?.body as FormData;
+    expect(form.getAll("ocr")).toEqual(["anexo_3.pdf"]);
+    expect(form.get("ocrProvider")).toBe("cloud");
+    expect(form.get("replaces")).toBe("s-anterior");
+  });
+
   it("informa que el análisis se detuvo si el flujo termina sin la revisión", async () => {
     const body = event("document_started", { position: 0, name: "notas.txt" });
     const fetchResource = vi.fn(() => Promise.resolve(streamResponse(body)));

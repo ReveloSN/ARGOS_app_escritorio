@@ -3,14 +3,18 @@ import { useEffect, useState } from "react";
 import type {
   DocumentReadResult,
   ReviewProgressEvent,
+  ReviewRequest,
   ReviewResult,
 } from "../../services/engine/reviewTypes";
 import { useEngineServices } from "../engine/EngineServicesContext";
 import { applyProgress, finishedCount, startReading, type ReadingState } from "./readingProgress";
 import { useReview } from "./reviewContext";
 
+/** «Activar OCR»: archivos a leer con OCR y la lectura anterior que se reemplaza. */
+export type ReviewStartOptions = Pick<ReviewRequest, "ocr" | "replaces">;
+
 export interface ReviewStart {
-  readonly start: (name: string, files: readonly File[]) => void;
+  readonly start: (name: string, files: readonly File[], options?: ReviewStartOptions) => void;
   /** Avance de la lectura mientras el motor trabaja; null cuando no hay una lectura en curso. */
   readonly reading: ReadingState | null;
   readonly hasFailed: boolean;
@@ -24,11 +28,13 @@ export function useStartReview(): ReviewStart {
   const { reviews } = useEngineServices();
   const reading = useReadingState();
   const outcome = useReviewOutcome();
-  const start = (name: string, files: readonly File[]) => {
+  const start = (name: string, files: readonly File[], options: ReviewStartOptions = {}) => {
     outcome.clearFailure();
+    // Al releer con OCR se vuelve al avance de lectura hasta tener el resultado nuevo.
+    outcome.reset();
     reading.begin(files.map((file) => file.name));
     reviews
-      .startReview({ name, files, onProgress: reading.advance })
+      .startReview({ name, files, onProgress: reading.advance, ...options })
       .then(outcome.show, outcome.fail)
       .finally(reading.end);
   };

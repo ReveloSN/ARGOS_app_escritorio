@@ -4,7 +4,8 @@ import type { ServerSentEvent } from "./serverSentEvents";
 /** Archivos con sus campos de formulario, tal como los recibe el motor (multipart). */
 export interface Upload {
   readonly path: string;
-  readonly fields: Readonly<Record<string, string>>;
+  /** Un campo con varios valores se repite (por ejemplo, los archivos de «Activar OCR»). */
+  readonly fields: Readonly<Record<string, string | readonly string[]>>;
   readonly files: readonly File[];
   readonly timeoutMs: number;
 }
@@ -31,7 +32,10 @@ export async function streamUpload<Result>(
 function uploadForm({ fields, files }: Upload): FormData {
   const body = new FormData();
   Object.entries(fields).forEach(([name, value]) => {
-    body.append(name, value);
+    const values: readonly string[] = typeof value === "string" ? [value] : value;
+    values.forEach((item) => {
+      body.append(name, item);
+    });
   });
   files.forEach((file) => {
     body.append("files", file, file.name);

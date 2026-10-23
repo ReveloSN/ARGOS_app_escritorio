@@ -165,6 +165,14 @@
       "type": "Tipo",
       "file": "Archivo",
       "reading": "Lectura"
+    },
+    "readStatusLocalOcr": {
+      "one": "Leído con OCR · {count} fragmento con texto",
+      "other": "Leído con OCR · {count} fragmentos con texto"
+    },
+    "readStatusCloudOcr": {
+      "one": "Leído con Document AI · {count} fragmento con texto",
+      "other": "Leído con Document AI · {count} fragmentos con texto"
     }
   },
   "analysisFailed": {
@@ -177,7 +185,8 @@
     "no_text": {
       "what": "No pudimos leer «{name}».",
       "why": "Es una imagen escaneada sin texto.",
-      "todo": "Súbalo de nuevo con texto seleccionable."
+      "todo": "Súbalo de nuevo con texto seleccionable.",
+      "todoOcr": "Súbalo de nuevo con texto seleccionable o actívelo para lectura por OCR."
     },
     "encrypted": {
       "what": "«{name}» está protegido con contraseña.",
@@ -203,6 +212,16 @@
       "what": "No se puede revisar «{name}».",
       "why": "ARGUS lee PDF, DOCX, XLSX, EML y texto.",
       "todo": "Expórtelo como PDF o DOCX y cárguelo de nuevo."
+    },
+    "ocr_unavailable": {
+      "what": "No pudimos leer «{name}» con OCR.",
+      "why": "El OCR de este equipo no está disponible.",
+      "todo": "Reinstale ARGUS, que incluye el OCR, o súbalo con texto seleccionable."
+    },
+    "ocr_no_text": {
+      "what": "El OCR no encontró texto en «{name}».",
+      "why": "La imagen puede estar en blanco, girada o con muy poca resolución.",
+      "todo": "Escanéelo de nuevo a 300 ppp o súbalo con texto seleccionable."
     }
   },
   "results": {
@@ -467,7 +486,8 @@
     "reading": "Leyendo…",
     "read": "Leído",
     "unreadable": "No se pudo leer",
-    "note": "Al terminar, verá qué se leyó de cada archivo antes de revisar las alertas."
+    "note": "Al terminar, verá qué se leyó de cada archivo antes de revisar las alertas.",
+    "ocrPage": "Leyendo con OCR · página {done} de {total}"
   },
   "rowActions": {
     "open": "Abrir detalle",
@@ -505,7 +525,8 @@
       "privacy": "Privacidad",
       "shortcuts": "Atajos de teclado",
       "ai": "Inteligencia artificial",
-      "assistant": "Asistente"
+      "assistant": "Asistente",
+      "ocr": "OCR"
     },
     "detection": {
       "sensitivity": "Sensibilidad",
@@ -548,7 +569,7 @@
     },
     "privacy": {
       "localTitle": "El análisis es local",
-      "localDescription": "Los archivos se leen y comparan en este equipo. ARGUS no envía su contenido a internet ni a servidores externos.",
+      "localDescription": "Los archivos se leen y comparan en este equipo, incluida la lectura por OCR. ARGUS no envía su contenido a internet ni a servidores externos; solo sale lo que usted confirme enviar a un servicio que activó en Ajustes.",
       "retention": "Guardar el historial de decisiones durante 90 días",
       "folder": "Carpeta del historial",
       "retentionOn": "Las revisiones de más de 90 días, con la copia de sus archivos, se borran al iniciar ARGUS.",
@@ -637,6 +658,35 @@
       "reduceMotion": "Reducir movimiento",
       "reduceMotionHint": "Apagado, se usa la preferencia del sistema.",
       "onboarding": "Ver primeros pasos"
+    },
+    "ocr": {
+      "loading": "Cargando los ajustes de OCR…",
+      "failed": "No se pudieron cargar los ajustes de OCR: el motor de análisis no respondió.",
+      "localAvailable": "El OCR local (Tesseract) está listo en este equipo. «Activar OCR» lo usa por defecto.",
+      "localMissing": {
+        "what": "El OCR local no está disponible.",
+        "why": "No se encontró Tesseract, el lector de texto de imágenes que incluye ARGUS.",
+        "todo": "Reinstale ARGUS y vuelva a intentarlo.",
+        "retry": "Reintentar"
+      },
+      "cloudToggle": "Usar Google Document AI",
+      "cloudDescription": "Al pulsar «Activar OCR», ARGUS le preguntará antes de enviar el archivo y le dirá cuántas páginas saldrán del equipo. Sin internet o sin clave, se usa el OCR local.",
+      "projectId": "Proyecto de Google Cloud",
+      "location": "Ubicación",
+      "locations": {
+        "us": "Estados Unidos (us)",
+        "eu": "Unión Europea (eu)"
+      },
+      "processorId": "Procesador OCR",
+      "saveProcessor": "Guardar procesador",
+      "credentialsLabel": "Clave JSON de la cuenta de servicio",
+      "credentialsPlaceholder": "Pegue aquí el contenido del archivo .json",
+      "chooseFile": "Elegir archivo JSON",
+      "saveCredentials": "Guardar clave",
+      "credentialsStored": "Clave guardada en el llavero del sistema.",
+      "removeCredentials": "Quitar clave",
+      "invalidCredentials": "No es la clave de una cuenta de servicio. Descárguela en Google Cloud › IAM › Cuentas de servicio › Claves, en formato JSON.",
+      "keychainTodo": "Inicie el llavero de su escritorio y vuelva a intentarlo. Mientras tanto se usa el OCR local."
     }
   },
   "explanation": {
@@ -1183,6 +1233,23 @@
         "shortcuts": "Atajos: C, E, I. Deshacer con Ctrl Z.",
         "hide": "Puede ocultar al asistente en Ajustes."
       }
+    }
+  },
+  "ocr": {
+    "activate": "Activar OCR",
+    "consent": {
+      "title": "¿Enviar «{name}» a Google Document AI?",
+      "pages": {
+        "one": "Saldrá de este equipo {count} página de este archivo, solo para leer su texto.",
+        "other": "Saldrán de este equipo {count} páginas de este archivo, solo para leer su texto."
+      },
+      "local": "Si prefiere que nada salga del equipo, use el OCR local: es más lento y puede leer peor un escaneado de baja calidad.",
+      "send": {
+        "one": "Enviar {count} página",
+        "other": "Enviar {count} páginas"
+      },
+      "useLocal": "Usar OCR local",
+      "cancel": "Cancelar"
     }
   }
 }

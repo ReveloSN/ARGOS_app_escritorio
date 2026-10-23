@@ -1,0 +1,50 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-overlay);
+  display: grid;
+  place-items: center;
+  background: var(--color-backdrop);
+}
+
+/* Mismo diálogo que «Archivo protegido» del mockup de estados y mensajes. */
+.dialog {
+  display: flex;
+  gap: var(--spacing-3);
+  width: min(var(--size-dialog), calc(100% - var(--spacing-8)));
+  padding: var(--spacing-5);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+  box-shadow: var(--shadow-overlay);
+}
+
+.icon {
+  color: var(--color-text-secondary);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-semibold);
+}
+
+.text {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-2);
+}

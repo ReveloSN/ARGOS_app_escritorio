@@ -3,6 +3,7 @@ import { Icon } from "../../components/atoms/Icon";
 import { useI18n } from "../../i18n/i18nContext";
 import type { DocumentReadResult } from "../../services/engine/reviewTypes";
 import { fileTypeLabel } from "./fileTypeLabel";
+import { readStatusText, unreadableKeys } from "./readOutcomeText";
 import styles from "./ReviewSteps.module.css";
 
 interface DocumentStatusListProps {
@@ -11,7 +12,8 @@ interface DocumentStatusListProps {
 
 /** Pestaña «Archivos»: qué se leyó de cada archivo y por qué quedó fuera el que no se leyó. */
 export function DocumentStatusList({ documents }: DocumentStatusListProps) {
-  const { t, tPlural } = useI18n();
+  const i18n = useI18n();
+  const { t } = i18n;
   return (
     <ul aria-label={t("results.filesLabel")} className={styles.list}>
       {documents.map((document, index) => (
@@ -24,12 +26,12 @@ export function DocumentStatusList({ documents }: DocumentStatusListProps) {
           {document.reason ? (
             <span className={styles.status}>
               <Icon name="report" size="sm" className={styles.attention} />
-              {t(`unreadable.${document.reason}.why`)}
+              {t(unreadableKeys(document)?.why ?? `unreadable.${document.reason}.why`)}
             </span>
           ) : (
             <span className={styles.status}>
               <Icon name="check_circle" size="sm" className={styles.readIcon} />
-              {tPlural({ key: "newReview.readStatus", count: document.fragmentCount })}
+              {readStatusText(document, i18n)}
             </span>
           )}
         </li>

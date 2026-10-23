@@ -268,3 +268,39 @@
   align-items: center;
   gap: var(--spacing-3);
 }
+
+.credentials {
+  min-height: calc(4 * var(--line-height-body));
+  padding: var(--spacing-2) var(--spacing-2-5);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-background-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  resize: vertical;
+}
+
+/* El campo de archivo nativo queda oculto: el botón visible es la etiqueta. */
+.fileButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-control-md);
+  padding: 0 var(--spacing-3);
+  border: var(--border-width) solid var(--button-secondary-border);
+  border-radius: var(--radius-control);
+  background: var(--button-secondary-bg);
+  cursor: pointer;
+}
+
+.fileButton:focus-within {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.fileButton input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
