@@ -42,6 +42,13 @@ class WordEditResponse(CamelModel):
     characters: list[CharacterEditResponse]
 
 
+class MeaningResponse(CamelModel):
+    """«IA: Reformulado» o «IA: Cambio de sentido», con su confianza (0 a 1)."""
+
+    meaning: str
+    confidence: float
+
+
 class ChangeResponse(CamelModel):
     # Número del cambio en toda la comparación, en orden de lectura de cada par.
     number: int
@@ -52,6 +59,7 @@ class ChangeResponse(CamelModel):
     first: SegmentResponse | None
     second: SegmentResponse | None
     edits: list[WordEditResponse]
+    meaning: MeaningResponse | None
 
 
 class ChangeSummaryResponse(CamelModel):

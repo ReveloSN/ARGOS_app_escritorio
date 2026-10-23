@@ -4,8 +4,10 @@ version = "0.1.0"
 description = "Motor local de análisis de ARGUS: lee documentos, extrae entidades y detecta inconsistencias."
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "anthropic>=2.1.0",
     "es-core-news-md",
     "fastapi>=0.143.1",
+    "keyring>=25.7.0",
     "numpy>=2.5.4",
     "onnxruntime>=1.31.0",
     "openpyxl>=3.1.5",
@@ -74,7 +76,7 @@ ban-relative-imports = "all"
 [tool.mypy]
 python_version = "3.12"
 strict = true
-packages = ["argus", "tests"]
+packages = ["argus", "tests", "benchmarks"]
 plugins = ["pydantic.mypy"]
 
 # onnxruntime no publica tipos; se usa solo en su adaptador (infrastructure/nlp).

@@ -13,6 +13,9 @@ from argus.application.text_comparison.change_detector import ChangeDetector
 from argus.application.text_comparison.change_facts import ChangeFactsReader
 from argus.application.text_comparison.comparison_decisions import ComparisonDecisions
 from argus.application.text_comparison.document_pair_comparer import DocumentPairComparer
+from argus.application.text_comparison.meaning_classifier import (
+    RuleAndSimilarityMeaningClassifier,
+)
 from argus.application.text_comparison.run_comparison import (
     ComparisonAnalyzer,
     ComparisonRecorder,
@@ -70,7 +73,12 @@ def build_segment_similarity(embedder: TextEmbedder | None) -> SegmentSimilarity
 def build_comparison_services(
     dependencies: ComparisonDependencies, repositories: ComparisonRepositories, clock: Clock
 ) -> ComparisonServices:
-    detector = ChangeDetector(ChangeFactsReader(dependencies.values), MATERIALITY_CLASSIFIER)
+    meaning = RuleAndSimilarityMeaningClassifier(
+        SemanticSegmentSimilarity(dependencies.embedder) if dependencies.embedder else None
+    )
+    detector = ChangeDetector(
+        ChangeFactsReader(dependencies.values), MATERIALITY_CLASSIFIER, meaning
+    )
     aligner = SegmentAligner(build_segment_similarity(dependencies.embedder))
     comparer = DocumentPairComparer(DocumentSegmenter(), aligner, detector)
     analyzer = ComparisonAnalyzer(comparer, dependencies.inconsistencies)

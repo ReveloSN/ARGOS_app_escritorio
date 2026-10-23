@@ -2,6 +2,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 
 from argus.application.text_comparison.change_facts import ChangeFactsReader
+from argus.application.text_comparison.meaning_classifier import ChangeMeaningClassifier
 from argus.domain.risk import RiskLevel
 from argus.domain.risk_rules import RuleChainClassifier
 from argus.domain.text_comparison.alignment import Alignment
@@ -31,10 +32,14 @@ class ChangeDetector:
     """
 
     def __init__(
-        self, facts: ChangeFactsReader, classifier: RuleChainClassifier[ChangeFacts]
+        self,
+        facts: ChangeFactsReader,
+        classifier: RuleChainClassifier[ChangeFacts],
+        meaning: ChangeMeaningClassifier | None = None,
     ) -> None:
         self._facts = facts
         self._classifier = classifier
+        self._meaning = meaning
 
     def detect(self, alignment: Alignment) -> tuple[Change, ...]:
         drafts = [
@@ -49,8 +54,21 @@ class ChangeDetector:
         facts = self._facts.facts_of(draft.kind, draft.first, draft.second)
         risk = self._classifier.classify(facts) or FALLBACK_RISK
         materialities = tuple(sorted(facts.materialities))
+        sides = [side for side in (draft.first, draft.second) if side is not None]
+        meaning = (
+            None
+            if self._meaning is None
+            else self._meaning.classify(draft.kind, frozenset(materialities), sides)
+        )
         return Change(
-            draft.kind, risk, materialities, draft.first, draft.second, draft.edits, draft.is_moved
+            draft.kind,
+            risk,
+            materialities,
+            draft.first,
+            draft.second,
+            draft.edits,
+            draft.is_moved,
+            meaning,
         )
 
 

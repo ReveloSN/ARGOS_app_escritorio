@@ -1,12 +1,13 @@
 """Informe de comparación ↔ JSON para guardarlo en SQLite y volver a abrirlo igual."""
 
 import json
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
 from argus.domain.errors import UnreadableReason
 from argus.domain.read_outcome import ReadSummary
 from argus.domain.risk import RiskLevel
 from argus.domain.text_comparison.change import Change, ChangeKind, Materiality
+from argus.domain.text_comparison.meaning import ChangeMeaning, MeaningSuggestion
 from argus.domain.text_comparison.modes import ComparisonModeName
 from argus.domain.text_comparison.report import ComparisonContent, PairComparison
 from argus.infrastructure.persistence.alert_serialization import (
@@ -24,6 +25,11 @@ from argus.infrastructure.persistence.segment_serialization import (
 )
 
 
+class MeaningPayload(TypedDict):
+    meaning: str
+    confidence: float
+
+
 class ChangePayload(TypedDict):
     kind: str
     risk: str
@@ -32,6 +38,8 @@ class ChangePayload(TypedDict):
     second: SegmentPayload | None
     edits: list[EditPayload]
     is_moved: bool
+    # Ausente en las comparaciones guardadas antes de la Fase 6 del plan v0.1.
+    meaning: NotRequired[MeaningPayload | None]
 
 
 class PairPayload(TypedDict):
@@ -115,6 +123,11 @@ def _change_payload(change: Change) -> ChangePayload:
         "second": segment_payload(change.second) if change.second else None,
         "edits": [edit_payload(edit) for edit in change.edits],
         "is_moved": change.is_moved,
+        "meaning": (
+            None
+            if change.meaning is None
+            else {"meaning": change.meaning.meaning, "confidence": change.meaning.confidence}
+        ),
     }
 
 
@@ -128,4 +141,11 @@ def _change(payload: ChangePayload) -> Change:
         segment_from_payload(second) if second else None,
         tuple(edit_from_payload(edit) for edit in payload["edits"]),
         payload["is_moved"],
+        _meaning(payload.get("meaning")),
     )
+
+
+def _meaning(payload: MeaningPayload | None) -> MeaningSuggestion | None:
+    if payload is None:
+        return None
+    return MeaningSuggestion(ChangeMeaning(payload["meaning"]), payload["confidence"])

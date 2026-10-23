@@ -5,6 +5,7 @@ from enum import StrEnum
 
 from argus.domain.errors import InvalidValueError
 from argus.domain.risk import RiskLevel
+from argus.domain.text_comparison.meaning import MeaningSuggestion
 from argus.domain.text_comparison.segment import Segment
 from argus.domain.text_comparison.text_diff import WordEdit
 
@@ -50,6 +51,8 @@ class Change:
     edits: tuple[WordEdit, ...]
     # Un segmento modificado también puede haber cambiado de lugar.
     is_moved: bool
+    # Sugerencia «reformulado» o «cambio de sentido»; None si no hay nada que sugerir.
+    meaning: MeaningSuggestion | None = None
 
     def __post_init__(self) -> None:
         sides = (self.first is not None, self.second is not None)

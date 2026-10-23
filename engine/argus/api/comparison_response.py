@@ -4,6 +4,7 @@ from argus.api.schemas.comparison import (
     ChangeSummaryResponse,
     CharacterEditResponse,
     ComparisonResponse,
+    MeaningResponse,
     PairComparisonResponse,
     SegmentResponse,
     TextSpanResponse,
@@ -79,6 +80,13 @@ def _change(number: int, change: Change) -> ChangeResponse:
         first=_optional_segment(change.first),
         second=_optional_segment(change.second),
         edits=[_edit(edit) for edit in change.edits],
+        meaning=(
+            None
+            if change.meaning is None
+            else MeaningResponse(
+                meaning=change.meaning.meaning, confidence=change.meaning.confidence
+            )
+        ),
     )
 
 
