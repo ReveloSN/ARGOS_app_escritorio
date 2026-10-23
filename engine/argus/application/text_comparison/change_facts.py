@@ -5,7 +5,11 @@ from typing import Protocol
 from argus.application.ports.entity_extractor import EntityMatch
 from argus.domain.entity import EntityType
 from argus.domain.text_comparison.change import ChangeKind, Materiality
-from argus.domain.text_comparison.materiality import ChangeFacts, negation_count
+from argus.domain.text_comparison.materiality import (
+    ChangeFacts,
+    cosmetic_difference,
+    negation_count,
+)
 from argus.domain.text_comparison.segment import Segment
 
 NUMBER = re.compile(r"\d+")
@@ -41,6 +45,9 @@ class ChangeFactsReader:
     def facts_of(
         self, kind: ChangeKind, first: Segment | None, second: Segment | None
     ) -> ChangeFacts:
+        # Un cambio solo de forma no se analiza más: «18.450.000» y «18450000» no son montos distintos.
+        if first and second and (cosmetic := cosmetic_difference(first.text, second.text)):
+            return ChangeFacts(kind, frozenset({cosmetic}))
         differing = self._marks(first) ^ self._marks(second)
         materialities = {materiality for materiality, _ in differing}
         if kind is ChangeKind.MODIFIED and not materialities:

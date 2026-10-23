@@ -24,7 +24,7 @@ class FixedSimilarity:
 
 def test_identical_segments_pair_by_their_fingerprint_without_asking_the_model() -> None:
     first = segments_of("v1.pdf", "Objeto", "Canon de $ 18.450.000")
-    second = segments_of("v2.pdf", "OBJETO", "Canon de $ 18.450.000")
+    second = segments_of("v2.pdf", "Objeto", "Canon de $ 18.450.000")
 
     alignment = SegmentAligner(FixedSimilarity({})).align(first, second, THRESHOLD)
 

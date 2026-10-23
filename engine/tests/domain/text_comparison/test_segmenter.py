@@ -114,13 +114,14 @@ def test_spreadsheet_cells_are_grouped_by_sheet_and_row() -> None:
     assert segment_texts(segments) == ["Tarifa | 1.200", "Tarifa"]
 
 
-def test_comparison_ignores_case_and_spacing_but_not_wording() -> None:
+def test_only_the_exact_same_text_has_the_same_fingerprint() -> None:
     assert normalize_for_comparison("  El CANON\nmensual ") == "el canon mensual"
-    first = Segment(1, SegmentKind.PARAGRAPH, "El canon  mensual", origin_of("a.txt"))
-    same = Segment(7, SegmentKind.PARAGRAPH, "el canon mensual", origin_of("b.txt"))
-    other = Segment(1, SegmentKind.PARAGRAPH, "El canon anual", origin_of("a.txt"))
+    first = Segment(1, SegmentKind.PARAGRAPH, "El canon mensual", origin_of("a.txt"))
+    same = Segment(7, SegmentKind.PARAGRAPH, "El canon mensual", origin_of("b.txt"))
+    upper = Segment(1, SegmentKind.PARAGRAPH, "EL CANON MENSUAL", origin_of("b.txt"))
 
-    assert first.fingerprint == same.fingerprint != other.fingerprint
+    # Un cambio de mayúsculas o de espacios también se informa (Comparar decide si se ve).
+    assert first.fingerprint == same.fingerprint != upper.fingerprint
 
 
 def origin_of(name: str) -> SegmentOrigin:

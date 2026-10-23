@@ -71,6 +71,12 @@ def only_change(first: str, second: str) -> Change:
             "El arrendatario es Transportes del Sur S.A.S. desde hoy",
             Expected(Materiality.PARTY, RiskLevel.MEDIUM),
         ),
+        # Plan de la Fase 1: palabra eliminada y sinónimo son cambios de redacción, riesgo bajo.
+        (
+            "La bodega se entrega limpia y en buen estado de conservación",
+            "La bodega se entrega limpia y en estado de conservación",
+            Expected(Materiality.WORDING, RiskLevel.LOW),
+        ),
         (
             "La bodega se entrega limpia y en buen estado",
             "La bodega se entrega limpia y en perfecto estado",
@@ -89,6 +95,30 @@ def test_each_modified_segment_gets_its_materiality_and_risk(
     assert change.edits
     assert change.first is not None
     assert change.second is not None
+
+
+@pytest.mark.parametrize(
+    ("first", "second", "materiality"),
+    [
+        ("El arrendatario recibe la bodega", "EL ARRENDATARIO recibe la bodega", Materiality.CASE),
+        (
+            "Logística Andina S.A.S. firma hoy",
+            "Logística Andina SAS firma hoy",
+            Materiality.PUNCTUATION,
+        ),
+        ("El canon se paga\ncada mes", "El canon se paga cada mes", Materiality.FORMAT),
+    ],
+)
+def test_case_punctuation_and_format_changes_are_reported_as_low_risk(
+    first: str, second: str, materiality: Materiality
+) -> None:
+    change = only_change(first, second)
+
+    assert (change.kind, change.materialities, change.risk) == (
+        ChangeKind.MODIFIED,
+        (materiality,),
+        RiskLevel.LOW,
+    )
 
 
 def test_a_clause_that_changed_place_is_moved_without_edits() -> None:

@@ -59,6 +59,9 @@ class Segment:
 
     @cached_property
     def fingerprint(self) -> str:
-        """Huella del texto normalizado: dos segmentos con la misma huella dicen lo mismo."""
-        normalized = normalize_for_comparison(self.text).encode("utf-8")
-        return hashlib.sha256(normalized).hexdigest()
+        """Huella del texto exacto: dos segmentos con la misma huella dicen lo mismo.
+
+        Mayúsculas, puntuación y espacios cuentan: esos cambios se informan como cambios de
+        forma (riesgo bajo) y la pantalla Comparar decide si los muestra.
+        """
+        return hashlib.sha256(self.text.encode("utf-8")).hexdigest()

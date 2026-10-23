@@ -48,5 +48,9 @@ def test_a_deleted_phrase_keeps_its_whole_span() -> None:
     )
 
 
-def test_case_and_spacing_are_not_edits() -> None:
-    assert diff_words("El  CANON mensual", "el canon mensual") == ()
+def test_spacing_is_not_an_edit_but_case_is() -> None:
+    assert diff_words("El  canon\nmensual", "El canon mensual") == ()
+
+    (edit,) = diff_words("El canon mensual", "El CANON mensual")
+
+    assert (edit.kind, edit.first_text, edit.second_text) == (EditKind.REPLACED, "canon", "CANON")

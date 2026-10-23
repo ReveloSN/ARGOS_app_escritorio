@@ -1,6 +1,8 @@
 """Reglas de materialidad (Specification): qué cambios importan y con qué riesgo."""
 
 import re
+import unicodedata
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from argus.domain.risk import RiskLevel
@@ -35,6 +37,35 @@ WORD = re.compile(r"[\w-]+")
 def negation_count(text: str) -> int:
     words = WORD.findall(normalize_for_comparison(text))
     return sum(1 for word in words if word in NEGATION_WORDS)
+
+
+def _without_spacing(text: str) -> str:
+    return " ".join(text.split())
+
+
+def _without_punctuation(text: str) -> str:
+    kept = "".join(char for char in text if not unicodedata.category(char).startswith("P"))
+    return normalize_for_comparison(kept)
+
+
+# De la diferencia más leve a la más amplia: cada una ignora también lo de las anteriores.
+_COSMETIC_NORMALIZERS: tuple[tuple[Materiality, Callable[[str], str]], ...] = (
+    (Materiality.FORMAT, _without_spacing),
+    (Materiality.CASE, normalize_for_comparison),
+    (Materiality.PUNCTUATION, _without_punctuation),
+)
+
+
+def cosmetic_difference(first: str, second: str) -> Materiality | None:
+    """Si dos textos solo difieren en espacios, mayúsculas o puntuación, cuál es la diferencia."""
+    return next(
+        (
+            materiality
+            for materiality, normalize in _COSMETIC_NORMALIZERS
+            if normalize(first) == normalize(second)
+        ),
+        None,
+    )
 
 
 @dataclass(frozen=True)

@@ -56,7 +56,7 @@ class _Words:
 
     @property
     def keys(self) -> list[str]:
-        return [self.text[span.start : span.end].casefold() for span in self.spans]
+        return [self.text[span.start : span.end] for span in self.spans]
 
     def span(self, start: int, end: int) -> TextSpan | None:
         """Tramo que cubre de la palabra `start` a la `end` (excluida); None si no hay ninguna."""
@@ -64,7 +64,7 @@ class _Words:
 
 
 def diff_words(first: str, second: str) -> tuple[WordEdit, ...]:
-    """Ediciones para pasar de `first` a `second`; mayúsculas y espacios no cuentan."""
+    """Ediciones para pasar de `first` a `second`; los espacios entre palabras no cuentan."""
     first_words, second_words = _Words.of(first), _Words.of(second)
     matcher = SequenceMatcher(None, first_words.keys, second_words.keys, autojunk=False)
     return tuple(

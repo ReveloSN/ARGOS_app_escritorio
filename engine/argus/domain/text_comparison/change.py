@@ -25,6 +25,10 @@ class Materiality(StrEnum):
     PARTY = "party"
     NEGATION = "negation"
     WORDING = "wording"
+    # Cambios de forma: el texto dice lo mismo (la pantalla Comparar permite ocultarlos).
+    CASE = "case"
+    PUNCTUATION = "punctuation"
+    FORMAT = "format"
 
 
 # Qué lado debe existir según el tipo de cambio: (primer documento, segundo documento).
