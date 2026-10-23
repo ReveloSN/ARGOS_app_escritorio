@@ -1,6 +1,6 @@
 # Progreso de ARGUS
 
-Estado al 19/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verde en CI (ubuntu y windows).
+Estado al 22/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verde en CI (ubuntu y windows).
 
 ## Fases
 
@@ -16,10 +16,20 @@ Estado al 19/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 | 6 · Pantallas | Decisiones con deshacer, Resultados con filtros, Historial, Ajustes, búsqueda Ctrl K, progreso por archivo | ✅ Completa (ADR 015) |
 | 7 · IA | spaCy, embeddings ONNX, anomalías, aprendizaje con las decisiones y `AlertExplainer` | ✅ Completa (ADR 016) |
 | 8 · Empaquetado | Sidecar PyInstaller, instaladores .msi, .deb, .AppImage y elegir la carpeta del historial | ✅ Completa (ADR 017) |
-| A · Comparación (motor) | Segmentos con origen, alineación por huella y similitud, diff por palabra y carácter, materialidad, modos y `/comparisons` | ✅ Completa (ADR 018) |
-| B · IA opcional | Embedders local avanzado y en la nube (con consentimiento), contradicciones (NLI), `ChangeExplainer` y benchmark | Pendiente |
-| C · Comparar documentos (interfaz) | Mockup primero; dos paneles sincronizados, diff en el texto, cambios con filtros, decisiones, Explicar y matriz | Pendiente |
-| D · OCR opcional | PDF escaneados en vez de rechazarlos (revisa el ADR 005) | Pendiente |
+
+### Plan v0.1 (rediseño con identidad ARGUS; mockups de `docs/mockups/` del 22/10/2026)
+
+| Fase | Contenido | Estado |
+|---|---|---|
+| 1 · Motor de comparación | Segmentos con origen, alineación por huella y similitud, diff por palabra y carácter, materialidad (número, fecha, monto, parte, negación y cambios de forma), modos y `/comparisons` con progreso | ✅ Completa (ADR 018, 019) |
+| 2 · Sistema de diseño | Tokens nuevos, componentes, temas claro y oscuro, i18n, contraste 4.5:1, catálogo solo en desarrollo | Pendiente |
+| 3 · Interfaz de comparación | Pantalla Comparar: paneles sincronizados, diff en el texto, resumen, minimapa, filtros, decisiones y matriz | Pendiente |
+| 4 · Expediente y prevención | Datos confirmados como fuente de verdad, verificaciones internas y revisión antes de enviar | Pendiente |
+| 5 · Informe y métricas | Informe PDF y DOCX y panel de métricas en Historial | Pendiente |
+| 6 · IA opcional | `ChangeExplainer` con respaldo por plantillas, «reformulado» frente a «cambio de sentido» y benchmark del embedder | Pendiente |
+| 7 · Asistente | `ArgusAssistant` con sus estados derivados del motor, onboarding y ajuste «Mostrar asistente» | Pendiente |
+| 8 · OCR | `OcrEngine` con Tesseract local y Google Document AI opcional (revisa el ADR 005) | Pendiente |
+| 9 · Empaquetado y cierre | Instaladores con modelos, arranque sin internet, README y progreso final | Pendiente |
 
 ## Qué puede hacer hoy la app
 
@@ -33,7 +43,7 @@ Estado al 19/10/2026. Cada fase se cierra solo con lint, tipos y pruebas en verd
 - **IA local (sin internet):** nombres de persona con spaCy; un correo que cita un periodo distinto al de su adjunto del mismo tema (embeddings ONNX), mostrado como sugerencia con su confianza; fechas con un año fuera del patrón y montos con un cero de más o de menos; la confianza aprende de sus decisiones anteriores, y cada alerta trae una explicación en el idioma de la interfaz.
 - **Búsqueda global (Ctrl K):** en una revisión busca alertas y fragmentos de los documentos; en Historial, sesiones; en Ajustes, secciones.
 - Si el motor está detenido, Inicio sigue usable y dice qué hacer («Reintentar conexión»).
-- **Comparación de documentos (solo motor, todavía sin pantalla):** `POST /comparisons` con un modo (versiones, correo y adjunto, contrato y anexos, uno contra varios) divide cada archivo en párrafos, cláusulas y filas de tabla, los alinea y devuelve cada cambio (agregado, eliminado, modificado, movido) con su origen, el diff por palabra y por carácter, y su riesgo según toque montos, fechas, números, partes o negaciones. Funciona sin el modelo de embeddings; con él, también reconoce las reformulaciones. `GET /comparisons/{id}` la vuelve a abrir.
+- **Comparación de documentos (solo motor, todavía sin pantalla):** `POST /comparisons` con un modo (versiones, correo y adjunto, contrato y anexos, uno contra varios) divide cada archivo en párrafos, cláusulas y filas de tabla, los alinea y devuelve cada cambio (agregado, eliminado, modificado, movido) con su origen, el diff por palabra y por carácter, y su riesgo según toque montos, fechas, números, partes o negaciones. Los cambios solo de mayúsculas, de puntuación o de espacios se informan aparte, con riesgo bajo, para que la pantalla Comparar pueda ocultarlos. Funciona sin el modelo de embeddings; con él, también reconoce las reformulaciones. `GET /comparisons/{id}` la vuelve a abrir.
 - **Instaladores:** `.msi` (Windows), `.deb` y `.AppImage` (Linux) con el motor y los modelos incluidos; funcionan sin internet desde la primera ejecución.
 - Catálogo de componentes, solo en desarrollo: `npm --prefix app run dev` y abrir `http://localhost:1420/dev/design-system`.
 

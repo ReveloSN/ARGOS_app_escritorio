@@ -1,0 +1,12 @@
+# 019 · Cambios de forma y modos de la pantalla Comparar (cierre de la Fase 1)
+
+- **Estado:** aceptada · 22/10/2026
+- **Contexto:** el rediseño (mockup `ARGUS Comparar`) clasifica cada cambio en número, fecha, nombre, negación, texto, mayúsculas o puntuación, y deja ocultar los cambios de mayúsculas, de puntuación y de formato. «Solo cambios importantes» deja número, fecha, nombre y negación. El motor de la ADR 018 trataba los cambios de mayúsculas y de espacios como si no fueran cambios, así que la pantalla no podía mostrarlos.
+- **Decisión:**
+  - **La huella del segmento es el texto exacto.** Dos segmentos solo son idénticos si dicen exactamente lo mismo. Los que difieren en espacios, mayúsculas o puntuación se alinean igual por similitud y se informan como modificados.
+  - **Cambios de forma:** `cosmetic_difference` revisa, de la diferencia más leve a la más amplia, si los dos textos solo difieren en espacios y saltos de línea (`format`), en mayúsculas (`case`) o en puntuación (`punctuation`). Un cambio de forma no se analiza más, así «18.450.000» frente a «18450000» no cuenta como monto distinto. Su riesgo es bajo.
+  - **El diff por palabra distingue mayúsculas** («canon» → «CANON» es un reemplazo). Los espacios entre palabras siguen sin contar.
+  - **Ocultar es tarea de la interfaz:** el motor siempre informa todos los cambios con su materialidad. «Ignorar mayúsculas, puntuación o formato» y «Solo cambios importantes» son filtros de la pantalla sobre esas categorías. Así, cambiar un filtro no exige volver a comparar.
+  - **Correspondencia con el mockup:** número ← `number` y `amount`; fecha ← `date`; nombre ← `party`; negación ← `negation`; texto ← `wording`; mayúsculas ← `case`; puntuación ← `punctuation`; formato ← `format`. Los modos de la pantalla también corresponden a lo que ya existe: «Comparar versiones» usa el modo `versions` de `/comparisons`, «Matriz» usa `contract_annexes` (todos contra todos) y «Buscar inconsistencias» usa la revisión por entidades (`/reviews`). Los modos `email_attachment` y `one_to_many` quedan para «Revisar antes de enviar» y para comparar una referencia con varios documentos.
+  - **«Reformulado» frente a «Cambio de sentido»** es una sugerencia de IA y queda para la Fase 6.
+- **Consecuencias:** un PDF que cambió solo de cortes de línea genera cambios de formato; la pantalla los oculta por defecto, como en el mockup. Las pruebas de la Fase 1 cubren palabra eliminada, sinónimo, negación agregada, párrafo movido, 4857 frente a 4587 (alto) y los tres cambios de forma.
