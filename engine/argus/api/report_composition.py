@@ -22,6 +22,8 @@ from argus.infrastructure.reports.pdf_report_renderer import PdfReportRenderer
 class ReportServices:
     export: ExportReport
     open: OpenReport
+    # Versión del motor: el pie del informe dice con qué versión de ARGUS se generó.
+    version: str
 
 
 @dataclass(frozen=True)
@@ -29,6 +31,7 @@ class ReportDependencies:
     sessions: SessionRepository
     clock: Clock
     opener: FileOpener
+    version: str
 
 
 def build_report_services(dependencies: ReportDependencies, directory: Path) -> ReportServices:
@@ -41,4 +44,5 @@ def build_report_services(dependencies: ReportDependencies, directory: Path) -> 
     return ReportServices(
         export=ExportReport(dependencies.sessions, tools),
         open=OpenReport(dependencies.sessions, folder, dependencies.opener),
+        version=dependencies.version,
     )

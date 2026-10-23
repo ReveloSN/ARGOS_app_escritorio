@@ -1,7 +1,12 @@
 from fastapi import APIRouter, Response
 
 from argus.api.composition import EngineServices
-from argus.api.schemas.report import ExportReportBody, OpenReportBody, ReportLocationResponse
+from argus.api.schemas.report import (
+    ExportReportBody,
+    OpenReportBody,
+    ReportLocationResponse,
+    ReportPlanResponse,
+)
 from argus.application.export_report import ExportRequest, SavedReport
 
 NO_CONTENT = 204
@@ -17,8 +22,11 @@ def build_reports_router(services: EngineServices) -> APIRouter:
     reports = services.reports
 
     @router.get("")
-    def report_location(session_id: str) -> ReportLocationResponse:
-        return _location(reports.export.folder(session_id))
+    def report_location(session_id: str) -> ReportPlanResponse:
+        planned = reports.export.folder(session_id)
+        return ReportPlanResponse(
+            folder=planned.folder, file_name=planned.file_name, version=reports.version
+        )
 
     @router.post("")
     def export_report(session_id: str, body: ExportReportBody) -> ReportLocationResponse:

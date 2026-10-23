@@ -83,3 +83,9 @@ class ReportLocationResponse(CamelModel):
 
     folder: str
     file_name: str
+
+
+class ReportPlanResponse(ReportLocationResponse):
+    """Antes de exportar: además, la versión de ARGUS que firma el pie del informe."""
+
+    version: str

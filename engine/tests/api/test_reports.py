@@ -48,6 +48,7 @@ def test_exports_the_report_into_the_case_file_folder(
 
     folder = settings.reports_directory / "Revisión_de_prueba"
     assert pdf["folder"] == str(folder)
+    assert pdf["version"] == "9.9.9"
     assert pdf["saved"] == f"{pdf['fileName']}.pdf"
     assert (folder / pdf["saved"]).read_bytes().startswith(b"%PDF")
     assert (folder / docx["saved"]).is_file()

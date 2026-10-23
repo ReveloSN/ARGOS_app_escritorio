@@ -224,7 +224,8 @@ def build_engine_services(settings: EngineSettings, opener: FileOpener) -> Engin
             SendDependencies(build_attachment_readers(), values, clock, opener, data_directory),
         ),
         reports=build_report_services(
-            ReportDependencies(storage.sessions, clock, opener), settings.reports_directory
+            ReportDependencies(storage.sessions, clock, opener, settings.version),
+            settings.reports_directory,
         ),
         storage=storage,
         data_directory=data_directory,
