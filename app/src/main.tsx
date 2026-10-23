@@ -16,6 +16,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { EngineServicesContext } from "./features/engine/EngineServicesContext";
 import { ComparisonProvider } from "./features/comparison/ComparisonProvider";
+import { SendProvider } from "./features/sending/SendProvider";
 import { ReviewProvider } from "./features/review/ReviewProvider";
 import { ThemeProvider } from "./features/settings/theme/ThemeProvider";
 import { I18nProvider } from "./i18n/I18nProvider";
@@ -37,7 +38,9 @@ function render(content: ReactNode) {
         <ThemeProvider storage={browserPreferenceStorage}>
           <EngineServicesContext.Provider value={engineServices}>
             <ReviewProvider>
-              <ComparisonProvider>{content}</ComparisonProvider>
+              <ComparisonProvider>
+                <SendProvider>{content}</SendProvider>
+              </ComparisonProvider>
             </ReviewProvider>
           </EngineServicesContext.Provider>
         </ThemeProvider>

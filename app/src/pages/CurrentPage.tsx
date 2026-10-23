@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { AppRoute } from "../features/navigation/appRoute";
 import { usePageNavigation, type PageNavigation } from "../features/navigation/usePageNavigation";
 import { useReview } from "../features/review/reviewContext";
@@ -7,6 +9,7 @@ import { HistoryPage } from "./HistoryPage";
 import { HomePage } from "./HomePage";
 import { NewReviewPage } from "./NewReviewPage";
 import { ResultsPage } from "./ResultsPage";
+import { SendPage } from "./SendPage";
 import { SettingsPage } from "./SettingsPage";
 
 interface CurrentPageProps {
@@ -15,9 +18,18 @@ interface CurrentPageProps {
   readonly onSearchDocuments?: ((query: string) => void) | undefined;
 }
 
+/** Las pantallas que no dependen de la navegación ni de la revisión actual. */
+function standalonePage(page: AppRoute["page"]): ReactNode {
+  if (page === "settings") return <SettingsPage />;
+  if (page === "compare") return <ComparePage />;
+  return page === "send" ? <SendPage /> : null;
+}
+
 /** La pantalla de la ruta actual. */
 export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPageProps) {
   const navigation = usePageNavigation(onNavigate);
+  const standalone = standalonePage(route.page);
+  if (standalone) return standalone;
   switch (route.page) {
     case "newReview":
       return (
@@ -39,10 +51,6 @@ export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPag
           onNewReview={navigation.openNewReview}
         />
       );
-    case "settings":
-      return <SettingsPage />;
-    case "compare":
-      return <ComparePage />;
     case "results":
     case "alert":
       return (

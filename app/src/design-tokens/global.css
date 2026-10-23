@@ -152,6 +152,10 @@
   --size-facts-column-confirmed: 140px;
   --size-facts-column-status: 150px;
   --size-facts-column-actions: 160px;
+  /* Revisar antes de enviar (mockup «ARGUS Enviar»): panel de problemas y ancho del borrador. */
+  --size-send-panel: 380px;
+  --size-send-draft: 680px;
+  --size-send-header-label: 64px;
   --layer-menu: 5;
   --layer-overlay: 10;
   --layer-toast: 20;

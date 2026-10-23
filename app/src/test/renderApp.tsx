@@ -7,6 +7,7 @@ import {
   type EngineServices,
 } from "../features/engine/EngineServicesContext";
 import { ComparisonProvider } from "../features/comparison/ComparisonProvider";
+import { SendProvider } from "../features/sending/SendProvider";
 import { ReviewProvider } from "../features/review/ReviewProvider";
 import { ThemeProvider } from "../features/settings/theme/ThemeProvider";
 import { I18nProvider } from "../i18n/I18nProvider";
@@ -29,8 +30,10 @@ export function renderApp(services: EngineServices, review?: ReviewResult): Rend
         <EngineServicesContext.Provider value={services}>
           <ReviewProvider>
             <ComparisonProvider>
-              {review && <ReviewSeed review={review} />}
-              <App />
+              <SendProvider>
+                {review && <ReviewSeed review={review} />}
+                <App />
+              </SendProvider>
             </ComparisonProvider>
           </ReviewProvider>
         </EngineServicesContext.Provider>

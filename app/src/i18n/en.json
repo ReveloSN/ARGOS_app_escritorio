@@ -21,7 +21,8 @@
     "expand": "Expand",
     "localAnalysis": "Analyzed locally on this computer",
     "activeSession": "Active session",
-    "compare": "Compare"
+    "compare": "Compare",
+    "send": "Check before sending"
   },
   "topbar": {
     "session": "Session",
@@ -871,6 +872,113 @@
       "todoUnavailable": "Try again.",
       "retry": "Retry",
       "dismiss": "Got it"
+    }
+  },
+  "sending": {
+    "changeDraft": "Change draft",
+    "openInMail": "Open in mail",
+    "opened": "The copy of the draft was opened in your mail program.",
+    "openFailed": {
+      "what": "The draft could not be opened in your mail program.",
+      "why": "The analysis engine did not respond or there is no default mail program.",
+      "todo": "Check that a mail program is set up and try again.",
+      "retry": "Retry"
+    },
+    "start": {
+      "title": "Check an email before sending it",
+      "description": "Choose the draft (.eml) with its attachments. ARGUS checks the period it mentions, the attachments it promises and the recipients. It does not send the email.",
+      "withCaseFile": "It is compared with the open case file.",
+      "withoutCaseFile": "Without an open case file only the email is checked; with one open, attachments and contacts are compared too.",
+      "choose": "Choose draft",
+      "reviewing": "Checking “{name}”…",
+      "failed": {
+        "what": "The draft could not be checked.",
+        "why": "The analysis engine did not respond.",
+        "todo": "Try again."
+      },
+      "notADraft": {
+        "what": "The draft could not be read.",
+        "why": "The file is not an .eml email or it is damaged.",
+        "todo": "Save the email as .eml from your mail program and choose it again."
+      }
+    },
+    "draft": {
+      "label": "Draft",
+      "to": "To",
+      "cc": "CC",
+      "subject": "Subject",
+      "noCopy": "(no copy)",
+      "attachments": "Attachments ({count})",
+      "attachmentsLabel": "Attachments",
+      "size": "{size} KB"
+    },
+    "panel": {
+      "label": "Problems in the draft",
+      "issues": "Problems"
+    },
+    "summary": {
+      "problems": {
+        "one": "{count} problem in the draft",
+        "other": "{count} problems in the draft"
+      },
+      "review": "Check each one before sending. ARGUS does not send the email.",
+      "ready": "The draft is ready",
+      "readyCaseFile": "Attachments, period and recipients match the case file.",
+      "readyAlone": "The period and the attachments match what the email says."
+    },
+    "footer": {
+      "high": {
+        "one": "{count} high-risk problem unresolved. You can open the email anyway.",
+        "other": "{count} high-risk problems unresolved. You can open the email anyway."
+      },
+      "pending": {
+        "one": "{count} problem left.",
+        "other": "{count} problems left."
+      },
+      "none": "No pending problems."
+    },
+    "issue": {
+      "inCaseFile": "The case file has {name}.",
+      "period_mismatch": {
+        "kind": "Period",
+        "title": "It mentions “{mentioned}” and the attachment is from another period",
+        "body": "The text says “{marked}”. The attachment {attached} is from another period."
+      },
+      "missing_attachment": {
+        "kind": "Attachment",
+        "title": "It says “{phrase}” and it is not attached",
+        "body": "No attachment matches “{noun}”."
+      },
+      "foreign_recipient": {
+        "kind": "Recipient",
+        "title": "A recipient does not belong to the case file",
+        "body": "{recipient} is not among the case file contacts."
+      }
+    },
+    "fix": {
+      "replace_attachment": "Replace with the {mentioned} one",
+      "add_attachment": "Attach {suggested}",
+      "remove_recipient": "Remove recipient"
+    },
+    "fixed": {
+      "replace_attachment": "Attachment replaced",
+      "add_attachment": "Attached",
+      "remove_recipient": "Recipient removed"
+    },
+    "status": {
+      "error": "It is an error",
+      "correct": "It is correct",
+      "ignored": "Ignored"
+    },
+    "actions": {
+      "markError": "It is an error",
+      "correct": "It is correct",
+      "ignore": "Ignore"
+    },
+    "decided": {
+      "error": "Problem {number}: it will be applied to the copy of the draft.",
+      "correct": "Problem {number} marked as “It is correct”.",
+      "ignored": "Problem {number} ignored."
     }
   }
 }

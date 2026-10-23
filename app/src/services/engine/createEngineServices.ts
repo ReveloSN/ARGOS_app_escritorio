@@ -13,6 +13,7 @@ import { FactClient } from "./factClient";
 import { HistoryClient } from "./historyClient";
 import { PreferencesClient } from "./preferencesClient";
 import { ReviewClient } from "./reviewClient";
+import { SendClient } from "./sendClient";
 import { TauriEngineConnectionSource } from "./tauriEngineConnectionSource";
 
 /** Raíz de composición de la interfaz: elige de dónde sale la conexión al motor. */
@@ -23,6 +24,7 @@ export function createEngineServices(): EngineServices {
     reviews: new ReviewClient(http),
     comparisons: new ComparisonClient(http),
     facts: new FactClient(http),
+    sending: new SendClient(http),
     history: new HistoryClient(http),
     preferences: new PreferencesClient(http),
     documents: new DocumentClient(http),

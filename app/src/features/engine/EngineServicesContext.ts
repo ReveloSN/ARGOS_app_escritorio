@@ -8,6 +8,7 @@ import type { FactGateway } from "../../services/engine/factTypes";
 import type { HistorySource } from "../../services/engine/historyTypes";
 import type { PreferencesStore } from "../../services/engine/preferencesTypes";
 import type { ReviewGateway } from "../../services/engine/reviewTypes";
+import type { SendGateway } from "../../services/engine/sendTypes";
 
 /** Puertos del motor que usa la interfaz; se inyectan desde la raíz (main.tsx o las pruebas). */
 export interface EngineServices {
@@ -15,6 +16,7 @@ export interface EngineServices {
   readonly reviews: ReviewGateway;
   readonly comparisons: ComparisonGateway;
   readonly facts: FactGateway;
+  readonly sending: SendGateway;
   readonly history: HistorySource;
   readonly preferences: PreferencesStore;
   readonly documents: DocumentAccess;

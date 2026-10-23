@@ -21,7 +21,8 @@
     "expand": "Expandir",
     "localAnalysis": "Análisis local en este equipo",
     "activeSession": "Sesión activa",
-    "compare": "Comparar"
+    "compare": "Comparar",
+    "send": "Revisar antes de enviar"
   },
   "topbar": {
     "session": "Sesión",
@@ -871,6 +872,113 @@
       "todoUnavailable": "Inténtelo de nuevo.",
       "retry": "Reintentar",
       "dismiss": "Entendido"
+    }
+  },
+  "sending": {
+    "changeDraft": "Cambiar borrador",
+    "openInMail": "Abrir en el correo",
+    "opened": "Se abrió la copia del borrador en su programa de correo.",
+    "openFailed": {
+      "what": "No se pudo abrir el borrador en el correo.",
+      "why": "El motor de análisis no respondió o no hay un programa de correo predeterminado.",
+      "todo": "Revise que tenga un programa de correo configurado e inténtelo de nuevo.",
+      "retry": "Reintentar"
+    },
+    "start": {
+      "title": "Revise un correo antes de enviarlo",
+      "description": "Elija el borrador (.eml) con sus adjuntos. ARGUS revisa el periodo citado, los adjuntos que menciona y los destinatarios. No envía el correo.",
+      "withCaseFile": "Se compara con el expediente abierto.",
+      "withoutCaseFile": "Sin expediente abierto, solo se revisa el correo; con uno abierto también se comparan los adjuntos y los contactos.",
+      "choose": "Elegir borrador",
+      "reviewing": "Revisando «{name}»…",
+      "failed": {
+        "what": "No se pudo revisar el borrador.",
+        "why": "El motor de análisis no respondió.",
+        "todo": "Inténtelo de nuevo."
+      },
+      "notADraft": {
+        "what": "No se pudo leer el borrador.",
+        "why": "El archivo no es un correo .eml o está dañado.",
+        "todo": "Guarde el correo como .eml desde su programa de correo y elíjalo de nuevo."
+      }
+    },
+    "draft": {
+      "label": "Borrador",
+      "to": "Para",
+      "cc": "CC",
+      "subject": "Asunto",
+      "noCopy": "(sin copia)",
+      "attachments": "Adjuntos ({count})",
+      "attachmentsLabel": "Adjuntos",
+      "size": "{size} KB"
+    },
+    "panel": {
+      "label": "Problemas del borrador",
+      "issues": "Problemas"
+    },
+    "summary": {
+      "problems": {
+        "one": "{count} problema en el borrador",
+        "other": "{count} problemas en el borrador"
+      },
+      "review": "Revise cada uno antes de enviar. ARGUS no envía el correo.",
+      "ready": "El borrador está listo",
+      "readyCaseFile": "Adjuntos, periodo y destinatarios coinciden con el expediente.",
+      "readyAlone": "El periodo y los adjuntos coinciden con lo que dice el correo."
+    },
+    "footer": {
+      "high": {
+        "one": "{count} de riesgo alto sin resolver. Puede abrir el correo de todas formas.",
+        "other": "{count} de riesgo alto sin resolver. Puede abrir el correo de todas formas."
+      },
+      "pending": {
+        "one": "Queda {count} problema sin resolver.",
+        "other": "Quedan {count} problemas sin resolver."
+      },
+      "none": "Sin problemas pendientes."
+    },
+    "issue": {
+      "inCaseFile": "En el expediente está {name}.",
+      "period_mismatch": {
+        "kind": "Periodo",
+        "title": "Menciona «{mentioned}» y el adjunto es de otro periodo",
+        "body": "El texto dice «{marked}». El adjunto {attached} corresponde a otro periodo."
+      },
+      "missing_attachment": {
+        "kind": "Adjunto",
+        "title": "Dice «{phrase}» y no está adjunto",
+        "body": "Ningún adjunto corresponde a «{noun}»."
+      },
+      "foreign_recipient": {
+        "kind": "Destinatario",
+        "title": "Un destinatario no corresponde al expediente",
+        "body": "{recipient} no aparece entre los contactos del expediente."
+      }
+    },
+    "fix": {
+      "replace_attachment": "Cambiar por el de {mentioned}",
+      "add_attachment": "Adjuntar {suggested}",
+      "remove_recipient": "Quitar destinatario"
+    },
+    "fixed": {
+      "replace_attachment": "Se cambió el adjunto",
+      "add_attachment": "Se adjuntó",
+      "remove_recipient": "Se quitó el destinatario"
+    },
+    "status": {
+      "error": "Es un error",
+      "correct": "Es correcto",
+      "ignored": "Ignorado"
+    },
+    "actions": {
+      "markError": "Es un error",
+      "correct": "Es correcto",
+      "ignore": "Ignorar"
+    },
+    "decided": {
+      "error": "Problema {number}: se aplicará en la copia del borrador.",
+      "correct": "Problema {number} marcado como «Es correcto».",
+      "ignored": "Problema {number} ignorado."
     }
   }
 }
