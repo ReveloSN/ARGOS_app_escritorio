@@ -1,8 +1,14 @@
 """Comparación de documentos tal como la consume la interfaz (pantalla Comparar documentos)."""
 
 from datetime import datetime
+from typing import Literal
 
-from argus.api.schemas.review import CamelModel, DocumentResponse
+from argus.api.schemas.review import (
+    AlertResponse,
+    CamelModel,
+    DecisionsResponse,
+    DocumentResponse,
+)
 
 
 class TextSpanResponse(CamelModel):
@@ -58,6 +64,12 @@ class PairComparisonResponse(CamelModel):
     second_document: str
     summary: ChangeSummaryResponse
     changes: list[ChangeResponse]
+    # Texto completo de cada lado, segmento por segmento, para los dos paneles.
+    first_segments: list[SegmentResponse]
+    second_segments: list[SegmentResponse]
+    match_ratio: float
+    # Coinciden menos del 20 %: la interfaz sugiere «Buscar inconsistencias».
+    seems_unrelated: bool
 
 
 class ComparisonResponse(CamelModel):
@@ -68,6 +80,16 @@ class ComparisonResponse(CamelModel):
     documents: list[DocumentResponse]
     summary: ChangeSummaryResponse
     pairs: list[PairComparisonResponse]
+    # Alertas de la revisión por entidades; su número sigue al último cambio.
+    inconsistencies: list[AlertResponse]
+    decisions: DecisionsResponse
+
+
+class ComparisonDecisionBody(CamelModel):
+    # Número de un cambio o de una inconsistencia de la comparación.
+    number: int
+    kind: Literal["correct", "error", "ignored"]
+    correct_side: Literal["first", "second"] | None = None
 
 
 class PairComparedEvent(CamelModel):

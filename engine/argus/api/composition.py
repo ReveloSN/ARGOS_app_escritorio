@@ -5,6 +5,7 @@ from pathlib import Path
 
 from argus.api.comparison_composition import (
     ComparisonDependencies,
+    ComparisonRepositories,
     ComparisonServices,
     build_comparison_services,
 )
@@ -70,6 +71,7 @@ from argus.infrastructure.persistence.sqlite_comparison_repository import (
 )
 from argus.infrastructure.persistence.sqlite_database import SqliteDatabase
 from argus.infrastructure.persistence.sqlite_decision_repository import (
+    COMPARISON_DECISIONS,
     SqliteDecisionRepository,
 )
 from argus.infrastructure.persistence.sqlite_decision_statistics import SqliteDecisionStatistics
@@ -97,6 +99,7 @@ class ReviewStorage:
     rules: SqliteSuppressionRuleRepository
     statistics: SqliteDecisionStatistics
     comparisons: SqliteComparisonRepository
+    comparison_decisions: SqliteDecisionRepository
 
 
 @dataclass(frozen=True)
@@ -130,6 +133,7 @@ def build_review_storage(database_path: Path) -> ReviewStorage:
         SqliteSuppressionRuleRepository(database),
         SqliteDecisionStatistics(database),
         SqliteComparisonRepository(database),
+        SqliteDecisionRepository(database, COMPARISON_DECISIONS),
     )
 
 
@@ -143,7 +147,7 @@ def build_engine_services(settings: EngineSettings, opener: FileOpener) -> Engin
     values = build_entity_extraction_pipeline()
     analyzer = build_review_analyzer(storage, build_alert_sources(embedder), values)
     comparison = ComparisonDependencies(
-        DocumentLoader(build_document_reader_factory()), values, embedder
+        DocumentLoader(build_document_reader_factory()), values, embedder, analyzer
     )
     return EngineServices(
         run_review=build_run_review(storage, archive, analyzer),
@@ -164,7 +168,11 @@ def build_engine_services(settings: EngineSettings, opener: FileOpener) -> Engin
             FileSystemHistoryCopier(data_directory),
             JsonHistoryPointer(settings.pointer_directory),
         ),
-        comparisons=build_comparison_services(comparison, storage.comparisons, clock),
+        comparisons=build_comparison_services(
+            comparison,
+            ComparisonRepositories(storage.comparisons, storage.comparison_decisions),
+            clock,
+        ),
         storage=storage,
         data_directory=data_directory,
     )

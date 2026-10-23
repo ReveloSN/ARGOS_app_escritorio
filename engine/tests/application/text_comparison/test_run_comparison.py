@@ -8,6 +8,7 @@ from argus.application.text_comparison.change_detector import ChangeDetector
 from argus.application.text_comparison.change_facts import ChangeFactsReader
 from argus.application.text_comparison.document_pair_comparer import DocumentPairComparer
 from argus.application.text_comparison.run_comparison import (
+    ComparisonAnalyzer,
     ComparisonRecorder,
     ComparisonRequest,
     OpenComparison,
@@ -27,7 +28,12 @@ from argus.domain.text_comparison.modes import (
 from argus.domain.text_comparison.segmenter import DocumentSegmenter
 from argus.infrastructure.extraction.contract_id_extractor import ContractIdExtractor
 from tests.application.in_memory_repositories import InMemoryComparisonRepository, SteppingClock
-from tests.application.test_run_review import LineReader, RecordingProgress
+from tests.application.test_run_review import (
+    CONTRACT_ALERT,
+    LineReader,
+    RecordingAnalyzer,
+    RecordingProgress,
+)
 
 VERSION_1 = "Contrato No. 4857 de arrendamiento\nEl canon se paga cada mes"
 VERSION_2 = "Contrato No. 4587 de arrendamiento\nEl canon se paga cada mes"
@@ -49,7 +55,8 @@ def build_run_comparison() -> tuple[RunComparison, InMemoryComparisonRepository]
         DocumentSegmenter(), SegmentAligner(LexicalSegmentSimilarity()), detector
     )
     loader = DocumentLoader(DocumentReaderFactory({DocumentFormat.TEXT: LineReader()}))
-    run = RunComparison(loader, comparer, ComparisonRecorder(repository, SteppingClock()))
+    analyzer = ComparisonAnalyzer(comparer, RecordingAnalyzer([CONTRACT_ALERT]))
+    run = RunComparison(loader, analyzer, ComparisonRecorder(repository, SteppingClock()))
     return run, repository
 
 
@@ -104,3 +111,16 @@ def test_a_mode_rejects_fewer_files_than_it_needs() -> None:
 def test_an_unknown_comparison_is_reported() -> None:
     with pytest.raises(ComparisonNotFoundError):
         OpenComparison(InMemoryComparisonRepository()).execute("no-existe")
+
+
+def test_the_comparison_keeps_both_texts_and_the_inconsistencies_of_the_files() -> None:
+    run, _ = build_run_comparison()
+
+    report = run.execute(
+        ComparisonRequest("Arrendamiento", VERSIONS, sources(VERSION_1, VERSION_2))
+    )
+
+    (pair,) = report.content.pairs
+    assert [segment.text for segment in pair.first_segments] == VERSION_1.splitlines()
+    assert [segment.text for segment in pair.second_segments] == VERSION_2.splitlines()
+    assert report.content.inconsistencies == (CONTRACT_ALERT,)

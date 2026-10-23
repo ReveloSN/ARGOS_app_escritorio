@@ -83,6 +83,18 @@ MIGRATIONS: tuple[str, ...] = (
     );
     CREATE INDEX comparisons_by_creation ON comparisons (created_at);
     """,
+    # Fase 3 del plan v0.1: decisiones sobre cada cambio e inconsistencia de una comparación. La
+    # columna se llama como en `decisions` para compartir el repositorio (ADR 021).
+    """
+    CREATE TABLE comparison_decisions (
+        comparison_id TEXT NOT NULL REFERENCES comparisons (id) ON DELETE CASCADE,
+        alert_number INTEGER NOT NULL,
+        kind TEXT NOT NULL,
+        decided_at TEXT NOT NULL,
+        correct_side TEXT,
+        PRIMARY KEY (comparison_id, alert_number)
+    );
+    """,
 )
 SCHEMA_VERSION = len(MIGRATIONS)
 

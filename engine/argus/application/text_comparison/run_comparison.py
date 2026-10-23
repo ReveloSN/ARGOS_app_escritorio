@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -5,11 +6,18 @@ from argus.application.document_loader import DocumentLoader
 from argus.application.ports.clock import Clock
 from argus.application.ports.document_reader import DocumentSource
 from argus.application.ports.repositories import ComparisonRepository
+from argus.application.review_analyzers import ReviewAnalyzer
 from argus.application.review_progress import ReviewProgress, SilentReviewProgress
 from argus.application.text_comparison.document_pair_comparer import DocumentPairComparer
+from argus.domain.alert import Alert
+from argus.domain.document import Document
 from argus.domain.errors import NotEnoughDocumentsError
 from argus.domain.text_comparison.modes import ComparisonMode
-from argus.domain.text_comparison.report import ComparisonContent, ComparisonReport
+from argus.domain.text_comparison.report import (
+    ComparisonContent,
+    ComparisonReport,
+    PairComparison,
+)
 
 
 class ComparisonProgress(ReviewProgress, Protocol):
@@ -51,6 +59,34 @@ class ComparisonRecorder:
         return report
 
 
+@dataclass(frozen=True)
+class ComparisonFindings:
+    pairs: tuple[PairComparison, ...]
+    inconsistencies: tuple[Alert, ...]
+
+
+class ComparisonAnalyzer:
+    """Compara el texto de cada par que arma el modo y busca inconsistencias entre todos.
+
+    Las inconsistencias salen del mismo análisis por entidades de la revisión, así los
+    archivos se leen una sola vez.
+    """
+
+    def __init__(self, comparer: DocumentPairComparer, inconsistencies: ReviewAnalyzer) -> None:
+        self._comparer = comparer
+        self._inconsistencies = inconsistencies
+
+    def analyze(
+        self, mode: ComparisonMode, documents: Sequence[Document], progress: ComparisonProgress
+    ) -> ComparisonFindings:
+        pairs = mode.pairs(documents)
+        compared = []
+        for position, pair in enumerate(pairs):
+            compared.append(self._comparer.compare(pair, mode.similarity_threshold))
+            progress.pair_compared(position, len(pairs))
+        return ComparisonFindings(tuple(compared), self._inconsistencies.analyze(documents))
+
+
 class RunComparison:
     """Caso de uso: archivos cargados → lectura → pares según el modo → cambios guardados.
 
@@ -59,10 +95,10 @@ class RunComparison:
     """
 
     def __init__(
-        self, loader: DocumentLoader, comparer: DocumentPairComparer, recorder: ComparisonRecorder
+        self, loader: DocumentLoader, analyzer: ComparisonAnalyzer, recorder: ComparisonRecorder
     ) -> None:
         self._loader = loader
-        self._comparer = comparer
+        self._analyzer = analyzer
         self._recorder = recorder
 
     def execute(
@@ -73,13 +109,14 @@ class RunComparison:
         outcomes = self._loader.load(request.sources, progress)
         progress.analysis_started()
         documents = [outcome.document for outcome in outcomes if outcome.document is not None]
-        pairs = request.mode.pairs(documents)
-        compared = []
-        for position, pair in enumerate(pairs):
-            compared.append(self._comparer.compare(pair, request.mode.similarity_threshold))
-            progress.pair_compared(position, len(pairs))
-        summaries = tuple(outcome.summary for outcome in outcomes)
-        content = ComparisonContent(request.name, request.mode.name, summaries, tuple(compared))
+        findings = self._analyzer.analyze(request.mode, documents, progress)
+        content = ComparisonContent(
+            request.name,
+            request.mode.name,
+            tuple(outcome.summary for outcome in outcomes),
+            findings.pairs,
+            findings.inconsistencies,
+        )
         return self._recorder.record(content)
 
 

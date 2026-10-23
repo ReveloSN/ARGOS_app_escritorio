@@ -37,7 +37,7 @@ def to_review_response(
         session=session_response(review.session),
         documents=[document_response(document) for document in review.documents],
         alerts=[
-            _alert(item, explanation)
+            alert_response(item, explanation)
             for item, explanation in zip(review.alerts, explanations, strict=True)
         ],
         decisions=decisions_response(decisions),
@@ -85,7 +85,7 @@ def _explanation(explanation: Explanation) -> list[ExplanationPartResponse]:
     ]
 
 
-def _alert(item: NumberedAlert, explanation: Explanation) -> AlertResponse:
+def alert_response(item: NumberedAlert, explanation: Explanation) -> AlertResponse:
     alert = item.alert
     first_raw = alert.first.representative.raw_value
     second_raw = alert.second.representative.raw_value

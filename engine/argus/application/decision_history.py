@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from threading import Lock
 
 from argus.application.command_history import CommandHistory
 from argus.application.ports.clock import Clock
@@ -62,3 +63,45 @@ class DecisionHistory:
 
     def redo(self) -> bool:
         return self._commands.redo()
+
+
+@dataclass(frozen=True)
+class DecisionsState:
+    """Las decisiones vigentes de una revisión o comparación y si hay algo que deshacer."""
+
+    decisions: tuple[Decision, ...]
+    can_undo: bool
+
+
+class DecisionHistories:
+    """Un historial de deshacer por dueño (revisión o comparación) mientras el motor está abierto.
+
+    El motor atiende peticiones en varios hilos: el candado evita que dos decisiones
+    simultáneas desordenen un historial.
+    """
+
+    def __init__(self, repository: DecisionRepository, clock: Clock) -> None:
+        self._repository = repository
+        self._clock = clock
+        self._histories: dict[str, DecisionHistory] = {}
+        self._lock = Lock()
+
+    def decide(self, owner_id: str, request: DecisionRequest) -> None:
+        with self._lock:
+            self._history(owner_id).decide(request)
+
+    def undo(self, owner_id: str) -> None:
+        with self._lock:
+            self._history(owner_id).undo()
+
+    def can_undo(self, owner_id: str) -> bool:
+        history = self._histories.get(owner_id)
+        return history is not None and history.can_undo
+
+    def decisions(self, owner_id: str) -> tuple[Decision, ...]:
+        return self._repository.list_for(owner_id)
+
+    def _history(self, owner_id: str) -> DecisionHistory:
+        if owner_id not in self._histories:
+            self._histories[owner_id] = DecisionHistory(owner_id, self._repository, self._clock)
+        return self._histories[owner_id]

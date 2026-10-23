@@ -1,7 +1,4 @@
-from collections.abc import Iterator
-from itertools import count
-
-from argus.api.review_response import document_response
+from argus.api.review_response import alert_response, decisions_response, document_response
 from argus.api.schemas.comparison import (
     ChangeResponse,
     ChangeSummaryResponse,
@@ -12,18 +9,26 @@ from argus.api.schemas.comparison import (
     TextSpanResponse,
     WordEditResponse,
 )
+from argus.application.alert_explanation import AlertExplainer
+from argus.application.decision_history import DecisionsState
 from argus.domain.text_comparison.change import Change
-from argus.domain.text_comparison.report import ChangeSummary, ComparisonReport, PairComparison
+from argus.domain.text_comparison.report import (
+    ChangeSummary,
+    ComparisonReport,
+    NumberedChange,
+    PairComparison,
+)
 from argus.domain.text_comparison.segment import Segment, TextSpan
 from argus.domain.text_comparison.text_diff import WordEdit
 from argus.infrastructure.persistence.alert_serialization import location_payload
 
-FIRST_CHANGE_NUMBER = 1
 
-
-def to_comparison_response(report: ComparisonReport) -> ComparisonResponse:
+def to_comparison_response(
+    report: ComparisonReport, decisions: DecisionsState, explainer: AlertExplainer
+) -> ComparisonResponse:
     content = report.content
-    numbers = count(FIRST_CHANGE_NUMBER)
+    inconsistencies = report.numbered_inconsistencies
+    explanations = explainer.explain([item.alert for item in inconsistencies])
     return ComparisonResponse(
         id=report.id,
         name=content.name,
@@ -31,16 +36,29 @@ def to_comparison_response(report: ComparisonReport) -> ComparisonResponse:
         created_at=report.created_at,
         documents=[document_response(document) for document in content.documents],
         summary=_summary(report.summary),
-        pairs=[_pair(pair, numbers) for pair in content.pairs],
+        pairs=[_pair(pair, _changes_of(report, index)) for index, pair in enumerate(content.pairs)],
+        inconsistencies=[
+            alert_response(item, explanation)
+            for item, explanation in zip(inconsistencies, explanations, strict=True)
+        ],
+        decisions=decisions_response(decisions),
     )
 
 
-def _pair(pair: PairComparison, numbers: Iterator[int]) -> PairComparisonResponse:
+def _changes_of(report: ComparisonReport, pair_index: int) -> list[NumberedChange]:
+    return [item for item in report.numbered_changes if item.pair_index == pair_index]
+
+
+def _pair(pair: PairComparison, changes: list[NumberedChange]) -> PairComparisonResponse:
     return PairComparisonResponse(
         first_document=pair.first_document,
         second_document=pair.second_document,
         summary=_summary(pair.summary),
-        changes=[_change(next(numbers), change) for change in pair.changes],
+        changes=[_change(item.number, item.change) for item in changes],
+        first_segments=[_segment(segment) for segment in pair.first_segments],
+        second_segments=[_segment(segment) for segment in pair.second_segments],
+        match_ratio=pair.match_ratio,
+        seems_unrelated=pair.seems_unrelated,
     )
 
 
@@ -58,15 +76,17 @@ def _change(number: int, change: Change) -> ChangeResponse:
         risk=change.risk,
         materialities=list(change.materialities),
         is_moved=change.is_moved,
-        first=_segment(change.first),
-        second=_segment(change.second),
+        first=_optional_segment(change.first),
+        second=_optional_segment(change.second),
         edits=[_edit(edit) for edit in change.edits],
     )
 
 
-def _segment(segment: Segment | None) -> SegmentResponse | None:
-    if segment is None:
-        return None
+def _optional_segment(segment: Segment | None) -> SegmentResponse | None:
+    return _segment(segment) if segment else None
+
+
+def _segment(segment: Segment) -> SegmentResponse:
     return SegmentResponse(
         position=segment.position,
         kind=segment.kind,

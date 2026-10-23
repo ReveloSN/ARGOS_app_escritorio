@@ -65,8 +65,8 @@ LOCATION_BUILDERS: dict[str, Callable[[LocationPayload], SourceLocation]] = {
 }
 
 
-def alert_to_json(alert: Alert) -> str:
-    payload: AlertPayload = {
+def alert_payload(alert: Alert) -> AlertPayload:
+    return {
         "first": [_entity_payload(entity) for entity in alert.first.entities],
         "second": [_entity_payload(entity) for entity in alert.second.entities],
         "difference": {
@@ -76,11 +76,18 @@ def alert_to_json(alert: Alert) -> str:
         },
         "risk": alert.risk,
     }
-    return json.dumps(payload, ensure_ascii=False)
+
+
+def alert_to_json(alert: Alert) -> str:
+    return json.dumps(alert_payload(alert), ensure_ascii=False)
 
 
 def alert_from_json(text: str) -> Alert:
     payload: AlertPayload = json.loads(text)
+    return alert_from_payload(payload)
+
+
+def alert_from_payload(payload: AlertPayload) -> Alert:
     difference = payload["difference"]
     return Alert(
         AlertSide(tuple(_entity(item) for item in payload["first"])),

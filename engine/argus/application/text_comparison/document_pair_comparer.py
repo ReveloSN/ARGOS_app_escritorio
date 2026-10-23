@@ -16,8 +16,7 @@ class DocumentPairComparer:
         self._detector = detector
 
     def compare(self, pair: DocumentPair, threshold: float) -> PairComparison:
-        alignment = self._aligner.align(
-            self._segmenter.segment(pair.first), self._segmenter.segment(pair.second), threshold
-        )
-        changes = self._detector.detect(alignment)
-        return PairComparison(pair.first.name, pair.second.name, changes)
+        first = self._segmenter.segment(pair.first)
+        second = self._segmenter.segment(pair.second)
+        changes = self._detector.detect(self._aligner.align(first, second, threshold))
+        return PairComparison(pair.first.name, pair.second.name, changes, first, second)

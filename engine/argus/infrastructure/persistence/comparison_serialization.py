@@ -9,6 +9,11 @@ from argus.domain.risk import RiskLevel
 from argus.domain.text_comparison.change import Change, ChangeKind, Materiality
 from argus.domain.text_comparison.modes import ComparisonModeName
 from argus.domain.text_comparison.report import ComparisonContent, PairComparison
+from argus.infrastructure.persistence.alert_serialization import (
+    AlertPayload,
+    alert_from_payload,
+    alert_payload,
+)
 from argus.infrastructure.persistence.segment_serialization import (
     EditPayload,
     SegmentPayload,
@@ -33,6 +38,8 @@ class PairPayload(TypedDict):
     first: str
     second: str
     changes: list[ChangePayload]
+    first_segments: list[SegmentPayload]
+    second_segments: list[SegmentPayload]
 
 
 class DocumentPayload(TypedDict):
@@ -46,6 +53,7 @@ class ContentPayload(TypedDict):
     mode: str
     documents: list[DocumentPayload]
     pairs: list[PairPayload]
+    inconsistencies: list[AlertPayload]
 
 
 def content_to_json(content: ComparisonContent) -> str:
@@ -56,14 +64,8 @@ def content_to_json(content: ComparisonContent) -> str:
             {"name": doc.name, "reason": doc.reason, "fragment_count": doc.fragment_count}
             for doc in content.documents
         ],
-        "pairs": [
-            {
-                "first": pair.first_document,
-                "second": pair.second_document,
-                "changes": [_change_payload(change) for change in pair.changes],
-            }
-            for pair in content.pairs
-        ],
+        "pairs": [_pair_payload(pair) for pair in content.pairs],
+        "inconsistencies": [alert_payload(alert) for alert in content.inconsistencies],
     }
     return json.dumps(payload, ensure_ascii=False)
 
@@ -78,11 +80,30 @@ def content_from_json(text: str) -> ComparisonContent:
         )
         for item in payload["documents"]
     )
-    pairs = tuple(
-        PairComparison(item["first"], item["second"], tuple(map(_change, item["changes"])))
-        for item in payload["pairs"]
+    pairs = tuple(_pair(item) for item in payload["pairs"])
+    inconsistencies = tuple(alert_from_payload(item) for item in payload["inconsistencies"])
+    mode = ComparisonModeName(payload["mode"])
+    return ComparisonContent(payload["name"], mode, documents, pairs, inconsistencies)
+
+
+def _pair_payload(pair: PairComparison) -> PairPayload:
+    return {
+        "first": pair.first_document,
+        "second": pair.second_document,
+        "changes": [_change_payload(change) for change in pair.changes],
+        "first_segments": [segment_payload(segment) for segment in pair.first_segments],
+        "second_segments": [segment_payload(segment) for segment in pair.second_segments],
+    }
+
+
+def _pair(payload: PairPayload) -> PairComparison:
+    return PairComparison(
+        payload["first"],
+        payload["second"],
+        tuple(_change(change) for change in payload["changes"]),
+        tuple(segment_from_payload(segment) for segment in payload["first_segments"]),
+        tuple(segment_from_payload(segment) for segment in payload["second_segments"]),
     )
-    return ComparisonContent(payload["name"], ComparisonModeName(payload["mode"]), documents, pairs)
 
 
 def _change_payload(change: Change) -> ChangePayload:

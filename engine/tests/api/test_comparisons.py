@@ -142,3 +142,43 @@ def test_an_unknown_mode_or_comparison_is_rejected(
     assert unknown_mode.status_code == 422
     assert unknown_id.status_code == 404
     assert unknown_id.json() == {"detail": "comparison_not_found"}
+
+
+def test_the_comparison_brings_both_texts_its_inconsistencies_and_its_decisions(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    files = [text_file("v1.txt", VERSION_1), text_file("v2.txt", VERSION_2)]
+
+    comparison = post_comparison(client, auth_headers, ComparisonUpload("versions", files))[-1][1]
+
+    (pair,) = comparison["pairs"]
+    assert pair["firstSegments"][0]["text"] == "CONTRATO DE ARRENDAMIENTO No. 4857"
+    assert pair["matchRatio"] == 1
+    assert pair["seemsUnrelated"] is False
+    numbers = [inconsistency["number"] for inconsistency in comparison["inconsistencies"]]
+    assert numbers
+    assert numbers[0] == len(pair["changes"]) + 1
+    assert comparison["decisions"] == {"decisions": [], "canUndo": False}
+
+
+def test_each_change_is_decided_and_undone(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    files = [text_file("v1.txt", VERSION_1), text_file("v2.txt", VERSION_2)]
+    comparison_id = post_comparison(client, auth_headers, ComparisonUpload("versions", files))[-1][
+        1
+    ]["id"]
+    decisions_path = f"/comparisons/{comparison_id}/decisions"
+
+    decided = client.post(decisions_path, headers=auth_headers, json={"number": 2, "kind": "error"})
+    reopened = client.get(f"/comparisons/{comparison_id}", headers=auth_headers).json()
+    undone = client.post(f"{decisions_path}/undo", headers=auth_headers).json()
+    missing = client.post(
+        decisions_path, headers=auth_headers, json={"number": 99, "kind": "error"}
+    )
+
+    assert [d["alertNumber"] for d in decided.json()["decisions"]] == [2]
+    assert reopened["decisions"]["decisions"][0]["kind"] == "error"
+    assert undone["decisions"] == []
+    assert missing.status_code == 404
+    assert missing.json() == {"detail": "comparison_item_not_found"}

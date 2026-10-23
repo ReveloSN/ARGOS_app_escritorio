@@ -97,3 +97,12 @@ class NotEnoughDocumentsError(ArgusDomainError):
         super().__init__(f"Se necesitan al menos {minimum} archivos y llegaron {received}.")
         self.minimum = minimum
         self.received = received
+
+
+class ComparisonItemNotFoundError(ArgusDomainError):
+    """El número no corresponde a ningún cambio ni inconsistencia de la comparación."""
+
+    def __init__(self, comparison_id: str, number: int) -> None:
+        super().__init__(f"La comparación «{comparison_id}» no tiene el elemento {number}.")
+        self.comparison_id = comparison_id
+        self.number = number
