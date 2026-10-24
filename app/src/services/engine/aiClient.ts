@@ -1,4 +1,9 @@
-import type { AiGateway, AiSettingsResult, ChangeExplanationResult } from "./aiTypes";
+import type {
+  AiGateway,
+  AiProviderValue,
+  AiSettingsResult,
+  ChangeExplanationResult,
+} from "./aiTypes";
 import type { EngineHttp } from "./engineHttp";
 
 const SETTINGS_PATH = "/settings/ai";
@@ -33,13 +38,11 @@ export class AiClient implements AiGateway {
   }
 
   setExplainsChanges(enabled: boolean): Promise<AiSettingsResult> {
-    const body = { explainsChanges: enabled };
-    return this.http.json({
-      path: SETTINGS_PATH,
-      timeoutMs: REQUEST_TIMEOUT_MS,
-      method: "PUT",
-      body,
-    });
+    return this.updateSettings({ explainsChanges: enabled });
+  }
+
+  setProvider(provider: AiProviderValue): Promise<AiSettingsResult> {
+    return this.updateSettings({ provider });
   }
 
   storeKey(key: string): Promise<AiSettingsResult> {
@@ -50,6 +53,15 @@ export class AiClient implements AiGateway {
   removeKey(): Promise<AiSettingsResult> {
     const path = `${SETTINGS_PATH}/key`;
     return this.http.json({ path, timeoutMs: REQUEST_TIMEOUT_MS, method: "DELETE" });
+  }
+
+  private updateSettings(body: object): Promise<AiSettingsResult> {
+    return this.http.json({
+      path: SETTINGS_PATH,
+      timeoutMs: REQUEST_TIMEOUT_MS,
+      method: "PUT",
+      body,
+    });
   }
 
   private explanation(itemPath: string, locale: string): Promise<ChangeExplanationResult> {

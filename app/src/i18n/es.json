@@ -632,14 +632,13 @@
     },
     "ai": {
       "toggle": "Explicar cambios con IA",
-      "description": "Al pedir «Explicar este cambio», ARGUS envía a {provider} solo los dos fragmentos de ese cambio. La detección y el análisis siguen siendo locales.",
+      "description": "Al pedir «Explicar este cambio» o «Explicar esta alerta», ARGUS envía a {provider} solo los fragmentos de origen. La detección y el análisis siguen siendo locales.",
       "model": "Proveedor: {provider} · modelo {model}",
       "keyLabel": "Clave de la API de {provider}",
-      "keyPlaceholder": "sk-ant-…",
       "saveKey": "Guardar clave",
       "removeKey": "Quitar clave",
       "keyStored": "Clave guardada en el llavero del sistema.",
-      "keyMissing": "Sin clave, «Explicar este cambio» usa la explicación local.",
+      "keyMissing": "Sin clave, «Explicar este cambio» y «Explicar esta alerta» usan la explicación local.",
       "loading": "Cargando los ajustes de IA…",
       "failed": "No se pudieron cargar los ajustes de IA: el motor de análisis no respondió.",
       "keychain": {
@@ -649,7 +648,13 @@
         "retry": "Reintentar"
       },
       "providers": {
-        "anthropic": "Anthropic"
+        "anthropic": "Anthropic",
+        "deepseek": "DeepSeek"
+      },
+      "providerLabel": "Proveedor de IA",
+      "keyPlaceholders": {
+        "anthropic": "sk-ant-…",
+        "deepseek": "sk-…"
       }
     },
     "assistant": {

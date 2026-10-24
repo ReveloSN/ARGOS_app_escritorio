@@ -37,12 +37,14 @@ describe("AiClient", () => {
     await client.storeKey("sk-prueba");
     await client.removeKey();
     await client.setExplainsChanges(true);
+    await client.setProvider("deepseek");
 
     const calls = fetchResource.mock.calls.map(([url, init]) => [url, init.method, init.body]);
     expect(calls).toEqual([
       ["http://127.0.0.1:5000/settings/ai/key", "PUT", JSON.stringify({ key: "sk-prueba" })],
       ["http://127.0.0.1:5000/settings/ai/key", "DELETE", undefined],
       ["http://127.0.0.1:5000/settings/ai", "PUT", JSON.stringify({ explainsChanges: true })],
+      ["http://127.0.0.1:5000/settings/ai", "PUT", JSON.stringify({ provider: "deepseek" })],
     ]);
   });
 });

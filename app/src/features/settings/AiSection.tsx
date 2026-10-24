@@ -8,9 +8,39 @@ import type { AiSettingsResult } from "../../services/engine/aiTypes";
 import styles from "./Settings.module.css";
 import { useAiSettings, type AiSettingsControl } from "./useAiSettings";
 
-function KeyField({ control, provider }: { control: AiSettingsControl; provider: string }) {
+interface SectionProps {
+  readonly settings: AiSettingsResult;
+  readonly control: AiSettingsControl;
+}
+
+/** Anthropic o DeepSeek: cada uno con su propia clave en el llavero (ADR 028). */
+function ProviderSelect({ settings, control }: SectionProps) {
+  const { t } = useI18n();
+  return (
+    <label className={styles.keyLabel}>
+      <span>{t("settings.ai.providerLabel")}</span>
+      <select
+        className={styles.keyInput}
+        value={settings.provider}
+        onChange={(event) => {
+          const chosen = settings.providers.find((item) => item.id === event.target.value);
+          if (chosen) control.setProvider(chosen.id);
+        }}
+      >
+        {settings.providers.map((item) => (
+          <option key={item.id} value={item.id}>
+            {t(`settings.ai.providers.${item.id}`)} · {item.model}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+function KeyField({ settings, control }: SectionProps) {
   const { t } = useI18n();
   const [key, setKey] = useState("");
+  const provider = t(`settings.ai.providers.${settings.provider}`);
   const save = () => {
     control.storeKey(key);
     setKey("");
@@ -23,7 +53,7 @@ function KeyField({ control, provider }: { control: AiSettingsControl; provider:
           type="password"
           autoComplete="off"
           className={styles.keyInput}
-          placeholder={t("settings.ai.keyPlaceholder")}
+          placeholder={t(`settings.ai.keyPlaceholders.${settings.provider}`)}
           value={key}
           onChange={(event) => {
             setKey(event.target.value);
@@ -37,15 +67,8 @@ function KeyField({ control, provider }: { control: AiSettingsControl; provider:
   );
 }
 
-function KeyStatus({
-  settings,
-  control,
-}: {
-  settings: AiSettingsResult;
-  control: AiSettingsControl;
-}) {
+function KeyStatus({ settings, control }: SectionProps) {
   const { t } = useI18n();
-  const provider = t("settings.ai.providers.anthropic");
   if (!settings.isKeychainAvailable) {
     return (
       <ErrorMessage
@@ -61,7 +84,7 @@ function KeyStatus({
   if (!settings.hasKey) {
     return (
       <>
-        <KeyField control={control} provider={provider} />
+        <KeyField settings={settings} control={control} />
         <p className={styles.description}>{t("settings.ai.keyMissing")}</p>
       </>
     );
@@ -89,7 +112,7 @@ export function AiSection({ onSaved }: { onSaved: () => void }) {
     );
   }
   const settings = control.state.data;
-  const provider = t("settings.ai.providers.anthropic");
+  const provider = t(`settings.ai.providers.${settings.provider}`);
   return (
     <>
       <Toggle
@@ -98,6 +121,7 @@ export function AiSection({ onSaved }: { onSaved: () => void }) {
         onChange={control.setExplainsChanges}
       />
       <p className={styles.description}>{t("settings.ai.description", { provider })}</p>
+      <ProviderSelect settings={settings} control={control} />
       <p className={styles.description}>
         {t("settings.ai.model", { provider, model: settings.model })}
       </p>

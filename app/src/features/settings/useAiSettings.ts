@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { AiGateway, AiSettingsResult } from "../../services/engine/aiTypes";
+import type { AiGateway, AiProviderValue, AiSettingsResult } from "../../services/engine/aiTypes";
 import { useEngineServices } from "../engine/EngineServicesContext";
 import { useEngineQuery } from "../engine/useEngineQuery";
 
@@ -19,6 +19,9 @@ function aiActions(ai: AiGateway, run: (change: () => Promise<AiSettingsResult>)
   return {
     setExplainsChanges: (enabled: boolean) => {
       run(() => ai.setExplainsChanges(enabled));
+    },
+    setProvider: (provider: AiProviderValue) => {
+      run(() => ai.setProvider(provider));
     },
     storeKey: (key: string) => {
       run(() => ai.storeKey(key));

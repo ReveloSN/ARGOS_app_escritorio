@@ -632,14 +632,13 @@
     },
     "ai": {
       "toggle": "Explain changes with AI",
-      "description": "When you ask to “Explain this change”, ARGUS sends {provider} only the two fragments of that change. Detection and analysis stay local.",
+      "description": "When you ask to “Explain this change” or “Explain this alert”, ARGUS sends {provider} only the origin fragments. Detection and analysis stay local.",
       "model": "Provider: {provider} · model {model}",
       "keyLabel": "{provider} API key",
-      "keyPlaceholder": "sk-ant-…",
       "saveKey": "Save key",
       "removeKey": "Remove key",
       "keyStored": "Key saved in the system keychain.",
-      "keyMissing": "Without a key, “Explain this change” uses the local explanation.",
+      "keyMissing": "Without a key, “Explain this change” and “Explain this alert” use the local explanation.",
       "loading": "Loading AI settings…",
       "failed": "AI settings could not be loaded: the analysis engine did not respond.",
       "keychain": {
@@ -649,7 +648,13 @@
         "retry": "Retry"
       },
       "providers": {
-        "anthropic": "Anthropic"
+        "anthropic": "Anthropic",
+        "deepseek": "DeepSeek"
+      },
+      "providerLabel": "AI provider",
+      "keyPlaceholders": {
+        "anthropic": "sk-ant-…",
+        "deepseek": "sk-…"
       }
     },
     "assistant": {

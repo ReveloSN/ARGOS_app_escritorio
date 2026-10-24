@@ -104,6 +104,7 @@ function fakeAi(overrides: FakeEngineOptions["ai"]): EngineServices["ai"] {
     explainAlert: notConfigured(),
     aiSettings: notConfigured(),
     setExplainsChanges: notConfigured(),
+    setProvider: notConfigured(),
     storeKey: notConfigured(),
     removeKey: notConfigured(),
     ...overrides,

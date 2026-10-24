@@ -15,12 +15,21 @@ export interface ChangeExplanationResult {
   readonly fallbackReason: FallbackReasonValue | null;
 }
 
+export type AiProviderValue = "anthropic" | "deepseek";
+
+export interface AiProviderResult {
+  readonly id: AiProviderValue;
+  readonly model: string;
+}
+
 export interface AiSettingsResult {
   readonly explainsChanges: boolean;
+  /** El proveedor elegido; la clave y el llavero se refieren a él. */
+  readonly provider: AiProviderValue;
+  readonly model: string;
   readonly hasKey: boolean;
   readonly isKeychainAvailable: boolean;
-  readonly provider: string;
-  readonly model: string;
+  readonly providers: readonly AiProviderResult[];
 }
 
 /** Puerto de la interfaz para la IA opcional; el cliente HTTP lo implementa. */
@@ -33,6 +42,7 @@ export interface AiGateway {
   explainAlert(sessionId: string, number: number, locale: string): Promise<ChangeExplanationResult>;
   aiSettings(): Promise<AiSettingsResult>;
   setExplainsChanges(enabled: boolean): Promise<AiSettingsResult>;
+  setProvider(provider: AiProviderValue): Promise<AiSettingsResult>;
   storeKey(key: string): Promise<AiSettingsResult>;
   removeKey(): Promise<AiSettingsResult>;
 }
