@@ -88,7 +88,7 @@ describe("Explicar esta alerta", () => {
     const table = screen.getByRole("table", { name: "Lista de alertas" });
     await userEvent.click(within(table).getAllByRole("row")[2] ?? table);
 
-    const panel = within(screen.getByRole("region", { name: "Explicación del cambio" }));
+    const panel = within(screen.getByRole("region", { name: "Explicación de la alerta" }));
     expect(
       panel.getByRole("heading", {
         name: /«contrato.txt» y «anexo.pdf» citan números de contrato/,

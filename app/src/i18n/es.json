@@ -1309,6 +1309,7 @@
   },
   "explainPanel": {
     "label": "Explicación del cambio",
+    "labelAlert": "Explicación de la alerta",
     "sideA": "Documento A dice",
     "sideB": "Documento B dice",
     "absent": "No aparece en este documento",

@@ -9,6 +9,8 @@ import { SideBySideValues } from "./SideBySideValues";
 import type { SideBySide } from "./sideValues";
 
 interface PanelLayoutProps {
+  /** Cómo se anuncia el panel: de un cambio o de una alerta. */
+  readonly label: string;
   readonly blocks: ExplanationBlocks;
   /** «Posible cambio de significado»: la sugerencia de la IA local, en lenguaje claro. */
   readonly meaning: string | undefined;
@@ -25,7 +27,7 @@ export function PanelLayout(props: PanelLayoutProps) {
   const { t } = useI18n();
   const hasAiSuggestion = props.isAiSuggestion || props.meaning !== undefined;
   return (
-    <section aria-label={t("explainPanel.label")} className={styles.panel}>
+    <section aria-label={props.label} className={styles.panel}>
       <header className={styles.header}>
         {props.meaning && (
           <span className={styles.meaning}>

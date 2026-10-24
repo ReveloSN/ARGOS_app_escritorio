@@ -13,5 +13,5 @@ export function useSessionList(active: ReviewDigest): QueryState<readonly Sessio
   const query = useEngineQuery(key, () => history.history(SESSION_LIST_DAYS));
   const state = query.state;
   if (state.status !== "ready") return state;
-  return { status: "ready", data: toSessionItems(state.data.sessions, active.id) };
+  return { status: "ready", data: toSessionItems(state.data.sessions, active) };
 }

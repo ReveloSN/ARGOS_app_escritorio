@@ -43,12 +43,14 @@ interface ExplanationPanelProps {
  * activada y «Ver detalle», sus bloques la reemplazan como «Sugerencia de IA».
  */
 export function ExplanationPanel({ target, actions }: ExplanationPanelProps) {
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const query = useDetailQuery(target, isOpen);
   useExplainingSignal(isOpen && query.state.status === "loading");
   const result = query.state.status === "ready" ? query.state.data : null;
   return (
     <PanelLayout
+      label={t(target.subject === "change" ? "explainPanel.label" : "explainPanel.labelAlert")}
       blocks={withAiStructure(target.blocks, result?.structure ?? null)}
       meaning={target.meaning}
       values={target.values}
