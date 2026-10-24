@@ -6,7 +6,12 @@ import type { DecisionsResult } from "../../services/engine/reviewTypes";
 /** Comparación actual: solo existe después de que el motor devuelve resultados reales. */
 export interface ComparisonState {
   readonly comparison: ComparisonResult | null;
+  /** Las comparaciones cerradas en esta sesión, con las decisiones que ya tenían, la más reciente primero. */
+  readonly recent: readonly ComparisonResult[];
   readonly showComparison: (comparison: ComparisonResult) => void;
+  /** «Cerrar comparación»: vuelve a elegir qué comparar sin perder las decisiones tomadas. */
+  readonly closeComparison: () => void;
+  /** Descarta todo (cambio de sesión): lo cerrado tampoco pertenece a la nueva sesión. */
   readonly discardComparison: () => void;
   readonly updateDecisions: (decisions: DecisionsResult) => void;
 }

@@ -5,6 +5,7 @@ import { AssistantEye } from "../features/assistant/AssistantEye";
 import { useAssistantStatus } from "../features/assistant/useAssistantStatus";
 import { EngineUnavailableMessage } from "../features/engine/EngineUnavailableMessage";
 import { useEngineStatus } from "../features/engine/useEngineStatus";
+import { useReopenComparison } from "../features/comparison/useReopenComparison";
 import { RecentComparisons } from "../features/session/RecentComparisons";
 import { ReviewOverview } from "../features/session/ReviewOverview";
 import { isEmptySnapshot, type SessionSnapshot } from "../features/session/sessionSnapshot";
@@ -24,6 +25,7 @@ function SessionSummary({
   onCompare,
 }: Pick<HomePageProps, "onContinueReview" | "onCompare"> & { snapshot: SessionSnapshot }) {
   const { t } = useI18n();
+  const reopen = useReopenComparison();
   if (isEmptySnapshot(snapshot)) {
     return (
       <>
@@ -35,7 +37,13 @@ function SessionSummary({
   return (
     <>
       {snapshot.review && <ReviewOverview review={snapshot.review} onContinue={onContinueReview} />}
-      <RecentComparisons comparisons={snapshot.comparisons} onOpen={onCompare} />
+      <RecentComparisons
+        comparisons={snapshot.comparisons}
+        onOpen={(comparisonId) => {
+          reopen(comparisonId);
+          onCompare();
+        }}
+      />
     </>
   );
 }

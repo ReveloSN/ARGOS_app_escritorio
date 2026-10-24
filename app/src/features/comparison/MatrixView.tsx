@@ -17,6 +17,23 @@ interface MatrixViewProps {
   readonly view: ComparisonView;
 }
 
+function HeaderButton({ document, onOpen }: { document: string; onOpen: (name: string) => void }) {
+  const { t } = useI18n();
+  return (
+    <button
+      type="button"
+      title={document}
+      aria-label={t("comparison.matrixHeader", { document })}
+      className={joinClassNames(styles.tableHead, styles.headerButton)}
+      onClick={() => {
+        onOpen(document);
+      }}
+    >
+      {document}
+    </button>
+  );
+}
+
 function CellContent({ cell }: { cell: MatrixCell }) {
   const { t, tPlural } = useI18n();
   if (!cell.highestRisk) {
@@ -76,14 +93,10 @@ export function MatrixView({ comparison, view }: MatrixViewProps) {
         >
           <span className={styles.tableHead}>{t("comparison.matrix.axis")}</span>
           {matrix.documents.map((name) => (
-            <span key={name} title={name} className={styles.tableHead}>
-              {name}
-            </span>
+            <HeaderButton key={name} document={name} onOpen={view.openAgainstAll} />
           ))}
           {matrix.documents.map((row, rowIndex) => [
-            <span key={row} title={row} className={styles.tableHead}>
-              {row}
-            </span>,
+            <HeaderButton key={row} document={row} onOpen={view.openAgainstAll} />,
             ...(matrix.cells[rowIndex] ?? []).map((cell, columnIndex) =>
               cell ? (
                 <button

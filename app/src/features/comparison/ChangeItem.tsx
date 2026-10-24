@@ -13,6 +13,8 @@ interface ChangeItemProps {
   readonly change: ChangeResult;
   readonly decision: DecisionResult | undefined;
   readonly isSelected: boolean;
+  /** «Contra todos»: el documento contra el que ocurre el cambio. */
+  readonly against?: string | undefined;
   readonly onSelect: (number: number) => void;
 }
 
@@ -28,7 +30,7 @@ function ItemValues({ change }: { change: ChangeResult }) {
 }
 
 /** Un cambio de la lista: tipo, lugar, valores, sugerencia de IA y decisión tomada. */
-export function ChangeItem({ change, decision, isSelected, onSelect }: ChangeItemProps) {
+export function ChangeItem({ change, decision, isSelected, against, onSelect }: ChangeItemProps) {
   const { t } = useI18n();
   const appearance = CHANGE_KIND_APPEARANCE[change.kind];
   const segment = changeSegment(change);
@@ -56,6 +58,11 @@ export function ChangeItem({ change, decision, isSelected, onSelect }: ChangeIte
           </span>
           <ItemValues change={change} />
           <span className={styles.itemFooter}>
+            {against && (
+              <span className={styles.itemAgainst} title={against}>
+                {t("comparison.scope.versus", { document: against })}
+              </span>
+            )}
             {change.meaning && <span>{meaningLabel(change.meaning, t)}</span>}
             {decision && (
               <span className={styles.itemStatus}>{t(DECISION_LABELS[decision.kind])}</span>

@@ -64,13 +64,14 @@ function digestOfComparison(comparison: ComparisonResult): ComparisonDigest {
   };
 }
 
+/** Las comparaciones de la sesión: la abierta primero y, después, las cerradas recientes. */
 export function snapshotOf(
   review: ReviewResult | null,
-  comparison: ComparisonResult | null,
+  comparisons: readonly ComparisonResult[],
 ): SessionSnapshot {
   return {
     review: review && digestOfReview(review),
-    comparisons: comparison ? [digestOfComparison(comparison)] : [],
+    comparisons: comparisons.map(digestOfComparison),
   };
 }
 

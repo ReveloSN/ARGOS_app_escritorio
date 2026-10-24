@@ -1,14 +1,14 @@
+import type { ReactNode } from "react";
+
 import { Checkbox } from "../../components/atoms/Checkbox";
-import { Icon } from "../../components/atoms/Icon";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { PluralKey, TranslationKey } from "../../i18n/translate";
-import type { ChangeKindValue, PairComparisonResult } from "../../services/engine/comparisonTypes";
+import type { ChangeKindValue, ChangeResult } from "../../services/engine/comparisonTypes";
 import {
   CHANGE_KINDS,
   COSMETIC_MATERIALITIES,
   countByKind,
-  shownChanges,
   type ChangeFilters,
   type CosmeticMateriality,
 } from "./changeFilters";
@@ -27,7 +27,10 @@ const IGNORE_LABELS: Readonly<Record<CosmeticMateriality, TranslationKey>> = {
 };
 
 interface VersionsToolbarProps {
-  readonly pair: PairComparisonResult;
+  /** Los cambios del alcance, después de ignorar los de forma. */
+  readonly changes: readonly ChangeResult[];
+  /** Qué se compara: A → B, o el documento base frente a todos. */
+  readonly heading: ReactNode;
   readonly filters: ChangeFilters;
   readonly onFilters: (filters: ChangeFilters) => void;
 }
@@ -41,19 +44,13 @@ function toggled(
   return next;
 }
 
-/** Documentos A → B, cuántos cambios hay de cada tipo y qué cambios de forma se ignoran. */
-export function VersionsToolbar({ pair, filters, onFilters }: VersionsToolbarProps) {
+/** Qué se compara, cuántos cambios hay de cada tipo y qué cambios de forma se ignoran. */
+export function VersionsToolbar({ changes, heading, filters, onFilters }: VersionsToolbarProps) {
   const { t, tPlural } = useI18n();
-  const counts = countByKind(shownChanges(pair.changes, filters.ignored));
+  const counts = countByKind(changes);
   return (
     <div className={styles.toolbar}>
-      <div className={styles.documents}>
-        <span className={styles.sideBadge}>{t("comparison.sideA")}</span>
-        <span className={styles.documentName}>{pair.firstDocument}</span>
-        <Icon name="arrow_forward" size="sm" />
-        <span className={styles.sideBadge}>{t("comparison.sideB")}</span>
-        <span className={styles.documentName}>{pair.secondDocument}</span>
-      </div>
+      <div className={styles.documents}>{heading}</div>
       <div className={styles.counters}>
         {CHANGE_KINDS.map((kind) => (
           <span key={kind} className={styles.counter}>

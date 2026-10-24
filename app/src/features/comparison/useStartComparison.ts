@@ -1,8 +1,10 @@
 import { useState } from "react";
 
 import type {
+  ComparisonGateway,
   ComparisonModeValue,
   ComparisonProgressEvent,
+  ComparisonResult,
 } from "../../services/engine/comparisonTypes";
 import { useEngineServices } from "../engine/EngineServicesContext";
 import { useComparison } from "./comparisonContext";
@@ -36,23 +38,48 @@ function advance(progress: ComparisonProgress, event: ComparisonProgressEvent): 
   return progress;
 }
 
+interface StartHandlers {
+  readonly setStatus: (status: StartStatus) => void;
+  readonly show: (comparison: ComparisonResult) => void;
+}
+
+/** Avisa el avance de la lectura y de cada par mientras el motor trabaja. */
+function trackProgress(fileCount: number, setStatus: StartHandlers["setStatus"]) {
+  let progress: ComparisonProgress = { read: 0, files: fileCount, compared: 0, pairs: 0 };
+  setStatus({ kind: "running", progress });
+  return (event: ComparisonProgressEvent) => {
+    progress = advance(progress, event);
+    setStatus({ kind: "running", progress });
+  };
+}
+
+function runComparison(
+  gateway: ComparisonGateway,
+  files: readonly File[],
+  handlers: StartHandlers,
+): void {
+  const onProgress = trackProgress(files.length, handlers.setStatus);
+  const name = files.map((file) => file.name).join(NAME_SEPARATOR);
+  const request = { name, mode: modeForFiles(files.length), files, onProgress };
+  gateway.startComparison(request).then(
+    (result) => {
+      // Sin esto, al cerrar la comparación volvería a verse el avance de la anterior.
+      handlers.setStatus({ kind: "idle" });
+      handlers.show(result);
+    },
+    () => {
+      handlers.setStatus({ kind: "failed" });
+    },
+  );
+}
+
 /** «Elegir documentos»: compara los archivos y muestra el avance mientras el motor trabaja. */
 export function useStartComparison() {
   const { comparisons } = useEngineServices();
   const { showComparison } = useComparison();
   const [status, setStatus] = useState<StartStatus>({ kind: "idle" });
   const start = (files: readonly File[]) => {
-    let progress: ComparisonProgress = { read: 0, files: files.length, compared: 0, pairs: 0 };
-    setStatus({ kind: "running", progress });
-    const onProgress = (event: ComparisonProgressEvent) => {
-      progress = advance(progress, event);
-      setStatus({ kind: "running", progress });
-    };
-    const name = files.map((file) => file.name).join(NAME_SEPARATOR);
-    const request = { name, mode: modeForFiles(files.length), files, onProgress };
-    comparisons.startComparison(request).then(showComparison, () => {
-      setStatus({ kind: "failed" });
-    });
+    runComparison(comparisons, files, { setStatus, show: showComparison });
   };
   return { status, start };
 }

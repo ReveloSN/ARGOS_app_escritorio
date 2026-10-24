@@ -6,11 +6,11 @@ import { isEmptySnapshot, snapshotOf } from "./sessionSnapshot";
 
 describe("estado de la sesión activa", () => {
   it("sin revisión ni comparación está vacío", () => {
-    expect(isEmptySnapshot(snapshotOf(null, null))).toBe(true);
+    expect(isEmptySnapshot(snapshotOf(null, []))).toBe(true);
   });
 
   it("cuenta documentos y alertas pendientes por riesgo de la revisión", () => {
-    const snapshot = snapshotOf(REVIEW, null);
+    const snapshot = snapshotOf(REVIEW, []);
 
     expect(isEmptySnapshot(snapshot)).toBe(false);
     expect(snapshot.review).toMatchObject({
@@ -24,7 +24,7 @@ describe("estado de la sesión activa", () => {
   });
 
   it("las alertas decididas dejan de estar pendientes", () => {
-    const snapshot = snapshotOf(CLOSED_REVIEW, null);
+    const snapshot = snapshotOf(CLOSED_REVIEW, []);
 
     expect(snapshot.review).toMatchObject({
       pendingCount: 1,
@@ -34,7 +34,7 @@ describe("estado de la sesión activa", () => {
   });
 
   it("una comparación sola ya no es una sesión vacía", () => {
-    const snapshot = snapshotOf(null, comparison({}));
+    const snapshot = snapshotOf(null, [comparison({})]);
 
     expect(isEmptySnapshot(snapshot)).toBe(false);
     expect(snapshot.review).toBeNull();

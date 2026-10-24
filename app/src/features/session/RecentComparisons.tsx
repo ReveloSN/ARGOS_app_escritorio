@@ -4,7 +4,7 @@ import type { ComparisonDigest } from "./sessionSnapshot";
 
 interface RecentComparisonsProps {
   readonly comparisons: readonly ComparisonDigest[];
-  readonly onOpen: () => void;
+  readonly onOpen: (comparisonId: string) => void;
 }
 
 export function RecentComparisons({ comparisons, onOpen }: RecentComparisonsProps) {
@@ -20,7 +20,9 @@ export function RecentComparisons({ comparisons, onOpen }: RecentComparisonsProp
               type="button"
               aria-label={t("home.overview.openComparison", { name: item.name })}
               className={styles.comparison}
-              onClick={onOpen}
+              onClick={() => {
+                onOpen(item.id);
+              }}
             >
               <span className={styles.comparisonName}>{item.name}</span>
               <span className={styles.comparisonMeta}>

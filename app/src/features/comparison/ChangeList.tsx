@@ -23,6 +23,8 @@ interface ChangeListProps {
   readonly filters: ChangeFilters;
   readonly decisions: readonly DecisionResult[];
   readonly selected: number | undefined;
+  /** Número de cambio → documento contra el que ocurre; solo en «contra todos». */
+  readonly againstByChange?: ReadonlyMap<number, string> | undefined;
   readonly onFilters: (filters: ChangeFilters) => void;
   readonly onSelect: (number: number) => void;
 }
@@ -72,6 +74,7 @@ export function ChangeList(props: ChangeListProps) {
             change={change}
             decision={props.decisions.find((decision) => decision.alertNumber === change.number)}
             isSelected={props.selected === change.number}
+            against={props.againstByChange?.get(change.number)}
             onSelect={props.onSelect}
           />
         ))}

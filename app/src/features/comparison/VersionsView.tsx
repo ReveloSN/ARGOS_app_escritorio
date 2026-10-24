@@ -4,20 +4,23 @@ import { ErrorMessage } from "../../components/molecules/ErrorMessage";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ComparisonResult, PairComparisonResult } from "../../services/engine/comparisonTypes";
 import type { AlertDecisions } from "../alerts/useAlertDecisions";
-import { shownChanges, visibleChanges } from "./changeFilters";
 import { ChangeList } from "./ChangeList";
+import { changeCountsByDocument } from "./comparisonScope";
+import { DocumentFilterChips } from "./DocumentFilterChips";
 import { ChangeMinimap } from "./ChangeMinimap";
 import styles from "./Compare.module.css";
 import { DocumentPanel } from "./DocumentPanel";
 import { ItemDetail } from "./ItemDetail";
 import { changeDetail } from "./itemDetails";
 import { panelSegments } from "./segmentRuns";
+import type { ScopedList } from "./scopedList";
 import type { ComparisonView } from "./useComparisonView";
 import { useSyncedScroll } from "./useSyncedScroll";
 
 interface VersionsViewProps {
   readonly comparison: ComparisonResult;
   readonly pair: PairComparisonResult;
+  readonly list: ScopedList;
   readonly view: ComparisonView;
   readonly decisions: AlertDecisions;
 }
@@ -51,13 +54,13 @@ function UnrelatedVersions({ view }: { view: ComparisonView }) {
 }
 
 /** Comparar versiones: dos paneles sincronizados, minimapa, lista de cambios y su detalle. */
-export function VersionsView({ comparison, pair, view, decisions }: VersionsViewProps) {
+export function VersionsView({ comparison, pair, list, view, decisions }: VersionsViewProps) {
   const { t } = useI18n();
   const scroll = useSyncedScroll();
   useScrollToSelected(view.selected);
   if (pair.seemsUnrelated) return <UnrelatedVersions view={view} />;
-  const shown = shownChanges(pair.changes, view.filters.ignored);
-  const selectedChange = shown.find((change) => change.number === view.selected);
+  const shown = list.pairChanges;
+  const selectedChange = list.selected;
   const decisionOf = (number: number) =>
     comparison.decisions.decisions.find((decision) => decision.alertNumber === number);
   return (
@@ -90,9 +93,17 @@ export function VersionsView({ comparison, pair, view, decisions }: VersionsView
         />
       </div>
       <aside className={styles.aside}>
+        {view.scope.against.kind === "all" && (
+          <DocumentFilterChips
+            documents={changeCountsByDocument(comparison, view.scope, list.shown)}
+            selected={view.documentFilter}
+            onSelect={view.setDocumentFilter}
+          />
+        )}
         <ChangeList
-          shown={shown}
-          visible={visibleChanges(pair.changes, view.filters)}
+          shown={list.shown.map((item) => item.change)}
+          visible={list.visible}
+          againstByChange={view.scope.against.kind === "all" ? list.againstByChange : undefined}
           filters={view.filters}
           decisions={comparison.decisions.decisions}
           selected={view.selected}

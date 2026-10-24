@@ -790,6 +790,24 @@
   },
   "comparison": {
     "title": "Comparar documentos",
+    "scope": {
+      "label": "Qué comparar",
+      "base": "Documento base",
+      "against": "Contra",
+      "allOthers": "Todos los demás documentos",
+      "allHeading": "{base} frente a todos los demás",
+      "baseBadge": "Base",
+      "versus": "contra {document}",
+      "filterLabel": "Filtrar por documento",
+      "allDocuments": "Todos los documentos",
+      "breakdown": "Cambios por documento",
+      "noChanges": "sin cambios"
+    },
+    "close": {
+      "action": "Cerrar comparación",
+      "hint": "Esc"
+    },
+    "matrixHeader": "Comparar {document} contra todos los demás",
     "modes": {
       "label": "Modo de comparación",
       "versions": "Comparar versiones",

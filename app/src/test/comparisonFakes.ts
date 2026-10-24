@@ -97,6 +97,17 @@ export const ADDED_CHANGE: ChangeResult = {
   edits: [],
   meaning: { meaning: "meaning_change", confidence: 0.7 },
 };
+export const REMOVED_ANNEX_CHANGE: ChangeResult = {
+  number: 3,
+  kind: "removed",
+  risk: "medium",
+  materialities: [],
+  isMoved: false,
+  first: V2[2] ?? null,
+  second: null,
+  edits: [],
+  meaning: null,
+};
 export const CASE_CHANGE: ChangeResult = {
   ...NUMBER_CHANGE,
   number: 5,

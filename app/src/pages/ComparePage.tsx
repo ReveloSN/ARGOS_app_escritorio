@@ -1,3 +1,6 @@
+import { RecentComparisons } from "../features/session/RecentComparisons";
+import { snapshotOf } from "../features/session/sessionSnapshot";
+import { useReopenComparison } from "../features/comparison/useReopenComparison";
 import { CompareStart } from "../features/comparison/CompareStart";
 import { useComparison } from "../features/comparison/comparisonContext";
 import { ComparisonWorkspace } from "../features/comparison/ComparisonWorkspace";
@@ -11,7 +14,8 @@ import styles from "./Page.module.css";
  * reales del motor (versiones, inconsistencias y matriz).
  */
 export function ComparePage() {
-  const { comparison } = useComparison();
+  const { comparison, recent } = useComparison();
+  const reopen = useReopenComparison();
   const start = useStartComparison();
   const engineStatus = useEngineStatus();
   if (comparison) {
@@ -22,6 +26,7 @@ export function ComparePage() {
     <div className={styles.page}>
       {engineStatus === "stopped" && <EngineUnavailableMessage />}
       <CompareStart status={start.status} onFiles={start.start} />
+      <RecentComparisons comparisons={snapshotOf(null, recent).comparisons} onOpen={reopen} />
     </div>
   );
 }

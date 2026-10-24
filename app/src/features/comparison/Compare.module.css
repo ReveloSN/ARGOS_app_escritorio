@@ -643,3 +643,72 @@
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
 }
+
+.scopeSelector {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacing-3);
+}
+
+.itemAgainst {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chipText {
+  display: inline-block;
+  max-width: var(--size-chip-text);
+  overflow: hidden;
+  vertical-align: bottom;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.breakdown {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-caption);
+}
+
+.breakdownTitle {
+  padding-block-end: var(--spacing-1);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  text-align: start;
+}
+
+.breakdownDocument {
+  max-width: var(--size-chip-text);
+  padding-inline-end: var(--spacing-3);
+  overflow: hidden;
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-regular);
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.headerButton {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  cursor: pointer;
+}
+
+.closeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.grow {
+  flex: 1;
+}

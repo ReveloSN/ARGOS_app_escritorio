@@ -6,6 +6,9 @@ import { snapshotOf, type SessionSnapshot } from "./sessionSnapshot";
 
 export function useSessionSnapshot(): SessionSnapshot {
   const { review } = useReview();
-  const { comparison } = useComparison();
-  return useMemo(() => snapshotOf(review, comparison), [review, comparison]);
+  const { comparison, recent } = useComparison();
+  return useMemo(
+    () => snapshotOf(review, comparison ? [comparison, ...recent] : recent),
+    [review, comparison, recent],
+  );
 }
