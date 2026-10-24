@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 import styles from "./ModalDialog.module.css";
 
@@ -43,7 +44,8 @@ export function ModalDialog({ title, children, actions, onClose }: ModalDialogPr
     if (event.key === "Tab") keepFocusInside(event, dialog.current);
   };
 
-  return (
+  // Fuera del encabezado y de la barra lateral: un diálogo modal no pertenece a esos puntos de referencia.
+  return createPortal(
     <div className={styles.backdrop}>
       <div
         ref={dialog}
@@ -59,6 +61,7 @@ export function ModalDialog({ title, children, actions, onClose }: ModalDialogPr
         <div className={styles.body}>{children}</div>
         <div className={styles.actions}>{actions}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

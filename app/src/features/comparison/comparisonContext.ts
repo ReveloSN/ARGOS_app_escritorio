@@ -11,8 +11,6 @@ export interface ComparisonState {
   readonly showComparison: (comparison: ComparisonResult) => void;
   /** «Cerrar comparación»: vuelve a elegir qué comparar sin perder las decisiones tomadas. */
   readonly closeComparison: () => void;
-  /** Descarta todo (cambio de sesión): lo cerrado tampoco pertenece a la nueva sesión. */
-  readonly discardComparison: () => void;
   readonly updateDecisions: (decisions: DecisionsResult) => void;
 }
 

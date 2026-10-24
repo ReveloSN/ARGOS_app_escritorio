@@ -28,7 +28,9 @@ export function SessionNotice({ deletion, switching }: SessionNoticeProps) {
         />
       )}
       <Toast
-        message={t("sessionMenu.deleted", { name: deletion.deleted?.session.name ?? "" })}
+        message={
+          deletion.deleted ? t("sessionMenu.deleted", { name: deletion.deleted.session.name }) : ""
+        }
         visible={deletion.deleted !== null}
         onUndo={deletion.deleted ? deletion.undo : undefined}
         hasUndoShortcut={false}
