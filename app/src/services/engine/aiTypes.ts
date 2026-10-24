@@ -30,6 +30,7 @@ export interface AiGateway {
     number: number,
     locale: string,
   ): Promise<ChangeExplanationResult>;
+  explainAlert(sessionId: string, number: number, locale: string): Promise<ChangeExplanationResult>;
   aiSettings(): Promise<AiSettingsResult>;
   setExplainsChanges(enabled: boolean): Promise<AiSettingsResult>;
   storeKey(key: string): Promise<AiSettingsResult>;

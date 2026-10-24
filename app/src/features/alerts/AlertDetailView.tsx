@@ -5,7 +5,9 @@ import { DifferenceLine } from "../../components/molecules/DifferenceLine";
 import { ComparisonPanel } from "../../components/organisms/ComparisonPanel";
 import { useI18n } from "../../i18n/i18nContext";
 import type { AlertResult, AlertSideResult, ReviewResult } from "../../services/engine/reviewTypes";
+import { ExplanationPanel } from "../explanation/ExplanationPanel";
 import { decisionStateOf } from "./alertDecisions";
+import { alertExplainTarget } from "./alertExplainTarget";
 import {
   alertTitle,
   describeLocation,
@@ -101,6 +103,7 @@ export function AlertDetailView(props: AlertDetailViewProps) {
         second={alert.second ? compared(alert.second) : undefined}
       />
       <DifferenceLine {...difference} />
+      <ExplanationPanel target={alertExplainTarget(review.session.id, alert, t)} />
       <DetailDecision {...props} />
     </div>
   );

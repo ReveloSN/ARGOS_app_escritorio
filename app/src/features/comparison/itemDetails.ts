@@ -2,8 +2,8 @@ import type { TranslationKey } from "../../i18n/translate";
 import type { ChangeKindValue, ChangeResult } from "../../services/engine/comparisonTypes";
 import type { AlertResult, AlertSideResult } from "../../services/engine/reviewTypes";
 import { alertTitle, describeLocation, type Translate } from "../alerts/alertPresentation";
+import type { ExplainTarget } from "../explanation/explainTarget";
 import { CHANGE_KIND_APPEARANCE, changeSegment, changeValues } from "./changePresentation";
-import type { ExplainTarget } from "./ChangeExplanationPanel";
 import type { ItemDetailContent } from "./ItemDetail";
 import { meaningLabel } from "./meaningLabel";
 
@@ -57,7 +57,8 @@ function explainTarget(
   const segment = changeSegment(change);
   if (!segment) return undefined;
   const source = `${segment.document} · ${describeLocation(segment.location, t)}`;
-  return { comparisonId, number: change.number, quote: segment.text, source };
+  const quotes = [{ text: segment.text, source }];
+  return { subject: "change", comparisonId, number: change.number, quotes };
 }
 
 function sideValue(side: AlertSideResult, fallback: string) {

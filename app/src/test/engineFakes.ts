@@ -101,6 +101,7 @@ function fakeReports(overrides: FakeEngineOptions["reports"]): EngineServices["r
 function fakeAi(overrides: FakeEngineOptions["ai"]): EngineServices["ai"] {
   return {
     explainChange: notConfigured(),
+    explainAlert: notConfigured(),
     aiSettings: notConfigured(),
     setExplainsChanges: notConfigured(),
     storeKey: notConfigured(),

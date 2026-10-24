@@ -3,8 +3,9 @@ import { DecisionButtons } from "../../components/molecules/DecisionButtons";
 import { useI18n } from "../../i18n/i18nContext";
 import type { DecisionResult } from "../../services/engine/reviewTypes";
 import type { AlertDecisions } from "../alerts/useAlertDecisions";
+import type { ExplainTarget } from "../explanation/explainTarget";
+import { ExplanationPanel } from "../explanation/ExplanationPanel";
 import { DECISION_LABELS } from "../alerts/useAlertDecisions";
-import { ChangeExplanationPanel, type ExplainTarget } from "./ChangeExplanationPanel";
 import styles from "./Compare.module.css";
 
 /** Lo que muestra el detalle de un cambio o de una inconsistencia. */
@@ -47,7 +48,7 @@ export function ItemDetail({ content, decision, decisions }: ItemDetailProps) {
           </div>
         ))}
       </dl>
-      {content.explain && <ChangeExplanationPanel target={content.explain} />}
+      {content.explain && <ExplanationPanel target={content.explain} />}
       {decision && (
         <div role="status" className={styles.saved}>
           <Icon name="check" size="sm" />

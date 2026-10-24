@@ -856,20 +856,6 @@
       "label": "IA: {meaning}",
       "reworded": "Reformulado",
       "meaning_change": "Cambio de sentido"
-    },
-    "explain": {
-      "toggle": "Explicar este cambio",
-      "loading": "Preparando la explicación…",
-      "failed": "No se pudo explicar el cambio: el motor de análisis no respondió. Ciérrelo y ábralo de nuevo.",
-      "aiLabel": "Sugerencia de IA",
-      "templateLabel": "Explicación de ARGUS",
-      "fallback": {
-        "no_key": "La IA está activada pero falta la clave: guárdela en Ajustes > Inteligencia artificial.",
-        "keychain_unavailable": "No se pudo leer el llavero del sistema; se muestra la explicación local.",
-        "provider_unavailable": "El proveedor de IA no respondió; se muestra la explicación local. Inténtelo más tarde.",
-        "invalid_key": "El proveedor rechazó la clave: revísela en Ajustes > Inteligencia artificial.",
-        "refused": "El proveedor de IA no quiso explicar este fragmento; se muestra la explicación local."
-      }
     }
   },
   "facts": {
@@ -1250,6 +1236,45 @@
       },
       "useLocal": "Usar OCR local",
       "cancel": "Cancelar"
+    }
+  },
+  "explain": {
+    "toggle": {
+      "change": "Explicar este cambio",
+      "alert": "Explicar esta alerta"
+    },
+    "loading": "Preparando la explicación…",
+    "failed": "No se pudo obtener la explicación: el motor de análisis no respondió. Ciérrela y ábrala de nuevo.",
+    "aiLabel": "Sugerencia de IA",
+    "templateLabel": "Explicación de ARGUS",
+    "aiNote": "Es una sugerencia: la decisión sigue siendo suya.",
+    "retry": "Reintentar",
+    "fallback": {
+      "no_key": {
+        "what": "La IA está activada, pero no hay una clave guardada.",
+        "why": "Sin la clave, ARGUS no puede pedir la sugerencia al proveedor.",
+        "todo": "Guarde la clave en Ajustes › Inteligencia artificial y vuelva a intentarlo. Mientras tanto se muestra la explicación local."
+      },
+      "keychain_unavailable": {
+        "what": "No se pudo leer el llavero del sistema.",
+        "why": "La clave de la IA se guarda allí; sin el llavero no se puede usar.",
+        "todo": "Inicie el llavero de su escritorio y vuelva a intentarlo. Mientras tanto se muestra la explicación local."
+      },
+      "provider_unavailable": {
+        "what": "El proveedor de IA no respondió.",
+        "why": "Puede ser la conexión a internet o una interrupción del servicio.",
+        "todo": "Revise la conexión y vuelva a intentarlo. Mientras tanto se muestra la explicación local."
+      },
+      "invalid_key": {
+        "what": "El proveedor rechazó la clave.",
+        "why": "La clave guardada no es válida o fue revocada.",
+        "todo": "Revísela en Ajustes › Inteligencia artificial y vuelva a intentarlo. Mientras tanto se muestra la explicación local."
+      },
+      "refused": {
+        "what": "El proveedor de IA no quiso explicar este fragmento.",
+        "why": "Su política de contenido lo impidió.",
+        "todo": "Use la explicación local o vuelva a intentarlo más tarde."
+      }
     }
   }
 }

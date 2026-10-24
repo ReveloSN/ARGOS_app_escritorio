@@ -19,6 +19,16 @@ describe("AiClient", () => {
     expect(url).toBe("http://127.0.0.1:5000/comparisons/c%201/changes/3/explanation?locale=en");
   });
 
+  it("pide la explicación de una alerta de la revisión por el mismo camino", async () => {
+    const explanation = { source: "template", parts: [], text: "", fallbackReason: null };
+    const fetchResource = vi.fn<FetchResource>(() => Promise.resolve(jsonResponse(explanation)));
+
+    await clientWith(fetchResource).explainAlert("s 1", 2, "es");
+
+    const [url] = fetchResource.mock.calls[0] ?? [];
+    expect(url).toBe("http://127.0.0.1:5000/reviews/s%201/alerts/2/explanation?locale=es");
+  });
+
   it("guarda la clave en el llavero y la quita", async () => {
     const state = { explainsChanges: false, hasKey: true, isKeychainAvailable: true };
     const fetchResource = vi.fn<FetchResource>(() => Promise.resolve(jsonResponse(state)));

@@ -15,10 +15,17 @@ export class AiClient implements AiGateway {
     number: number,
     locale: string,
   ): Promise<ChangeExplanationResult> {
-    const query = new URLSearchParams({ locale });
     const id = encodeURIComponent(comparisonId);
-    const path = `/comparisons/${id}/changes/${String(number)}/explanation?${query.toString()}`;
-    return this.http.json({ path, timeoutMs: EXPLANATION_TIMEOUT_MS });
+    return this.explanation(`/comparisons/${id}/changes/${String(number)}`, locale);
+  }
+
+  explainAlert(
+    sessionId: string,
+    number: number,
+    locale: string,
+  ): Promise<ChangeExplanationResult> {
+    const id = encodeURIComponent(sessionId);
+    return this.explanation(`/reviews/${id}/alerts/${String(number)}`, locale);
   }
 
   aiSettings(): Promise<AiSettingsResult> {
@@ -43,5 +50,11 @@ export class AiClient implements AiGateway {
   removeKey(): Promise<AiSettingsResult> {
     const path = `${SETTINGS_PATH}/key`;
     return this.http.json({ path, timeoutMs: REQUEST_TIMEOUT_MS, method: "DELETE" });
+  }
+
+  private explanation(itemPath: string, locale: string): Promise<ChangeExplanationResult> {
+    const query = new URLSearchParams({ locale });
+    const path = `${itemPath}/explanation?${query.toString()}`;
+    return this.http.json({ path, timeoutMs: EXPLANATION_TIMEOUT_MS });
   }
 }

@@ -856,20 +856,6 @@
       "label": "AI: {meaning}",
       "reworded": "Reworded",
       "meaning_change": "Change of meaning"
-    },
-    "explain": {
-      "toggle": "Explain this change",
-      "loading": "Preparing the explanation…",
-      "failed": "The change could not be explained: the analysis engine did not respond. Close it and open it again.",
-      "aiLabel": "AI suggestion",
-      "templateLabel": "ARGUS explanation",
-      "fallback": {
-        "no_key": "AI is on but the key is missing: save it in Settings > Artificial intelligence.",
-        "keychain_unavailable": "The system keychain could not be read; the local explanation is shown.",
-        "provider_unavailable": "The AI provider did not respond; the local explanation is shown. Try again later.",
-        "invalid_key": "The provider rejected the key: check it in Settings > Artificial intelligence.",
-        "refused": "The AI provider declined to explain this fragment; the local explanation is shown."
-      }
     }
   },
   "facts": {
@@ -1250,6 +1236,45 @@
       },
       "useLocal": "Use local OCR",
       "cancel": "Cancel"
+    }
+  },
+  "explain": {
+    "toggle": {
+      "change": "Explain this change",
+      "alert": "Explain this alert"
+    },
+    "loading": "Preparing the explanation…",
+    "failed": "The explanation could not be obtained: the analysis engine did not respond. Close it and open it again.",
+    "aiLabel": "AI suggestion",
+    "templateLabel": "ARGUS explanation",
+    "aiNote": "This is a suggestion: the decision is still yours.",
+    "retry": "Retry",
+    "fallback": {
+      "no_key": {
+        "what": "AI is on, but no key is saved.",
+        "why": "Without the key, ARGUS cannot ask the provider for a suggestion.",
+        "todo": "Save the key in Settings › Artificial intelligence and try again. Meanwhile the local explanation is shown."
+      },
+      "keychain_unavailable": {
+        "what": "The system keychain could not be read.",
+        "why": "The AI key is stored there; without the keychain it cannot be used.",
+        "todo": "Start your desktop keychain and try again. Meanwhile the local explanation is shown."
+      },
+      "provider_unavailable": {
+        "what": "The AI provider did not respond.",
+        "why": "It may be the internet connection or a service outage.",
+        "todo": "Check the connection and try again. Meanwhile the local explanation is shown."
+      },
+      "invalid_key": {
+        "what": "The provider rejected the key.",
+        "why": "The saved key is not valid or was revoked.",
+        "todo": "Check it in Settings › Artificial intelligence and try again. Meanwhile the local explanation is shown."
+      },
+      "refused": {
+        "what": "The AI provider declined to explain this fragment.",
+        "why": "Its content policy prevented it.",
+        "todo": "Use the local explanation or try again later."
+      }
     }
   }
 }
