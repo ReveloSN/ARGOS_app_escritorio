@@ -71,3 +71,6 @@ class ReviewSession:
         if self.is_closed:
             raise ClosedSessionError(self.id)
         return replace(self, closed_at=closed_at)
+
+    def rename(self, name: str) -> "ReviewSession":
+        return replace(self, name=name.strip())

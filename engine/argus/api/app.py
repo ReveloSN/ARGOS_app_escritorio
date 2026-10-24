@@ -21,7 +21,11 @@ from argus.api.routes.preferences import (
     build_suppression_rules_router,
 )
 from argus.api.routes.reports import build_reports_router
-from argus.api.routes.reviews import build_decisions_router, build_reviews_router
+from argus.api.routes.reviews import (
+    build_decisions_router,
+    build_reviews_router,
+    build_session_management_router,
+)
 from argus.api.routes.send_reviews import (
     build_send_decisions_router,
     build_send_reviews_router,
@@ -49,6 +53,7 @@ def create_app(
     routers = (
         build_reviews_router,
         build_decisions_router,
+        build_session_management_router,
         build_documents_router,
         build_history_router,
         build_preferences_router,

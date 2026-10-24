@@ -68,3 +68,18 @@ def test_session_times_must_include_a_time_zone() -> None:
         ReviewSession.start(
             NewReviewSession("Expediente", DOCUMENTS, 0), datetime(2026, 10, 13, 9, 42)
         )
+
+
+def test_renaming_keeps_everything_else_and_trims_the_name() -> None:
+    session = start()
+
+    renamed = session.rename("  Contrato firmado ")
+
+    assert renamed.name == "Contrato firmado"
+    assert renamed.id == session.id
+    assert renamed.alert_count == session.alert_count
+
+
+def test_renaming_to_an_empty_name_is_rejected() -> None:
+    with pytest.raises(InvalidValueError):
+        start().rename("   ")

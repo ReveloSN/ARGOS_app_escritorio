@@ -104,3 +104,7 @@ class PageRecognizedEvent(CamelModel):
 class DocumentFinishedEvent(CamelModel):
     position: int
     document: DocumentResponse
+
+
+class RenameSessionBody(CamelModel):
+    name: str

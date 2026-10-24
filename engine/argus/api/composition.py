@@ -64,7 +64,12 @@ from argus.application.review_history import (
     ReviewHistory,
 )
 from argus.application.review_recording import StoredReviewRecorder
-from argus.application.review_session_use_cases import CloseReviewSession, StartReviewSession
+from argus.application.review_session_use_cases import (
+    CloseReviewSession,
+    DeleteReviewSession,
+    RenameReviewSession,
+    StartReviewSession,
+)
 from argus.application.run_review import ReviewRunner, RunReview
 from argus.application.suppress_similar_alerts import SuppressSimilarAlerts
 from argus.domain.comparison.comparators_by_type import comparators_for
@@ -154,6 +159,8 @@ class EngineServices:
     run_review: ReviewRunner
     open_review: OpenReview
     close_review: CloseReviewSession
+    rename_review: RenameReviewSession
+    delete_review: DeleteReviewSession
     decisions: ReviewDecisions
     history: ReviewHistory
     search_documents: SearchDocuments
@@ -227,6 +234,8 @@ def build_engine_services(
             StoredReviewRepositories(storage.sessions, storage.alerts, storage.documents)
         ),
         close_review=CloseReviewSession(storage.sessions, clock),
+        rename_review=RenameReviewSession(storage.sessions),
+        delete_review=DeleteReviewSession(storage.sessions, archive),
         decisions=ReviewDecisions(DecisionRepositories(storage.sessions, storage.decisions), clock),
         history=ReviewHistory(
             HistoryRepositories(storage.sessions, storage.alerts, storage.decisions)

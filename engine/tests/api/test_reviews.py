@@ -132,3 +132,54 @@ def test_review_requires_the_access_token(client: TestClient) -> None:
     response = client.post("/reviews", data={"name": "x"}, files=[upload("Contrato_4857_v3.pdf")])
 
     assert response.status_code == 401
+
+
+def test_a_review_can_be_renamed_and_keeps_its_alerts(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    created = post_review(client, auth_headers, "Contrato_4857_v3.pdf")
+    session_id = created["session"]["id"]
+
+    renamed = client.patch(
+        f"/reviews/{session_id}", headers=auth_headers, json={"name": "  Contrato firmado  "}
+    )
+    reopened = client.get(f"/reviews/{session_id}", headers=auth_headers).json()
+
+    assert renamed.status_code == 200
+    assert renamed.json()["name"] == "Contrato firmado"
+    assert reopened["session"]["name"] == "Contrato firmado"
+    assert reopened["alerts"] == created["alerts"]
+
+
+def test_renaming_with_an_empty_name_is_rejected(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    session_id = post_review(client, auth_headers, "Contrato_4857_v3.pdf")["session"]["id"]
+
+    response = client.patch(f"/reviews/{session_id}", headers=auth_headers, json={"name": "   "})
+
+    assert response.status_code == 422
+
+
+def test_deleting_a_review_removes_it_from_the_history(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    session_id = post_review(client, auth_headers, "Contrato_4857_v3.pdf")["session"]["id"]
+
+    deleted = client.delete(f"/reviews/{session_id}", headers=auth_headers)
+    reopened = client.get(f"/reviews/{session_id}", headers=auth_headers)
+    history = client.get("/history?days=30", headers=auth_headers).json()
+
+    assert deleted.status_code == 204
+    assert reopened.status_code == 404
+    assert [item["id"] for item in history["sessions"]] == []
+
+
+def test_deleting_or_renaming_an_unknown_review_is_reported(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    deleted = client.delete("/reviews/no-existe", headers=auth_headers)
+    renamed = client.patch("/reviews/no-existe", headers=auth_headers, json={"name": "Otro"})
+
+    assert deleted.status_code == 404
+    assert renamed.status_code == 404
