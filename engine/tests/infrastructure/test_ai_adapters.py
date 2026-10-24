@@ -8,6 +8,7 @@ import pytest
 from keyring.errors import NoKeyringError, PasswordDeleteError
 
 from argus.application.ai.ai_change_explainer import ExplanationPrompt
+from argus.application.text_comparison.change_explanation import ExplanationSubject
 from argus.domain.errors import ExplanationProviderError, KeychainUnavailableError
 from argus.infrastructure.ai.anthropic_explanation_provider import (
     FALLBACK_BETA,
@@ -16,7 +17,9 @@ from argus.infrastructure.ai.anthropic_explanation_provider import (
 )
 from argus.infrastructure.ai.keyring_secret_store import KeyringSecretStore
 
-PROMPT = ExplanationPrompt("es", "modified", "podrá terminar", "no podrá terminar")
+PROMPT = ExplanationPrompt(
+    "es", ExplanationSubject.CHANGE, "modified", ("podrá terminar", "no podrá terminar")
+)
 REQUEST = httpx2.Request("POST", "https://api.anthropic.com/v1/messages")
 
 

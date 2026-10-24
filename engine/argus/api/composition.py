@@ -39,6 +39,7 @@ from argus.application.document_loader import DocumentLoader
 from argus.application.document_reader_factory import DocumentReaderFactory
 from argus.application.embedding_similarity import EmbeddingTextSimilarity
 from argus.application.entity_extraction_pipeline import EntityExtractionPipeline
+from argus.application.explain_alert import ExplainAlert
 from argus.application.fact_value_reader import FactValueReader
 from argus.application.feedback_confidence import FeedbackAdjustingReviewAnalyzer
 from argus.application.ocr_settings import ManageOcrSettings
@@ -166,6 +167,7 @@ class EngineServices:
     sending: SendServices
     reports: ReportServices
     ai_settings: ManageAiSettings
+    explain_alert: ExplainAlert
     ocr_settings: ManageOcrSettings
     storage: ReviewStorage
     data_directory: Path
@@ -198,6 +200,9 @@ def build_engine_services(
     ai = external.ai
     data_directory = settings.data_directory
     storage = build_review_storage(data_directory / DATABASE_FILE_NAME)
+    # Un solo explicador para «Explicar este cambio» y «Explicar esta alerta» (ADR 024).
+    change_explainer = build_change_explainer(storage.ai_settings, ai)
+    alert_explainer = TemplateAlertExplainer(storage.statistics)
     archive = FileSystemDocumentArchive(data_directory / ARCHIVE_FOLDER_NAME)
     clock = SystemClock()
     apply_history_retention(storage, archive)
@@ -209,7 +214,7 @@ def build_engine_services(
         values,
         embedder,
         analyzer,
-        build_change_explainer(storage.ai_settings, ai),
+        change_explainer,
     )
     return EngineServices(
         run_review=RereadReview(
@@ -229,7 +234,8 @@ def build_engine_services(
         search_documents=SearchDocuments(storage.sessions, storage.documents),
         open_document=OpenDocument(storage.documents, archive, opener),
         suppress_similar=SuppressSimilarAlerts(storage.alerts, storage.rules, clock),
-        explainer=TemplateAlertExplainer(storage.statistics),
+        explainer=alert_explainer,
+        explain_alert=ExplainAlert(storage.alerts, alert_explainer, change_explainer),
         change_history_folder=ChangeHistoryFolder(
             data_directory,
             FileSystemHistoryCopier(data_directory),

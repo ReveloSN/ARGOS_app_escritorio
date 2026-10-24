@@ -5,23 +5,23 @@ from argus.application.ai.ai_settings import AiSettingsRepository
 from argus.application.ports.secrets import SecretStore
 from argus.application.text_comparison.change_explanation import (
     ChangeExplanation,
-    ChangeExplanationRequest,
+    ExplanationRequest,
     ExplanationSource,
+    ExplanationSubject,
     FallbackReason,
     TemplateChangeExplainer,
 )
 from argus.domain.errors import ExplanationProviderError, KeychainUnavailableError
-from argus.domain.text_comparison.segment import Segment
 
 
 @dataclass(frozen=True)
 class ExplanationPrompt:
-    """Lo único que sale del equipo: el idioma, el tipo de cambio y los dos fragmentos."""
+    """Lo único que sale del equipo: el idioma, qué se explica, su tipo y los fragmentos."""
 
     locale: str
+    subject: ExplanationSubject
     kind: str
-    before: str
-    after: str
+    fragments: tuple[str, ...]
 
 
 class ExplanationProvider(Protocol):
@@ -35,10 +35,6 @@ class AiExplanationSources:
     settings: AiSettingsRepository
     secrets: SecretStore
     provider: ExplanationProvider
-
-
-def _text(segment: Segment | None) -> str:
-    return "" if segment is None else segment.text
 
 
 def _fallback_reason(error: ExplanationProviderError) -> FallbackReason:
@@ -57,7 +53,7 @@ class AiChangeExplainer:
         self._sources = sources
         self._fallback = fallback
 
-    def explain(self, request: ChangeExplanationRequest) -> ChangeExplanation:
+    def explain(self, request: ExplanationRequest) -> ChangeExplanation:
         if not self._sources.settings.get().explains_changes:
             return self._fallback.explain(request)
         try:
@@ -68,19 +64,14 @@ class AiChangeExplainer:
             return self._template(request, FallbackReason.NO_KEY)
         return self._ask(request, key)
 
-    def _ask(self, request: ChangeExplanationRequest, key: str) -> ChangeExplanation:
-        change = request.change
-        prompt = ExplanationPrompt(
-            request.locale, change.kind, _text(change.first), _text(change.second)
-        )
+    def _ask(self, request: ExplanationRequest, key: str) -> ChangeExplanation:
+        prompt = ExplanationPrompt(request.locale, request.subject, request.kind, request.fragments)
         try:
             text = self._sources.provider.explain(key, prompt)
         except ExplanationProviderError as error:
             return self._template(request, _fallback_reason(error))
         return ChangeExplanation(ExplanationSource.AI, text=text)
 
-    def _template(
-        self, request: ChangeExplanationRequest, reason: FallbackReason
-    ) -> ChangeExplanation:
+    def _template(self, request: ExplanationRequest, reason: FallbackReason) -> ChangeExplanation:
         template = self._fallback.explain(request)
         return ChangeExplanation(template.source, template.parts, fallback_reason=reason)

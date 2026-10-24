@@ -5,8 +5,9 @@ import pytest
 from argus.application.ai.ai_change_explainer import AiChangeExplainer, AiExplanationSources
 from argus.application.ai.ai_settings import AiSettings, ManageAiSettings
 from argus.application.text_comparison.change_explanation import (
-    ChangeExplanationRequest,
+    ExplanationRequest,
     ExplanationSource,
+    ExplanationSubject,
     FallbackReason,
     TemplateChangeExplainer,
     explanation_topic,
@@ -82,7 +83,7 @@ def test_without_ai_the_explanation_is_the_local_template() -> None:
     provider = RecordingProvider()
 
     explanation = explainer(False, InMemorySecretStore("sk-prueba"), provider).explain(
-        ChangeExplanationRequest(NEGATION, "es")
+        ExplanationRequest.for_change(NEGATION, "es")
     )
 
     assert explanation.source is ExplanationSource.TEMPLATE
@@ -95,14 +96,16 @@ def test_with_ai_only_the_two_fragments_and_the_language_leave_the_computer() ->
     provider = RecordingProvider("Ahora el arrendatario ya no puede terminar el contrato.")
 
     explanation = explainer(True, InMemorySecretStore("sk-prueba"), provider).explain(
-        ChangeExplanationRequest(NEGATION, "en")
+        ExplanationRequest.for_change(NEGATION, "en")
     )
 
     assert explanation.source is ExplanationSource.AI
     assert explanation.text == "Ahora el arrendatario ya no puede terminar el contrato."
     ((key, prompt),) = provider.calls
     assert key == "sk-prueba"
-    assert (prompt.locale, prompt.before, prompt.after) == ("en", BEFORE.text, AFTER.text)
+    assert prompt.locale == "en"
+    assert prompt.subject is ExplanationSubject.CHANGE
+    assert prompt.fragments == (BEFORE.text, AFTER.text)
 
 
 @pytest.mark.parametrize(
@@ -131,7 +134,7 @@ def test_when_ai_cannot_answer_the_template_says_why(
     secrets: InMemorySecretStore, provider: RecordingProvider, reason: FallbackReason
 ) -> None:
     explanation = explainer(True, secrets, provider).explain(
-        ChangeExplanationRequest(NEGATION, "es")
+        ExplanationRequest.for_change(NEGATION, "es")
     )
 
     assert explanation.source is ExplanationSource.TEMPLATE

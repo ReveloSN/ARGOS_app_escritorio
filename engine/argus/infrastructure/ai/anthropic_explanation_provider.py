@@ -5,6 +5,7 @@ import anthropic
 from anthropic.types.beta import BetaMessage, BetaMessageParam, BetaOutputConfigParam
 
 from argus.application.ai.ai_change_explainer import ExplanationPrompt
+from argus.application.text_comparison.change_explanation import ExplanationSubject
 from argus.domain.errors import ExplanationProviderError
 
 MODEL = "claude-sonnet-5-5"
@@ -20,14 +21,28 @@ REFUSAL = "refusal"
 LANGUAGES = {"es": "español", "en": "English"}
 DEFAULT_LANGUAGE = "español"
 
-SYSTEM_PROMPT = (
-    "Eres el asistente de ARGUS, una herramienta que compara versiones de documentos antes de "
-    "firmarlos o enviarlos. Recibes la versión anterior y la nueva de un mismo fragmento. "
-    "Explica en dos o tres frases, sin viñetas ni formato, qué cambia en lo que el texto "
-    "permite, obliga, cobra o fecha, o di que solo cambia la redacción si el sentido es el "
-    "mismo. Usa solo lo que dicen los fragmentos: no supongas hechos ni des asesoría legal. "
+ROLE = (
+    "Eres el asistente de ARGUS, una herramienta que revisa documentos antes de firmarlos o "
+    "enviarlos. "
+)
+RULES = (
+    " Explica en dos o tres frases, sin viñetas ni formato. Usa solo lo que dicen los "
+    "fragmentos: no supongas hechos, no des asesoría legal y no decidas por el usuario. "
     "Responde en {language}."
 )
+SYSTEM_PROMPTS: dict[ExplanationSubject, str] = {
+    ExplanationSubject.CHANGE: ROLE
+    + "Recibes la versión anterior y la nueva de un mismo fragmento. Di qué cambia en lo que "
+    "el texto permite, obliga, cobra o fecha, o di que solo cambia la redacción si el sentido "
+    "es el mismo." + RULES,
+    ExplanationSubject.ALERT: ROLE
+    + "Recibes el fragmento de origen de cada valor de una alerta: dos fragmentos de "
+    "documentos distintos que deberían coincidir, o uno solo si la alerta señala un dato que "
+    "no cuadra dentro de un mismo documento. Di en qué difieren o qué no cuadra y qué conviene "
+    "revisar antes de firmar o enviar." + RULES,
+}
+MISSING_BEFORE = "(no existe en la versión anterior)"
+MISSING_AFTER = "(no existe en la versión nueva)"
 
 type ClientFactory = Callable[[str], anthropic.Anthropic]
 
@@ -37,11 +52,17 @@ def default_client(api_key: str) -> anthropic.Anthropic:
 
 
 def _user_message(prompt: ExplanationPrompt) -> str:
-    before = prompt.before or "(no existe en la versión anterior)"
-    after = prompt.after or "(no existe en la versión nueva)"
-    return (
-        f"Tipo de cambio: {prompt.kind}\n\nVersión anterior:\n{before}\n\nVersión nueva:\n{after}"
+    if prompt.subject is ExplanationSubject.CHANGE:
+        before, after = prompt.fragments
+        return (
+            f"Tipo de cambio: {prompt.kind}\n\n"
+            f"Versión anterior:\n{before or MISSING_BEFORE}\n\n"
+            f"Versión nueva:\n{after or MISSING_AFTER}"
+        )
+    fragments = (
+        f"Fragmento {number}:\n{text}" for number, text in enumerate(prompt.fragments, start=1)
     )
+    return f"Tipo de diferencia: {prompt.kind}\n\n" + "\n\n".join(fragments)
 
 
 def _text_of(response: BetaMessage) -> str:
@@ -56,7 +77,7 @@ def _text_of(response: BetaMessage) -> str:
 class AnthropicExplanationProvider:
     """Adapter del puerto ExplanationProvider con la API de Anthropic (SDK oficial).
 
-    Solo envía el idioma, el tipo de cambio y los dos fragmentos alineados; nunca el documento.
+    Solo envía el idioma, qué se explica, su tipo y los fragmentos de origen; nunca el documento.
     """
 
     def __init__(self, client_for: ClientFactory = default_client) -> None:
@@ -70,7 +91,7 @@ class AnthropicExplanationProvider:
             response = self._client_for(api_key).beta.messages.create(
                 model=MODEL,
                 max_tokens=MAX_TOKENS,
-                system=SYSTEM_PROMPT.format(language=language),
+                system=SYSTEM_PROMPTS[prompt.subject].format(language=language),
                 messages=messages,
                 output_config=output_config,
                 betas=[FALLBACK_BETA],

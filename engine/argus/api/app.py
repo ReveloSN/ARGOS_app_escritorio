@@ -5,7 +5,11 @@ from argus.api.access_token import AUTHORIZATION_HEADER, AccessTokenMiddleware
 from argus.api.composition import build_engine_services
 from argus.api.error_handlers import register_error_handlers
 from argus.api.ocr_composition import ExternalAdapters, default_external_adapters
-from argus.api.routes.ai import build_ai_settings_router, build_change_explanation_router
+from argus.api.routes.ai import (
+    build_ai_settings_router,
+    build_alert_explanation_router,
+    build_change_explanation_router,
+)
 from argus.api.routes.comparisons import build_comparisons_router
 from argus.api.routes.documents import build_documents_router
 from argus.api.routes.facts import build_fact_changes_router, build_facts_router
@@ -56,6 +60,7 @@ def create_app(
         build_send_decisions_router,
         build_reports_router,
         build_change_explanation_router,
+        build_alert_explanation_router,
         build_ai_settings_router,
         build_ocr_settings_router,
         build_ocr_credentials_router,

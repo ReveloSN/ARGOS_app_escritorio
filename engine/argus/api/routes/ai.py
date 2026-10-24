@@ -11,6 +11,7 @@ from argus.api.schemas.ai import (
 )
 from argus.api.schemas.review import ExplanationPartResponse
 from argus.application.ai.ai_settings import AiSettingsState
+from argus.application.text_comparison.change_explanation import ChangeExplanation
 from argus.infrastructure.ai.anthropic_explanation_provider import MODEL
 
 PROVIDER = "anthropic"
@@ -27,6 +28,19 @@ def _settings(state: AiSettingsState) -> AiSettingsResponse:
     )
 
 
+def _explanation(explanation: ChangeExplanation) -> ChangeExplanationResponse:
+    parts = [
+        ExplanationPartResponse(key=part.key, params=dict(part.params), count=part.count)
+        for part in explanation.parts
+    ]
+    return ChangeExplanationResponse(
+        source=explanation.source,
+        parts=parts,
+        text=explanation.text,
+        fallback_reason=explanation.fallback_reason,
+    )
+
+
 def build_change_explanation_router(services: EngineServices) -> APIRouter:
     """«Explicar este cambio» en la pantalla Comparar."""
     router = APIRouter(prefix="/comparisons")
@@ -35,17 +49,20 @@ def build_change_explanation_router(services: EngineServices) -> APIRouter:
     def explain_change(
         comparison_id: str, number: int, locale: Annotated[str, Query()] = DEFAULT_LOCALE
     ) -> ChangeExplanationResponse:
-        explanation = services.comparisons.explain.execute(comparison_id, number, locale)
-        parts = [
-            ExplanationPartResponse(key=part.key, params=dict(part.params), count=part.count)
-            for part in explanation.parts
-        ]
-        return ChangeExplanationResponse(
-            source=explanation.source,
-            parts=parts,
-            text=explanation.text,
-            fallback_reason=explanation.fallback_reason,
-        )
+        return _explanation(services.comparisons.explain.execute(comparison_id, number, locale))
+
+    return router
+
+
+def build_alert_explanation_router(services: EngineServices) -> APIRouter:
+    """«Explicar esta alerta» en el detalle de la alerta: el mismo flujo que los cambios."""
+    router = APIRouter(prefix="/reviews")
+
+    @router.get("/{session_id}/alerts/{number}/explanation")
+    def explain_alert(
+        session_id: str, number: int, locale: Annotated[str, Query()] = DEFAULT_LOCALE
+    ) -> ChangeExplanationResponse:
+        return _explanation(services.explain_alert.execute(session_id, number, locale))
 
     return router
 
