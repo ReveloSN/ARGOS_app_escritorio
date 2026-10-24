@@ -14,7 +14,7 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 - **Revisar antes de enviar:** un borrador de correo y sus adjuntos, con una copia corregida que abre su programa de correo.
 - **Informe** en PDF o DOCX y un **historial** con métricas de uso.
 - **OCR** para PDF escaneados, con Tesseract en el equipo. Opcionalmente se puede usar Google Document AI, que pide su permiso antes de cada envío.
-- **IA opcional:** «Explicar este cambio» con Claude (Anthropic). Viene apagada, la clave se guarda en el llavero del sistema y cada explicación se rotula «Sugerencia de IA».
+- **IA opcional:** «Explicar este cambio» y «Explicar esta alerta» con Claude (Anthropic) o DeepSeek, a elección. Viene apagada, cada proveedor guarda su clave en el llavero del sistema y cada explicación se rotula «Sugerencia de IA» con la cita de su origen.
 - **Asistente de IA:** el ojo de ARGUS en la barra lateral, con un estado que sale de datos reales del motor.
 
 ## Instalar
@@ -32,7 +32,7 @@ Los instaladores llevan el motor, los modelos de lenguaje y Tesseract con españ
 ## Privacidad
 
 - Los archivos se leen y comparan en su equipo. Ningún contenido sale de él sin que usted lo active en Ajustes y confirme cada envío.
-- Las claves de Anthropic y de Google Cloud se guardan en el llavero del sistema operativo: el Administrador de credenciales en Windows y Secret Service en Linux. Nunca van a archivos ni al historial.
+- Las claves de Anthropic, DeepSeek y Google Cloud se guardan en el llavero del sistema operativo: el Administrador de credenciales en Windows y Secret Service en Linux. Nunca van a archivos ni al historial.
 - El historial se guarda en su carpeta de datos, o en la que usted elija en Ajustes. Opcionalmente se borra a los 90 días.
 
 ## Desarrollo
@@ -95,7 +95,7 @@ npm run tauri -- build --config src-tauri/tauri.bundle.conf.json
 
 - `engine/`: motor en Python con FastAPI y arquitectura hexagonal (`domain`, `application`, `infrastructure`, `api`), persistencia en SQLite y NLP local con spaCy, ONNX Runtime y rapidfuzz.
 - `app/`: interfaz en Tauri 2, React y TypeScript estricto, con design tokens en tres niveles, Atomic Design e i18n en español e inglés.
-- `docs/decisions/`: decisiones de arquitectura (ADR 001 a 027).
+- `docs/decisions/`: decisiones de arquitectura (ADR 001 a 028).
 - `docs/progreso.md`: el estado de cada fase.
 - `docs/mockups/`: la fuente de verdad visual.
 
