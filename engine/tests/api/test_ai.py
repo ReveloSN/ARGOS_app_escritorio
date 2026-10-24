@@ -1,3 +1,5 @@
+import json
+
 from fastapi.testclient import TestClient
 
 from argus.api.ai_composition import AiAdapters
@@ -98,3 +100,38 @@ def test_an_unknown_change_is_not_found(client: TestClient, auth_headers: dict[s
     )
 
     assert response.status_code == 404
+
+
+def test_a_structured_answer_fills_the_four_blocks_and_the_long_text(
+    client: TestClient, auth_headers: dict[str, str], ai: AiAdapters
+) -> None:
+    answer = {
+        "summary": "Falta una condición.",
+        "what_changed": "Se quitó una frase.",
+        "why_it_matters": "Ya no se exige.",
+        "what_to_do": "Pregunte por qué.",
+        "detail": "Texto largo.",
+    }
+    recording_provider(ai).answer = json.dumps(answer)
+    client.put("/settings/ai/key", headers=auth_headers, json={"key": "sk-prueba"})
+    client.put("/settings/ai", headers=auth_headers, json={"explainsChanges": True})
+
+    body = client.get(first_change_url(client, auth_headers), headers=auth_headers).json()
+
+    assert body["source"] == "ai"
+    assert body["text"] == "Texto largo."
+    assert body["structure"] == {
+        "summary": "Falta una condición.",
+        "whatChanged": "Se quitó una frase.",
+        "whyItMatters": "Ya no se exige.",
+        "whatToDo": "Pregunte por qué.",
+    }
+
+
+def test_plain_text_and_the_local_template_have_no_structure(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    body = client.get(first_change_url(client, auth_headers), headers=auth_headers).json()
+
+    assert body["source"] == "template"
+    assert body["structure"] is None

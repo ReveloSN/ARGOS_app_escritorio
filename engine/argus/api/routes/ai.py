@@ -9,6 +9,7 @@ from argus.api.schemas.ai import (
     AiSettingsResponse,
     AiSettingsUpdate,
     ChangeExplanationResponse,
+    ExplanationStructureResponse,
 )
 from argus.api.schemas.review import ExplanationPartResponse
 from argus.application.ai.ai_settings import AiSettingsState, ManageAiSettings
@@ -28,6 +29,18 @@ def _settings(ai: ManageAiSettings, state: AiSettingsState) -> AiSettingsRespons
     )
 
 
+def _structure(explanation: ChangeExplanation) -> ExplanationStructureResponse | None:
+    structure = explanation.structure
+    if structure is None:
+        return None
+    return ExplanationStructureResponse(
+        summary=structure.summary,
+        what_changed=structure.what_changed,
+        why_it_matters=structure.why_it_matters,
+        what_to_do=structure.what_to_do,
+    )
+
+
 def _explanation(explanation: ChangeExplanation) -> ChangeExplanationResponse:
     parts = [
         ExplanationPartResponse(key=part.key, params=dict(part.params), count=part.count)
@@ -38,6 +51,7 @@ def _explanation(explanation: ChangeExplanation) -> ChangeExplanationResponse:
         parts=parts,
         text=explanation.text,
         fallback_reason=explanation.fallback_reason,
+        structure=_structure(explanation),
     )
 
 

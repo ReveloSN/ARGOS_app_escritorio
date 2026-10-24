@@ -56,6 +56,8 @@ class ChangeResponse(CamelModel):
     risk: str
     materialities: list[str]
     is_moved: bool
+    # De qué trata el cambio («negation», «amount», «added»…): la interfaz elige su explicación.
+    topic: str
     first: SegmentResponse | None
     second: SegmentResponse | None
     edits: list[WordEditResponse]

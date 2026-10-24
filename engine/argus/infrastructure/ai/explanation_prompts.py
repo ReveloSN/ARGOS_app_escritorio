@@ -11,9 +11,12 @@ ROLE = (
     "enviarlos. "
 )
 RULES = (
-    " Explica en dos o tres frases, sin viñetas ni formato. Usa solo lo que dicen los "
-    "fragmentos: no supongas hechos, no des asesoría legal y no decidas por el usuario. "
-    "Responde en {language}."
+    " Responde únicamente con un objeto JSON, sin formato ni texto fuera de él, con estas "
+    'claves: "summary" (una frase en lenguaje cotidiano que diga qué pasa), "what_changed" '
+    '(qué cambió), "why_it_matters" (por qué importa) y "what_to_do" (qué puede hacer la '
+    'persona) con una o dos frases cada una, y "detail" (la explicación completa, de tres a '
+    "cinco frases). Usa solo lo que dicen los fragmentos: no supongas hechos, no des asesoría "
+    "legal y no decidas por el usuario. Escribe los valores en {language}."
 )
 SYSTEM_PROMPTS: dict[ExplanationSubject, str] = {
     ExplanationSubject.CHANGE: ROLE

@@ -12,6 +12,7 @@ from argus.api.schemas.comparison import (
 )
 from argus.application.alert_explanation import AlertExplainer
 from argus.application.decision_history import DecisionsState
+from argus.application.text_comparison.change_explanation import explanation_topic
 from argus.domain.text_comparison.change import Change
 from argus.domain.text_comparison.report import (
     ChangeSummary,
@@ -77,6 +78,7 @@ def _change(number: int, change: Change) -> ChangeResponse:
         risk=change.risk,
         materialities=list(change.materialities),
         is_moved=change.is_moved,
+        topic=explanation_topic(change),
         first=_optional_segment(change.first),
         second=_optional_segment(change.second),
         edits=[_edit(edit) for edit in change.edits],
