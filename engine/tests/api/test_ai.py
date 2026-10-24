@@ -1,8 +1,9 @@
 from fastapi.testclient import TestClient
 
 from argus.api.ai_composition import AiAdapters
+from argus.application.ai.ai_settings import AiProvider
 from tests.api.test_comparisons import compare_versions
-from tests.application.ai_doubles import InMemorySecretStore, RecordingProvider
+from tests.application.ai_doubles import recording_provider, secret_store
 
 
 def first_change_url(client: TestClient, headers: dict[str, str]) -> str:
@@ -36,15 +37,18 @@ def test_with_ai_on_and_a_key_the_change_is_explained_by_the_model(
 
     assert settings == {
         "explainsChanges": True,
-        "hasKey": True,
-        "isKeychainAvailable": True,
         "provider": "anthropic",
         "model": "claude-sonnet-5-5",
+        "hasKey": True,
+        "isKeychainAvailable": True,
+        "providers": [
+            {"id": "anthropic", "model": "claude-sonnet-5-5"},
+            {"id": "deepseek", "model": "deepseek-flash"},
+        ],
     }
     assert body["source"] == "ai"
     assert body["text"] == "Sugerencia de prueba."
-    assert isinstance(ai.provider, RecordingProvider)
-    assert ai.provider.calls[0][1].locale == "en"
+    assert recording_provider(ai).calls[0][1].locale == "en"
 
 
 def test_the_key_can_be_removed_and_is_never_returned(
@@ -56,8 +60,34 @@ def test_the_key_can_be_removed_and_is_never_returned(
 
     assert removed.json()["hasKey"] is False
     assert "sk-prueba" not in removed.text
-    assert isinstance(ai.secrets, InMemorySecretStore)
-    assert ai.secrets.secret is None
+    assert secret_store(ai, AiProvider.ANTHROPIC).secret is None
+
+
+def test_each_provider_keeps_its_own_key_and_the_chosen_one_answers(
+    client: TestClient, auth_headers: dict[str, str], ai: AiAdapters
+) -> None:
+    client.put("/settings/ai/key", headers=auth_headers, json={"key": "sk-ant"})
+
+    switched = client.put(
+        "/settings/ai", headers=auth_headers, json={"provider": "deepseek"}
+    ).json()
+    assert (switched["provider"], switched["model"]) == ("deepseek", "deepseek-flash")
+    assert switched["hasKey"] is False
+
+    client.put("/settings/ai/key", headers=auth_headers, json={"key": "sk-deep"})
+    client.put("/settings/ai", headers=auth_headers, json={"explainsChanges": True})
+    client.get(first_change_url(client, auth_headers), headers=auth_headers)
+
+    assert recording_provider(ai).calls[-1][0] == "sk-deep"
+    assert secret_store(ai, AiProvider.ANTHROPIC).secret == "sk-ant"
+    back = client.put("/settings/ai", headers=auth_headers, json={"provider": "anthropic"}).json()
+    assert back["hasKey"] is True
+
+
+def test_an_unknown_provider_is_rejected(client: TestClient, auth_headers: dict[str, str]) -> None:
+    response = client.put("/settings/ai", headers=auth_headers, json={"provider": "otro"})
+
+    assert response.status_code == 422
 
 
 def test_an_unknown_change_is_not_found(client: TestClient, auth_headers: dict[str, str]) -> None:

@@ -5,6 +5,7 @@ from typing import Annotated
 from pydantic import Field
 
 from argus.api.schemas.review import CamelModel, ExplanationPartResponse
+from argus.application.ai.ai_settings import AiProvider
 
 
 class ChangeExplanationResponse(CamelModel):
@@ -16,16 +17,26 @@ class ChangeExplanationResponse(CamelModel):
     fallback_reason: str | None
 
 
-class AiSettingsResponse(CamelModel):
-    explains_changes: bool
-    has_key: bool
-    is_keychain_available: bool
-    provider: str
+class AiProviderResponse(CamelModel):
+    id: AiProvider
     model: str
 
 
-class AiSettingsUpdate(CamelModel):
+class AiSettingsResponse(CamelModel):
     explains_changes: bool
+    # El proveedor elegido y su modelo; la clave y el llavero se refieren a ese proveedor.
+    provider: AiProvider
+    model: str
+    has_key: bool
+    is_keychain_available: bool
+    providers: list[AiProviderResponse]
+
+
+class AiSettingsUpdate(CamelModel):
+    """Cada campo es opcional: se cambia solo lo que viene."""
+
+    explains_changes: bool | None = None
+    provider: AiProvider | None = None
 
 
 class AiKeyBody(CamelModel):

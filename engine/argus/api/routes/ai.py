@@ -5,26 +5,26 @@ from fastapi import APIRouter, Query
 from argus.api.composition import EngineServices
 from argus.api.schemas.ai import (
     AiKeyBody,
+    AiProviderResponse,
     AiSettingsResponse,
     AiSettingsUpdate,
     ChangeExplanationResponse,
 )
 from argus.api.schemas.review import ExplanationPartResponse
-from argus.application.ai.ai_settings import AiSettingsState
+from argus.application.ai.ai_settings import AiSettingsState, ManageAiSettings
 from argus.application.text_comparison.change_explanation import ChangeExplanation
-from argus.infrastructure.ai.anthropic_explanation_provider import MODEL
 
-PROVIDER = "anthropic"
 DEFAULT_LOCALE = "es"
 
 
-def _settings(state: AiSettingsState) -> AiSettingsResponse:
+def _settings(ai: ManageAiSettings, state: AiSettingsState) -> AiSettingsResponse:
     return AiSettingsResponse(
         explains_changes=state.settings.explains_changes,
+        provider=state.settings.provider,
+        model=state.model,
         has_key=state.has_key,
         is_keychain_available=state.is_keychain_available,
-        provider=PROVIDER,
-        model=MODEL,
+        providers=[AiProviderResponse(id=id, model=model) for id, model in ai.available()],
     )
 
 
@@ -67,6 +67,15 @@ def build_alert_explanation_router(services: EngineServices) -> APIRouter:
     return router
 
 
+def _apply(ai: ManageAiSettings, body: AiSettingsUpdate) -> AiSettingsState:
+    """Cambia solo lo que viene en el cuerpo: el proveedor, el interruptor o los dos."""
+    if body.provider is not None:
+        ai.set_provider(body.provider)
+    if body.explains_changes is not None:
+        ai.set_explains_changes(body.explains_changes)
+    return ai.state()
+
+
 def build_ai_settings_router(services: EngineServices) -> APIRouter:
     """Activar la IA y guardar la clave en el llavero; la clave nunca se devuelve."""
     router = APIRouter(prefix="/settings/ai")
@@ -74,18 +83,18 @@ def build_ai_settings_router(services: EngineServices) -> APIRouter:
 
     @router.get("")
     def ai_settings() -> AiSettingsResponse:
-        return _settings(ai.state())
+        return _settings(ai, ai.state())
 
     @router.put("")
     def update_ai_settings(body: AiSettingsUpdate) -> AiSettingsResponse:
-        return _settings(ai.set_explains_changes(body.explains_changes))
+        return _settings(ai, _apply(ai, body))
 
     @router.put("/key")
     def store_key(body: AiKeyBody) -> AiSettingsResponse:
-        return _settings(ai.store_key(body.key))
+        return _settings(ai, ai.store_key(body.key))
 
     @router.delete("/key")
     def remove_key() -> AiSettingsResponse:
-        return _settings(ai.remove_key())
+        return _settings(ai, ai.remove_key())
 
     return router

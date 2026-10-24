@@ -2,7 +2,7 @@ import json
 import sqlite3
 from datetime import datetime
 
-from argus.application.ai.ai_settings import AiSettings
+from argus.application.ai.ai_settings import DEFAULT_PROVIDER, AiProvider, AiSettings
 from argus.application.ocr_settings import CloudOcrProcessor, OcrSettings
 from argus.domain.entity import EntityType
 from argus.domain.preferences import ComparedCategory, UserPreferences
@@ -92,6 +92,15 @@ def _to_rule(row: sqlite3.Row | RuleRow) -> SuppressionRule:
 
 
 AI_EXPLAINS_CHANGES_KEY = "ai_explains_changes"
+AI_PROVIDER_KEY = "ai_provider"
+
+
+def _provider_of(value: str | None) -> AiProvider:
+    # Un proveedor guardado que ya no existe vuelve al predeterminado, nunca rompe el arranque.
+    try:
+        return AiProvider(json.loads(value)) if value else DEFAULT_PROVIDER
+    except ValueError:
+        return DEFAULT_PROVIDER
 
 
 class SqliteAiSettingsRepository:
@@ -102,16 +111,25 @@ class SqliteAiSettingsRepository:
 
     def get(self) -> AiSettings:
         with self._database.connect() as connection:
-            row = connection.execute(
-                "SELECT value FROM preferences WHERE key = ?", (AI_EXPLAINS_CHANGES_KEY,)
-            ).fetchone()
-        return AiSettings(explains_changes=bool(row and json.loads(row[0])))
+            rows = connection.execute(
+                "SELECT key, value FROM preferences WHERE key IN (?, ?)",
+                (AI_EXPLAINS_CHANGES_KEY, AI_PROVIDER_KEY),
+            ).fetchall()
+        stored = dict(rows)
+        explains = stored.get(AI_EXPLAINS_CHANGES_KEY)
+        return AiSettings(
+            explains_changes=bool(explains and json.loads(explains)),
+            provider=_provider_of(stored.get(AI_PROVIDER_KEY)),
+        )
 
     def save(self, settings: AiSettings) -> None:
         with self._database.connect() as connection:
-            connection.execute(
+            connection.executemany(
                 "INSERT OR REPLACE INTO preferences (key, value) VALUES (?, ?)",
-                (AI_EXPLAINS_CHANGES_KEY, json.dumps(settings.explains_changes)),
+                [
+                    (AI_EXPLAINS_CHANGES_KEY, json.dumps(settings.explains_changes)),
+                    (AI_PROVIDER_KEY, json.dumps(str(settings.provider))),
+                ],
             )
 
 

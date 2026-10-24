@@ -6,7 +6,7 @@ from argus.api.ai_composition import AiAdapters
 from argus.api.app import create_app
 from argus.api.settings import EngineSettings
 from tests.api.review_stream import post_review
-from tests.application.ai_doubles import InMemorySecretStore, RecordingProvider
+from tests.application.ai_doubles import RecordingProvider, offline_ai, recording_provider
 from tests.application.in_memory_repositories import RecordingFileOpener
 from tests.application.ocr_doubles import offline_adapters
 
@@ -54,8 +54,7 @@ def test_a_two_value_alert_sends_only_its_two_origin_fragments(
 
     assert body["source"] == "ai"
     assert body["text"] == "Sugerencia de prueba."
-    assert isinstance(ai.provider, RecordingProvider)
-    ((_, prompt),) = ai.provider.calls
+    ((_, prompt),) = recording_provider(ai).calls
     assert (prompt.locale, prompt.subject, prompt.kind) == ("en", "alert", "transposition")
     assert prompt.fragments == (
         alert["first"]["occurrences"][0]["excerpt"],
@@ -73,8 +72,7 @@ def test_a_single_value_alert_sends_one_fragment(
     body = client.get(explanation_url(review, alert), headers=auth_headers).json()
 
     assert body["source"] == "ai"
-    assert isinstance(ai.provider, RecordingProvider)
-    ((_, prompt),) = ai.provider.calls
+    ((_, prompt),) = recording_provider(ai).calls
     assert prompt.kind == "impossible_date"
     assert prompt.fragments == (alert["first"]["occurrences"][0]["excerpt"],)
 
@@ -91,16 +89,13 @@ def test_with_ai_on_but_no_key_the_local_explanation_says_why(
     assert body["source"] == "template"
     assert body["fallbackReason"] == "no_key"
     assert body["parts"] == alert["explanation"]
-    assert isinstance(ai.provider, RecordingProvider)
-    assert ai.provider.calls == []
+    assert recording_provider(ai).calls == []
 
 
 def test_when_the_network_fails_the_local_explanation_says_why(
     settings: EngineSettings, opener: RecordingFileOpener, auth_headers: dict[str, str]
 ) -> None:
-    offline = AiAdapters(
-        InMemorySecretStore("sk-prueba"), RecordingProvider(failure="provider_unavailable")
-    )
+    offline = offline_ai(RecordingProvider(failure="provider_unavailable"), key="sk-prueba")
     client = TestClient(create_app(settings, opener, offline_adapters(offline)))
     review = post_review(client, auth_headers, *TWO_DOCUMENTS)
     alert = alert_of_kind(review, "transposition")

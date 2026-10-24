@@ -3,7 +3,13 @@ from dataclasses import replace
 import pytest
 
 from argus.application.ai.ai_change_explainer import AiChangeExplainer, AiExplanationSources
-from argus.application.ai.ai_settings import AiSettings, ManageAiSettings
+from argus.application.ai.ai_settings import (
+    AiProvider,
+    AiSettings,
+    ManageAiSettings,
+    ProviderAccess,
+    ProviderAccesses,
+)
 from argus.application.text_comparison.change_explanation import (
     ExplanationRequest,
     ExplanationSource,
@@ -44,10 +50,14 @@ class InMemoryAiSettings:
         self.settings = settings
 
 
+def accesses(secrets: InMemorySecretStore, provider: RecordingProvider) -> ProviderAccesses:
+    return {AiProvider.ANTHROPIC: ProviderAccess(secrets, provider, "claude-sonnet-5-5")}
+
+
 def explainer(
     enabled: bool, secrets: InMemorySecretStore, provider: RecordingProvider
 ) -> AiChangeExplainer:
-    sources = AiExplanationSources(InMemoryAiSettings(enabled), secrets, provider)
+    sources = AiExplanationSources(InMemoryAiSettings(enabled), accesses(secrets, provider))
     return AiChangeExplainer(sources, TemplateChangeExplainer())
 
 
@@ -144,7 +154,7 @@ def test_when_ai_cannot_answer_the_template_says_why(
 
 def test_ai_settings_never_return_the_key_and_report_the_keychain() -> None:
     secrets = InMemorySecretStore()
-    settings = ManageAiSettings(InMemoryAiSettings(False), secrets)
+    settings = ManageAiSettings(InMemoryAiSettings(False), accesses(secrets, RecordingProvider()))
 
     assert not settings.state().has_key
     assert settings.store_key("  sk-prueba  ").has_key
@@ -152,7 +162,8 @@ def test_ai_settings_never_return_the_key_and_report_the_keychain() -> None:
     assert settings.set_explains_changes(True).settings.explains_changes
     assert not settings.remove_key().has_key
     unavailable = ManageAiSettings(
-        InMemoryAiSettings(True), InMemorySecretStore(is_available=False)
+        InMemoryAiSettings(True),
+        accesses(InMemorySecretStore(is_available=False), RecordingProvider()),
     )
     assert unavailable.state().is_keychain_available is False
     with pytest.raises(KeychainUnavailableError):
