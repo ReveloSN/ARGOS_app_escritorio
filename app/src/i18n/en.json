@@ -113,7 +113,24 @@
     "title": "No reviews yet",
     "description": "Load the documents you are about to send or sign. ARGUS compares them with each other and shows you the differences before you finish.",
     "note": "Files are analyzed on this computer.",
-    "compareVersions": "Compare two versions"
+    "compareVersions": "Compare two versions",
+    "overview": {
+      "label": "Active session status",
+      "closed": "Closed · read only",
+      "documents": {
+        "one": "{count} document loaded",
+        "other": "{count} documents loaded"
+      },
+      "riskList": "Pending alerts by risk",
+      "continue": "Continue the review",
+      "viewResults": "View the closed review",
+      "comparisonsTitle": "Latest comparisons",
+      "comparison": {
+        "one": "{documents} documents · {count} change",
+        "other": "{documents} documents · {count} changes"
+      },
+      "openComparison": "Open comparison “{name}”"
+    }
   },
   "engineUnavailable": {
     "what": "The analysis engine is not responding.",

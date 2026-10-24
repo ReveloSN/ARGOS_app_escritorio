@@ -26,6 +26,18 @@ function standalonePage(page: AppRoute["page"]): ReactNode {
   return page === "send" ? <SendPage /> : null;
 }
 
+function homePage(navigation: PageNavigation): ReactNode {
+  return (
+    <HomePage
+      onNewReview={navigation.openNewReview}
+      onCompare={navigation.openCompare}
+      onContinueReview={() => {
+        navigation.openTab("alerts");
+      }}
+    />
+  );
+}
+
 /** La pantalla de la ruta actual. */
 export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPageProps) {
   const navigation = usePageNavigation(onNavigate);
@@ -59,7 +71,7 @@ export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPag
         <ReviewPage route={route} navigation={navigation} onSearchDocuments={onSearchDocuments} />
       );
     case "home":
-      return <HomePage onNewReview={navigation.openNewReview} onCompare={navigation.openCompare} />;
+      return homePage(navigation);
   }
 }
 
@@ -73,7 +85,7 @@ interface ReviewPageProps {
 function ReviewPage({ route, navigation, onSearchDocuments }: ReviewPageProps) {
   const { review } = useReview();
   if (!review) {
-    return <HomePage onNewReview={navigation.openNewReview} onCompare={navigation.openCompare} />;
+    return homePage(navigation);
   }
   if (route.page === "report") {
     return (

@@ -113,7 +113,24 @@
     "title": "Todavía no hay revisiones",
     "description": "Cargue los documentos que va a enviar o firmar. ARGUS los compara entre sí y le muestra las diferencias antes de que finalice.",
     "note": "Los archivos se analizan en este equipo.",
-    "compareVersions": "Comparar dos versiones"
+    "compareVersions": "Comparar dos versiones",
+    "overview": {
+      "label": "Estado de la sesión activa",
+      "closed": "Cerrada · solo lectura",
+      "documents": {
+        "one": "{count} documento cargado",
+        "other": "{count} documentos cargados"
+      },
+      "riskList": "Alertas pendientes por riesgo",
+      "continue": "Continuar la revisión",
+      "viewResults": "Ver la revisión cerrada",
+      "comparisonsTitle": "Últimas comparaciones",
+      "comparison": {
+        "one": "{documents} documentos · {count} cambio",
+        "other": "{documents} documentos · {count} cambios"
+      },
+      "openComparison": "Abrir comparación «{name}»"
+    }
   },
   "engineUnavailable": {
     "what": "El motor de análisis no responde.",

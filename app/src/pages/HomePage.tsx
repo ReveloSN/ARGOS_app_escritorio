@@ -5,19 +5,50 @@ import { AssistantEye } from "../features/assistant/AssistantEye";
 import { useAssistantStatus } from "../features/assistant/useAssistantStatus";
 import { EngineUnavailableMessage } from "../features/engine/EngineUnavailableMessage";
 import { useEngineStatus } from "../features/engine/useEngineStatus";
+import { RecentComparisons } from "../features/session/RecentComparisons";
+import { ReviewOverview } from "../features/session/ReviewOverview";
+import { isEmptySnapshot, type SessionSnapshot } from "../features/session/sessionSnapshot";
+import { useSessionSnapshot } from "../features/session/useSessionSnapshot";
 import { useI18n } from "../i18n/i18nContext";
 import styles from "./HomePage.module.css";
 
 interface HomePageProps {
   readonly onNewReview: () => void;
   readonly onCompare: () => void;
+  readonly onContinueReview: () => void;
 }
 
-/** Inicio, primer uso: el asistente sobre la retícula y «Nueva revisión». Sin datos inventados. */
-export function HomePage({ onNewReview, onCompare }: HomePageProps) {
+function SessionSummary({
+  snapshot,
+  onContinueReview,
+  onCompare,
+}: Pick<HomePageProps, "onContinueReview" | "onCompare"> & { snapshot: SessionSnapshot }) {
+  const { t } = useI18n();
+  if (isEmptySnapshot(snapshot)) {
+    return (
+      <>
+        <h1 className={styles.title}>{t("home.title")}</h1>
+        <p className={styles.description}>{t("home.description")}</p>
+      </>
+    );
+  }
+  return (
+    <>
+      {snapshot.review && <ReviewOverview review={snapshot.review} onContinue={onContinueReview} />}
+      <RecentComparisons comparisons={snapshot.comparisons} onOpen={onCompare} />
+    </>
+  );
+}
+
+/**
+ * Inicio: el estado de la sesión activa (la misma fuente que la barra lateral) con accesos
+ * directos; el estado vacío solo aparece si de verdad no hay documentos ni comparaciones.
+ */
+export function HomePage({ onNewReview, onCompare, onContinueReview }: HomePageProps) {
   const { t } = useI18n();
   const engineStatus = useEngineStatus();
   const assistant = useAssistantStatus();
+  const snapshot = useSessionSnapshot();
 
   return (
     <div className={styles.home}>
@@ -34,8 +65,11 @@ export function HomePage({ onNewReview, onCompare }: HomePageProps) {
             size="lg"
             label={t("assistant.label", { status: assistant.text })}
           />
-          <h1 className={styles.title}>{t("home.title")}</h1>
-          <p className={styles.description}>{t("home.description")}</p>
+          <SessionSummary
+            snapshot={snapshot}
+            onContinueReview={onContinueReview}
+            onCompare={onCompare}
+          />
           <div className={styles.actions}>
             <Button variant="primary" shortcut={NEW_REVIEW_SHORTCUT} onClick={onNewReview}>
               {t("navigation.newReview")}

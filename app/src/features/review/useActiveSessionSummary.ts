@@ -1,29 +1,27 @@
 import type { ActiveSessionSummary } from "../../components/organisms/Sidebar";
 import { useI18n } from "../../i18n/i18nContext";
-import type { ReviewResult } from "../../services/engine/reviewTypes";
-import { isReadOnly, pendingCount } from "../alerts/alertDecisions";
+import type { ReviewDigest } from "../session/sessionSnapshot";
 
 export interface SessionIndicators {
   readonly card: ActiveSessionSummary;
   readonly badge: string | undefined;
 }
 
-/** Sesión activa y contador de la barra lateral, derivados de la revisión real (o nada). */
+/** Sesión activa y contador de la barra lateral, derivados del estado de la sesión (o nada). */
 export function useActiveSessionSummary(
-  review: ReviewResult | null,
+  review: ReviewDigest | null,
 ): SessionIndicators | undefined {
   const { t, tPlural } = useI18n();
   if (!review) return undefined;
-  const pending = pendingCount(review);
-  const summary = isReadOnly(review)
+  const summary = review.isClosed
     ? t("review.closedSummary")
     : tPlural({
         key: "review.pendingSummary",
-        count: pending,
-        params: { total: review.alerts.length },
+        count: review.pendingCount,
+        params: { total: review.alertCount },
       });
   return {
-    card: { name: review.session.name, summary },
-    badge: pending > 0 && !isReadOnly(review) ? String(pending) : undefined,
+    card: { name: review.name, summary },
+    badge: review.pendingCount > 0 && !review.isClosed ? String(review.pendingCount) : undefined,
   };
 }
