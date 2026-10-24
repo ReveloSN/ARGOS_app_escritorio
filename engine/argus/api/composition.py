@@ -71,6 +71,7 @@ from argus.application.review_session_use_cases import (
     StartReviewSession,
 )
 from argus.application.run_review import ReviewRunner, RunReview
+from argus.application.session_sources import ArchivedDocumentContent, SessionSources
 from argus.application.suppress_similar_alerts import SuppressSimilarAlerts
 from argus.domain.comparison.comparators_by_type import comparators_for
 from argus.domain.document import DocumentFormat
@@ -169,6 +170,7 @@ class EngineServices:
     explainer: AlertExplainer
     change_history_folder: ChangeHistoryFolder
     comparisons: ComparisonServices
+    session_sources: SessionSources
     facts: ConfirmedFacts
     check_facts: CheckConfirmedFacts
     sending: SendServices
@@ -254,6 +256,9 @@ def build_engine_services(
             comparison,
             ComparisonRepositories(storage.comparisons, storage.comparison_decisions),
             clock,
+        ),
+        session_sources=SessionSources(
+            storage.sessions, storage.documents, ArchivedDocumentContent(storage.documents, archive)
         ),
         facts=ConfirmedFacts(
             FactRepositories(storage.sessions, storage.facts), FactValueReader(values), clock

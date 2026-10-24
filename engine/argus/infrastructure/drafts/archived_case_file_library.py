@@ -5,11 +5,8 @@ from pathlib import PurePath
 from argus.application.ports.document_archive import DocumentArchive
 from argus.application.ports.document_reader import DocumentSource
 from argus.application.ports.repositories import DocumentRepository
-from argus.domain.errors import (
-    ArchivedFileMissingError,
-    DocumentNotFoundError,
-    UnreadableDocumentError,
-)
+from argus.application.session_sources import ArchivedDocumentContent
+from argus.domain.errors import ArchivedFileMissingError, UnreadableDocumentError
 from argus.infrastructure.drafts.eml_draft_reader import addresses
 from argus.infrastructure.readers.eml_reader import parse_email
 
@@ -27,7 +24,7 @@ class ArchivedCaseFileLibrary:
 
     def __init__(self, documents: DocumentRepository, archive: DocumentArchive) -> None:
         self._documents = documents
-        self._archive = archive
+        self._content = ArchivedDocumentContent(documents, archive)
 
     def document_names(self, session_id: str) -> tuple[str, ...]:
         return tuple(
@@ -43,13 +40,7 @@ class ArchivedCaseFileLibrary:
         return frozenset(in_text) | frozenset(self._header_addresses(session_id))
 
     def content_of(self, session_id: str, document_name: str) -> DocumentSource:
-        position = self._documents.position_of(session_id, document_name)
-        if position is None:
-            raise DocumentNotFoundError(session_id, document_name)
-        path = self._archive.path_of(session_id, position)
-        if path is None:
-            raise ArchivedFileMissingError(session_id, document_name)
-        return DocumentSource(document_name, path.read_bytes())
+        return self._content.content_of(session_id, document_name)
 
     def _header_addresses(self, session_id: str) -> Iterator[str]:
         emails = (

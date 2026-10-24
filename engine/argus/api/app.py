@@ -10,7 +10,10 @@ from argus.api.routes.ai import (
     build_alert_explanation_router,
     build_change_explanation_router,
 )
-from argus.api.routes.comparisons import build_comparisons_router
+from argus.api.routes.comparisons import (
+    build_comparisons_router,
+    build_session_comparisons_router,
+)
 from argus.api.routes.documents import build_documents_router
 from argus.api.routes.facts import build_fact_changes_router, build_facts_router
 from argus.api.routes.health import build_health_router
@@ -59,6 +62,7 @@ def create_app(
         build_preferences_router,
         build_suppression_rules_router,
         build_comparisons_router,
+        build_session_comparisons_router,
         build_facts_router,
         build_fact_changes_router,
         build_send_reviews_router,
