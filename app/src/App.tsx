@@ -13,7 +13,12 @@ import {
   type AppRoute,
 } from "./features/navigation/appRoute";
 import { useActiveSessionSummary } from "./features/review/useActiveSessionSummary";
+import { SessionNotice } from "./features/session/SessionNotice";
+import { SessionSwitcher } from "./features/session/SessionSwitcher";
+import { usePendingSessionDeletion } from "./features/session/usePendingSessionDeletion";
+import { useSessionRename } from "./features/session/useSessionRename";
 import { useSessionSnapshot } from "./features/session/useSessionSnapshot";
+import { useSessionSwitch } from "./features/session/useSessionSwitch";
 import { GlobalSearch } from "./features/search/GlobalSearch";
 import { useGlobalSearch } from "./features/search/useGlobalSearch";
 import { CurrentPage } from "./pages/CurrentPage";
@@ -24,6 +29,9 @@ const NEW_REVIEW_ROUTE: AppRoute = { page: "newReview" };
 export function App() {
   const snapshot = useSessionSnapshot();
   const indicators = useActiveSessionSummary(snapshot.review);
+  const switching = useSessionSwitch();
+  const renaming = useSessionRename();
+  const deletion = usePendingSessionDeletion();
   const [route, setRoute] = useState<AppRoute>(HOME_ROUTE);
   const [collapsed, setCollapsed] = useState(false);
   const search = useGlobalSearch(route, setRoute);
@@ -71,7 +79,19 @@ export function App() {
       }
       topbar={
         <Topbar
-          sessionName={snapshot.review?.name}
+          session={
+            snapshot.review && (
+              <SessionSwitcher
+                active={snapshot.review}
+                renaming={renaming}
+                onSwitch={switching.switchTo}
+                onNewSession={() => {
+                  setRoute(NEW_REVIEW_ROUTE);
+                }}
+                onDelete={deletion.schedule}
+              />
+            )
+          }
           assistantStatus={assistant.topbar}
           searchPlaceholder={search.scope?.placeholder}
           onOpenSearch={
@@ -88,6 +108,7 @@ export function App() {
         <GlobalSearch scope={search.scope} initialQuery={search.query} onClose={search.close} />
       )}
       <OnboardingGate />
+      <SessionNotice deletion={deletion} switching={switching} />
     </AppShell>
   );
 }

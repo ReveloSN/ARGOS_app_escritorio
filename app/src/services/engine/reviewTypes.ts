@@ -161,6 +161,8 @@ export interface ReviewGateway {
   startReview(request: ReviewRequest): Promise<ReviewResult>;
   openReview(sessionId: string): Promise<ReviewResult>;
   closeReview(sessionId: string): Promise<SessionResult>;
+  renameReview(sessionId: string, name: string): Promise<SessionResult>;
+  deleteReview(sessionId: string): Promise<void>;
   decide(sessionId: string, decision: DecisionInput): Promise<DecisionsResult>;
   undoDecision(sessionId: string): Promise<DecisionsResult>;
 }

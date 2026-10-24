@@ -16,6 +16,38 @@
     "compare": "Compare",
     "send": "Check before sending"
   },
+  "sessionMenu": {
+    "trigger": "Switch session. Active session: {name}",
+    "menuLabel": "Sessions",
+    "documents": {
+      "one": "{count} document",
+      "other": "{count} documents"
+    },
+    "pending": {
+      "one": "{count} pending alert",
+      "other": "{count} pending alerts"
+    },
+    "closed": "closed",
+    "new": "New session",
+    "rename": "Rename",
+    "delete": "Delete",
+    "renameTitle": "Rename the session",
+    "renameField": "Session name",
+    "renameSave": "Save name",
+    "cancel": "Cancel",
+    "deleteTitle": "Delete the session “{name}”?",
+    "deleteBody": "Its alerts, its decisions and the copy of its files are deleted.",
+    "deleteHint": "You will have a few seconds to undo it.",
+    "deleteConfirm": "Delete session",
+    "deleted": "Session “{name}” deleted",
+    "failed": {
+      "what": "We could not complete the change to the session.",
+      "why": "The analysis engine did not respond.",
+      "todo": "Try again in a few seconds.",
+      "retry": "Try again",
+      "dismiss": "Dismiss notice"
+    }
+  },
   "topbar": {
     "session": "Session",
     "searchPlaceholder": "Search alerts and documents",

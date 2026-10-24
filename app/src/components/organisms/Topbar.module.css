@@ -8,33 +8,6 @@
   background: var(--color-background-surface);
 }
 
-.session {
-  display: flex;
-  flex: 0 1 auto;
-  align-items: center;
-  gap: var(--spacing-2);
-  min-width: 0;
-  max-width: var(--size-topbar-session);
-}
-
-.sessionLabel {
-  flex: none;
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-caption);
-}
-
-.sessionName {
-  min-width: 0;
-  overflow: hidden;
-  font-weight: var(--font-weight-medium);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.muted {
-  color: var(--color-text-tertiary);
-}
-
 .search {
   display: flex;
   flex: 1 1 auto;

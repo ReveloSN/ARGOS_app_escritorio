@@ -16,6 +16,38 @@
     "compare": "Comparar",
     "send": "Revisar antes de enviar"
   },
+  "sessionMenu": {
+    "trigger": "Cambiar de sesión. Sesión activa: {name}",
+    "menuLabel": "Sesiones",
+    "documents": {
+      "one": "{count} documento",
+      "other": "{count} documentos"
+    },
+    "pending": {
+      "one": "{count} alerta pendiente",
+      "other": "{count} alertas pendientes"
+    },
+    "closed": "cerrada",
+    "new": "Nueva sesión",
+    "rename": "Renombrar",
+    "delete": "Eliminar",
+    "renameTitle": "Renombrar la sesión",
+    "renameField": "Nombre de la sesión",
+    "renameSave": "Guardar nombre",
+    "cancel": "Cancelar",
+    "deleteTitle": "¿Eliminar la sesión «{name}»?",
+    "deleteBody": "Se eliminan sus alertas, sus decisiones y la copia de sus archivos.",
+    "deleteHint": "Tendrá unos segundos para deshacerlo.",
+    "deleteConfirm": "Eliminar sesión",
+    "deleted": "Sesión «{name}» eliminada",
+    "failed": {
+      "what": "No pudimos completar el cambio en la sesión.",
+      "why": "El motor de análisis no respondió.",
+      "todo": "Inténtelo de nuevo en unos segundos.",
+      "retry": "Reintentar",
+      "dismiss": "Cerrar aviso"
+    }
+  },
   "topbar": {
     "session": "Sesión",
     "searchPlaceholder": "Buscar en alertas y documentos",

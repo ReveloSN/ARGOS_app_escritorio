@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { useI18n } from "../../i18n/i18nContext";
 import { Icon } from "../atoms/Icon";
 import { Kbd, MODIFIER_KEY } from "../atoms/Kbd";
@@ -10,7 +12,8 @@ import styles from "./Topbar.module.css";
 const SEARCH_SHORTCUT = [MODIFIER_KEY, "K"];
 
 interface TopbarProps {
-  readonly sessionName?: string | undefined;
+  /** El selector de la sesión activa; sin sesión no se muestra nada. */
+  readonly session?: ReactNode;
   readonly searchPlaceholder?: string | undefined;
   readonly assistantStatus: AssistantStatusLine;
   /** Sin acción no se muestra la búsqueda: nunca un control que no hace nada. */
@@ -19,7 +22,7 @@ interface TopbarProps {
 }
 
 export function Topbar({
-  sessionName,
+  session,
   searchPlaceholder,
   assistantStatus,
   onOpenSearch,
@@ -30,15 +33,7 @@ export function Topbar({
 
   return (
     <header className={styles.topbar}>
-      {sessionName && (
-        <div className={styles.session}>
-          <span className={styles.sessionLabel}>{t("topbar.session")}</span>
-          <span title={sessionName} className={styles.sessionName}>
-            {sessionName}
-          </span>
-          <Icon name="expand_more" size="md" className={styles.muted} />
-        </div>
-      )}
+      {session}
       {onOpenSearch && (
         <button type="button" className={styles.search} onClick={onOpenSearch}>
           <Icon name="search" size="md" />

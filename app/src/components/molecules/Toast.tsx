@@ -11,10 +11,12 @@ interface ToastProps {
   readonly visible: boolean;
   /** Sin acción para deshacer, la confirmación no muestra el botón. */
   readonly onUndo?: (() => void) | undefined;
+  /** Oculta «Ctrl Z» cuando ese atajo no deshace lo que el aviso confirma. */
+  readonly hasUndoShortcut?: boolean;
 }
 
 /** Confirmación al decidir con «Deshacer» a mano (CLAUDE.md §9, feedback). */
-export function Toast({ message, visible, onUndo }: ToastProps) {
+export function Toast({ message, visible, onUndo, hasUndoShortcut = true }: ToastProps) {
   const { t } = useI18n();
 
   return (
@@ -24,7 +26,7 @@ export function Toast({ message, visible, onUndo }: ToastProps) {
       {onUndo && (
         <button type="button" className={styles.undo} onClick={onUndo} tabIndex={visible ? 0 : -1}>
           {t("actions.undo")}
-          <Kbd keys={UNDO_SHORTCUT} variant="inline" />
+          {hasUndoShortcut && <Kbd keys={UNDO_SHORTCUT} variant="inline" />}
         </button>
       )}
     </div>

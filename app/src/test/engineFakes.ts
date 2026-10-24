@@ -49,6 +49,8 @@ function fakeReviews(overrides: FakeEngineOptions["reviews"]): EngineServices["r
     startReview: notConfigured(),
     openReview: notConfigured(),
     closeReview: notConfigured(),
+    renameReview: notConfigured(),
+    deleteReview: notConfigured(),
     decide: notConfigured(),
     undoDecision: notConfigured(),
     ...overrides,
