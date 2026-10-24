@@ -23,6 +23,9 @@ export type MaterialityValue =
   | "case"
   | "punctuation"
   | "format";
+/** De qué trata un cambio; el motor lo decide una sola vez y la interfaz elige el texto. */
+export type ChangeTopicValue =
+  MaterialityValue | "added" | "removed" | "moved" | "reworded" | "meaning_change" | "wording";
 export type EditKindValue = "inserted" | "deleted" | "replaced";
 export type SegmentKindValue = "paragraph" | "clause" | "table_row";
 
@@ -63,10 +66,11 @@ export interface ChangeResult {
   readonly risk: RiskLevelValue;
   readonly materialities: readonly MaterialityValue[];
   readonly isMoved: boolean;
+  readonly topic: ChangeTopicValue;
   readonly first: SegmentResult | null;
   readonly second: SegmentResult | null;
   readonly edits: readonly WordEditResult[];
-  /** «IA: Reformulado» o «IA: Cambio de sentido»; null si no hay sugerencia. */
+  /** Sugerencia de la IA local («Reformulado, mismo significado» o «Posible cambio de significado»). */
   readonly meaning: MeaningResult | null;
 }
 

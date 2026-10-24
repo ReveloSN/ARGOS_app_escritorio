@@ -5,44 +5,10 @@ import type {
   ChangeResult,
   ComparisonResult,
   PairComparisonResult,
-  SegmentResult,
-  WordEditResult,
 } from "../services/engine/comparisonTypes";
+import { replaced, V2, V3 } from "./comparisonSegments";
 
-export function segment(document: string, position: number, text: string): SegmentResult {
-  return {
-    position,
-    kind: "paragraph",
-    text,
-    document,
-    location: { kind: "paragraph", paragraph: position },
-    span: { start: 0, end: text.length },
-  };
-}
-
-export function replaced(first: [number, number, string], second: [number, number, string]) {
-  const edit: WordEditResult = {
-    kind: "replaced",
-    first: { start: first[0], end: first[1] },
-    second: { start: second[0], end: second[1] },
-    firstText: first[2],
-    secondText: second[2],
-    characters: [],
-  };
-  return edit;
-}
-
-export const V2 = [
-  segment("Contrato_v2.docx", 1, "Contrato No. 4857"),
-  segment("Contrato_v2.docx", 2, "El arrendatario podrá ceder el contrato."),
-  segment("Contrato_v2.docx", 3, "Seguros a cargo del arrendatario."),
-];
-export const V3 = [
-  segment("Contrato_v3.docx", 1, "Contrato No. 4587"),
-  segment("Contrato_v3.docx", 2, "Seguros a cargo del arrendatario."),
-  segment("Contrato_v3.docx", 3, "El arrendatario no podrá ceder el contrato."),
-  segment("Contrato_v3.docx", 4, "Cláusula penal por $ 5.000.000."),
-];
+export { replaced, segment, V2, V3 } from "./comparisonSegments";
 
 export const NUMBER_CHANGE: ChangeResult = {
   number: 1,
@@ -50,6 +16,7 @@ export const NUMBER_CHANGE: ChangeResult = {
   risk: "high",
   materialities: ["number"],
   isMoved: false,
+  topic: "number",
   first: V2[0] ?? null,
   second: V3[0] ?? null,
   edits: [replaced([13, 17, "4857"], [13, 17, "4587"])],
@@ -61,6 +28,7 @@ export const NEGATION_CHANGE: ChangeResult = {
   risk: "high",
   materialities: ["negation"],
   isMoved: false,
+  topic: "negation",
   first: V2[1] ?? null,
   second: V3[2] ?? null,
   edits: [
@@ -81,6 +49,7 @@ export const MOVED_CHANGE: ChangeResult = {
   risk: "low",
   materialities: [],
   isMoved: true,
+  topic: "moved",
   first: V2[2] ?? null,
   second: V3[1] ?? null,
   edits: [],
@@ -92,6 +61,7 @@ export const ADDED_CHANGE: ChangeResult = {
   risk: "high",
   materialities: ["amount"],
   isMoved: false,
+  topic: "amount",
   first: null,
   second: V3[3] ?? null,
   edits: [],
@@ -103,6 +73,7 @@ export const REMOVED_ANNEX_CHANGE: ChangeResult = {
   risk: "medium",
   materialities: [],
   isMoved: false,
+  topic: "removed",
   first: V2[2] ?? null,
   second: null,
   edits: [],
@@ -113,6 +84,7 @@ export const CASE_CHANGE: ChangeResult = {
   number: 5,
   risk: "low",
   materialities: ["case"],
+  topic: "case",
   meaning: { meaning: "reworded", confidence: 0.95 },
 };
 

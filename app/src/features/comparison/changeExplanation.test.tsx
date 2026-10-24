@@ -12,6 +12,19 @@ const TEMPLATE: ChangeExplanationResult = {
   parts: [{ key: "changeExplanation.number", params: {}, count: null }],
   text: "",
   fallbackReason: null,
+  structure: null,
+};
+const FROM_AI: ChangeExplanationResult = {
+  ...TEMPLATE,
+  source: "ai",
+  parts: [],
+  text: "El número del contrato pasó de 4857 a 4587 y eso puede ser otro contrato.",
+  structure: {
+    summary: "El número del contrato cambió.",
+    whatChanged: "El 4857 ahora dice 4587.",
+    whyItMatters: "Puede ser otro contrato.",
+    whatToDo: "Pregunte cuál es el número correcto.",
+  },
 };
 
 async function openFirstChange(explainChange: () => Promise<ChangeExplanationResult>) {
@@ -26,53 +39,119 @@ async function openFirstChange(explainChange: () => Promise<ChangeExplanationRes
   await screen.findByRole("heading", { name: "Comparar documentos" });
 }
 
-describe("Explicar este cambio", () => {
+const panel = () => within(screen.getByRole("region", { name: "Explicación del cambio" }));
+
+describe("Panel de explicación de un cambio", () => {
   beforeEach(stubBrowser);
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it("muestra la sugerencia de sentido en la lista, rotulada como IA", async () => {
+  it("rotula la sugerencia de significado en lenguaje claro, sin etiquetas técnicas", async () => {
     await openFirstChange(() => Promise.resolve(TEMPLATE));
 
     const list = within(screen.getByRole("list", { name: "Cambios" }));
-    expect(list.getAllByText("IA: Cambio de sentido").length).toBeGreaterThan(0);
+    expect(list.getAllByText("Posible cambio de significado").length).toBeGreaterThan(0);
+    expect(screen.queryByText(/^IA: /)).not.toBeInTheDocument();
+    expect(panel().getByText("Sugerencia de IA, usted decide")).toBeInTheDocument();
   });
 
-  it("pide la explicación solo al abrirla y la muestra con su origen", async () => {
+  it("se entiende de un vistazo: frase, los dos valores, tres bloques y las decisiones debajo", async () => {
     const explainChange = vi.fn(() => Promise.resolve(TEMPLATE));
+    await openFirstChange(explainChange);
+
+    expect(
+      panel().getByRole("heading", { name: "En el documento B, «4857» pasa a ser «4587»." }),
+    ).toBeInTheDocument();
+    const a = panel().getByRole("region", { name: "Documento A dice: Contrato_v2.docx" });
+    const b = panel().getByRole("region", { name: "Documento B dice: Contrato_v3.docx" });
+    expect(within(a).getByText("4857").tagName).toBe("MARK");
+    expect(within(b).getByText("4587").tagName).toBe("MARK");
+    const titles = ["Qué cambió", "Por qué importa", "Qué puede hacer"].map((title) =>
+      panel().getByText(title),
+    );
+    expect(titles).toHaveLength(3);
+    expect(panel().getByText("Cambia un número o identificador.")).toBeInTheDocument();
+    const decision = panel().getByRole("button", { name: /Es un error/ });
+    expect(titles[2]?.compareDocumentPosition(decision)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(explainChange).not.toHaveBeenCalled();
+  });
+
+  it("lo que falta en un documento se dice con texto e ícono, no solo con color", async () => {
+    await openFirstChange(() => Promise.resolve(TEMPLATE));
+
+    await userEvent.click(screen.getByRole("button", { name: /Cláusula penal/ }));
+
+    const b = panel().getByRole("region", { name: "Documento B dice: Contrato_v3.docx" });
+    expect(within(b).getByText("Cláusula penal por $ 5.000.000.").tagName).toBe("INS");
+    const a = panel().getByRole("region", { name: "Documento A dice: Contrato_v2.docx" });
+    expect(within(a).getByText("No aparece en este documento")).toBeInTheDocument();
+  });
+
+  it("«Ver detalle» pide el texto largo solo al abrirlo y lo muestra con su origen", async () => {
+    let finish: (result: ChangeExplanationResult) => void = () => undefined;
+    const explainChange = vi.fn(
+      () =>
+        new Promise<ChangeExplanationResult>((resolve) => {
+          finish = resolve;
+        }),
+    );
     await openFirstChange(explainChange);
     expect(explainChange).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getByRole("button", { name: "Explicar este cambio" }));
+    await userEvent.click(panel().getByRole("button", { name: "Ver detalle" }));
 
     expect(explainChange).toHaveBeenCalledWith("c1", 1, "es");
-    expect(await screen.findByText("Explicación de ARGUS")).toBeInTheDocument();
-    expect(screen.getByText(/Cambia un número o identificador/)).toBeInTheDocument();
-    expect(screen.getByText(/Contrato_v3.docx · /)).toBeInTheDocument();
     const navigation = screen.getByRole("navigation", { name: "Navegación principal" });
     expect(within(navigation).getByRole("status")).toHaveAccessibleName(
       "Asistente de IA: Explicando un cambio",
     );
+    await act(async () => {
+      finish(TEMPLATE);
+      await Promise.resolve();
+    });
+    const label = await panel().findByText("Explicación de ARGUS");
+    const detail = within(label.parentElement ?? label);
+    expect(
+      detail.getByText(/Cambia un número o identificador: puede referirse/),
+    ).toBeInTheDocument();
+    expect(detail.getByText(/Contrato_v3.docx · /)).toBeInTheDocument();
+    expect(within(navigation).getByRole("status")).not.toHaveAccessibleName(
+      "Asistente de IA: Explicando un cambio",
+    );
   });
 
-  it("rotula el texto del modelo como «Sugerencia de IA»", async () => {
-    const fromAi = { ...TEMPLATE, source: "ai" as const, text: "Cambia el número del contrato." };
-    await openFirstChange(() => Promise.resolve(fromAi));
+  it("si la IA entrega los cuatro bloques, ocupan el lugar de la plantilla", async () => {
+    await openFirstChange(() => Promise.resolve(FROM_AI));
 
-    await userEvent.click(screen.getByRole("button", { name: "Explicar este cambio" }));
+    await userEvent.click(panel().getByRole("button", { name: "Ver detalle" }));
 
-    expect(await screen.findByText("Sugerencia de IA")).toBeInTheDocument();
-    expect(screen.getByText("Cambia el número del contrato.")).toBeInTheDocument();
+    expect(await panel().findByText("El número del contrato cambió.")).toBeInTheDocument();
+    expect(panel().getByText("Pregunte cuál es el número correcto.")).toBeInTheDocument();
+    expect(panel().getByText("Sugerencia de IA")).toBeInTheDocument();
+    expect(panel().getByText(FROM_AI.text)).toBeInTheDocument();
+    expect(panel().getByText("Sugerencia de IA, usted decide")).toBeInTheDocument();
   });
 
-  it("si la IA no pudo responder, dice por qué y usa la explicación local", async () => {
+  it("si la IA no pudo responder, dice por qué y deja la misma estructura con la plantilla", async () => {
     const fallback = { ...TEMPLATE, fallbackReason: "invalid_key" as const };
     await openFirstChange(() => Promise.resolve(fallback));
 
-    await userEvent.click(screen.getByRole("button", { name: "Explicar este cambio" }));
+    await userEvent.click(panel().getByRole("button", { name: "Ver detalle" }));
 
     expect(await screen.findByText(/El proveedor rechazó la clave/)).toBeInTheDocument();
-    expect(screen.getByText("Explicación de ARGUS")).toBeInTheDocument();
+    expect(panel().getByText("Cambia un número o identificador.")).toBeInTheDocument();
+    expect(panel().getByText("Explicación de ARGUS")).toBeInTheDocument();
+  });
+
+  it("todo es alcanzable con el teclado", async () => {
+    await openFirstChange(() => Promise.resolve(TEMPLATE));
+    const toggle = panel().getByRole("button", { name: "Ver detalle" });
+
+    toggle.focus();
+    await userEvent.keyboard("{Enter}");
+
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(toggle).toHaveFocus();
   });
 });

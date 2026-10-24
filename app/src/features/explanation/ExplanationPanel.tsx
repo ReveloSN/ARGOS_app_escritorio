@@ -1,69 +1,72 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-import { Icon } from "../../components/atoms/Icon";
 import { useI18n } from "../../i18n/i18nContext";
 import { useAssistantSignals } from "../assistant/assistantContext";
-import { AssistantEye } from "../assistant/AssistantEye";
 import { useEngineServices } from "../engine/EngineServicesContext";
 import { useEngineQuery } from "../engine/useEngineQuery";
+import { DetailBody, DetailToggle } from "./ExplanationDetail";
 import { explanationKey, requestExplanation, type ExplainTarget } from "./explainTarget";
-import styles from "./ExplanationPanel.module.css";
-import { ExplanationResult } from "./ExplanationResult";
+import { withAiStructure } from "./explanationBlocks";
+import { PanelLayout } from "./PanelLayout";
 
-function ExplanationBody({ target }: { target: ExplainTarget }) {
-  const { t, locale } = useI18n();
-  const { ai } = useEngineServices();
-  const query = useEngineQuery(explanationKey(target, locale), () =>
-    requestExplanation(ai, target, locale),
-  );
-  if (query.state.status === "ready") {
-    return (
-      <ExplanationResult result={query.state.data} quotes={target.quotes} onRetry={query.reload} />
-    );
-  }
-  const hasFailed = query.state.status === "failed";
-  return (
-    <div role="status" className={styles.explaining}>
-      <AssistantEye state={hasFailed ? "error" : "explaining"} size="sm" />
-      {t(hasFailed ? "explain.failed" : "explain.loading")}
-    </div>
-  );
-}
-
-/** Mientras el panel está abierto, la barra lateral dice «Explicando un cambio». */
-function useExplainingSignal(isOpen: boolean) {
+/** Mientras el motor prepara la explicación, la barra lateral dice «Explicando un cambio». */
+function useExplainingSignal(isWorking: boolean) {
   const { setExplaining } = useAssistantSignals();
   useEffect(() => {
-    if (!isOpen) return undefined;
+    if (!isWorking) return undefined;
     setExplaining(true);
     return () => {
       setExplaining(false);
     };
-  }, [isOpen, setExplaining]);
+  }, [isWorking, setExplaining]);
+}
+
+/** La explicación del texto largo se pide solo con «Ver detalle»: es lo único que puede salir al proveedor de IA. */
+function useDetailQuery(target: ExplainTarget, isOpen: boolean) {
+  const { locale } = useI18n();
+  const { ai } = useEngineServices();
+  const key = `${explanationKey(target, locale)}:${String(isOpen)}`;
+  return useEngineQuery(key, () =>
+    isOpen ? requestExplanation(ai, target, locale) : Promise.resolve(null),
+  );
+}
+
+interface ExplanationPanelProps {
+  readonly target: ExplainTarget;
+  /** Es correcto / Es un error / Ignorar: van debajo de la explicación. */
+  readonly actions: ReactNode;
 }
 
 /**
- * «Explicar este cambio» o «Explicar esta alerta»: se pide al abrirlo; plantilla local o
- * «Sugerencia de IA» citada. La decisión sigue siendo del usuario.
+ * Explicación de un cambio o de una alerta que se entiende en cinco segundos: frase resumen,
+ * los dos valores, tres bloques y las decisiones. La plantilla local se ve al instante; con IA
+ * activada y «Ver detalle», sus bloques la reemplazan como «Sugerencia de IA».
  */
-export function ExplanationPanel({ target }: { target: ExplainTarget }) {
-  const { t } = useI18n();
+export function ExplanationPanel({ target, actions }: ExplanationPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
-  useExplainingSignal(isOpen);
+  const query = useDetailQuery(target, isOpen);
+  useExplainingSignal(isOpen && query.state.status === "loading");
+  const result = query.state.status === "ready" ? query.state.data : null;
   return (
-    <div className={styles.explainBox}>
-      <button
-        type="button"
-        aria-expanded={isOpen}
-        className={styles.explainToggle}
-        onClick={() => {
-          setIsOpen((open) => !open);
-        }}
-      >
-        <Icon name={isOpen ? "expand_less" : "expand_more"} size="sm" />
-        {t(`explain.toggle.${target.subject}`)}
-      </button>
-      {isOpen && <ExplanationBody target={target} />}
-    </div>
+    <PanelLayout
+      blocks={withAiStructure(target.blocks, result?.structure ?? null)}
+      meaning={target.meaning}
+      values={target.values}
+      isAiSuggestion={result?.source === "ai"}
+      actions={actions}
+      detail={
+        <>
+          <DetailToggle
+            isOpen={isOpen}
+            onToggle={() => {
+              setIsOpen((open) => !open);
+            }}
+          />
+          {isOpen && (
+            <DetailBody state={query.state} quotes={target.quotes} onRetry={query.reload} />
+          )}
+        </>
+      }
+    />
   );
 }

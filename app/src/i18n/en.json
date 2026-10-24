@@ -681,13 +681,13 @@
     },
     "ai": {
       "toggle": "Explain changes with AI",
-      "description": "When you ask to “Explain this change” or “Explain this alert”, ARGUS sends {provider} only the origin fragments. Detection and analysis stay local.",
+      "description": "When you open “See details” on a change or an alert, ARGUS sends {provider} only the origin fragments. Detection and analysis stay local.",
       "model": "Provider: {provider} · model {model}",
       "keyLabel": "{provider} API key",
       "saveKey": "Save key",
       "removeKey": "Remove key",
       "keyStored": "Key saved in the system keychain.",
-      "keyMissing": "Without a key, “Explain this change” and “Explain this alert” use the local explanation.",
+      "keyMissing": "Without a key, “See details” uses the local explanation.",
       "loading": "Loading AI settings…",
       "failed": "AI settings could not be loaded: the analysis engine did not respond.",
       "keychain": {
@@ -877,9 +877,7 @@
       "removedTitle": "This text is missing in B",
       "addedTitle": "This text was added in B",
       "modifiedTitle": "The text changed between A and B",
-      "movedTitle": "This text moved",
-      "inA": "In A",
-      "inB": "In B"
+      "movedTitle": "This text moved"
     },
     "decided": "Change {number} marked as “{decision}”.",
     "unrelated": {
@@ -925,9 +923,8 @@
       "failedTodo": "Choose the documents again to retry."
     },
     "meaning": {
-      "label": "AI: {meaning}",
-      "reworded": "Reworded",
-      "meaning_change": "Change of meaning"
+      "reworded": "Reworded, same meaning",
+      "meaning_change": "Possible change of meaning"
     }
   },
   "facts": {
@@ -1310,16 +1307,115 @@
       "cancel": "Cancel"
     }
   },
-  "explain": {
-    "toggle": {
-      "change": "Explain this change",
-      "alert": "Explain this alert"
+  "explainPanel": {
+    "label": "Explanation of the change",
+    "sideA": "Document A says",
+    "sideB": "Document B says",
+    "absent": "Does not appear in this document",
+    "changed": "What changed",
+    "why": "Why it matters",
+    "todo": "What you can do",
+    "detail": "See details",
+    "aiNote": "AI suggestion, you decide",
+    "summary": {
+      "removed": "Document B is missing “{text}”.",
+      "added": "Document B adds “{text}”.",
+      "modified": "In document B, “{before}” becomes “{after}”.",
+      "moved": "In document B, “{text}” is in a different place."
     },
+    "topics": {
+      "negation": {
+        "changed": "A negation (“not”, “nor”, “without”) appears or disappears.",
+        "why": "What the text allows can become forbidden, or the other way around.",
+        "todo": "Read the whole sentence in both documents and confirm the change is intended."
+      },
+      "amount": {
+        "changed": "An amount changes.",
+        "why": "A different value changes what is paid or charged.",
+        "todo": "Compare it with the agreed value and fix the document that is wrong."
+      },
+      "date": {
+        "changed": "A date changes.",
+        "why": "It can move deadlines, validity periods or due dates.",
+        "todo": "Check the right date against the agreement."
+      },
+      "number": {
+        "changed": "A number or identifier changes.",
+        "why": "It may refer to another contract, another document or another quantity.",
+        "todo": "Confirm the right number and fix the document that has it wrong."
+      },
+      "party": {
+        "changed": "The name or identification of a party changes.",
+        "why": "The document could bind or favor another person or company.",
+        "todo": "Check the name or tax ID against an official document."
+      },
+      "case": {
+        "changed": "Only the capitalization changes.",
+        "why": "The meaning is the same.",
+        "todo": "You can mark it as correct or ignore it."
+      },
+      "punctuation": {
+        "changed": "Only the punctuation changes.",
+        "why": "The meaning is almost always the same, but a comma can move a condition.",
+        "todo": "Read it once and, if it is fine, mark it as correct or ignore it."
+      },
+      "format": {
+        "changed": "Only spacing or formatting changes.",
+        "why": "The content is the same.",
+        "todo": "You can ignore it."
+      },
+      "added": {
+        "changed": "Text was added that the other document does not have.",
+        "why": "It can create an obligation or a right that did not exist before.",
+        "todo": "Read the new text and confirm it was agreed."
+      },
+      "removed": {
+        "changed": "Text that was in the other document was removed.",
+        "why": "It can remove an obligation, a right or a condition.",
+        "todo": "Ask whether the omission was intended; if not, restore the text."
+      },
+      "moved": {
+        "changed": "The text is the same, but it is in a different place.",
+        "why": "Changing the order can change which clause it applies to.",
+        "todo": "Check that it is still under the right clause."
+      },
+      "reworded": {
+        "changed": "It is written in a different way.",
+        "why": "The meaning seems to be the same.",
+        "todo": "Compare it quickly and mark it as correct if it matches."
+      },
+      "meaning_change": {
+        "changed": "The wording changes and so does what the text says.",
+        "why": "Two versions that say different things can lead to different decisions.",
+        "todo": "Read both texts and decide which one is right."
+      },
+      "wording": {
+        "changed": "The wording changes.",
+        "why": "It is not clear whether the meaning is the same.",
+        "todo": "Compare both texts to confirm."
+      }
+    },
+    "alert": {
+      "why": {
+        "contract_id": "A different contract number may refer to another agreement.",
+        "tax_id": "A different tax ID may identify another person or company.",
+        "money": "A different amount changes what is paid or charged.",
+        "date": "A different date can move deadlines and due dates.",
+        "person_name": "A different name may point to another person.",
+        "organization_name": "A different company name may point to another company.",
+        "period": "A different period can send or charge for another month."
+      },
+      "todo": {
+        "pair": "Check which of the two values is right and fix the document that is wrong.",
+        "single": "Check the data in the document and fix it if it is wrong."
+      }
+    }
+  },
+  "explain": {
     "loading": "Preparing the explanation…",
     "failed": "The explanation could not be obtained: the analysis engine did not respond. Close it and open it again.",
     "aiLabel": "AI suggestion",
     "templateLabel": "ARGUS explanation",
-    "aiNote": "This is a suggestion: the decision is still yours.",
     "retry": "Retry",
     "fallback": {
       "no_key": {

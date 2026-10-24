@@ -1,9 +1,15 @@
 import type { TranslationKey } from "../../i18n/translate";
-import type { ChangeKindValue, ChangeResult } from "../../services/engine/comparisonTypes";
+import type {
+  ChangeKindValue,
+  ChangeResult,
+  PairComparisonResult,
+} from "../../services/engine/comparisonTypes";
 import type { AlertResult, AlertSideResult } from "../../services/engine/reviewTypes";
 import { alertTitle, describeLocation, type Translate } from "../alerts/alertPresentation";
+import { changeBlocks } from "../explanation/explanationBlocks";
 import type { ExplainTarget } from "../explanation/explainTarget";
-import { CHANGE_KIND_APPEARANCE, changeSegment, changeValues } from "./changePresentation";
+import { changeSideValues } from "../explanation/sideValues";
+import { CHANGE_KIND_APPEARANCE, changeSegment } from "./changePresentation";
 import type { ItemDetailContent } from "./ItemDetail";
 import { meaningLabel } from "./meaningLabel";
 
@@ -27,38 +33,41 @@ function changeHeading(change: ChangeResult, t: Translate) {
   };
 }
 
-export function changeDetail(
-  change: ChangeResult,
-  comparisonId: string,
-  t: Translate,
-): ItemDetailContent {
-  const values = changeValues(change);
+/** Lo que hace falta para detallar un cambio: él, su par de documentos y la comparación. */
+export interface ChangeSource {
+  readonly change: ChangeResult;
+  readonly pair: PairComparisonResult;
+  readonly comparisonId: string;
+}
+
+export function changeDetail(source: ChangeSource, t: Translate): ItemDetailContent {
   return {
-    ...changeHeading(change, t),
-    values: [
-      labeled(t("comparison.detail.inA"), values.before),
-      labeled(t("comparison.detail.inB"), values.after),
-    ],
-    meaning: change.meaning ? meaningLabel(change.meaning, t) : undefined,
-    explain: explainTarget(change, comparisonId, t),
+    ...changeHeading(source.change, t),
+    values: [],
+    explain: explainTarget(source, t),
   };
 }
 
-function labeled(label: string, value: string) {
-  return { label, value };
-}
-
 /** El cambio a explicar y el fragmento citado como origen (el del documento nuevo si existe). */
-function explainTarget(
-  change: ChangeResult,
-  comparisonId: string,
-  t: Translate,
-): ExplainTarget | undefined {
+function explainTarget({ change, pair, comparisonId }: ChangeSource, t: Translate): ExplainTarget {
   const segment = changeSegment(change);
-  if (!segment) return undefined;
-  const source = `${segment.document} · ${describeLocation(segment.location, t)}`;
-  const quotes = [{ text: segment.text, source }];
-  return { subject: "change", comparisonId, number: change.number, quotes };
+  const quotes = segment
+    ? [
+        {
+          text: segment.text,
+          source: `${segment.document} · ${describeLocation(segment.location, t)}`,
+        },
+      ]
+    : [];
+  return {
+    subject: "change",
+    comparisonId,
+    number: change.number,
+    quotes,
+    blocks: changeBlocks(change, t),
+    meaning: change.meaning ? meaningLabel(change.meaning, t) : undefined,
+    values: changeSideValues(change, pair),
+  };
 }
 
 function sideValue(side: AlertSideResult, fallback: string) {

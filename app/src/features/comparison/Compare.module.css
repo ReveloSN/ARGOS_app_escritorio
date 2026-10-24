@@ -635,15 +635,6 @@
   font-size: var(--font-size-micro);
 }
 
-.detailMeaning {
-  align-self: flex-start;
-  padding: 0 var(--spacing-1-5);
-  border: var(--border-width) solid var(--color-border-strong);
-  border-radius: var(--radius-xs);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-caption);
-}
-
 .scopeSelector {
   display: flex;
   flex-wrap: wrap;

@@ -6,6 +6,14 @@ export type ExplanationSourceValue = "ai" | "template";
 export type FallbackReasonValue =
   "no_key" | "keychain_unavailable" | "provider_unavailable" | "invalid_key" | "refused";
 
+/** Los cuatro bloques cortos que entrega la IA; null con la plantilla o con texto libre. */
+export interface ExplanationStructureResult {
+  readonly summary: string;
+  readonly whatChanged: string;
+  readonly whyItMatters: string;
+  readonly whatToDo: string;
+}
+
 export interface ChangeExplanationResult {
   /** «ai»: la redactó el modelo («Sugerencia de IA»); «template»: plantilla local. */
   readonly source: ExplanationSourceValue;
@@ -13,6 +21,7 @@ export interface ChangeExplanationResult {
   readonly text: string;
   /** Por qué se usó la plantilla con la IA activada; null si no hubo problema. */
   readonly fallbackReason: FallbackReasonValue | null;
+  readonly structure: ExplanationStructureResult | null;
 }
 
 export type AiProviderValue = "anthropic" | "deepseek";

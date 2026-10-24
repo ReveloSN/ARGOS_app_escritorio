@@ -112,7 +112,7 @@ export function VersionsView({ comparison, pair, list, view, decisions }: Versio
         />
         {selectedChange && (
           <ItemDetail
-            content={changeDetail(selectedChange, comparison.id, t)}
+            content={changeDetail({ change: selectedChange, pair, comparisonId: comparison.id }, t)}
             decision={decisionOf(selectedChange.number)}
             decisions={decisions}
           />
