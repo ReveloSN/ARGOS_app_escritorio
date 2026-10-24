@@ -23,8 +23,6 @@ SUBSTANTIVE = frozenset(
 COSMETIC_CONFIDENCE = 0.95
 # Cambia un monto, una fecha, un número, una parte o una negación: las reglas lo saben.
 SUBSTANTIVE_CONFIDENCE = 0.9
-# Texto que aparece o desaparece entero: casi siempre cambia lo que el documento permite u obliga.
-WHOLE_SEGMENT_CONFIDENCE = 0.7
 # Umbrales del benchmark del ADR 024 sobre los fixtures (MiniLM multilingüe).
 REWORDED_FROM = 0.9
 MEANING_CHANGE_BELOW = 0.75
@@ -50,7 +48,7 @@ class ChangeMeaningClassifier(Protocol):
     def classify(
         self, kind: ChangeKind, materialities: frozenset[Materiality], sides: Sequence[Segment]
     ) -> MeaningSuggestion | None:
-        """La sugerencia, o None si no hay nada que sugerir (un movido sin cambios) o no se sabe."""
+        """La sugerencia, o None si no hay dos textos que comparar o no se sabe."""
         ...
 
 
@@ -71,14 +69,14 @@ class RuleAndSimilarityMeaningClassifier:
     def classify(
         self, kind: ChangeKind, materialities: frozenset[Materiality], sides: Sequence[Segment]
     ) -> MeaningSuggestion | None:
-        if kind is ChangeKind.MOVED:
+        # Reformulado o cambio de sentido compara dos textos: lo agregado, eliminado o movido
+        # no tiene contra qué compararse y no lleva sugerencia.
+        if kind is not ChangeKind.MODIFIED:
             return None
         if materialities & SUBSTANTIVE:
             return MeaningSuggestion(ChangeMeaning.MEANING_CHANGE, SUBSTANTIVE_CONFIDENCE)
         if materialities and materialities <= COSMETIC:
             return MeaningSuggestion(ChangeMeaning.REWORDED, COSMETIC_CONFIDENCE)
-        if kind is not ChangeKind.MODIFIED:
-            return MeaningSuggestion(ChangeMeaning.MEANING_CHANGE, WHOLE_SEGMENT_CONFIDENCE)
         return self._by_similarity(sides)
 
     def _by_similarity(self, sides: Sequence[Segment]) -> MeaningSuggestion | None:
