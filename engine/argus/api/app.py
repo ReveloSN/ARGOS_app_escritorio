@@ -35,7 +35,7 @@ from argus.application.ports.document_archive import FileOpener
 from argus.infrastructure.system_file_opener import SystemFileOpener
 
 API_TITLE = "ARGUS engine"
-ALLOWED_METHODS = ["GET", "POST", "PUT", "DELETE"]
+ALLOWED_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 ALLOWED_HEADERS = [AUTHORIZATION_HEADER, "content-type"]
 
 

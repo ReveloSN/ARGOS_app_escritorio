@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from tests.api.conftest import TAURI_WINDOWS_ORIGIN
@@ -5,10 +6,10 @@ from tests.api.conftest import TAURI_WINDOWS_ORIGIN
 UNKNOWN_ORIGIN = "https://example.com"
 
 
-def preflight_headers(origin: str) -> dict[str, str]:
+def preflight_headers(origin: str, method: str = "GET") -> dict[str, str]:
     return {
         "Origin": origin,
-        "Access-Control-Request-Method": "GET",
+        "Access-Control-Request-Method": method,
         "Access-Control-Request-Headers": "authorization",
     }
 
@@ -57,3 +58,14 @@ def test_rejection_is_readable_by_the_tauri_webview(client: TestClient) -> None:
 
     assert response.status_code == 401
     assert response.headers["access-control-allow-origin"] == TAURI_WINDOWS_ORIGIN
+
+
+@pytest.mark.parametrize("method", ["GET", "POST", "PUT", "PATCH", "DELETE"])
+def test_the_webview_may_use_every_method_the_interface_calls(
+    client: TestClient, method: str
+) -> None:
+    # Regresión: renombrar una sesión usa PATCH y el navegador lo rechazaba en el preflight.
+    response = client.options("/health", headers=preflight_headers(TAURI_WINDOWS_ORIGIN, method))
+
+    assert response.status_code == 200
+    assert method in response.headers["access-control-allow-methods"]
