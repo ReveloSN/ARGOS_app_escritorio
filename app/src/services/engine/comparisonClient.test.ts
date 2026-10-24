@@ -41,6 +41,30 @@ describe("ComparisonClient", () => {
     expect(progress).toEqual([{ kind: "pair_compared", position: 0, total: 1 }]);
   });
 
+  it("compara archivos del expediente enviando solo sus nombres, sin subir nada", async () => {
+    const fetchResource = vi.fn<FetchResource>(() =>
+      Promise.resolve(eventStream(["comparison", COMPARISON])),
+    );
+
+    const comparison = await clientWith(fetchResource).startSessionComparison({
+      sessionId: "s 1",
+      name: "v1 · v2",
+      mode: "versions",
+      documents: ["v1.txt", "v2.txt"],
+    });
+
+    const [url, init] = fetchResource.mock.calls[0] ?? [];
+    expect(comparison).toEqual(COMPARISON);
+    expect(url).toBe("http://127.0.0.1:5000/comparisons/from-session");
+    expect(init?.method).toBe("POST");
+    expect(JSON.parse(init?.body as string)).toEqual({
+      sessionId: "s 1",
+      name: "v1 · v2",
+      mode: "versions",
+      documents: ["v1.txt", "v2.txt"],
+    });
+  });
+
   it("decide con el número del elemento de la comparación", async () => {
     const decisions = { decisions: [], canUndo: true };
     const fetchResource = vi.fn<FetchResource>(() => Promise.resolve(jsonResponse(decisions)));

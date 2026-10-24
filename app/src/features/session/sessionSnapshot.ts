@@ -9,6 +9,8 @@ export interface ReviewDigest {
   readonly name: string;
   readonly isClosed: boolean;
   readonly documentCount: number;
+  /** Los archivos que se leyeron: los únicos que se pueden comparar sin cargarlos otra vez. */
+  readonly readableDocuments: readonly string[];
   readonly alertCount: number;
   readonly pendingCount: number;
   readonly pendingByRisk: PendingByRisk;
@@ -48,6 +50,9 @@ function digestOfReview(review: ReviewResult): ReviewDigest {
     name: review.session.name,
     isClosed: isReadOnly(review),
     documentCount: review.documents.length,
+    readableDocuments: review.documents
+      .filter((document) => document.status === "read")
+      .map((document) => document.name),
     alertCount: review.alerts.length,
     pendingCount: byRisk.high + byRisk.medium + byRisk.low,
     pendingByRisk: byRisk,

@@ -53,15 +53,13 @@ function trackProgress(fileCount: number, setStatus: StartHandlers["setStatus"])
   };
 }
 
+/** Una comparación en marcha: el avance, el resultado o el fallo; igual para archivos nuevos o del expediente. */
 function runComparison(
-  gateway: ComparisonGateway,
-  files: readonly File[],
+  fileCount: number,
+  start: (onProgress: (event: ComparisonProgressEvent) => void) => Promise<ComparisonResult>,
   handlers: StartHandlers,
 ): void {
-  const onProgress = trackProgress(files.length, handlers.setStatus);
-  const name = files.map((file) => file.name).join(NAME_SEPARATOR);
-  const request = { name, mode: modeForFiles(files.length), files, onProgress };
-  gateway.startComparison(request).then(
+  start(trackProgress(fileCount, handlers.setStatus)).then(
     (result) => {
       // Sin esto, al cerrar la comparación volvería a verse el avance de la anterior.
       handlers.setStatus({ kind: "idle" });
@@ -73,13 +71,31 @@ function runComparison(
   );
 }
 
-/** «Elegir documentos»: compara los archivos y muestra el avance mientras el motor trabaja. */
+function uploaded(gateway: ComparisonGateway, files: readonly File[]) {
+  const name = files.map((file) => file.name).join(NAME_SEPARATOR);
+  const mode = modeForFiles(files.length);
+  return (onProgress: (event: ComparisonProgressEvent) => void) =>
+    gateway.startComparison({ name, mode, files, onProgress });
+}
+
+function fromSession(gateway: ComparisonGateway, sessionId: string, documents: readonly string[]) {
+  const name = documents.join(NAME_SEPARATOR);
+  const mode = modeForFiles(documents.length);
+  return (onProgress: (event: ComparisonProgressEvent) => void) =>
+    gateway.startSessionComparison({ sessionId, name, mode, documents, onProgress });
+}
+
+/** «Elegir documentos» o «Comparar los elegidos» del expediente, con el avance mientras el motor trabaja. */
 export function useStartComparison() {
   const { comparisons } = useEngineServices();
   const { showComparison } = useComparison();
   const [status, setStatus] = useState<StartStatus>({ kind: "idle" });
+  const handlers = { setStatus, show: showComparison };
   const start = (files: readonly File[]) => {
-    runComparison(comparisons, files, { setStatus, show: showComparison });
+    runComparison(files.length, uploaded(comparisons, files), handlers);
   };
-  return { status, start };
+  const startFromSession = (sessionId: string, documents: readonly string[]) => {
+    runComparison(documents.length, fromSession(comparisons, sessionId, documents), handlers);
+  };
+  return { status, start, startFromSession };
 }

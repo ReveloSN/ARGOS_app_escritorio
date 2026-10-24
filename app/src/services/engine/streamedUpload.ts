@@ -1,4 +1,4 @@
-import { EngineUnavailableError, type EngineHttp } from "./engineHttp";
+import { EngineUnavailableError, type EngineHttp, type EngineRequest } from "./engineHttp";
 import type { ServerSentEvent } from "./serverSentEvents";
 
 /** Archivos con sus campos de formulario, tal como los recibe el motor (multipart). */
@@ -14,18 +14,28 @@ export interface Upload {
  * Sube archivos y lee el flujo SSE: cada evento de avance va a `onProgress` y el evento
  * `finishedEvent` trae el resultado. Sin él, el análisis se interrumpió en el motor.
  */
-export async function streamUpload<Result>(
+export function streamUpload<Result>(
   http: EngineHttp,
   upload: Upload & { readonly finishedEvent: string },
   onProgress: (event: ServerSentEvent) => void,
 ): Promise<Result> {
-  let result: Result | undefined;
   const request = { path: upload.path, timeoutMs: upload.timeoutMs, method: "POST" as const };
-  await http.stream({ ...request, body: uploadForm(upload) }, (event) => {
-    if (event.name === upload.finishedEvent) result = event.data as Result;
+  const body = uploadForm(upload);
+  return streamRequest(http, { ...request, body, finishedEvent: upload.finishedEvent }, onProgress);
+}
+
+/** El mismo flujo SSE para una petición que no sube archivos (un cuerpo JSON). */
+export async function streamRequest<Result>(
+  http: EngineHttp,
+  request: EngineRequest & { readonly finishedEvent: string },
+  onProgress: (event: ServerSentEvent) => void,
+): Promise<Result> {
+  let result: Result | undefined;
+  await http.stream(request, (event) => {
+    if (event.name === request.finishedEvent) result = event.data as Result;
     else onProgress(event);
   });
-  if (result === undefined) throw new EngineUnavailableError(upload.path);
+  if (result === undefined) throw new EngineUnavailableError(request.path);
   return result;
 }
 

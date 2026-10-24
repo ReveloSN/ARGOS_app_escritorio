@@ -62,6 +62,7 @@ function fakeComparisons(
 ): EngineServices["comparisons"] {
   return {
     startComparison: notConfigured(),
+    startSessionComparison: notConfigured(),
     openComparison: notConfigured(),
     decide: notConfigured(),
     undoDecision: notConfigured(),

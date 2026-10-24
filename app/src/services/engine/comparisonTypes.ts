@@ -122,9 +122,19 @@ export interface ComparisonRequest {
   readonly onProgress?: (event: ComparisonProgressEvent) => void;
 }
 
+/** Comparar archivos que ya están en una revisión guardada, sin volver a cargarlos. */
+export interface SessionComparisonRequest {
+  readonly sessionId: string;
+  readonly name: string;
+  readonly mode: ComparisonModeValue;
+  readonly documents: readonly string[];
+  readonly onProgress?: (event: ComparisonProgressEvent) => void;
+}
+
 /** Puerto de la interfaz para las comparaciones; el cliente HTTP lo implementa. */
 export interface ComparisonGateway {
   startComparison(request: ComparisonRequest): Promise<ComparisonResult>;
+  startSessionComparison(request: SessionComparisonRequest): Promise<ComparisonResult>;
   openComparison(comparisonId: string): Promise<ComparisonResult>;
   decide(comparisonId: string, decision: DecisionInput): Promise<DecisionsResult>;
   undoDecision(comparisonId: string): Promise<DecisionsResult>;

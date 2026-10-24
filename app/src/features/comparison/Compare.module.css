@@ -703,3 +703,26 @@
 .grow {
   flex: 1;
 }
+
+.fromSession {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+}
+
+.fromSessionTitle {
+  margin: 0;
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-semibold);
+}
+
+.fromSessionHint {
+  margin: 0 0 var(--spacing-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}

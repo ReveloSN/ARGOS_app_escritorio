@@ -790,6 +790,14 @@
   },
   "comparison": {
     "title": "Comparar documentos",
+    "fromSession": {
+      "title": "Documentos del expediente",
+      "description": "Ya están cargados: elija cuáles comparar sin volver a subirlos.",
+      "compare": {
+        "one": "Comparar {count} elegido",
+        "other": "Comparar los {count} elegidos"
+      }
+    },
     "scope": {
       "label": "Qué comparar",
       "base": "Documento base",

@@ -10,6 +10,7 @@ function digest(overrides: Partial<ReviewDigest>): ReviewDigest {
     name: "Revisión de prueba",
     isClosed: false,
     documentCount: 3,
+    readableDocuments: [],
     alertCount: 5,
     pendingCount: 3,
     pendingByRisk: { high: 3, medium: 0, low: 0 },

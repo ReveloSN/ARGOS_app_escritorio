@@ -3,10 +3,11 @@ import type {
   ComparisonProgressEvent,
   ComparisonRequest,
   ComparisonResult,
+  SessionComparisonRequest,
 } from "./comparisonTypes";
 import type { EngineHttp } from "./engineHttp";
 import type { DecisionInput, DecisionsResult } from "./reviewTypes";
-import { progressEventOf, streamUpload } from "./streamedUpload";
+import { progressEventOf, streamRequest, streamUpload } from "./streamedUpload";
 
 const COMPARISONS_PATH = "/comparisons";
 const COMPARISON_FINISHED_EVENT = "comparison";
@@ -32,6 +33,21 @@ export class ComparisonClient implements ComparisonGateway {
     };
     return streamUpload(this.http, upload, (event) =>
       onProgress?.(progressEventOf(event) as ComparisonProgressEvent),
+    );
+  }
+
+  startSessionComparison(request: SessionComparisonRequest): Promise<ComparisonResult> {
+    const { onProgress, ...body } = request;
+    return streamRequest(
+      this.http,
+      {
+        path: `${COMPARISONS_PATH}/from-session`,
+        timeoutMs: COMPARISON_TIMEOUT_MS,
+        method: "POST",
+        body,
+        finishedEvent: COMPARISON_FINISHED_EVENT,
+      },
+      (event) => onProgress?.(progressEventOf(event) as ComparisonProgressEvent),
     );
   }
 

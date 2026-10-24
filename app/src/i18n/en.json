@@ -790,6 +790,14 @@
   },
   "comparison": {
     "title": "Compare documents",
+    "fromSession": {
+      "title": "Case file documents",
+      "description": "They are already loaded: choose which ones to compare without uploading them again.",
+      "compare": {
+        "one": "Compare {count} selected",
+        "other": "Compare the {count} selected"
+      }
+    },
     "scope": {
       "label": "What to compare",
       "base": "Base document",

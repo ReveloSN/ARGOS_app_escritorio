@@ -16,6 +16,7 @@ describe("estado de la sesión activa", () => {
     expect(snapshot.review).toMatchObject({
       name: "Revisión de prueba",
       documentCount: 3,
+      readableDocuments: ["contrato.txt", "anexo.pdf"],
       alertCount: 2,
       pendingCount: 2,
       pendingByRisk: { high: 1, medium: 1, low: 0 },
