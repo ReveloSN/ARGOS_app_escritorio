@@ -14,6 +14,7 @@ import {
 } from "../../test/comparisonFakes";
 import { inconsistency } from "../../test/inconsistencyFakes";
 import { countByKind, DEFAULT_FILTERS, visibleChanges } from "./changeFilters";
+import type { ChangeResult } from "../../services/engine/comparisonTypes";
 import { changeValues } from "./changePresentation";
 import { comparisonMatrix } from "./comparisonMatrix";
 import { inconsistencyColumns, inconsistencyRows } from "./inconsistencyRows";
@@ -66,9 +67,32 @@ describe("tramos de los paneles", () => {
 describe("presentación de un cambio", () => {
   it("muestra el antes y el después según el tipo", () => {
     expect(changeValues(NUMBER_CHANGE)).toEqual({ before: "4857", after: "4587" });
-    expect(changeValues(NEGATION_CHANGE)).toEqual({ before: "", after: "no" });
     expect(changeValues(ADDED_CHANGE).before).toBe("");
     expect(changeValues(MOVED_CHANGE)).toEqual({ before: V2[2]?.text, after: "" });
+  });
+
+  it("un cambiado siempre muestra A → B, también si la edición solo agrega o solo quita", () => {
+    // Regresión: con una sola palabra agregada o quitada la tarjeta mostraba un solo lado.
+    expect(changeValues(NEGATION_CHANGE)).toEqual({
+      before: V2[1]?.text,
+      after: V3[2]?.text,
+    });
+    const deletion: ChangeResult = {
+      ...NEGATION_CHANGE,
+      edits: [
+        {
+          kind: "deleted",
+          first: { start: 16, end: 18 },
+          second: null,
+          firstText: "no",
+          secondText: "",
+          characters: [],
+        },
+      ],
+    };
+    const values = changeValues(deletion);
+    expect(values.before).not.toBe("");
+    expect(values.after).not.toBe("");
   });
 });
 

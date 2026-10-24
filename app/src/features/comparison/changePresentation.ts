@@ -46,10 +46,18 @@ function textIf(isShown: boolean, segment: SegmentResult | null): string {
   return isShown && segment ? segment.text : "";
 }
 
+// Si la edición solo agrega o solo quita, el lado vacío no dice nada: se muestran las dos frases.
+function modifiedValues(change: ChangeResult): ChangeValues {
+  const edited = {
+    before: joinedEdits(change, "firstText"),
+    after: joinedEdits(change, "secondText"),
+  };
+  if (edited.before && edited.after) return edited;
+  return { before: textIf(true, change.first), after: textIf(true, change.second) };
+}
+
 export function changeValues(change: ChangeResult): ChangeValues {
-  if (change.kind === "modified") {
-    return { before: joinedEdits(change, "firstText"), after: joinedEdits(change, "secondText") };
-  }
+  if (change.kind === "modified") return modifiedValues(change);
   const sides = WHOLE_SEGMENT_SIDES[change.kind];
   return { before: textIf(sides.before, change.first), after: textIf(sides.after, change.second) };
 }
