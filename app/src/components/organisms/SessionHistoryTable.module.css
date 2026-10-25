@@ -1,4 +1,9 @@
 .table {
+  /* Las columnas fijas no pueden dejar a «Sesión» sin ancho: si no caben, el contenedor se desplaza. */
+  min-width: calc(
+    var(--size-column-session-min) + var(--size-column-date) + 2 * var(--size-column-count) +
+      var(--size-column-decided) + var(--size-column-state)
+  );
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;

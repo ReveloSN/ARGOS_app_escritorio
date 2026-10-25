@@ -24,3 +24,8 @@ Rama local `trabajo-autonomo` (sin push; GitHub no es necesario). Zona horaria: 
 - Estado: mi motor aislado sigue en el puerto 8766 con 2 sesiones de prueba (datos en carpeta temporal). La interfaz del usuario (1420) apunta a su propio motor (8765) y no la uso.
 - Efecto: el recorrido visual completo (Comparar en los 3 modos, tema, tamaño pequeño, teclado) no se puede hacer sin una decisión del usuario: liberar el puerto 1420 o permitir otro origen en desarrollo. Lo que sí hice antes del bloqueo: ver Historial a 800 px (hallazgos abajo).
 - Hallazgos visuales ya vistos en Historial a 800 px de ancho: la tabla de sesiones se corta a la mitad de la pantalla, el encabezado «SESIÓN» se superpone con «FECHA» y hay un panel derecho vacío.
+
+## Ciclo A · 14:45 · Historial a 800 px
+- Encontré: con el panel lateral, las columnas fijas (514 px) dejaban a «Sesión» con ancho 0.
+- Cambié: `SessionHistoryTable.module.css` da un ancho mínimo a la tabla (token nuevo `--size-column-session-min: 200px`); el contenedor ya se desplaza. Lint de CSS y 31 pruebas de organismos e Historial en verde.
+- Sin verificar: el resultado visual (no hay prueba de layout en jsdom ni pude volver a abrir la página). Sin captura «después».
