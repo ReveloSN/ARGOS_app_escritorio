@@ -39,3 +39,7 @@ Rama local `trabajo-autonomo` (sin push; GitHub no es necesario). Zona horaria: 
 - Cambié: el título se ajusta en varias líneas; subtítulo y valores llevan `title` con el texto completo. Prueba de regresión (falló antes): `review.test.tsx › ofrece el texto completo…`. ESLint, tsc, stylelint y 22 pruebas de organismos en verde. Capturas: `alertas-titulos-antes/despues.jpg`.
 - Sin verificar: a 800 px las filas quedan altas (5 líneas) porque «Alerta» solo recibe ~130 px; lo dejo para Ciclo B (columnas de valor más estrechas o filas a dos líneas).
 - Historial a 800 px: verificado con captura `historial-800-antes/despues.jpg` (la columna Sesión ya se ve).
+
+## Ciclo A · 01:45 · Comparar › Documentos del expediente
+- Encontré: las casillas de los archivos iban en línea y cada una se pegaba al nombre del anterior («contrato_v1.txt☑contrato_v2.txt»).
+- Cambié: lista `ul/li`, un archivo por renglón (también resuelve los nombres largos). Prueba de regresión que falló antes: `compareFromSession.test.tsx › lista cada archivo en su propio renglón…`. Lint, tipos y 46 pruebas de Comparar en verde. Capturas `comparar-documentos-expediente-antes/despues.jpg`.

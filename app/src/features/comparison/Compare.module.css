@@ -721,6 +721,15 @@
   font-weight: var(--font-weight-semibold);
 }
 
+.fromSessionList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .fromSessionHint {
   margin: 0 0 var(--spacing-2);
   color: var(--color-text-secondary);

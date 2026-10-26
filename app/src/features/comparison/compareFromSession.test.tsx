@@ -45,6 +45,15 @@ describe("Comparar los archivos del expediente sin cargarlos otra vez", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("lista cada archivo en su propio renglón para que ninguno se pegue al otro", async () => {
+    renderApp(engine().services, REVIEW);
+    await openCompare();
+
+    const group = screen.getByRole("group", { name: "Documentos del expediente" });
+
+    expect(within(group).getAllByRole("listitem")).toHaveLength(2);
+  });
+
   it("compara los elegidos con el motor, sin subir ningún archivo", async () => {
     const { services, startSessionComparison, startComparison } = engine();
     renderApp(services, REVIEW);

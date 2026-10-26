@@ -28,16 +28,19 @@ export function SessionDocumentsPicker({ documents, onCompare }: SessionDocument
       <div role="group" aria-label={t("comparison.fromSession.title")}>
         <h2 className={styles.fromSessionTitle}>{t("comparison.fromSession.title")}</h2>
         <p className={styles.fromSessionHint}>{t("comparison.fromSession.description")}</p>
-        {documents.map((name) => (
-          <Checkbox
-            key={name}
-            label={name}
-            checked={chosen.includes(name)}
-            onChange={() => {
-              setChosen(toggled(chosen, name, documents));
-            }}
-          />
-        ))}
+        <ul className={styles.fromSessionList}>
+          {documents.map((name) => (
+            <li key={name}>
+              <Checkbox
+                label={name}
+                checked={chosen.includes(name)}
+                onChange={() => {
+                  setChosen(toggled(chosen, name, documents));
+                }}
+              />
+            </li>
+          ))}
+        </ul>
       </div>
       <Button
         variant="primary"
