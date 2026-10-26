@@ -15,7 +15,8 @@ interface TopbarProps {
   /** El selector de la sesión activa; sin sesión no se muestra nada. */
   readonly session?: ReactNode;
   readonly searchPlaceholder?: string | undefined;
-  readonly assistantStatus: AssistantStatusLine;
+  /** Sin estado no se muestra nada: la barra lateral ya lo dice. */
+  readonly assistantStatus?: AssistantStatusLine | undefined;
   /** Sin acción no se muestra la búsqueda: nunca un control que no hace nada. */
   readonly onOpenSearch?: (() => void) | undefined;
   readonly onOpenHelp?: () => void;
@@ -42,7 +43,7 @@ export function Topbar({
         </button>
       )}
       <div className={styles.spacer} />
-      <AssistantStatusIndicator status={assistantStatus} />
+      {assistantStatus && <AssistantStatusIndicator status={assistantStatus} />}
       {onOpenHelp && (
         <button
           type="button"

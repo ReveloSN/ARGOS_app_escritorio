@@ -56,3 +56,10 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - Encontré: 5 interruptores de Ajustes con 20 px de alto (Guardar el historial, Explicar cambios con IA, Google Document AI, Mostrar asistente, Reducir movimiento). Contraste, nombres y tamaños de texto: sin hallazgos.
 - Cambié: `min-height: var(--size-control-sm)` (26 px) en `Toggle` y `Checkbox`. Verificado con el mismo script (0 controles pequeños).
 - Sin prueba automática (layout puro). No alcancé a repasar con el script Expediente, Comparar, Revisar antes de enviar ni Historial: el clic programático no navega; solo cuenta el recorrido manual.
+
+## Ciclo B · 01:10 · B1 · el estado del asistente se dice una sola vez
+- Encontré: «3 alertas de riesgo alto» en la barra superior, en la tarjeta del asistente (barra lateral) y como chip «Alto 3» en el Expediente.
+- Cambié: la barra superior ya no repite el estado del asistente salvo que la barra lateral esté contraída o haya algo que atender (avance de lectura o «Reintentar» con el motor detenido). `topbarStatusFor` en `useAssistantChrome.ts`; `Topbar` acepta estado opcional. Pruebas nuevas en `assistant.test.tsx` (una falló antes del cambio). Lint, tipos y 40 pruebas relacionadas en verde. Capturas `B1-*`.
+- Reversible: borrar `topbarStatusFor` del `App.tsx` y pasar `assistant.topbar`.
+- Se queda: el chip «Alto 3» es el desglose por riesgo de la pantalla (dato distinto al texto del asistente).
+- Candidato pendiente: Inicio dice «Todavía no hay revisiones» aunque el Historial tiene sesiones guardadas (estado vacío con datos existentes).

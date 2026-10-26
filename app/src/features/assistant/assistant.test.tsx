@@ -81,6 +81,25 @@ describe("Asistente de IA", () => {
     expect(storage.read("argus.assistant")).toBe("hidden");
   });
 
+  it("dice el estado normal una sola vez: en la barra lateral y no en la superior", async () => {
+    renderApp(fakeEngineServices(), REVIEW, memoryStorage(SEEN));
+    await act(() => Promise.resolve());
+
+    expect(sidebarStatus()).toHaveTextContent("No pudo leer un archivo");
+    expect(within(screen.getByRole("banner")).queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("con la barra lateral contraída, la barra superior retoma el estado", async () => {
+    renderApp(fakeEngineServices(), REVIEW, memoryStorage(SEEN));
+    await act(() => Promise.resolve());
+
+    await userEvent.keyboard("{Control>}b{/Control}");
+
+    expect(within(screen.getByRole("banner")).getByRole("status")).toHaveTextContent(
+      "No pudo leer un archivo",
+    );
+  });
+
   it("«Reducir movimiento» se aplica a toda la app y se recuerda", async () => {
     const storage = memoryStorage(SEEN);
     renderApp(fakeEngineServices(), undefined, storage);

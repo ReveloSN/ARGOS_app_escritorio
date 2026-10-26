@@ -4,7 +4,7 @@ import { Sidebar } from "./components/organisms/Sidebar";
 import { Topbar } from "./components/organisms/Topbar";
 import { AppShell } from "./components/templates/AppShell";
 import { OnboardingGate } from "./features/assistant/OnboardingDialog";
-import { useAssistantChrome } from "./features/assistant/useAssistantChrome";
+import { topbarStatusFor, useAssistantChrome } from "./features/assistant/useAssistantChrome";
 import { useShortcuts } from "./features/keyboard/useShortcuts";
 import {
   HOME_ROUTE,
@@ -92,7 +92,7 @@ export function App() {
               />
             )
           }
-          assistantStatus={assistant.topbar}
+          assistantStatus={topbarStatusFor(assistant.topbar, collapsed)}
           searchPlaceholder={search.scope?.placeholder}
           onOpenSearch={
             search.open &&
