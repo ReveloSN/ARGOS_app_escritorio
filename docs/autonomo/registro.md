@@ -51,20 +51,20 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - Sin prueba automática: es layout puro (jsdom no lo calcula); verificado en el navegador real. Lint, tipos y pruebas se corren en el commit.
 - Observación para Ciclo B: ahora el encabezado de cada panel trunca el nombre del archivo; el nombre ya está en la línea «A … → B …», así que se repite.
 
-## Ciclo A · 01:05 · áreas de clic, contraste y tema claro
+## Ciclo A · 00:55 · áreas de clic, contraste y tema claro
 - Revisé con un script en el navegador (800 px, datos reales): controles sin nombre accesible, áreas de clic < 24 px, texto < 11 px y contraste < 4,5:1, en Inicio y Ajustes (tema oscuro y claro).
 - Encontré: 5 interruptores de Ajustes con 20 px de alto (Guardar el historial, Explicar cambios con IA, Google Document AI, Mostrar asistente, Reducir movimiento). Contraste, nombres y tamaños de texto: sin hallazgos.
 - Cambié: `min-height: var(--size-control-sm)` (26 px) en `Toggle` y `Checkbox`. Verificado con el mismo script (0 controles pequeños).
 - Sin prueba automática (layout puro). No alcancé a repasar con el script Expediente, Comparar, Revisar antes de enviar ni Historial: el clic programático no navega; solo cuenta el recorrido manual.
 
-## Ciclo B · 01:10 · B1 · el estado del asistente se dice una sola vez
+## Ciclo B · 00:59 · B1 · el estado del asistente se dice una sola vez
 - Encontré: «3 alertas de riesgo alto» en la barra superior, en la tarjeta del asistente (barra lateral) y como chip «Alto 3» en el Expediente.
 - Cambié: la barra superior ya no repite el estado del asistente salvo que la barra lateral esté contraída o haya algo que atender (avance de lectura o «Reintentar» con el motor detenido). `topbarStatusFor` en `useAssistantChrome.ts`; `Topbar` acepta estado opcional. Pruebas nuevas en `assistant.test.tsx` (una falló antes del cambio). Lint, tipos y 40 pruebas relacionadas en verde. Capturas `B1-*`.
 - Reversible: borrar `topbarStatusFor` del `App.tsx` y pasar `assistant.topbar`.
 - Se queda: el chip «Alto 3» es el desglose por riesgo de la pantalla (dato distinto al texto del asistente).
 - Candidato pendiente: Inicio dice «Todavía no hay revisiones» aunque el Historial tiene sesiones guardadas (estado vacío con datos existentes).
 
-## Ciclo B · 01:35 · B2 · Inicio sin sesión abierta pero con revisiones guardadas
+## Ciclo B · 01:15 · B2 · Inicio sin sesión abierta pero con revisiones guardadas
 - Encontré: Inicio decía «Todavía no hay revisiones» con 2 sesiones en el Historial (estado vacío con datos existentes; también ocurre al eliminar la sesión activa si quedan otras).
 - Cambié: sin sesión activa y con revisiones guardadas, Inicio dice «No hay una revisión abierta · Tiene N revisiones guardadas. Ábralas desde el historial o empiece una nueva» y suma el botón secundario «Ver el historial». Sin nada guardado, el estado vacío es el de siempre. `useSavedSessionCount` (se consulta de nuevo al cambiar la sesión activa), textos es/en, `HomePage`/`CurrentPage`. Pruebas en `homeSavedSessions.test.tsx` (2 fallaron antes). Ajusté 2 pruebas existentes: la de eliminar sesión (ahora queda otra guardada) y la de «motor no responde» del Historial (la primera consulta ahora es la de Inicio).
 - Suite completa de la interfaz: 393 pruebas en verde con `--maxWorkers=3`. Con todo el paralelismo y el motor y Vite abiertos, 21 pruebas fallaron por tiempo (5 s), no por lógica: la máquina se satura.
