@@ -63,3 +63,10 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - Reversible: borrar `topbarStatusFor` del `App.tsx` y pasar `assistant.topbar`.
 - Se queda: el chip «Alto 3» es el desglose por riesgo de la pantalla (dato distinto al texto del asistente).
 - Candidato pendiente: Inicio dice «Todavía no hay revisiones» aunque el Historial tiene sesiones guardadas (estado vacío con datos existentes).
+
+## Ciclo B · 01:35 · B2 · Inicio sin sesión abierta pero con revisiones guardadas
+- Encontré: Inicio decía «Todavía no hay revisiones» con 2 sesiones en el Historial (estado vacío con datos existentes; también ocurre al eliminar la sesión activa si quedan otras).
+- Cambié: sin sesión activa y con revisiones guardadas, Inicio dice «No hay una revisión abierta · Tiene N revisiones guardadas. Ábralas desde el historial o empiece una nueva» y suma el botón secundario «Ver el historial». Sin nada guardado, el estado vacío es el de siempre. `useSavedSessionCount` (se consulta de nuevo al cambiar la sesión activa), textos es/en, `HomePage`/`CurrentPage`. Pruebas en `homeSavedSessions.test.tsx` (2 fallaron antes). Ajusté 2 pruebas existentes: la de eliminar sesión (ahora queda otra guardada) y la de «motor no responde» del Historial (la primera consulta ahora es la de Inicio).
+- Suite completa de la interfaz: 393 pruebas en verde con `--maxWorkers=3`. Con todo el paralelismo y el motor y Vite abiertos, 21 pruebas fallaron por tiempo (5 s), no por lógica: la máquina se satura.
+- Limitación: durante el plazo de 8 s para deshacer, la sesión eliminada sigue en la cuenta (el motor aún no la borra). Capturas `B2-*`.
+- Sin verificar: el panel del navegador recortó la captura «después» (viewport emulado); el texto nuevo se ve en ella.

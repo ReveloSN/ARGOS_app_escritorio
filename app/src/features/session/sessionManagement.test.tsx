@@ -53,7 +53,10 @@ describe("Renombrar y eliminar la sesión activa", () => {
     await user.click(within(dialog).getByRole("button", { name: "Eliminar sesión" }));
 
     expect(screen.getByText("Sesión «Revisión de prueba» eliminada")).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Todavía no hay revisiones" })).toBeInTheDocument();
+    // Queda otra sesión guardada en el historial: Inicio lo dice en lugar de «no hay revisiones».
+    expect(
+      await screen.findByRole("heading", { name: "No hay una revisión abierta" }),
+    ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /Deshacer/ }));
 
     expect(within(screen.getByRole("main")).getByText("Revisión de prueba")).toBeInTheDocument();

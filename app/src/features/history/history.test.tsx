@@ -136,7 +136,12 @@ describe("Historial", () => {
   });
 
   it("si el motor no responde, lo dice y permite reintentar", async () => {
-    const history = vi.fn().mockRejectedValueOnce(new Error("detenido")).mockResolvedValue(HISTORY);
+    // La primera consulta es la de Inicio (cuenta las revisiones guardadas); la segunda, la página.
+    const history = vi
+      .fn()
+      .mockRejectedValueOnce(new Error("detenido"))
+      .mockRejectedValueOnce(new Error("detenido"))
+      .mockResolvedValue(HISTORY);
     renderApp(
       fakeEngineServices({
         history: { history },

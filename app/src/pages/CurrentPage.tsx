@@ -34,6 +34,9 @@ function homePage(navigation: PageNavigation): ReactNode {
       onContinueReview={() => {
         navigation.openTab("alerts");
       }}
+      onOpenHistory={() => {
+        navigation.openHistory();
+      }}
     />
   );
 }

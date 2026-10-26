@@ -146,6 +146,14 @@
     "description": "Load the documents you are about to send or sign. ARGUS compares them with each other and shows you the differences before you finish.",
     "note": "Files are analyzed on this computer.",
     "compareVersions": "Compare two versions",
+    "saved": {
+      "title": "No review is open",
+      "description": {
+        "one": "You have {count} saved review. Open it from the history or start a new one.",
+        "other": "You have {count} saved reviews. Open them from the history or start a new one."
+      },
+      "openHistory": "View history"
+    },
     "overview": {
       "label": "Active session status",
       "closed": "Closed · read only",

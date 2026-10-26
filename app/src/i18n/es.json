@@ -146,6 +146,14 @@
     "description": "Cargue los documentos que va a enviar o firmar. ARGUS los compara entre sí y le muestra las diferencias antes de que finalice.",
     "note": "Los archivos se analizan en este equipo.",
     "compareVersions": "Comparar dos versiones",
+    "saved": {
+      "title": "No hay una revisión abierta",
+      "description": {
+        "one": "Tiene {count} revisión guardada. Ábrala desde el historial o empiece una nueva.",
+        "other": "Tiene {count} revisiones guardadas. Ábralas desde el historial o empiece una nueva."
+      },
+      "openHistory": "Ver el historial"
+    },
     "overview": {
       "label": "Estado de la sesión activa",
       "closed": "Cerrada · solo lectura",
