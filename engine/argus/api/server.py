@@ -17,7 +17,7 @@ from typing import TextIO
 import uvicorn
 
 from argus.api.app import create_app
-from argus.api.settings import EngineSettings
+from argus.api.settings import EngineSettings, InvalidDevOriginError, read_dev_origins
 from argus.infrastructure.history_location import JsonHistoryPointer, default_data_directory
 
 LOOPBACK_HOST = "127.0.0.1"
@@ -73,10 +73,10 @@ def stop_when_stdin_closes(server: uvicorn.Server, stdin: TextIO) -> None:
     threading.Thread(target=wait_for_end_of_input, daemon=True).start()
 
 
-def run(options: LaunchOptions, access_token: str) -> None:
+def run(options: LaunchOptions, access_token: str, dev_origins: tuple[str, ...] = ()) -> None:
     default_directory = default_data_directory()
     data_directory = JsonHistoryPointer(default_directory).resolve(default_directory)
-    settings = EngineSettings.from_installed_package(access_token, data_directory)
+    settings = EngineSettings.from_installed_package(access_token, data_directory, dev_origins)
     server = uvicorn.Server(uvicorn.Config(create_app(settings), access_log=False))
     with bind_loopback_socket(options.port) as sock:
         print(format_ready_announcement(sock.getsockname()[1]), flush=True)
@@ -89,6 +89,7 @@ def main() -> None:
     options = parse_launch_options(sys.argv[1:])
     try:
         access_token = read_access_token(os.environ)
-    except MissingAccessTokenError as error:
+        dev_origins = read_dev_origins(os.environ)
+    except (MissingAccessTokenError, InvalidDevOriginError) as error:
         sys.exit(str(error))
-    run(options, access_token)
+    run(options, access_token, dev_origins)

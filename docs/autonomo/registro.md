@@ -29,3 +29,7 @@ Rama local `trabajo-autonomo` (sin push; GitHub no es necesario). Zona horaria: 
 - Encontré: con el panel lateral, las columnas fijas (514 px) dejaban a «Sesión» con ancho 0.
 - Cambié: `SessionHistoryTable.module.css` da un ancho mínimo a la tabla (token nuevo `--size-column-session-min: 200px`); el contenedor ya se desplaza. Lint de CSS y 31 pruebas de organismos e Historial en verde.
 - Sin verificar: el resultado visual (no hay prueba de layout en jsdom ni pude volver a abrir la página). Sin captura «después».
+
+## Ciclo A · 00:50 del 26/10 · variable ARGUS_DEV_ORIGIN
+- Pedido del usuario: permitir un segundo origen en desarrollo. Como la ventana original (23:00 del 25/10) ya venció, tomo ese mensaje como autorización nueva y trabajo hasta las 23:00 del 26/10.
+- Cambié: `ARGUS_DEV_ORIGIN` suma un origen a la lista CORS del motor. Solo acepta `http://localhost:N` o `http://127.0.0.1:N`; cualquier otro valor detiene el arranque con un mensaje. Sin la variable no cambia nada. Pruebas en `tests/api/test_dev_origin.py` (validación y CORS real). Ruff, black, mypy y las 21 pruebas relacionadas en verde.

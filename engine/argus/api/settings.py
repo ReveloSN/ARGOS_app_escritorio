@@ -1,3 +1,5 @@
+import re
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from importlib.metadata import version
 from pathlib import Path
@@ -15,6 +17,27 @@ TAURI_ORIGINS: tuple[str, ...] = (
     "tauri://localhost",
     "http://localhost:1420",
 )
+
+DEV_ORIGIN_ENV_VAR = "ARGUS_DEV_ORIGIN"
+# Solo bucle local: la variable sirve para un segundo servidor de desarrollo, no para abrir el motor.
+_LOOPBACK_ORIGIN = re.compile(r"http://(localhost|127\.0\.0\.1):\d{1,5}")
+
+
+class InvalidDevOriginError(Exception):
+    def __init__(self, origin: str) -> None:
+        super().__init__(
+            f"{DEV_ORIGIN_ENV_VAR}={origin!r} no es válido: use http://localhost:<puerto> "
+            "o http://127.0.0.1:<puerto>."
+        )
+
+
+def read_dev_origins(environ: Mapping[str, str]) -> tuple[str, ...]:
+    origin = environ.get(DEV_ORIGIN_ENV_VAR, "").strip()
+    if not origin:
+        return ()
+    if not _LOOPBACK_ORIGIN.fullmatch(origin):
+        raise InvalidDevOriginError(origin)
+    return (origin,)
 
 
 @dataclass(frozen=True)
@@ -34,7 +57,12 @@ class EngineSettings:
     reports_directory: Path = field(default_factory=default_reports_directory)
 
     @classmethod
-    def from_installed_package(cls, access_token: str, data_directory: Path) -> "EngineSettings":
+    def from_installed_package(
+        cls, access_token: str, data_directory: Path, dev_origins: tuple[str, ...] = ()
+    ) -> "EngineSettings":
         return cls(
-            version=version(PACKAGE_NAME), access_token=access_token, data_directory=data_directory
+            version=version(PACKAGE_NAME),
+            access_token=access_token,
+            data_directory=data_directory,
+            allowed_origins=(*TAURI_ORIGINS, *dev_origins),
         )
