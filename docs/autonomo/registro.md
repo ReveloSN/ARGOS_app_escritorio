@@ -43,3 +43,9 @@ Rama local `trabajo-autonomo` (sin push; GitHub no es necesario). Zona horaria: 
 ## Ciclo A · 01:45 · Comparar › Documentos del expediente
 - Encontré: las casillas de los archivos iban en línea y cada una se pegaba al nombre del anterior («contrato_v1.txt☑contrato_v2.txt»).
 - Cambié: lista `ul/li`, un archivo por renglón (también resuelve los nombres largos). Prueba de regresión que falló antes: `compareFromSession.test.tsx › lista cada archivo en su propio renglón…`. Lint, tipos y 46 pruebas de Comparar en verde. Capturas `comparar-documentos-expediente-antes/despues.jpg`.
+
+## Ciclo A · 02:10 · Comparar versiones: texto cortado en los paneles
+- Encontré (v1 frente a v2, 800 px): el texto de los dos documentos se recortaba por la derecha («Juan Perez, s…»). La rejilla de cada panel no tenía columna definida y el texto la ensanchaba más allá del panel.
+- Cambié: `.panel { grid-template-columns: minmax(0, 1fr) }` en `Compare.module.css`. Capturas `comparar-paneles-antes/despues.jpg`.
+- Sin prueba automática: es layout puro (jsdom no lo calcula); verificado en el navegador real. Lint, tipos y pruebas se corren en el commit.
+- Observación para Ciclo B: ahora el encabezado de cada panel trunca el nombre del archivo; el nombre ya está en la línea «A … → B …», así que se repite.
