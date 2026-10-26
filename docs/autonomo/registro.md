@@ -33,3 +33,9 @@ Rama local `trabajo-autonomo` (sin push; GitHub no es necesario). Zona horaria: 
 ## Ciclo A · 00:50 del 26/10 · variable ARGUS_DEV_ORIGIN
 - Pedido del usuario: permitir un segundo origen en desarrollo. Como la ventana original (23:00 del 25/10) ya venció, tomo ese mensaje como autorización nueva y trabajo hasta las 23:00 del 26/10.
 - Cambié: `ARGUS_DEV_ORIGIN` suma un origen a la lista CORS del motor. Solo acepta `http://localhost:N` o `http://127.0.0.1:N`; cualquier otro valor detiene el arranque con un mensaje. Sin la variable no cambia nada. Pruebas en `tests/api/test_dev_origin.py` (validación y CORS real). Ruff, black, mypy y las 21 pruebas relacionadas en verde.
+
+## Ciclo A · 01:20 · lista de alertas con textos cortados
+- Encontré (Expediente › Alertas a 800 px, 3 documentos reales): el título de la alerta («El número de c…»), el subtítulo con los archivos y los valores (fechas) salían cortados con puntos suspensivos, sin tooltip ni otra forma de leerlos.
+- Cambié: el título se ajusta en varias líneas; subtítulo y valores llevan `title` con el texto completo. Prueba de regresión (falló antes): `review.test.tsx › ofrece el texto completo…`. ESLint, tsc, stylelint y 22 pruebas de organismos en verde. Capturas: `alertas-titulos-antes/despues.jpg`.
+- Sin verificar: a 800 px las filas quedan altas (5 líneas) porque «Alerta» solo recibe ~130 px; lo dejo para Ciclo B (columnas de valor más estrechas o filas a dos líneas).
+- Historial a 800 px: verificado con captura `historial-800-antes/despues.jpg` (la columna Sesión ya se ve).

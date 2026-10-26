@@ -73,7 +73,6 @@
   min-width: 0;
 }
 
-.title,
 .subtitle,
 .value {
   overflow: hidden;
@@ -81,8 +80,10 @@
   white-space: nowrap;
 }
 
+/* El título se ajusta en líneas: es lo que el usuario necesita leer completo para decidir. */
 .title {
   font-weight: var(--font-weight-medium);
+  overflow-wrap: anywhere;
 }
 
 .selected .title {

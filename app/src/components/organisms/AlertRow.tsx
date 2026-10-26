@@ -48,10 +48,16 @@ export function AlertRow({ row, isSelected, onSelect, onHighlight, actionsFor }:
       <td className={styles.number}>{row.number}</td>
       <td className={styles.alert}>
         <span className={styles.title}>{row.title}</span>
-        <span className={styles.subtitle}>{row.subtitle}</span>
+        <span className={styles.subtitle} title={row.subtitle}>
+          {row.subtitle}
+        </span>
       </td>
-      <td className={styles.value}>{row.valueA}</td>
-      <td className={styles.value}>{row.valueB}</td>
+      <td className={styles.value} title={row.valueA}>
+        {row.valueA}
+      </td>
+      <td className={styles.value} title={row.valueB}>
+        {row.valueB}
+      </td>
       <td>
         <DecisionTag state={row.decision} />
       </td>

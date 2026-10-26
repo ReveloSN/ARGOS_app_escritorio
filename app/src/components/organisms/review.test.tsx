@@ -42,6 +42,16 @@ describe("AlertList", () => {
     expect(table).toHaveTextContent("Es correcto");
   });
 
+  it("ofrece el texto completo de lo que la columna corta con puntos suspensivos", () => {
+    renderWithProviders(
+      <AlertList groups={[{ id: "todas", rows: ROWS }]} selectedId="1" onSelect={vi.fn()} />,
+    );
+
+    const [first] = ROWS;
+    expect(screen.getByTitle(first?.subtitle ?? "")).toBeInTheDocument();
+    expect(screen.getByTitle("01/07/2026")).toBeInTheDocument();
+  });
+
   it("marca la fila seleccionada y selecciona con clic o con Enter", async () => {
     const onSelect = vi.fn();
     renderWithProviders(
