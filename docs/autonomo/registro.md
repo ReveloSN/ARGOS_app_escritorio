@@ -50,3 +50,9 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - Cambié: `.panel { grid-template-columns: minmax(0, 1fr) }` en `Compare.module.css`. Capturas `comparar-paneles-antes/despues.jpg`.
 - Sin prueba automática: es layout puro (jsdom no lo calcula); verificado en el navegador real. Lint, tipos y pruebas se corren en el commit.
 - Observación para Ciclo B: ahora el encabezado de cada panel trunca el nombre del archivo; el nombre ya está en la línea «A … → B …», así que se repite.
+
+## Ciclo A · 01:05 · áreas de clic, contraste y tema claro
+- Revisé con un script en el navegador (800 px, datos reales): controles sin nombre accesible, áreas de clic < 24 px, texto < 11 px y contraste < 4,5:1, en Inicio y Ajustes (tema oscuro y claro).
+- Encontré: 5 interruptores de Ajustes con 20 px de alto (Guardar el historial, Explicar cambios con IA, Google Document AI, Mostrar asistente, Reducir movimiento). Contraste, nombres y tamaños de texto: sin hallazgos.
+- Cambié: `min-height: var(--size-control-sm)` (26 px) en `Toggle` y `Checkbox`. Verificado con el mismo script (0 controles pequeños).
+- Sin prueba automática (layout puro). No alcancé a repasar con el script Expediente, Comparar, Revisar antes de enviar ni Historial: el clic programático no navega; solo cuenta el recorrido manual.

@@ -1,4 +1,6 @@
 .toggle {
+  /* Área de clic de al menos 24 px de alto (WCAG 2.2, tamaño del objetivo). */
+  min-height: var(--size-control-sm);
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-3);
