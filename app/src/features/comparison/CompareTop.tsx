@@ -51,12 +51,21 @@ function VersionsTop({
   const isAgainstAll = view.scope.against.kind === "all";
   return (
     <>
-      <ScopeSelector comparison={comparison} scope={view.scope} onScope={view.setScope} />
       <VersionsToolbar
-        changes={list.shown.map((item) => item.change)}
         heading={<ScopeHeading comparison={comparison} view={view} />}
-        filters={view.filters}
-        onFilters={view.setFilters}
+        options={{
+          changes: list.shown.map((item) => item.change),
+          filters: view.filters,
+          onFilters: view.setFilters,
+          scopeSelector: (
+            <ScopeSelector comparison={comparison} scope={view.scope} onScope={view.setScope} />
+          ),
+          isMinimapShown: view.isMinimapShown,
+          onMinimapShown: view.setMinimapShown,
+          onOpenMatrix: () => {
+            view.setTab("matrix");
+          },
+        }}
       />
       {isAgainstAll && (
         <DocumentBreakdown documents={changeCountsByDocument(comparison, view.scope, list.shown)} />

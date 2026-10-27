@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import { joinClassNames } from "../../components/joinClassNames";
 import { ErrorMessage } from "../../components/molecules/ErrorMessage";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ComparisonResult, PairComparisonResult } from "../../services/engine/comparisonTypes";
@@ -9,10 +10,9 @@ import { changeCountsByDocument } from "./comparisonScope";
 import { DocumentFilterChips } from "./DocumentFilterChips";
 import { ChangeMinimap } from "./ChangeMinimap";
 import styles from "./Compare.module.css";
-import { DocumentPanel } from "./DocumentPanel";
+import { UnifiedDocument } from "./UnifiedDocument";
 import { ItemDetail } from "./ItemDetail";
 import { changeDetail } from "./itemDetails";
-import { panelSegments } from "./segmentRuns";
 import type { ScopedList } from "./scopedList";
 import type { ComparisonView } from "./useComparisonView";
 import { useSyncedScroll } from "./useSyncedScroll";
@@ -65,32 +65,26 @@ export function VersionsView({ comparison, pair, list, view, decisions }: Versio
     comparison.decisions.decisions.find((decision) => decision.alertNumber === number);
   return (
     <div className={styles.versions}>
-      <div className={styles.panels}>
-        <DocumentPanel
-          side="first"
-          document={pair.firstDocument}
-          segments={panelSegments(pair.firstSegments, shown, "first")}
-          selected={view.selected}
-          onSelect={view.select}
-          scrollRef={scroll.first}
-          onScroll={scroll.onFirstScroll}
-        />
-        <DocumentPanel
-          side="second"
-          document={pair.secondDocument}
-          segments={panelSegments(pair.secondSegments, shown, "second")}
+      <div
+        className={joinClassNames(styles.panels, view.isMinimapShown && styles.panelsWithMinimap)}
+      >
+        <UnifiedDocument
+          pair={pair}
+          changes={shown}
           selected={view.selected}
           onSelect={view.select}
           scrollRef={scroll.second}
           onScroll={scroll.onSecondScroll}
         />
-        <ChangeMinimap
-          pair={pair}
-          changes={shown}
-          selected={view.selected}
-          viewport={scroll.viewport}
-          onSelect={view.select}
-        />
+        {view.isMinimapShown && (
+          <ChangeMinimap
+            pair={pair}
+            changes={shown}
+            selected={view.selected}
+            viewport={scroll.viewport}
+            onSelect={view.select}
+          />
+        )}
       </div>
       <aside className={styles.aside}>
         {view.scope.against.kind === "all" && (

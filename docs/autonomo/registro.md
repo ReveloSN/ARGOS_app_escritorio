@@ -141,3 +141,12 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - Suite completa del motor: 1696 pasan, 1 omitida, cobertura 99 %. Interfaz: 406 pruebas + 8 del build de producción. Lint, tipos y formato sin avisos.
 - Detuve mi motor (8766) y mi interfaz (1421). Los puertos 8765 y 1420 del usuario ya no estaban en uso al final de la jornada (no los toqué).
 - Git: `git log --oneline -5` y `git status` verificados; todos los commits están en la rama local `trabajo-autonomo`; no se hizo push ni se tocó `main`; sin errores de git. `graphify-out/` (del usuario) sigue sin seguimiento.
+
+## Rediseño visual de Comparar · 27/10 10:27 · medición ANTES (rama rediseno-visual, desde trabajo-autonomo)
+- Encargo: rediseñar solo Comparar (versiones y matriz) según «ARGUS Comparar v2», variante 1a. El mockup v2 **no está en `docs/mockups/`** (solo existe «ARGUS Comparar.dc.html», la versión anterior): trabajo con la descripción escrita del encargo; lo anoto como límite. La barra lateral no se toca.
+- Medido con el motor real (puerto 8766, 3 documentos: contrato_v1/v2/v3.txt) a 1280×800, tema oscuro, con el primer cambio elegido y su detalle abierto:
+  - Comparar versiones: **19** elementos interactivos visibles en el contenido (4 de cabecera, 2 selectores, «Opciones», 4 marcas del minimapa, 4 filas, 3 decisiones, «Ver detalle»; la barra lateral aparte). **0** etiquetas de riesgo visibles (los cambios llevan su riesgo en los datos, pero la lista no lo enseña). **15** colores distintos. Ancho de cada panel de texto: **363 px** (< 400).
+  - Matriz: **17** elementos interactivos (con 3 documentos; 9 celdas, 6 con «Alto»), **6** etiquetas de riesgo «Alto» a la vez (una por celda), 16 colores distintos. Muestra las dos mitades de la matriz (cada par dos veces).
+- Presupuesto fijado: **≤ 12** elementos interactivos visibles en Comparar versiones.
+- Capturas: `capturas/R0-antes-versiones-1280.jpg`, `capturas/R0-antes-matriz-1280.jpg`.
+- Decisión de datos: el riesgo de cada cambio ya viene del motor (`ChangeResult.risk`; ALTO = cambio de monto, fecha, número o negación; MEDIO = parte o segmento completo; BAJO = el resto). «Importante» pasa a significar riesgo alto en el contador, el filtro y el punto rojo; antes «Solo cambios importantes» también incluía nombres de partes (riesgo medio).

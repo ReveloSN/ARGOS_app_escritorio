@@ -12,7 +12,10 @@ export interface ComparisonView extends ScopeSelection {
   /** El par que muestran los paneles: el del alcance, o el del cambio elegido en «contra todos». */
   readonly pairIndex: number;
   readonly filters: ChangeFilters;
+  /** El minimapa de cambios vive en «Opciones» y empieza oculto. */
+  readonly isMinimapShown: boolean;
   readonly setTab: (tab: CompareTab) => void;
+  readonly setMinimapShown: (isShown: boolean) => void;
   readonly setFilters: (filters: ChangeFilters) => void;
   /** «Abrir el par» de la matriz: sus versiones, con el primer cambio elegido. */
   readonly openPair: (pairIndex: number) => void;
@@ -24,11 +27,19 @@ function initialTab(comparison: ComparisonResult): CompareTab {
   return comparison.mode === "versions" ? "versions" : "matrix";
 }
 
-/** Lo que el usuario mira en Comparar; vuelve a empezar con cada comparación nueva. */
-export function useComparisonView(comparison: ComparisonResult): ComparisonView {
-  const [tab, setTab] = useState<CompareTab>(() => initialTab(comparison));
+/** Los filtros y el minimapa: lo que «Opciones» cambia. */
+function useDisplayOptions() {
   const [filters, setFilters] = useState<ChangeFilters>(DEFAULT_FILTERS);
-  const selection = useScopeSelection(comparison);
+  const [isMinimapShown, setMinimapShown] = useState(false);
+  return { filters, isMinimapShown, setFilters, setMinimapShown };
+}
+
+/** Abrir un par o un documento contra todos: cambia el alcance y pasa a las versiones. */
+function useOpeners(
+  comparison: ComparisonResult,
+  selection: ScopeSelection,
+  setTab: (tab: CompareTab) => void,
+) {
   const openVersions = (scope: CompareScope) => {
     selection.setScope(scope);
     setTab("versions");
@@ -37,9 +48,18 @@ export function useComparisonView(comparison: ComparisonResult): ComparisonView 
     const pair = comparison.pairs[index];
     if (pair) openVersions(againstDocument(pair.firstDocument, pair.secondDocument));
   };
-  const pairIndex = pairIndexOf(comparison, selection.scope, selection.selected);
   const openAgainstAll = (document: string) => {
     openVersions(againstAll(document));
   };
-  return { ...selection, tab, pairIndex, filters, setTab, setFilters, openPair, openAgainstAll };
+  return { openPair, openAgainstAll };
+}
+
+/** Lo que el usuario mira en Comparar; vuelve a empezar con cada comparación nueva. */
+export function useComparisonView(comparison: ComparisonResult): ComparisonView {
+  const [tab, setTab] = useState<CompareTab>(() => initialTab(comparison));
+  const display = useDisplayOptions();
+  const selection = useScopeSelection(comparison);
+  const pairIndex = pairIndexOf(comparison, selection.scope, selection.selected);
+  const openers = useOpeners(comparison, selection, setTab);
+  return { ...selection, ...display, ...openers, tab, pairIndex, setTab };
 }

@@ -2,46 +2,14 @@ import { act, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { ComparisonResult } from "../../services/engine/comparisonTypes";
-import {
-  comparison,
-  NUMBER_CHANGE,
-  pair,
-  REMOVED_ANNEX_CHANGE,
-  VERSION_CHANGES,
-} from "../../test/comparisonFakes";
+import { ANNEX, required, THREE, V2, V3 } from "../../test/threeDocuments";
 import { fakeEngineServices } from "../../test/engineFakes";
 import { renderApp, stubBrowser } from "../../test/renderApp";
 
-function required<T>(value: T | undefined): T {
-  if (value === undefined) throw new Error("Falta un elemento que la prueba necesita.");
-  return value;
-}
-
-const V2 = "Contrato_v2.docx";
-const V3 = "Contrato_v3.docx";
-const ANNEX = "Anexo.pdf";
 const DECIDED = {
   decisions: [{ alertNumber: 1, kind: "error" as const, correctSide: null, decidedAt: "" }],
   canUndo: true,
 };
-
-// Tres documentos comparados todos contra todos, como lo hace el motor con tres o más archivos.
-const THREE: ComparisonResult = (() => {
-  const base = comparison();
-  return comparison({
-    mode: "contract_annexes",
-    documents: [
-      ...base.documents,
-      { ...required(base.documents[0]), name: ANNEX, fragmentCount: 2 },
-    ],
-    pairs: [
-      pair(V2, V3, VERSION_CHANGES),
-      pair(V2, ANNEX, [{ ...REMOVED_ANNEX_CHANGE, number: 6 }]),
-      pair(V3, ANNEX, [{ ...NUMBER_CHANGE, number: 7 }]),
-    ],
-  });
-})();
 
 async function openThree(decide = vi.fn(() => Promise.resolve(DECIDED))) {
   const startComparison = vi.fn(() => Promise.resolve(THREE));
@@ -54,8 +22,12 @@ async function openThree(decide = vi.fn(() => Promise.resolve(DECIDED))) {
   return { decide };
 }
 
+const OPTIONS = { name: /^Opciones/ };
+
+/** Las versiones, con «Opciones» abierto: ahí viven los selectores de documento. */
 async function openVersions() {
   await userEvent.click(screen.getByRole("tab", { name: /Comparar versiones/ }));
+  await userEvent.click(screen.getByRole("button", OPTIONS));
 }
 
 describe("Comparar un documento contra todos", () => {
@@ -128,7 +100,7 @@ describe("Comparar un documento contra todos", () => {
       name: `Comparar ${ANNEX} contra todos los demás`,
     });
     await userEvent.click(required(headers[0]));
-
+    await userEvent.click(screen.getByRole("button", OPTIONS));
     expect(screen.getByRole("combobox", { name: "Documento base" })).toHaveValue(ANNEX);
     expect(screen.getByRole("combobox", { name: "Contra" })).toHaveDisplayValue(
       "Todos los demás documentos",
@@ -138,6 +110,7 @@ describe("Comparar un documento contra todos", () => {
     const cells = screen.getAllByRole("gridcell").filter((cell) => cell.tagName === "BUTTON");
     await userEvent.click(required(cells[0]));
     await userEvent.click(screen.getByRole("button", { name: /Abrir el par/ }));
+    await userEvent.click(screen.getByRole("button", OPTIONS));
     expect(screen.getByRole("combobox", { name: "Contra" })).not.toHaveDisplayValue(
       "Todos los demás documentos",
     );
@@ -152,7 +125,7 @@ describe("Cerrar la comparación", () => {
 
   it("vuelve a elegir qué comparar sin perder las decisiones y se puede reabrir", async () => {
     const { decide } = await openThree();
-    await openVersions();
+    await userEvent.click(screen.getByRole("tab", { name: /Comparar versiones/ }));
     await userEvent.keyboard("e");
     expect(decide).toHaveBeenCalled();
 
@@ -161,7 +134,7 @@ describe("Cerrar la comparación", () => {
     expect(screen.getByText("Elija dos o más documentos")).toBeInTheDocument();
     const recent = screen.getByRole("button", { name: /Abrir comparación/ });
     await userEvent.click(recent);
-    await openVersions();
+    await userEvent.click(screen.getByRole("tab", { name: /Comparar versiones/ }));
     expect(
       within(screen.getByRole("list", { name: "Cambios" })).getByText("Es un error"),
     ).toBeVisible();

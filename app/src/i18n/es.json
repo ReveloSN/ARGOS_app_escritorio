@@ -864,7 +864,9 @@
         "other": "{count} activas"
       },
       "typeLabel": "Mostrar",
-      "legendLabel": "Cómo leer las marcas"
+      "legendLabel": "Cómo leer las marcas",
+      "minimap": "Mostrar el minimapa",
+      "matrix": "Ver la matriz de documentos"
     },
     "ignore": {
       "label": "Ignorar",
@@ -954,6 +956,20 @@
     "meaning": {
       "reworded": "Reformulado, mismo significado",
       "meaning_change": "Posible cambio de significado"
+    },
+    "unified": {
+      "label": "Texto con los cambios",
+      "movedTo": "Movido a {location}"
+    },
+    "summary": {
+      "changes": {
+        "one": "{count} cambio",
+        "other": "{count} cambios"
+      },
+      "important": {
+        "one": "{count} importante",
+        "other": "{count} importantes"
+      }
     }
   },
   "facts": {

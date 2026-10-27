@@ -864,7 +864,9 @@
         "other": "{count} active"
       },
       "typeLabel": "Show",
-      "legendLabel": "How to read the marks"
+      "legendLabel": "How to read the marks",
+      "minimap": "Show the minimap",
+      "matrix": "See the document matrix"
     },
     "ignore": {
       "label": "Ignore",
@@ -954,6 +956,20 @@
     "meaning": {
       "reworded": "Reworded, same meaning",
       "meaning_change": "Possible change of meaning"
+    },
+    "unified": {
+      "label": "Text with the changes",
+      "movedTo": "Moved to {location}"
+    },
+    "summary": {
+      "changes": {
+        "one": "{count} change",
+        "other": "{count} changes"
+      },
+      "important": {
+        "one": "{count} important",
+        "other": "{count} important"
+      }
     }
   },
   "facts": {

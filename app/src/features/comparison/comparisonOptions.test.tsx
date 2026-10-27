@@ -77,4 +77,37 @@ describe("Opciones de Comparar", () => {
     expect(tab).toHaveAttribute("aria-keyshortcuts", "1");
     expect(tab.querySelector("kbd")).toHaveTextContent("1");
   });
+
+  it("la línea superior resume en corto: cuántos cambios hay y cuántos son importantes", async () => {
+    await openComparison();
+
+    expect(screen.getByText("5 cambios · 3 importantes")).toBeVisible();
+    expect(screen.queryByText("faltan")).not.toBeInTheDocument();
+  });
+
+  it("el minimapa y el enlace a la matriz salen de la vista principal y viven en Opciones", async () => {
+    const options = await openComparison();
+    expect(screen.queryByRole("navigation", { name: "Minimapa de cambios" })).toBeNull();
+
+    await userEvent.click(options);
+    await userEvent.click(screen.getByRole("checkbox", { name: "Mostrar el minimapa" }));
+
+    expect(screen.getByRole("navigation", { name: "Minimapa de cambios" })).toBeVisible();
+    expect(options).toHaveAccessibleName("Opciones, 2 activas");
+    await userEvent.click(screen.getByRole("button", { name: "Ver la matriz de documentos" }));
+    expect(screen.getByRole("tab", { name: "Matriz" })).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("(regresión) el foco entra al abrir Opciones y vuelve al botón con Esc, sin cerrar la comparación", async () => {
+    const options = await openComparison();
+
+    await userEvent.keyboard("o");
+
+    expect(options).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("combobox", { name: "Documento base" })).toHaveFocus();
+    await userEvent.keyboard("{Escape}");
+    expect(options).toHaveAttribute("aria-expanded", "false");
+    expect(options).toHaveFocus();
+    expect(screen.getByRole("heading", { name: "Comparar documentos" })).toBeVisible();
+  });
 });
