@@ -1,21 +1,28 @@
-import { Icon } from "../../components/atoms/Icon";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ChangeResult } from "../../services/engine/comparisonTypes";
 import type { DecisionResult } from "../../services/engine/reviewTypes";
 import { describeLocation } from "../alerts/alertPresentation";
 import { DECISION_LABELS } from "../alerts/useAlertDecisions";
-import { CHANGE_KIND_APPEARANCE, changeSegment, changeValues } from "./changePresentation";
+import { changeSegment, changeValues } from "./changePresentation";
 import styles from "./Compare.module.css";
-import { meaningLabel } from "./meaningLabel";
 
 interface ChangeItemProps {
   readonly change: ChangeResult;
   readonly decision: DecisionResult | undefined;
   readonly isSelected: boolean;
+  /** El primero de los que no son de riesgo alto: lleva un pequeño espacio antes. */
+  readonly startsOthers: boolean;
   /** «Contra todos»: el documento contra el que ocurre el cambio. */
   readonly against?: string | undefined;
   readonly onSelect: (number: number) => void;
+}
+
+/** Solo el riesgo alto lleva marca: un punto rojo con su nombre, nunca solo color. */
+function RiskDot({ risk }: { readonly risk: ChangeResult["risk"] }) {
+  const { t } = useI18n();
+  if (risk !== "high") return <span aria-hidden="true" className={styles.riskDotSpace} />;
+  return <span role="img" aria-label={t("risk.highLong")} className={styles.riskDot} />;
 }
 
 function ItemValues({ change }: { change: ChangeResult }) {
@@ -29,46 +36,38 @@ function ItemValues({ change }: { change: ChangeResult }) {
   );
 }
 
-/** Un cambio de la lista: tipo, lugar, valores, sugerencia de IA y decisión tomada. */
-export function ChangeItem({ change, decision, isSelected, against, onSelect }: ChangeItemProps) {
+function fullText(change: ChangeResult): string {
+  const values = changeValues(change);
+  return [values.before, values.after].filter(Boolean).join(" → ");
+}
+
+/** Un cambio, en una línea: su texto corto y su ubicación; la decisión tomada, si la hay. */
+export function ChangeItem(props: ChangeItemProps) {
   const { t } = useI18n();
-  const appearance = CHANGE_KIND_APPEARANCE[change.kind];
+  const { change, decision, isSelected, against } = props;
   const segment = changeSegment(change);
   return (
-    <li>
+    <li className={joinClassNames(props.startsOthers && styles.itemAfterHigh)}>
       <button
         type="button"
         aria-current={isSelected}
+        title={fullText(change)}
         className={joinClassNames(styles.item, isSelected && styles.itemSelected)}
         onClick={() => {
-          onSelect(change.number);
+          props.onSelect(change.number);
         }}
       >
-        <span className={styles.itemNumber}>{change.number}</span>
-        <span className={styles.itemBody}>
-          <span className={joinClassNames(styles.itemKind, styles[change.kind])}>
-            <Icon name={appearance.icon} size="xs" />
-            {t(appearance.label)}
-            {segment && (
-              <span className={styles.itemLocation}>
-                {" "}
-                · {describeLocation(segment.location, t)}
-              </span>
-            )}
+        <RiskDot risk={change.risk} />
+        <ItemValues change={change} />
+        {segment && (
+          <span className={styles.itemWhere}>{describeLocation(segment.location, t)}</span>
+        )}
+        {against && (
+          <span className={styles.itemAgainst} title={against}>
+            {t("comparison.scope.versus", { document: against })}
           </span>
-          <ItemValues change={change} />
-          <span className={styles.itemFooter}>
-            {against && (
-              <span className={styles.itemAgainst} title={against}>
-                {t("comparison.scope.versus", { document: against })}
-              </span>
-            )}
-            {change.meaning && <span>{meaningLabel(change.meaning, t)}</span>}
-            {decision && (
-              <span className={styles.itemStatus}>{t(DECISION_LABELS[decision.kind])}</span>
-            )}
-          </span>
-        </span>
+        )}
+        {decision && <span className={styles.itemStatus}>{t(DECISION_LABELS[decision.kind])}</span>}
       </button>
     </li>
   );

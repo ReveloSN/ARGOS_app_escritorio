@@ -39,7 +39,8 @@ describe("lista del alcance", () => {
   it("contra todos junta los cambios de cada documento, cada uno con su documento", () => {
     const list = scopedList(THREE, INPUT);
 
-    expect(list.visible.map((change) => change.number)).toEqual([1, 5, 2]);
+    // Los de riesgo alto (1 y 2) van primero; el 5 es de riesgo medio.
+    expect(list.visible.map((change) => change.number)).toEqual([1, 2, 5]);
     expect(list.againstByChange.get(1)).toBe(ANNEX_ONE);
     expect(list.againstByChange.get(2)).toBe(ANNEX_TWO);
     expect(list.selected?.number).toBe(2);

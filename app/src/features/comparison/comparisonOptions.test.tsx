@@ -44,7 +44,7 @@ describe("Opciones de Comparar", () => {
 
     expect(options).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByRole("checkbox", { name: "mayúsculas" })).toBeInTheDocument();
-    expect(screen.getByRole("checkbox", { name: /Solo cambios importantes/ })).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: "Mostrar el minimapa" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^Faltan/ })).toBeInTheDocument();
     expect(screen.getByText("tachado = falta en B")).toBeInTheDocument();
   });

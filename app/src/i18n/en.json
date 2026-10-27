@@ -895,12 +895,13 @@
     },
     "list": {
       "title": "Changes",
-      "count": "{visible} of {total}",
       "navigate": "J K to navigate",
-      "importantOnly": "Important changes only: numbers, dates, names and negations",
       "empty": "No changes match these filters.",
       "emptyHint": "Change them in “Options”.",
-      "noDifferences": "There are no differences between these documents."
+      "noDifferences": "There are no differences between these documents.",
+      "all": "All",
+      "important": "Important only",
+      "filterLabel": "Which changes to see"
     },
     "detail": {
       "empty": "—",

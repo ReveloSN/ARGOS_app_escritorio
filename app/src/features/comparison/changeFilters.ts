@@ -38,6 +38,11 @@ export function isImportant(change: ChangeResult): boolean {
   return change.risk === "high";
 }
 
+/** Los de riesgo alto primero, sin cambiar el orden dentro de cada grupo. */
+export function highRiskFirst(changes: readonly ChangeResult[]): ChangeResult[] {
+  return [...changes.filter(isImportant), ...changes.filter((change) => !isImportant(change))];
+}
+
 export function importantCount(changes: readonly ChangeResult[]): number {
   return changes.filter(isImportant).length;
 }

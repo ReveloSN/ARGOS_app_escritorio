@@ -13,12 +13,7 @@ const FOCUSABLE = "input, select, button";
 
 function activeCount(props: OptionsPanelProps): number {
   const filters: ChangeFilters = props.filters;
-  return (
-    filters.ignored.size +
-    Number(filters.isImportantOnly) +
-    Number(filters.type !== "all") +
-    Number(props.isMinimapShown)
-  );
+  return filters.ignored.size + Number(filters.type !== "all") + Number(props.isMinimapShown);
 }
 
 /** Esc cierra el panel antes que la comparación: se atiende primero y no llega a los demás. */

@@ -95,13 +95,6 @@ export function OptionsPanel(props: OptionsPanelProps) {
           />
         ))}
       </Row>
-      <Checkbox
-        label={t("comparison.list.importantOnly")}
-        checked={filters.isImportantOnly}
-        onChange={(checked) => {
-          onFilters({ ...filters, isImportantOnly: checked });
-        }}
-      />
       <Row label={t("comparison.options.typeLabel")}>
         <TypeChips {...props} />
       </Row>

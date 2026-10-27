@@ -50,8 +50,7 @@ describe("Panel de explicación de un cambio", () => {
   it("rotula la sugerencia de significado en lenguaje claro, sin etiquetas técnicas", async () => {
     await openFirstChange(() => Promise.resolve(TEMPLATE));
 
-    const list = within(screen.getByRole("list", { name: "Cambios" }));
-    expect(list.getAllByText("Posible cambio de significado").length).toBeGreaterThan(0);
+    expect(panel().getAllByText("Posible cambio de significado").length).toBeGreaterThan(0);
     expect(screen.queryByText(/^IA: /)).not.toBeInTheDocument();
     expect(panel().getByText("Sugerencia de IA, usted decide")).toBeInTheDocument();
   });

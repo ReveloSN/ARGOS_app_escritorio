@@ -94,15 +94,14 @@
   margin-left: auto;
 }
 
+/* El botón queda en la línea superior y el panel ocupa una fila propia debajo. */
 .options {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2);
-  margin-left: auto;
+  display: contents;
 }
 
 .optionsToggle {
   display: inline-flex;
+  margin-left: auto;
   align-items: center;
   gap: var(--spacing-1);
   min-height: var(--size-control-sm);
@@ -126,12 +125,17 @@
 
 .optionsPanel {
   display: flex;
+  flex: 1 1 100%;
   flex-direction: column;
   gap: var(--spacing-2-5);
   padding: var(--spacing-3);
   border: var(--border-width) solid var(--color-border-default);
   border-radius: var(--radius-md);
   background: var(--color-background-surface);
+}
+
+.optionsRow .legend {
+  margin-left: 0;
 }
 
 .optionsRow {
@@ -466,11 +470,12 @@
 }
 
 .item {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  display: flex;
+  align-items: center;
   gap: var(--spacing-2);
   width: 100%;
-  padding: var(--spacing-2) var(--spacing-1);
+  min-height: var(--size-control-lg);
+  padding: var(--spacing-1) var(--spacing-1);
   border: 0;
   border-bottom: var(--border-width) solid var(--color-border-default);
   background: transparent;
@@ -478,6 +483,30 @@
   font: inherit;
   text-align: start;
   cursor: pointer;
+}
+
+.itemAfterHigh {
+  margin-top: var(--spacing-3);
+}
+
+.riskDot,
+.riskDotSpace {
+  flex: none;
+  width: var(--size-risk-dot);
+  height: var(--size-risk-dot);
+}
+
+.riskDot {
+  border-radius: 50%;
+  background: var(--color-risk-high);
+}
+
+.itemWhere {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  white-space: nowrap;
 }
 
 .item:hover {
@@ -527,6 +556,8 @@
 }
 
 .itemValues {
+  flex: 0 1 auto;
+  min-width: 0;
   overflow: hidden;
   font-family: var(--font-family-mono);
   font-size: var(--font-size-caption);

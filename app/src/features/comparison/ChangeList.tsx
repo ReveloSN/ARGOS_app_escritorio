@@ -1,15 +1,20 @@
+import { SegmentedControl } from "../../components/molecules/SegmentedControl";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ChangeResult } from "../../services/engine/comparisonTypes";
 import type { DecisionResult } from "../../services/engine/reviewTypes";
+import { importantCount, type ChangeFilters } from "./changeFilters";
 import { ChangeItem } from "./ChangeItem";
 import styles from "./Compare.module.css";
 
 interface ChangeListProps {
   /** Los cambios después de ignorar los de forma. */
   readonly shown: readonly ChangeResult[];
+  /** Los que se ven: los de riesgo alto primero. */
   readonly visible: readonly ChangeResult[];
   readonly decisions: readonly DecisionResult[];
   readonly selected: number | undefined;
+  readonly filters: ChangeFilters;
+  readonly onFilters: (filters: ChangeFilters) => void;
   /** Número de cambio → documento contra el que ocurre; solo en «contra todos». */
   readonly againstByChange?: ReadonlyMap<number, string> | undefined;
   readonly onSelect: (number: number) => void;
@@ -29,25 +34,50 @@ function EmptyChanges({ hasHiddenChanges }: { readonly hasHiddenChanges: boolean
   );
 }
 
-/** Lista de cambios (J / K para navegar); sus filtros están en «Opciones». */
+const ALL = "all";
+const IMPORTANT = "important";
+
+/** Un solo control para ver todos los cambios o solo los importantes, cada uno con su conteo. */
+function ImportanceControl(props: Pick<ChangeListProps, "shown" | "filters" | "onFilters">) {
+  const { t } = useI18n();
+  const options = [
+    { value: ALL, label: `${t("comparison.list.all")} ${String(props.shown.length)}` },
+    {
+      value: IMPORTANT,
+      label: `${t("comparison.list.important")} ${String(importantCount(props.shown))}`,
+    },
+  ];
+  return (
+    <SegmentedControl
+      label={t("comparison.list.filterLabel")}
+      options={options}
+      value={props.filters.isImportantOnly ? IMPORTANT : ALL}
+      onChange={(value) => {
+        props.onFilters({ ...props.filters, isImportantOnly: value === IMPORTANT });
+      }}
+    />
+  );
+}
+
+/** Lista de cambios, uno por línea (J / K para navegar); los de riesgo alto van primero. */
 export function ChangeList(props: ChangeListProps) {
   const { t } = useI18n();
+  const firstOther = props.visible.findIndex((change) => change.risk !== "high");
   return (
     <div className={styles.listPanel}>
       <div className={styles.listHeader}>
         <span className={styles.listTitle}>{t("comparison.list.title")}</span>
-        <span className={styles.listCount}>
-          {t("comparison.list.count", { visible: props.visible.length, total: props.shown.length })}
-        </span>
         <span className={styles.listHint}>{t("comparison.list.navigate")}</span>
       </div>
+      <ImportanceControl {...props} />
       <ul aria-label={t("comparison.list.title")} className={styles.items}>
-        {props.visible.map((change) => (
+        {props.visible.map((change, index) => (
           <ChangeItem
             key={change.number}
             change={change}
             decision={props.decisions.find((decision) => decision.alertNumber === change.number)}
             isSelected={props.selected === change.number}
+            startsOthers={index > 0 && index === firstOther}
             against={props.againstByChange?.get(change.number)}
             onSelect={props.onSelect}
           />

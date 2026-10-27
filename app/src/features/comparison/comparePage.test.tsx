@@ -3,13 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { ComparisonRequest, ComparisonResult } from "../../services/engine/comparisonTypes";
-import {
-  CASE_CHANGE,
-  comparison,
-  MOVED_CHANGE,
-  pair,
-  VERSION_CHANGES,
-} from "../../test/comparisonFakes";
+import { CASE_CHANGE, comparison, pair, VERSION_CHANGES } from "../../test/comparisonFakes";
 import { fakeEngineServices } from "../../test/engineFakes";
 import { inconsistency } from "../../test/inconsistencyFakes";
 import { renderApp, stubBrowser } from "../../test/renderApp";
@@ -102,9 +96,7 @@ describe("Comparar documentos", () => {
     expect(list.getAllByRole("button")).toHaveLength(4);
     await userEvent.click(screen.getByRole("button", { name: /^Movidas/ }));
     expect(list.getAllByRole("button")).toHaveLength(1);
-    expect(list.getByRole("button")).toHaveAccessibleName(
-      expect.stringContaining(String(MOVED_CHANGE.number)),
-    );
+    expect(list.getByRole("button")).toHaveAccessibleName(expect.stringContaining("Párrafo 2"));
   });
 
   it("muestra las inconsistencias como dato por documento, con el valor distinto marcado", async () => {

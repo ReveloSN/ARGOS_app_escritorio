@@ -1,5 +1,10 @@
 import type { ChangeResult, ComparisonResult } from "../../services/engine/comparisonTypes";
-import { isHiddenByIgnore, visibleChanges, type ChangeFilters } from "./changeFilters";
+import {
+  highRiskFirst,
+  isHiddenByIgnore,
+  visibleChanges,
+  type ChangeFilters,
+} from "./changeFilters";
 import { scopedChanges, type CompareScope, type ScopedChange } from "./comparisonScope";
 
 export interface ScopedListInput {
@@ -32,9 +37,11 @@ export function scopedList(comparison: ComparisonResult, input: ScopedListInput)
   );
   return {
     shown,
-    visible: visibleChanges(
-      ofDocument.map((item) => item.change),
-      input.filters,
+    visible: highRiskFirst(
+      visibleChanges(
+        ofDocument.map((item) => item.change),
+        input.filters,
+      ),
     ),
     pairChanges: shown.filter((item) => item.pairIndex === input.pairIndex).map((i) => i.change),
     againstByChange: new Map(shown.map((item) => [item.change.number, item.other])),

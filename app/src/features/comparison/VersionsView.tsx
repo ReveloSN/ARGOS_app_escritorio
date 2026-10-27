@@ -99,6 +99,8 @@ export function VersionsView({ comparison, pair, list, view, decisions }: Versio
           visible={list.visible}
           againstByChange={view.scope.against.kind === "all" ? list.againstByChange : undefined}
           decisions={comparison.decisions.decisions}
+          filters={view.filters}
+          onFilters={view.setFilters}
           selected={view.selected}
           onSelect={view.select}
         />
