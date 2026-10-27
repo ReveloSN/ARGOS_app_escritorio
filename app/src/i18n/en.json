@@ -855,6 +855,15 @@
         "other": "moved"
       }
     },
+    "options": {
+      "label": "Options",
+      "active": {
+        "one": "{count} active",
+        "other": "{count} active"
+      },
+      "typeLabel": "Show",
+      "legendLabel": "How to read the marks"
+    },
     "ignore": {
       "label": "Ignore",
       "case": "case",

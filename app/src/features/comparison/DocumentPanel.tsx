@@ -12,10 +12,6 @@ const SIDE_LABELS: Readonly<Record<PanelSide, TranslationKey>> = {
   first: "comparison.sideA",
   second: "comparison.sideB",
 };
-const LEGENDS: Readonly<Record<PanelSide, TranslationKey>> = {
-  first: "comparison.panel.legendFirst",
-  second: "comparison.panel.legendSecond",
-};
 // El otro lado del cambio movido: en A se dice dónde quedó en B, y al revés.
 const OTHER_SIDE: Readonly<Record<PanelSide, PanelSide>> = { first: "second", second: "first" };
 
@@ -91,7 +87,6 @@ export function DocumentPanel(props: DocumentPanelProps) {
       <div className={styles.panelHeader}>
         <span className={styles.sideBadge}>{t(SIDE_LABELS[props.side])}</span>
         <span className={styles.documentName}>{props.document}</span>
-        <span className={styles.legend}>{t(LEGENDS[props.side])}</span>
       </div>
       <div ref={props.scrollRef} className={styles.panelBody} onScroll={props.onScroll}>
         {props.segments.map((item) => (

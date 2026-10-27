@@ -96,6 +96,7 @@ describe("Comparar documentos", () => {
     const list = within(await screen.findByRole("list", { name: "Cambios" }));
     expect(list.getAllByRole("button")).toHaveLength(5);
 
+    await userEvent.click(screen.getByRole("button", { name: /^Opciones/ }));
     await userEvent.click(screen.getByRole("checkbox", { name: "mayúsculas" }));
     expect(list.getAllByRole("button")).toHaveLength(4);
     await userEvent.click(screen.getByRole("button", { name: /^Movidas/ }));
@@ -138,6 +139,7 @@ describe("Comparar documentos", () => {
     expect(await screen.findByRole("grid", { name: "Matriz de diferencias" })).toBeInTheDocument();
     expect(screen.getAllByText("sin diferencias")).toHaveLength(4);
     await userEvent.click(screen.getByRole("button", { name: /Abrir el par/ }));
+    await userEvent.click(screen.getByRole("button", { name: /^Opciones/ }));
     expect(screen.getByText("tachado = falta en B")).toBeInTheDocument();
   });
 

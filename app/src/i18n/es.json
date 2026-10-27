@@ -855,6 +855,15 @@
         "other": "movidas"
       }
     },
+    "options": {
+      "label": "Opciones",
+      "active": {
+        "one": "{count} activa",
+        "other": "{count} activas"
+      },
+      "typeLabel": "Mostrar",
+      "legendLabel": "Cómo leer las marcas"
+    },
     "ignore": {
       "label": "Ignorar",
       "case": "mayúsculas",

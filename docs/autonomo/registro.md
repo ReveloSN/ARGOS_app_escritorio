@@ -70,3 +70,10 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - Suite completa de la interfaz: 393 pruebas en verde con `--maxWorkers=3`. Con todo el paralelismo y el motor y Vite abiertos, 21 pruebas fallaron por tiempo (5 s), no por lógica: la máquina se satura.
 - Limitación: durante el plazo de 8 s para deshacer, la sesión eliminada sigue en la cuenta (el motor aún no la borra). Capturas `B2-*`.
 - Sin verificar: el panel del navegador recortó la captura «después» (viewport emulado); el texto nuevo se ve en ella.
+
+## Jornada del 27/10 · 07:43 · inicio y B3
+- Punto de partida: rama `trabajo-autonomo`, árbol limpio salvo `graphify-out/` (sin seguimiento) y el stash del B3, que recuperé. Suite de partida en verde: interfaz 393, motor 1696 (1 omitida). Nota: la hora de `date` en bash sale en otra zona; uso PowerShell con «SA Pacific Standard Time».
+- Git: nada de remoto ni push; sin errores de git.
+- **B3 · Comparar muestra primero lo esencial.** Encontré: arriba de la comparación se apilaban resumen, «Ignorar», chips de tipo (que repetían los conteos del resumen), «Solo cambios importantes» y la leyenda en cada panel. Cambié: nuevo `ComparisonOptions` plegado por defecto («Opciones · 1 activa», `aria-expanded`) con Ignorar, «Solo cambios importantes», filtro por tipo y la leyenda; `ChangeList` y `DocumentPanel` quedan sin esos controles (también deja de truncarse el nombre del archivo en el encabezado de cada panel). Pruebas en `comparisonOptions.test.tsx` (la de la comparación sigue en `comparePage.test.tsx`, que dejé bajo 150 líneas). Lint, tipos y 48 pruebas de Comparar en verde. Capturas `B3-*`.
+- Reversible: borrar `ComparisonOptions` y devolver los controles a `VersionsToolbar`/`ChangeList`.
+- No hice: mover el minimapa (es una ayuda de navegación de poco ancho; moverlo cambia la rejilla).

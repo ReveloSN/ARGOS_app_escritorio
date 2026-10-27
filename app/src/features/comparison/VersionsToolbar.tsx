@@ -1,29 +1,18 @@
 import type { ReactNode } from "react";
 
-import { Checkbox } from "../../components/atoms/Checkbox";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
-import type { PluralKey, TranslationKey } from "../../i18n/translate";
+import type { PluralKey } from "../../i18n/translate";
 import type { ChangeKindValue, ChangeResult } from "../../services/engine/comparisonTypes";
-import {
-  CHANGE_KINDS,
-  COSMETIC_MATERIALITIES,
-  countByKind,
-  type ChangeFilters,
-  type CosmeticMateriality,
-} from "./changeFilters";
+import { CHANGE_KINDS, countByKind, type ChangeFilters } from "./changeFilters";
 import styles from "./Compare.module.css";
+import { ComparisonOptions } from "./ComparisonOptions";
 
 const COUNTER_LABELS: Readonly<Record<ChangeKindValue, PluralKey>> = {
   removed: "comparison.counters.removed",
   added: "comparison.counters.added",
   modified: "comparison.counters.modified",
   moved: "comparison.counters.moved",
-};
-const IGNORE_LABELS: Readonly<Record<CosmeticMateriality, TranslationKey>> = {
-  case: "comparison.ignore.case",
-  punctuation: "comparison.ignore.punctuation",
-  format: "comparison.ignore.format",
 };
 
 interface VersionsToolbarProps {
@@ -35,18 +24,9 @@ interface VersionsToolbarProps {
   readonly onFilters: (filters: ChangeFilters) => void;
 }
 
-function toggled(
-  ignored: ReadonlySet<CosmeticMateriality>,
-  materiality: CosmeticMateriality,
-): ReadonlySet<CosmeticMateriality> {
-  const next = new Set(ignored);
-  if (!next.delete(materiality)) next.add(materiality);
-  return next;
-}
-
-/** Qué se compara, cuántos cambios hay de cada tipo y qué cambios de forma se ignoran. */
+/** Qué se compara y cuántos cambios hay de cada tipo; los filtros van plegados en «Opciones». */
 export function VersionsToolbar({ changes, heading, filters, onFilters }: VersionsToolbarProps) {
-  const { t, tPlural } = useI18n();
+  const { tPlural } = useI18n();
   const counts = countByKind(changes);
   return (
     <div className={styles.toolbar}>
@@ -61,19 +41,7 @@ export function VersionsToolbar({ changes, heading, filters, onFilters }: Versio
           </span>
         ))}
       </div>
-      <div className={styles.ignores}>
-        <span className={styles.ignoreLabel}>{t("comparison.ignore.label")}</span>
-        {COSMETIC_MATERIALITIES.map((materiality) => (
-          <Checkbox
-            key={materiality}
-            label={t(IGNORE_LABELS[materiality])}
-            checked={filters.ignored.has(materiality)}
-            onChange={() => {
-              onFilters({ ...filters, ignored: toggled(filters.ignored, materiality) });
-            }}
-          />
-        ))}
-      </div>
+      <ComparisonOptions changes={changes} filters={filters} onFilters={onFilters} />
     </div>
   );
 }
