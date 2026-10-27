@@ -83,3 +83,9 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - **B5.** Encontré: Inicio con sesión mostraba dos botones primarios («Continuar la revisión» y «Nueva revisión»), más el «Nueva revisión» primario de la barra lateral. Cambié: en Inicio con sesión, «Nueva revisión» pasa a secundaria; sin sesión sigue primaria. Prueba nueva en `homeOverview.test.tsx` (falló antes). Capturas `B5-*`.
 - Interfaz completa: 397 pruebas en verde (`--maxWorkers=3`), ESLint y tsc sin avisos.
 - Se queda: el botón «Nueva revisión» de la barra lateral es global (acceso siempre visible), no una repetición de la pantalla.
+
+## Ciclo A/B · 07:49 · valores de las alertas, teclado, i18n y ventana mínima
+- Ventana mínima real de la app: 1100×700 (`tauri.conf.json`); verifico a ese tamaño además de 800 px.
+- Teclado: recorrido con Tab en Inicio (22 pasos): orden lógico (barra lateral → sesión → contenido), todos los elementos con foco visible y dentro de pantalla; los nombres accesibles no incluyen el texto de los iconos. Sin hallazgos.
+- i18n: búsqueda de cadenas en español dentro de `.tsx` (sin pruebas): solo el catálogo de desarrollo, permitido. Sin hallazgos.
+- Encontré: en el Expediente, las fechas de «Valor A/B» seguían cortadas («15 de marzo de 2…») aunque ya tenían `title`. Cambié: `.value` se ajusta en líneas (`overflow-wrap: anywhere`), sin recorte; el subtítulo conserva los puntos suspensivos con `title`. Capturas `valores-alertas-*`. CSS puro: sin prueba automática.
