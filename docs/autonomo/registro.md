@@ -121,3 +121,9 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - Nueva revisión: validé con archivos desde JavaScript; el nombre de la sesión es obligatorio y el mensaje aparece junto al campo (a la derecha del formulario). Los botones «Quitar» tienen nombre accesible por archivo. Sin hallazgos.
 - Aclaración sobre mis capturas: el panel las recorta a 800×600 de un viewport mayor, así que no muestran el borde derecho ni el inferior; lo que no se ve en ellas lo medí por JavaScript.
 - Interfaz: ESLint, tsc y 406 pruebas en verde.
+
+## Cierre parcial · 08:35 · documentación y verificación
+- Documenté en `docs/decisions/030-revision-autonoma-usabilidad-y-errores.md`, `docs/progreso.md` (tabla de la revisión, Comparar con «Opciones», Inicio, asistente, uso de `ARGUS_DEV_ORIGIN`, pendientes) y `docs/autonomo/resumen.md`.
+- Eliminar sesión: el diálogo pone el foco en «Cancelar» y avisa que hay unos segundos para deshacer; con Esc se cancela y el foco vuelve al selector. No borré ninguna sesión (ni siquiera las mías).
+- Verificación final: interfaz → ESLint, tsc, Prettier y Stylelint sin avisos, 406 pruebas; motor → ruff, black, mypy (403 archivos) sin avisos; suite del motor en curso.
+- Git: nada de remoto; commits solo en `trabajo-autonomo`; sin errores de git.
