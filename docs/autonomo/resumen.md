@@ -1,6 +1,6 @@
 # Resumen del trabajo autónomo (rama local `trabajo-autonomo`, sin push)
 
-Jornadas del 25/10 (13:15–13:37) y del 27/10 (desde las 07:32, hora de Bogotá). Todo el trabajo es local: 17 commits pequeños sobre `main`, sin remoto. Detalle por ciclo en `registro.md`; capturas en `capturas/`; decisión en `docs/decisions/030-…md`.
+Jornadas del 25/10 (13:15–13:37) y del 27/10 (desde las 07:32, hora de Bogotá). Todo el trabajo es local: 25 commits pequeños sobre `main`, sin remoto. Detalle por ciclo en `registro.md`; capturas en `capturas/`; decisión en `docs/decisions/030-…md`.
 
 ## Errores corregidos
 1. `test_engine_process_serves_health…`: no era un fallo, era el arranque en frío (importar `anthropic` ≈12 s y `spacy` ≈6 s); límite 30 → 120 s. Corre y pasa.
@@ -24,6 +24,9 @@ Cada uno con prueba de regresión que falló antes, salvo los de layout puro (CS
 - **B4** Los atajos 1/2/3 de las pestañas de Comparar parecían conteos: ahora son teclas y salen del nombre accesible (`B4-*`).
 - **B5** Una sola acción primaria en Inicio con sesión (`B5-*`).
 - Vacíos con salida: búsqueda sin resultados y «filtros» dicen qué hacer.
+
+## Verificación final
+Interfaz: ESLint, tsc, Prettier y Stylelint sin avisos; 406 pruebas y la verificación del build de producción (8). Motor: ruff, black y mypy sin avisos; 1696 pruebas (1 omitida), cobertura 99 %.
 
 ## Verificado
 Motor real en carpeta aislada con 2 sesiones y 3 documentos (TXT, DOCX, EML): Inicio, Expediente, Comparar (matriz, versiones, inconsistencias), Revisar antes de enviar, Historial, Ajustes, Nueva revisión; renombrar y eliminar (cancelar) sesión; decidir con C y deshacer con Ctrl Z; tema claro y oscuro; ventana 1100×700 y 800 px; recorrido con Tab (orden, foco visible, nombres accesibles); contraste 4,5:1 y áreas de clic con script; motor caído; casos límite del motor por API (idénticos, vacío, formato raro, un solo archivo).

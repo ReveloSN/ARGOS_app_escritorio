@@ -136,3 +136,8 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 ## Ciclo A · 08:41 · Archivos e Informe
 - Archivos: lista correcta (tipo, estado «Leído · N fragmentos»); sin hallazgos.
 - Informe (solo la vista previa; no exporté, escribiría en Documentos del usuario): el nombre del archivo que se guardará («Informe_Contrato_de_prestación_…pdf») se salía de su caja. Cambié: `.fileName` se parte donde haga falta (`overflow-wrap: anywhere`). Medido: ya no se corta. CSS puro.
+
+## Cierre · 08:42
+- Suite completa del motor: 1696 pasan, 1 omitida, cobertura 99 %. Interfaz: 406 pruebas + 8 del build de producción. Lint, tipos y formato sin avisos.
+- Detuve mi motor (8766) y mi interfaz (1421). Los puertos 8765 y 1420 del usuario ya no estaban en uso al final de la jornada (no los toqué).
+- Git: `git log --oneline -5` y `git status` verificados; todos los commits están en la rama local `trabajo-autonomo`; no se hizo push ni se tocó `main`; sin errores de git. `graphify-out/` (del usuario) sigue sin seguimiento.
