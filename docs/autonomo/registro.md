@@ -132,3 +132,7 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - Encontré: la tabla tenía una primera fila altísima y «Dato» y «Valor confirmado» medían 28 px cada una: las tres columnas fijas (450 px) se comen el ancho que deja la barra lateral y el panel de 360 px. Con las columnas aplastadas, el texto «Sin confirmar: 4857 y 4587» se partía letra a letra.
 - Cambié: la tabla tiene un ancho mínimo (token nuevo `--size-facts-columns-min: 320px` + las columnas fijas); su contenedor ya se desplaza. Medido en el navegador: columnas 139/180/140/150/160 px, filas de ~63 px, el documento no se desborda. Capturas `datos-confirmados-*`. CSS puro: sin prueba automática; Stylelint y Prettier sin avisos.
 - Historial con el nombre largo (88 caracteres): la celda se recorta con puntos suspensivos y `title`; el documento no se desborda. Sin hallazgos.
+
+## Ciclo A · 08:41 · Archivos e Informe
+- Archivos: lista correcta (tipo, estado «Leído · N fragmentos»); sin hallazgos.
+- Informe (solo la vista previa; no exporté, escribiría en Documentos del usuario): el nombre del archivo que se guardará («Informe_Contrato_de_prestación_…pdf») se salía de su caja. Cambié: `.fileName` se parte donde haga falta (`overflow-wrap: anywhere`). Medido: ya no se corta. CSS puro.
