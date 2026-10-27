@@ -101,6 +101,12 @@ describe("ComparisonPanel", () => {
 });
 
 describe("UploadZone", () => {
+  it("la invitación sirve también cuando aún no hay archivos: no dice «más»", () => {
+    renderWithProviders(<UploadZone onFilesSelected={vi.fn()} onPasteText={vi.fn()} />);
+
+    expect(screen.getByText(/Arrastre los archivos aquí/)).toBeInTheDocument();
+  });
+
   it("entrega los archivos elegidos desde el equipo", async () => {
     const onFilesSelected = vi.fn();
     renderWithProviders(<UploadZone onFilesSelected={onFilesSelected} onPasteText={vi.fn()} />);

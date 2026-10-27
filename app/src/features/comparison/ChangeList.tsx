@@ -15,6 +15,20 @@ interface ChangeListProps {
   readonly onSelect: (number: number) => void;
 }
 
+/** Sin cambios a la vista: o no hay diferencias, o los filtros ocultan las que hay. */
+function EmptyChanges({ hasHiddenChanges }: { readonly hasHiddenChanges: boolean }) {
+  const { t } = useI18n();
+  if (!hasHiddenChanges) {
+    return <p className={styles.emptyList}>{t("comparison.list.noDifferences")}</p>;
+  }
+  return (
+    <>
+      <p className={styles.emptyList}>{t("comparison.list.empty")}</p>
+      <p className={styles.emptyList}>{t("comparison.list.emptyHint")}</p>
+    </>
+  );
+}
+
 /** Lista de cambios (J / K para navegar); sus filtros están en «Opciones». */
 export function ChangeList(props: ChangeListProps) {
   const { t } = useI18n();
@@ -39,11 +53,7 @@ export function ChangeList(props: ChangeListProps) {
           />
         ))}
       </ul>
-      {!props.visible.length && (
-        <p className={styles.emptyList}>
-          {t(props.shown.length ? "comparison.list.empty" : "comparison.list.noDifferences")}
-        </p>
-      )}
+      {!props.visible.length && <EmptyChanges hasHiddenChanges={props.shown.length > 0} />}
     </div>
   );
 }

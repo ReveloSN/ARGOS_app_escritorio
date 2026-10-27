@@ -114,3 +114,10 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 ## Ciclo A/B · 08:23 · Revisar antes de enviar
 - Cargué un borrador `.eml` con un adjunto de otro periodo (desde JavaScript, el navegador no sube archivos): detecta «Menciona junio de 2026 y el adjunto es de otro periodo», marca el texto, lista el adjunto y ofrece «Abrir en el correo». Funciona.
 - Encontré (B): sin expediente abierto la ruta decía «Revisar antes de enviar › Revisar antes de enviar». Cambié: sin expediente la ruta es un solo nivel. Prueba en `sendPage.test.tsx` (falló antes). Lint, tipos y 9 pruebas de la pantalla en verde.
+
+## Ciclo B · 08:30 · textos: invitación de carga y vacíos con salida
+- «Nueva revisión» decía «Arrastre **más** archivos aquí» aunque no hubiera ninguno; ahora «Arrastre los archivos aquí…». Prueba en `review.test.tsx`.
+- Estados vacíos (revisé los de `es.json`): casi todos ya dicen qué pasó y qué hacer. Ajusté dos: la búsqueda sin resultados («…Pruebe con otra palabra o con menos letras») y «Ningún cambio con estos filtros», que ahora agrega «Cámbielos en «Opciones»» porque los filtros se movieron allí. Pruebas actualizadas en `search.test.tsx` y `comparisonOptions.test.tsx` (fallaron antes del cambio).
+- Nueva revisión: validé con archivos desde JavaScript; el nombre de la sesión es obligatorio y el mensaje aparece junto al campo (a la derecha del formulario). Los botones «Quitar» tienen nombre accesible por archivo. Sin hallazgos.
+- Aclaración sobre mis capturas: el panel las recorta a 800×600 de un viewport mayor, así que no muestran el borde derecho ni el inferior; lo que no se ve en ellas lo medí por JavaScript.
+- Interfaz: ESLint, tsc y 406 pruebas en verde.

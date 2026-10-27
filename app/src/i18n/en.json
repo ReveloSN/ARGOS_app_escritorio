@@ -109,7 +109,7 @@
     "line": "Line {line}"
   },
   "upload": {
-    "prompt": "Drag more files here or choose them from your computer",
+    "prompt": "Drag the files here or choose them from your computer",
     "formats": "PDF, DOCX, XLSX, EML or pasted text · up to 10 MB per file",
     "choose": "Choose files",
     "paste": "Paste text",
@@ -569,7 +569,7 @@
     "settingsPlaceholder": "Search settings",
     "typeMore": "Type at least 2 letters.",
     "searching": "Searching…",
-    "noResults": "No results for “{query}”.",
+    "noResults": "No results for “{query}”. Try another word or fewer letters.",
     "failed": "We could not search: the analysis engine did not respond. Type again to retry.",
     "openFailed": "We could not open “{name}”. Try again."
   },
@@ -897,6 +897,7 @@
       "navigate": "J K to navigate",
       "importantOnly": "Important changes only: numbers, dates, names and negations",
       "empty": "No changes match these filters.",
+      "emptyHint": "Change them in “Options”.",
       "noDifferences": "There are no differences between these documents."
     },
     "detail": {

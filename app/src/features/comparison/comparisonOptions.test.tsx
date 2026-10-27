@@ -63,6 +63,7 @@ describe("Opciones de Comparar", () => {
     await userEvent.click(screen.getByRole("button", { name: /^Faltan/ }));
 
     expect(screen.getByText("Ningún cambio con estos filtros.")).toBeVisible();
+    expect(screen.getByText("Cámbielos en «Opciones».")).toBeVisible();
     expect(
       screen.queryByText("No hay diferencias entre estos documentos."),
     ).not.toBeInTheDocument();

@@ -109,7 +109,7 @@
     "line": "Línea {line}"
   },
   "upload": {
-    "prompt": "Arrastre más archivos aquí o elíjalos desde el equipo",
+    "prompt": "Arrastre los archivos aquí o elíjalos desde el equipo",
     "formats": "PDF, DOCX, XLSX, EML o texto pegado · hasta 10 MB por archivo",
     "choose": "Elegir archivos",
     "paste": "Pegar texto",
@@ -569,7 +569,7 @@
     "settingsPlaceholder": "Buscar en ajustes",
     "typeMore": "Escriba al menos 2 letras.",
     "searching": "Buscando…",
-    "noResults": "Sin resultados para «{query}».",
+    "noResults": "Sin resultados para «{query}». Pruebe con otra palabra o con menos letras.",
     "failed": "No pudimos buscar: el motor de análisis no respondió. Escriba de nuevo para reintentar.",
     "openFailed": "No pudimos abrir «{name}». Inténtelo de nuevo."
   },
@@ -897,6 +897,7 @@
       "navigate": "J K para navegar",
       "importantOnly": "Solo cambios importantes: números, fechas, nombres y negaciones",
       "empty": "Ningún cambio con estos filtros.",
+      "emptyHint": "Cámbielos en «Opciones».",
       "noDifferences": "No hay diferencias entre estos documentos."
     },
     "detail": {
