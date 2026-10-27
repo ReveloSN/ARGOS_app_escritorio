@@ -89,3 +89,8 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - Teclado: recorrido con Tab en Inicio (22 pasos): orden lógico (barra lateral → sesión → contenido), todos los elementos con foco visible y dentro de pantalla; los nombres accesibles no incluyen el texto de los iconos. Sin hallazgos.
 - i18n: búsqueda de cadenas en español dentro de `.tsx` (sin pruebas): solo el catálogo de desarrollo, permitido. Sin hallazgos.
 - Encontré: en el Expediente, las fechas de «Valor A/B» seguían cortadas («15 de marzo de 2…») aunque ya tenían `title`. Cambié: `.value` se ajusta en líneas (`overflow-wrap: anywhere`), sin recorte; el subtítulo conserva los puntos suspensivos con `title`. Capturas `valores-alertas-*`. CSS puro: sin prueba automática.
+
+## Ciclo A · 07:57 · detalle de alerta: el valor grande se cortaba
+- Encontré (Expediente › detalle de una alerta de fecha, 1100×700): el valor de cada tarjeta («15 de marzo de 2026», 26 px) se salía de la tarjeta, se cortaba y abría una barra de desplazamiento horizontal. Causa: `DiffValue` era un `inline-flex` sin ajuste de línea y cada carácter un elemento aparte.
+- Cambié: `DiffValue` agrupa por palabra y se ajusta entre palabras; los valores de más de 12 caracteres usan el tamaño menor; los espacios se conservan (`white-space: pre`). Prueba nueva en `feedback.test.tsx` (falló antes). Lint, tipos y 398 pruebas en verde. Capturas `detalle-valor-*`.
+- Tropiezo: mi primera versión colapsaba los espacios («15demarzode2026») y la segunda partía «202/6»; las vi en pantalla y las corregí antes de hacer commit. Vite quedó con un módulo intermedio en caché (lo leyó mientras escribía el archivo); reinicié mi servidor con `--force`. No fue un fallo del código.

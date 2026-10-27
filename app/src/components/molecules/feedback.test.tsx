@@ -83,6 +83,14 @@ describe("DiffValue", () => {
     expect([...marks].map((mark) => mark.textContent)).toEqual(["8", "5"]);
     expect(container).toHaveTextContent("4857");
   });
+
+  it("achica los valores largos (una fecha) para que quepan en su tarjeta, y los cortos no", () => {
+    const short = renderWithProviders(<DiffValue value="4857" positions={[]} />);
+    const long = renderWithProviders(<DiffValue value="15 de marzo de 2026" positions={[]} />);
+
+    expect(short.container.firstElementChild?.className).toMatch(/lg/);
+    expect(long.container.firstElementChild?.className).toMatch(/md/);
+  });
 });
 
 describe("SourceLine", () => {

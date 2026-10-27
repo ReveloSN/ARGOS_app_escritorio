@@ -1,11 +1,24 @@
 .value {
   display: inline-flex;
+  flex-wrap: wrap;
+  row-gap: var(--spacing-1);
   font-family: var(--font-family-mono);
   font-weight: var(--font-weight-medium);
   line-height: 1;
 }
 
-.lg {
+/* Cada carácter es un elemento aparte: sin esto, los espacios del valor se colapsan. */
+.same,
+.differs {
+  white-space: pre;
+}
+
+.word {
+  display: inline-flex;
+}
+
+.lg,
+.lg .word {
   gap: var(--spacing-0-5);
   font-size: var(--font-size-value);
 }
