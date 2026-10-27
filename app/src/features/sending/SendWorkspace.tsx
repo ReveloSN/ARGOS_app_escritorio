@@ -22,15 +22,12 @@ function SendHeader({ review }: { review: SendReviewResult }) {
   const { t } = useI18n();
   const { review: caseFile } = useReview();
   const { discardReview } = useSendReview();
-  const root = caseFile ? caseFile.session.name : t("navigation.send");
+  const current = { id: "send", label: t("navigation.send") };
+  // Sin expediente la ruta es solo esta pantalla: repetir su nombre no orienta a nadie.
+  const trail = caseFile ? [{ id: "root", label: caseFile.session.name }, current] : [current];
   return (
     <div className={styles.header}>
-      <Breadcrumb
-        items={[
-          { id: "root", label: root },
-          { id: "send", label: t("navigation.send") },
-        ]}
-      />
+      <Breadcrumb items={trail} />
       <div className={styles.titleRow}>
         <h1 className={styles.title}>{t("navigation.send")}</h1>
         <span className={styles.fileName}>{review.draft.fileName}</span>

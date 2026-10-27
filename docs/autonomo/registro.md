@@ -110,3 +110,7 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - **Error 5 (motivo falso).** Para un `.txt` o Word vacío el motivo decía «Es una imagen escaneada sin texto»; ahora «El archivo no tiene texto. · Revise que sea el archivo correcto y cárguelo de nuevo». Solo un PDF conserva el texto de imagen escaneada. También corrige la pantalla normal de «Confirmar lectura». `unreadableKeys` se partió en funciones pequeñas por el límite de complejidad del lint.
 - Interfaz: ESLint, tsc y 404 pruebas en verde. Capturas `archivo-ilegible-*`, `sin-diferencias-antes`.
 - Tropiezo: Vite volvió a quedarse con un módulo antiguo tras un `prettier --write` sobre archivos observados; reinicié mi servidor. Solo afecta a mi verificación.
+
+## Ciclo A/B · 08:23 · Revisar antes de enviar
+- Cargué un borrador `.eml` con un adjunto de otro periodo (desde JavaScript, el navegador no sube archivos): detecta «Menciona junio de 2026 y el adjunto es de otro periodo», marca el texto, lista el adjunto y ofrece «Abrir en el correo». Funciona.
+- Encontré (B): sin expediente abierto la ruta decía «Revisar antes de enviar › Revisar antes de enviar». Cambié: sin expediente la ruta es un solo nivel. Prueba en `sendPage.test.tsx` (falló antes). Lint, tipos y 9 pruebas de la pantalla en verde.

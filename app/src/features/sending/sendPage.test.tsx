@@ -36,6 +36,15 @@ describe("Revisar antes de enviar", () => {
     expect(screen.getByText(/1 de riesgo alto sin resolver/)).toBeInTheDocument();
   });
 
+  it("(regresión) sin expediente la ruta dice «Revisar antes de enviar» una sola vez", async () => {
+    const reviewDraft = vi.fn(() => Promise.resolve(sendReview()));
+
+    await chooseDraft(fakeEngineServices({ sending: { reviewDraft } }), false);
+
+    const trail = await screen.findByRole("navigation", { name: "Ruta" });
+    expect(within(trail).getAllByText("Revisar antes de enviar")).toHaveLength(1);
+  });
+
   it("aplica una corrección, la deshace con Ctrl Z y abre la copia con Ctrl Enter", async () => {
     const decide = vi.fn(() =>
       Promise.resolve({ decisions: [decided(1, "error")], canUndo: true }),
