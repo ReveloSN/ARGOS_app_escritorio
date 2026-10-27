@@ -72,6 +72,11 @@
 
 .table {
   display: grid;
+  /* Dato y Valor confirmado no pueden quedar sin ancho: si no caben, el contenedor se desplaza. */
+  min-width: calc(
+    var(--size-facts-columns-min) + var(--size-facts-column-confirmed) +
+      var(--size-facts-column-status) + var(--size-facts-column-actions)
+  );
   grid-template-columns:
     minmax(0, 1fr) minmax(0, 1.3fr) var(--size-facts-column-confirmed)
     var(--size-facts-column-status) var(--size-facts-column-actions);
