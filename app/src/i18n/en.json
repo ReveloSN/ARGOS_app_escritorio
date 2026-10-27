@@ -243,7 +243,9 @@
       "what": "We couldn't read «{name}».",
       "why": "It's a scanned image with no text.",
       "todo": "Upload it again with selectable text.",
-      "todoOcr": "Upload it again with selectable text or enable OCR to read it."
+      "todoOcr": "Upload it again with selectable text or enable OCR to read it.",
+      "whyEmpty": "The file has no text.",
+      "todoEmpty": "Check that it is the right file and upload it again."
     },
     "encrypted": {
       "what": "«{name}» is password protected.",
@@ -894,7 +896,8 @@
       "count": "{visible} of {total}",
       "navigate": "J K to navigate",
       "importantOnly": "Important changes only: numbers, dates, names and negations",
-      "empty": "No changes match these filters."
+      "empty": "No changes match these filters.",
+      "noDifferences": "There are no differences between these documents."
     },
     "detail": {
       "empty": "—",

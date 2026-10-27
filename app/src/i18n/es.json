@@ -243,7 +243,9 @@
       "what": "No pudimos leer «{name}».",
       "why": "Es una imagen escaneada sin texto.",
       "todo": "Súbalo de nuevo con texto seleccionable.",
-      "todoOcr": "Súbalo de nuevo con texto seleccionable o actívelo para lectura por OCR."
+      "todoOcr": "Súbalo de nuevo con texto seleccionable o actívelo para lectura por OCR.",
+      "whyEmpty": "El archivo no tiene texto.",
+      "todoEmpty": "Revise que sea el archivo correcto y cárguelo de nuevo."
     },
     "encrypted": {
       "what": "«{name}» está protegido con contraseña.",
@@ -894,7 +896,8 @@
       "count": "{visible} de {total}",
       "navigate": "J K para navegar",
       "importantOnly": "Solo cambios importantes: números, fechas, nombres y negaciones",
-      "empty": "Ningún cambio con estos filtros."
+      "empty": "Ningún cambio con estos filtros.",
+      "noDifferences": "No hay diferencias entre estos documentos."
     },
     "detail": {
       "empty": "—",

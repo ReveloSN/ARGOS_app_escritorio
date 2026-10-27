@@ -7,6 +7,7 @@ import { CompareTop } from "./CompareTop";
 import { InconsistenciesView } from "./InconsistenciesView";
 import { MatrixView } from "./MatrixView";
 import { scopedList } from "./scopedList";
+import { UnreadableDocuments } from "./UnreadableDocuments";
 import { useCloseOnEscape } from "./useCloseOnEscape";
 import { useComparisonView, type ComparisonView } from "./useComparisonView";
 import { useWorkspaceShortcuts } from "./useWorkspaceShortcuts";
@@ -39,6 +40,14 @@ export function ComparisonWorkspace({ comparison }: ComparisonWorkspaceProps) {
   useCloseOnEscape(closeComparison);
   const crumb = useCrumb(comparison, view);
   const pair = comparison.pairs[view.pairIndex];
+  const unreadable = comparison.documents.filter((document) => document.status !== "read");
+  if (comparison.pairs.length === 0 && unreadable.length > 0) {
+    return (
+      <div className={styles.workspace}>
+        <UnreadableDocuments documents={unreadable} onClose={closeComparison} />
+      </div>
+    );
+  }
   return (
     <div className={styles.workspace}>
       <CompareTop
@@ -48,6 +57,9 @@ export function ComparisonWorkspace({ comparison }: ComparisonWorkspaceProps) {
         crumb={crumb}
         onClose={closeComparison}
       />
+      {unreadable.length > 0 && (
+        <UnreadableDocuments documents={unreadable} onClose={closeComparison} />
+      )}
       {view.tab === "versions" && pair && (
         <VersionsView
           comparison={comparison}

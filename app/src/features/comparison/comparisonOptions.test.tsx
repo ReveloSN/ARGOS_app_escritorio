@@ -7,10 +7,8 @@ import { CASE_CHANGE, comparison, pair, VERSION_CHANGES } from "../../test/compa
 import { fakeEngineServices } from "../../test/engineFakes";
 import { renderApp, stubBrowser } from "../../test/renderApp";
 
-async function openComparison() {
-  const withCase = comparison({
-    pairs: [pair("Contrato_v2.docx", "Contrato_v3.docx", [...VERSION_CHANGES, CASE_CHANGE])],
-  });
+async function openComparison(changes = [...VERSION_CHANGES, CASE_CHANGE]) {
+  const withCase = comparison({ pairs: [pair("Contrato_v2.docx", "Contrato_v3.docx", changes)] });
   const startComparison = vi.fn((request: ComparisonRequest) => {
     request.onProgress?.({ kind: "pair_compared", position: 0, total: 1 });
     return Promise.resolve(withCase);
@@ -49,6 +47,25 @@ describe("Opciones de Comparar", () => {
     expect(screen.getByRole("checkbox", { name: /Solo cambios importantes/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^Faltan/ })).toBeInTheDocument();
     expect(screen.getByText("tachado = falta en B")).toBeInTheDocument();
+  });
+
+  it("(regresión) dos documentos iguales dicen que no hay diferencias, no que los filtros las ocultan", async () => {
+    await openComparison([]);
+
+    expect(await screen.findByText("No hay diferencias entre estos documentos.")).toBeVisible();
+    expect(screen.queryByText("Ningún cambio con estos filtros.")).not.toBeInTheDocument();
+  });
+
+  it("si los filtros ocultan todos los cambios, lo dice y no afirma que no haya diferencias", async () => {
+    const options = await openComparison();
+
+    await userEvent.click(options);
+    await userEvent.click(screen.getByRole("button", { name: /^Faltan/ }));
+
+    expect(screen.getByText("Ningún cambio con estos filtros.")).toBeVisible();
+    expect(
+      screen.queryByText("No hay diferencias entre estos documentos."),
+    ).not.toBeInTheDocument();
   });
 
   it("el atajo de cada modo no se confunde con un conteo: queda fuera del nombre", async () => {

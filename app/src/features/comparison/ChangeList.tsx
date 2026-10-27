@@ -39,7 +39,11 @@ export function ChangeList(props: ChangeListProps) {
           />
         ))}
       </ul>
-      {!props.visible.length && <p className={styles.emptyList}>{t("comparison.list.empty")}</p>}
+      {!props.visible.length && (
+        <p className={styles.emptyList}>
+          {t(props.shown.length ? "comparison.list.empty" : "comparison.list.noDifferences")}
+        </p>
+      )}
     </div>
   );
 }

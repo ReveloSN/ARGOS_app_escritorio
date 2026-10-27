@@ -141,6 +141,13 @@
   gap: var(--spacing-2);
 }
 
+.unreadable {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-5);
+}
+
 .sideBadge {
   display: inline-grid;
   place-items: center;
