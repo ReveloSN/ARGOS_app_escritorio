@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, within } from "@testing-library/react";
+import { act, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -42,6 +42,23 @@ describe("Renombrar y eliminar la sesión activa", () => {
     const renamed = await screen.findByRole("button", { name: /Sesión activa: Contrato firmado/ });
     expect(renamed).toBeVisible();
     expect(within(screen.getByRole("navigation")).getByText("Contrato firmado")).toBeVisible();
+  });
+
+  it("(regresión) al abrir «Renombrar» el foco está en el campo y, al cerrar, vuelve al selector", async () => {
+    renderApp(engineWithTwoSessions().services, REVIEW);
+    const user = userEvent.setup();
+    const trigger = screen.getByRole("button", { name: /Cambiar de sesión/ });
+
+    const menu = await openSessionMenu(user);
+    await user.click(within(menu).getByRole("menuitem", { name: "Renombrar" }));
+    const dialog = screen.getByRole("dialog", { name: "Renombrar la sesión" });
+
+    expect(within(dialog).getByLabelText("Nombre de la sesión")).toHaveFocus();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(trigger).toHaveFocus();
+    });
   });
 
   it("«Eliminar» pide confirmación y permite deshacer antes de borrar", async () => {

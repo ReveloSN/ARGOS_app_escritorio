@@ -1,5 +1,7 @@
 .layout {
   display: grid;
+  /* Sin columna definida, un nombre largo ensancha la página más allá de la ventana. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   height: 100%;
 }

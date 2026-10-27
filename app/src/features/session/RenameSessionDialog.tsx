@@ -43,6 +43,7 @@ export function RenameSessionDialog({ currentName, renaming, onClose }: RenameSe
       >
         <TextField
           label={t("sessionMenu.renameField")}
+          autoFocus
           value={name}
           onChange={setName}
           {...(renaming.hasFailed ? { error: t("sessionMenu.failed.what") } : {})}

@@ -42,7 +42,9 @@ export function ResultsHeader({ review, closer, onAddFact, onReport }: ResultsHe
       />
       <div className={styles.titleRow}>
         <div className={styles.heading}>
-          <h1 className={styles.title}>{review.session.name}</h1>
+          <h1 className={styles.title} title={review.session.name}>
+            {review.session.name}
+          </h1>
           <ReviewSummaryLine review={review} />
         </div>
         <Button size="md" icon="description" onClick={onReport}>

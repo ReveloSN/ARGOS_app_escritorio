@@ -9,9 +9,18 @@ interface TextFieldProps {
   readonly onChange: (value: string) => void;
   readonly placeholder?: string;
   readonly error?: string;
+  /** Dentro de un diálogo: el foco entra al abrirlo y el texto actual queda seleccionado. */
+  readonly autoFocus?: boolean;
 }
 
-export function TextField({ label, value, onChange, placeholder, error }: TextFieldProps) {
+export function TextField({
+  label,
+  value,
+  onChange,
+  placeholder,
+  error,
+  autoFocus = false,
+}: TextFieldProps) {
   const inputId = useId();
   const errorId = useId();
 
@@ -24,6 +33,14 @@ export function TextField({ label, value, onChange, placeholder, error }: TextFi
         id={inputId}
         className={styles.input}
         value={value}
+        autoFocus={autoFocus}
+        onFocus={
+          autoFocus
+            ? (event) => {
+                event.target.select();
+              }
+            : undefined
+        }
         placeholder={placeholder}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}

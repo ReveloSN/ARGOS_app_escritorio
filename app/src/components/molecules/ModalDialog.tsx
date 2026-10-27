@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 import styles from "./ModalDialog.module.css";
@@ -28,12 +28,17 @@ function keepFocusInside(event: KeyboardEvent<HTMLElement>, container: HTMLEleme
 export function ModalDialog({ title, children, actions, onClose }: ModalDialogProps) {
   const titleId = useId();
   const dialog = useRef<HTMLDivElement>(null);
+  // Se lee al renderizar, antes de que un hijo con `autoFocus` se quede con el foco.
+  const [opener] = useState(() => document.activeElement);
+  // Diferido y solo si el diálogo ya no está en la página: el modo estricto de React desmonta y
+  // monta cada efecto una vez en desarrollo, y ese desmontaje de prueba no debe quitarle el foco al campo.
   useEffect(() => {
-    const opener = document.activeElement;
     return () => {
-      if (opener instanceof HTMLElement) opener.focus();
+      window.setTimeout(() => {
+        if (!document.getElementById(titleId) && opener instanceof HTMLElement) opener.focus();
+      }, 0);
     };
-  }, []);
+  }, [opener, titleId]);
 
   const handleKey = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Escape") {
