@@ -105,7 +105,11 @@ export function HomePage({
             onCompare={onCompare}
           />
           <div className={styles.actions}>
-            <Button variant="primary" shortcut={NEW_REVIEW_SHORTCUT} onClick={onNewReview}>
+            <Button
+              variant={isEmptySnapshot(snapshot) ? "primary" : "secondary"}
+              shortcut={NEW_REVIEW_SHORTCUT}
+              onClick={onNewReview}
+            >
               {t("navigation.newReview")}
             </Button>
             {hasSavedReviewsToOpen && (

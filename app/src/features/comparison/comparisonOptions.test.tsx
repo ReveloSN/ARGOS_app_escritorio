@@ -50,4 +50,13 @@ describe("Opciones de Comparar", () => {
     expect(screen.getByRole("button", { name: /^Faltan/ })).toBeInTheDocument();
     expect(screen.getByText("tachado = falta en B")).toBeInTheDocument();
   });
+
+  it("el atajo de cada modo no se confunde con un conteo: queda fuera del nombre", async () => {
+    await openComparison();
+
+    const tab = screen.getByRole("tab", { name: "Comparar versiones" });
+
+    expect(tab).toHaveAttribute("aria-keyshortcuts", "1");
+    expect(tab.querySelector("kbd")).toHaveTextContent("1");
+  });
 });

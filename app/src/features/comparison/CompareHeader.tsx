@@ -1,4 +1,5 @@
 import { Button } from "../../components/atoms/Button";
+import { Kbd } from "../../components/atoms/Kbd";
 import { Breadcrumb } from "../../components/molecules/Breadcrumb";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
@@ -39,13 +40,15 @@ export function CompareHeader({ tab, crumb, onTab, onClose }: CompareHeaderProps
               type="button"
               role="tab"
               aria-selected={tab === item.tab}
+              aria-label={t(item.label)}
+              aria-keyshortcuts={item.key}
               className={joinClassNames(styles.mode, tab === item.tab && styles.modeSelected)}
               onClick={() => {
                 onTab(item.tab);
               }}
             >
               {t(item.label)}
-              <kbd className={styles.modeKey}>{item.key}</kbd>
+              <Kbd keys={[item.key]} />
             </button>
           ))}
         </div>

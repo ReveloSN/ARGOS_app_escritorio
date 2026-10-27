@@ -38,6 +38,16 @@ describe("Inicio con una sesión activa", () => {
     expect(within(risks).getByText("Medio").closest("li")).toHaveTextContent("1");
   });
 
+  it("tiene una sola acción primaria: continuar la revisión; «Nueva revisión» pasa a secundaria", async () => {
+    renderApp(fakeEngineServices(), REVIEW);
+    await act(() => Promise.resolve());
+
+    const primary = screen.getByRole("main").querySelectorAll('button[class*="primary"]');
+
+    expect(primary).toHaveLength(1);
+    expect(primary[0]).toHaveTextContent("Continuar la revisión");
+  });
+
   it("ofrece accesos directos para seguir la revisión, revisar otra o comparar", async () => {
     renderApp(fakeEngineServices(), REVIEW);
     await act(() => Promise.resolve());
