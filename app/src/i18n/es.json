@@ -932,15 +932,17 @@
       "label": "Matriz de diferencias",
       "intro": "{documents} documentos · {pairs} pares · {different} pares con diferencias. Seleccione una celda para ver el par.",
       "axis": "Filas × columnas",
-      "same": "mismo documento",
-      "noDifferences": "sin diferencias",
-      "changes": {
-        "one": "cambio",
-        "other": "cambios"
-      },
       "selectedPair": "Par seleccionado",
       "versus": "frente a",
-      "open": "Abrir el par"
+      "open": "Abrir el par",
+      "cellChanges": {
+        "one": "{count} cambio",
+        "other": "{count} cambios"
+      },
+      "cellHigh": {
+        "one": "Riesgo alto, {count} cambio",
+        "other": "Riesgo alto, {count} cambios"
+      }
     },
     "start": {
       "title": "Elija dos o más documentos",

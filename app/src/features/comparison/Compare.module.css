@@ -724,6 +724,10 @@
 }
 
 .matrixCell {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  font-family: var(--font-family-mono);
   cursor: pointer;
 }
 
@@ -731,6 +735,16 @@
   background: var(--color-background-subtle);
   color: var(--color-text-tertiary);
   font-size: var(--font-size-caption);
+}
+
+.matrixCellHigh {
+  background: var(--color-risk-high-bg);
+  color: var(--color-risk-high);
+  font-weight: var(--font-weight-semibold);
+}
+
+.matrixCellEmpty {
+  color: var(--color-text-tertiary);
 }
 
 .matrixCount {

@@ -932,15 +932,17 @@
       "label": "Difference matrix",
       "intro": "{documents} documents · {pairs} pairs · {different} pairs with differences. Select a cell to see the pair.",
       "axis": "Rows × columns",
-      "same": "same document",
-      "noDifferences": "no differences",
-      "changes": {
-        "one": "change",
-        "other": "changes"
-      },
       "selectedPair": "Selected pair",
       "versus": "versus",
-      "open": "Open the pair"
+      "open": "Open the pair",
+      "cellChanges": {
+        "one": "{count} change",
+        "other": "{count} changes"
+      },
+      "cellHigh": {
+        "one": "High risk, {count} change",
+        "other": "High risk, {count} changes"
+      }
     },
     "start": {
       "title": "Choose two or more documents",

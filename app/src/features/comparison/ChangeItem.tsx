@@ -8,6 +8,7 @@ import { describeLocation } from "../alerts/alertPresentation";
 import { DECISION_LABELS } from "../alerts/useAlertDecisions";
 import { changeSegment, changeValues } from "./changePresentation";
 import styles from "./Compare.module.css";
+import { RiskDot } from "./RiskDot";
 
 interface ChangeItemProps {
   readonly change: ChangeResult;
@@ -20,13 +21,6 @@ interface ChangeItemProps {
   readonly onSelect: (number: number) => void;
   /** El detalle del cambio elegido se abre aquí mismo, bajo su fila. */
   readonly detail?: ReactNode;
-}
-
-/** Solo el riesgo alto lleva marca: un punto rojo con su nombre, nunca solo color. */
-function RiskDot({ risk }: { readonly risk: ChangeResult["risk"] }) {
-  const { t } = useI18n();
-  if (risk !== "high") return <span aria-hidden="true" className={styles.riskDotSpace} />;
-  return <span role="img" aria-label={t("risk.highLong")} className={styles.riskDot} />;
 }
 
 function ItemValues({ change }: { change: ChangeResult }) {

@@ -133,7 +133,7 @@ describe("Comparar documentos", () => {
       expect.objectContaining({ mode: "contract_annexes" }),
     );
     expect(await screen.findByRole("grid", { name: "Matriz de diferencias" })).toBeInTheDocument();
-    expect(screen.getAllByText("sin diferencias")).toHaveLength(4);
+    expect(screen.getAllByRole("gridcell")).toHaveLength(3);
     await userEvent.click(screen.getByRole("button", { name: /Abrir el par/ }));
     await userEvent.click(screen.getByRole("button", { name: /^Opciones/ }));
     expect(screen.getByText("tachado = falta en B")).toBeInTheDocument();
