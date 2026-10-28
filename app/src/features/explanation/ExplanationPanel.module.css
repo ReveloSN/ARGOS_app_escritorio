@@ -59,6 +59,11 @@
   font-weight: var(--font-weight-semibold);
 }
 
+.valueLocation {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-micro);
+}
+
 .valueDocument {
   overflow: hidden;
   color: var(--color-text-secondary);

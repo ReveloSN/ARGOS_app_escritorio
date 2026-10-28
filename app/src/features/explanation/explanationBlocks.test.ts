@@ -94,7 +94,7 @@ describe("valores lado a lado", () => {
     const values = changeSideValues(REMOVED_ANNEX_CHANGE, PAIR);
 
     expect(values.first.runs).not.toBeNull();
-    expect(values.second).toEqual({ document: "Contrato_v3.docx", runs: null });
+    expect(values.second).toEqual({ document: "Contrato_v3.docx", runs: null, location: null });
   });
 
   it("un texto movido se ve igual en los dos lados", () => {

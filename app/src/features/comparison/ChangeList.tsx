@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { SegmentedControl } from "../../components/molecules/SegmentedControl";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ChangeResult } from "../../services/engine/comparisonTypes";
@@ -18,6 +20,8 @@ interface ChangeListProps {
   /** Número de cambio → documento contra el que ocurre; solo en «contra todos». */
   readonly againstByChange?: ReadonlyMap<number, string> | undefined;
   readonly onSelect: (number: number) => void;
+  /** Lo que se abre bajo la fila del cambio elegido. */
+  readonly renderDetail: (change: ChangeResult) => ReactNode;
 }
 
 /** Sin cambios a la vista: o no hay diferencias, o los filtros ocultan las que hay. */
@@ -80,6 +84,7 @@ export function ChangeList(props: ChangeListProps) {
             startsOthers={index > 0 && index === firstOther}
             against={props.againstByChange?.get(change.number)}
             onSelect={props.onSelect}
+            detail={props.selected === change.number ? props.renderDetail(change) : undefined}
           />
         ))}
       </ul>

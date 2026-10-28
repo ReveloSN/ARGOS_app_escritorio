@@ -24,6 +24,7 @@ function ValueCard({ title, value }: ValueCardProps) {
       <span title={value.document} className={styles.valueDocument}>
         {value.document}
       </span>
+      {value.location && <span className={styles.valueLocation}>{value.location}</span>}
       {value.runs ? (
         <p className={styles.valueText}>
           {value.runs.map((run, index) =>

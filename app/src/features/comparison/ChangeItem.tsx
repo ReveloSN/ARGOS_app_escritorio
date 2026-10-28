@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ChangeResult } from "../../services/engine/comparisonTypes";
@@ -16,6 +18,8 @@ interface ChangeItemProps {
   /** «Contra todos»: el documento contra el que ocurre el cambio. */
   readonly against?: string | undefined;
   readonly onSelect: (number: number) => void;
+  /** El detalle del cambio elegido se abre aquí mismo, bajo su fila. */
+  readonly detail?: ReactNode;
 }
 
 /** Solo el riesgo alto lleva marca: un punto rojo con su nombre, nunca solo color. */
@@ -69,6 +73,7 @@ export function ChangeItem(props: ChangeItemProps) {
         )}
         {decision && <span className={styles.itemStatus}>{t(DECISION_LABELS[decision.kind])}</span>}
       </button>
+      {props.detail}
     </li>
   );
 }

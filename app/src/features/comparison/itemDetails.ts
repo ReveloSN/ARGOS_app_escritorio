@@ -26,6 +26,7 @@ function changeHeading(change: ChangeResult, t: Translate) {
   const segment = changeSegment(change);
   return {
     number: change.number,
+    risk: change.risk,
     icon: appearance.icon,
     kind: t(appearance.label),
     location: segment ? describeLocation(segment.location, t) : "",
@@ -66,7 +67,7 @@ function explainTarget({ change, pair, comparisonId }: ChangeSource, t: Translat
     quotes,
     blocks: changeBlocks(change, t),
     meaning: change.meaning ? meaningLabel(change.meaning, t) : undefined,
-    values: changeSideValues(change, pair),
+    values: changeSideValues(change, pair, (segment) => describeLocation(segment.location, t)),
   };
 }
 

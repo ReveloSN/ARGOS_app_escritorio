@@ -5,6 +5,8 @@ import { panelSegments, type PanelSide, type TextRun } from "../comparison/segme
 export interface SideValue {
   readonly document: string;
   readonly runs: readonly TextRun[] | null;
+  /** Página o sección de donde sale el valor; sin segmento no hay valor ni origen. */
+  readonly location: string | null;
 }
 
 export interface SideBySide {
@@ -26,10 +28,29 @@ function runsOf(
   return panelSegments([segment], [change], side)[0]?.runs ?? null;
 }
 
-/** «Documento A dice» y «Documento B dice»: lo mismo que ya marca el panel de cada documento. */
-export function changeSideValues(change: ChangeResult, pair: PairNames): SideBySide {
+export type DescribeSegment = (segment: SegmentResult) => string;
+
+function sideOf(
+  change: ChangeResult,
+  input: { document: string; side: PanelSide },
+  locate: DescribeSegment,
+): SideValue {
+  const segment = input.side === "first" ? change.first : change.second;
   return {
-    first: { document: pair.firstDocument, runs: runsOf(change, change.first, "first") },
-    second: { document: pair.secondDocument, runs: runsOf(change, change.second, "second") },
+    document: input.document,
+    runs: runsOf(change, segment, input.side),
+    location: segment ? locate(segment) : null,
+  };
+}
+
+/** «Documento A dice» y «Documento B dice»: lo mismo que ya marca el panel de cada documento. */
+export function changeSideValues(
+  change: ChangeResult,
+  pair: PairNames,
+  locate: DescribeSegment = () => "",
+): SideBySide {
+  return {
+    first: sideOf(change, { document: pair.firstDocument, side: "first" }, locate),
+    second: sideOf(change, { document: pair.secondDocument, side: "second" }, locate),
   };
 }

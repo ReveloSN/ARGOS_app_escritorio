@@ -60,7 +60,6 @@ export function VersionsView({ comparison, pair, list, view, decisions }: Versio
   useScrollToSelected(view.selected);
   if (pair.seemsUnrelated) return <UnrelatedVersions view={view} />;
   const shown = list.pairChanges;
-  const selectedChange = list.selected;
   const decisionOf = (number: number) =>
     comparison.decisions.decisions.find((decision) => decision.alertNumber === number);
   return (
@@ -103,14 +102,14 @@ export function VersionsView({ comparison, pair, list, view, decisions }: Versio
           onFilters={view.setFilters}
           selected={view.selected}
           onSelect={view.select}
+          renderDetail={(change) => (
+            <ItemDetail
+              content={changeDetail({ change, pair, comparisonId: comparison.id }, t)}
+              decision={decisionOf(change.number)}
+              decisions={decisions}
+            />
+          )}
         />
-        {selectedChange && (
-          <ItemDetail
-            content={changeDetail({ change: selectedChange, pair, comparisonId: comparison.id }, t)}
-            decision={decisionOf(selectedChange.number)}
-            decisions={decisions}
-          />
-        )}
       </aside>
     </div>
   );

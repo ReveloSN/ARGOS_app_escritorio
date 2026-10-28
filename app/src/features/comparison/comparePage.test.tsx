@@ -1,4 +1,5 @@
 import { act, screen, within } from "@testing-library/react";
+import { onlyRows } from "../../test/changeRows";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -89,14 +90,16 @@ describe("Comparar documentos", () => {
     });
     await compare(fakeEngineServices({ comparisons: { startComparison: startingWith(withCase) } }));
     const list = within(await screen.findByRole("list", { name: "Cambios" }));
-    expect(list.getAllByRole("button")).toHaveLength(5);
+    expect(onlyRows(list.getAllByRole("button"))).toHaveLength(5);
 
     await userEvent.click(screen.getByRole("button", { name: /^Opciones/ }));
     await userEvent.click(screen.getByRole("checkbox", { name: "mayúsculas" }));
-    expect(list.getAllByRole("button")).toHaveLength(4);
+    expect(onlyRows(list.getAllByRole("button"))).toHaveLength(4);
     await userEvent.click(screen.getByRole("button", { name: /^Movidas/ }));
-    expect(list.getAllByRole("button")).toHaveLength(1);
-    expect(list.getByRole("button")).toHaveAccessibleName(expect.stringContaining("Párrafo 2"));
+    expect(onlyRows(list.getAllByRole("button"))).toHaveLength(1);
+    expect(onlyRows(list.getAllByRole("button"))[0]).toHaveAccessibleName(
+      expect.stringContaining("Párrafo 2"),
+    );
   });
 
   it("muestra las inconsistencias como dato por documento, con el valor distinto marcado", async () => {

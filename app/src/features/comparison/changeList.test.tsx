@@ -1,4 +1,5 @@
 import { act, screen, within } from "@testing-library/react";
+import { onlyRows } from "../../test/changeRows";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -38,10 +39,10 @@ describe("Lista de cambios de Comparar", () => {
   it("los de riesgo alto van primero y J K recorren la lista en ese orden", async () => {
     const list = await openChanges();
     const current = () =>
-      list.getAllByRole("button").findIndex((row) => row.ariaCurrent === "true");
+      onlyRows(list.getAllByRole("button")).findIndex((row) => row.ariaCurrent === "true");
 
-    expect(list.getAllByRole("button")).toHaveLength(4);
-    expect(list.getAllByRole("button")[0]).toHaveAccessibleName(/4857 → 4587/);
+    expect(onlyRows(list.getAllByRole("button"))).toHaveLength(4);
+    expect(onlyRows(list.getAllByRole("button"))[0]).toHaveAccessibleName(/4857 → 4587/);
     await userEvent.keyboard("jj");
     expect(current()).toBe(2);
     await userEvent.keyboard("j");
@@ -54,7 +55,7 @@ describe("Lista de cambios de Comparar", () => {
     const list = await openChanges();
 
     expect(NUMBER_CHANGE.risk).toBe("high");
-    const first = required(list.getAllByRole("button")[0]);
+    const first = required(onlyRows(list.getAllByRole("button"))[0]);
     expect(within(first).getByRole("img", { name: "Riesgo alto" })).toBeVisible();
     const removed = screen.getByText("4857", { selector: "del" });
     const added = required(screen.getByText("4587", { selector: "ins" }));
@@ -75,8 +76,39 @@ describe("Lista de cambios de Comparar", () => {
     await userEvent.keyboard("{ArrowRight}");
 
     expect(screen.getByRole("radio", { name: "Solo importantes 3" })).toHaveFocus();
-    expect(list.getAllByRole("button")).toHaveLength(3);
+    expect(onlyRows(list.getAllByRole("button"))).toHaveLength(3);
     await userEvent.click(all);
-    expect(list.getAllByRole("button")).toHaveLength(4);
+    expect(onlyRows(list.getAllByRole("button"))).toHaveLength(4);
+  });
+
+  it("el detalle se abre bajo la fila elegida y es el único lugar con el nivel completo de riesgo", async () => {
+    const list = await openChanges();
+    const rows = onlyRows(list.getAllByRole("button"));
+
+    await userEvent.click(required(rows[0]));
+
+    const item = required(list.getAllByRole("listitem")[0]);
+    const detail = within(item).getByRole("region", { name: /Explicación del cambio/ });
+    expect(within(item).getByText(/Riesgo alto/)).toBeVisible();
+    expect(within(detail).getByText("Documento A dice")).toBeVisible();
+    expect(within(detail).getByText("Documento B dice")).toBeVisible();
+    expect(screen.queryByText(/^(Antes|Ahora)$/)).not.toBeInTheDocument();
+    expect(list.getAllByText(/Riesgo alto/)).toHaveLength(1);
+    expect(within(detail).getByRole("button", { name: /Es correcto/ })).toBeVisible();
+    expect(within(detail).getByRole("button", { name: /Ver detalle/ })).toBeVisible();
+  });
+
+  it("cada valor del detalle dice de qué archivo y de qué página o sección sale", async () => {
+    const list = await openChanges();
+    await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
+
+    const cards = list.getAllByRole("region", { name: /Documento [AB] dice: / });
+    expect(cards).toHaveLength(2);
+    cards.forEach((card) => {
+      expect(within(card).getByText(/\.docx$/)).toBeVisible();
+      expect(
+        within(card).getByText(/^(Página|Párrafo|Sección|Línea|Fila|Celda|Asunto|Cuerpo)/),
+      ).toBeVisible();
+    });
   });
 });

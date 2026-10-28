@@ -1,4 +1,5 @@
 import { act, screen, within } from "@testing-library/react";
+import { onlyRows } from "../../test/changeRows";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -54,7 +55,7 @@ describe("Comparar un documento contra todos", () => {
     await userEvent.selectOptions(against, ANNEX);
 
     const list = screen.getByRole("list", { name: "Cambios" });
-    expect(within(list).getAllByRole("button")).toHaveLength(1);
+    expect(onlyRows(within(list).getAllByRole("button"))).toHaveLength(1);
     expect(within(list).queryByText(/^contra /)).not.toBeInTheDocument();
   });
 
@@ -68,7 +69,7 @@ describe("Comparar un documento contra todos", () => {
     );
 
     const list = screen.getByRole("list", { name: "Cambios" });
-    expect(within(list).getAllByRole("button")).toHaveLength(5);
+    expect(onlyRows(within(list).getAllByRole("button"))).toHaveLength(5);
     expect(within(list).getAllByText(`contra ${V3}`)).toHaveLength(4);
     expect(within(list).getByText(`contra ${ANNEX}`)).toBeInTheDocument();
     const breakdown = screen.getByRole("table");
@@ -88,7 +89,7 @@ describe("Comparar un documento contra todos", () => {
     await userEvent.click(within(filters).getByRole("button", { name: new RegExp(ANNEX) }));
 
     const list = screen.getByRole("list", { name: "Cambios" });
-    expect(within(list).getAllByRole("button")).toHaveLength(1);
+    expect(onlyRows(within(list).getAllByRole("button"))).toHaveLength(1);
     expect(within(list).getByText(`contra ${ANNEX}`)).toBeInTheDocument();
   });
 
@@ -136,7 +137,7 @@ describe("Cerrar la comparación", () => {
     await userEvent.click(recent);
     await userEvent.click(screen.getByRole("tab", { name: /Comparar versiones/ }));
     expect(
-      within(screen.getByRole("list", { name: "Cambios" })).getByText("Es un error"),
+      within(screen.getByRole("list", { name: "Cambios" })).getAllByText("Es un error")[0],
     ).toBeVisible();
   });
 

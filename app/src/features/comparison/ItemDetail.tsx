@@ -1,3 +1,4 @@
+import { joinClassNames } from "../../components/joinClassNames";
 import { Icon } from "../../components/atoms/Icon";
 import { DecisionButtons } from "../../components/molecules/DecisionButtons";
 import { useI18n } from "../../i18n/i18nContext";
@@ -15,6 +16,8 @@ export interface ItemDetailContent {
   readonly kind: string;
   readonly location: string;
   readonly title: string;
+  /** Solo los cambios: el nivel completo de riesgo vive aquí y en ningún otro lugar. */
+  readonly risk?: "high" | "medium" | "low" | undefined;
   /** Los valores de una inconsistencia; un cambio los muestra en su explicación. */
   readonly values: readonly { readonly label: string; readonly value: string }[];
   /** Solo los cambios tienen la explicación estructurada. */
@@ -70,6 +73,19 @@ function InconsistencyValues({ content }: { content: ItemDetailContent }) {
   );
 }
 
+const RISK_ICONS = { high: "report", medium: "warning", low: "info" } as const;
+
+/** El único lugar con el nivel completo: palabra e icono; el medio y el bajo van en gris. */
+function RiskLevel({ risk }: { readonly risk: "high" | "medium" | "low" }) {
+  const { t } = useI18n();
+  return (
+    <span className={joinClassNames(styles.riskLevel, risk === "high" && styles.riskLevelHigh)}>
+      <Icon name={RISK_ICONS[risk]} size="xs" />
+      {t(`risk.${risk}Long`)}
+    </span>
+  );
+}
+
 /** El elemento elegido y su decisión (C, E, I) con deshacer (Ctrl Z). */
 export function ItemDetail(props: ItemDetailProps) {
   const { content } = props;
@@ -80,6 +96,7 @@ export function ItemDetail(props: ItemDetailProps) {
         {content.kind}
         <span className={styles.itemLocation}> · {content.location}</span>
       </span>
+      {content.risk && <RiskLevel risk={content.risk} />}
       {content.explain ? (
         <ExplanationPanel target={content.explain} actions={<DecisionArea {...props} />} />
       ) : (
