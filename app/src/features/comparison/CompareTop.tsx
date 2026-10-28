@@ -28,17 +28,23 @@ function ScopeHeading({ comparison, view }: Pick<CompareTopProps, "comparison" |
     return (
       <>
         <span className={styles.sideBadge}>{t("comparison.scope.baseBadge")}</span>
-        <span className={styles.documentName}>{view.scope.base}</span>
+        <span title={view.scope.base} className={styles.documentName}>
+          {view.scope.base}
+        </span>
       </>
     );
   }
   return (
     <>
       <span className={styles.sideBadge}>{t("comparison.sideA")}</span>
-      <span className={styles.documentName}>{pair?.firstDocument}</span>
+      <span title={pair?.firstDocument} className={styles.documentName}>
+        {pair?.firstDocument}
+      </span>
       <Icon name="arrow_forward" size="sm" />
       <span className={styles.sideBadge}>{t("comparison.sideB")}</span>
-      <span className={styles.documentName}>{pair?.secondDocument}</span>
+      <span title={pair?.secondDocument} className={styles.documentName}>
+        {pair?.secondDocument}
+      </span>
     </>
   );
 }

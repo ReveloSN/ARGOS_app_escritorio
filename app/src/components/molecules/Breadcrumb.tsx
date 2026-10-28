@@ -18,7 +18,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
   const { t } = useI18n();
 
   return (
-    <nav aria-label={t("navigationAids.breadcrumb")}>
+    <nav aria-label={t("navigationAids.breadcrumb")} className={styles.nav}>
       <ol className={styles.trail}>
         {items.map((item, index) => (
           <li key={item.id} className={styles.level}>
@@ -41,6 +41,7 @@ function BreadcrumbLevel({ item, isCurrent }: { item: BreadcrumbItem; isCurrent:
     return (
       <span
         aria-current={isCurrent ? "page" : undefined}
+        title={item.label}
         className={joinClassNames(className, styles.current)}
       >
         {item.label}
