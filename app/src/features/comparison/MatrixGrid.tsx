@@ -1,3 +1,5 @@
+import type { KeyboardEvent } from "react";
+
 import { Icon } from "../../components/atoms/Icon";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
@@ -61,6 +63,21 @@ function CellButton({ cell, isSelected, onSelect }: CellButtonProps) {
   );
 }
 
+const NEXT_KEYS = new Set(["ArrowRight", "ArrowDown"]);
+const PREVIOUS_KEYS = new Set(["ArrowLeft", "ArrowUp"]);
+
+/** Las flechas pasan de una celda a la siguiente (o anterior) del triángulo y la eligen. */
+function moveBetweenCells(event: KeyboardEvent<HTMLDivElement>) {
+  const step = NEXT_KEYS.has(event.key) ? 1 : PREVIOUS_KEYS.has(event.key) ? -1 : 0;
+  if (!step) return;
+  const cells = [...event.currentTarget.querySelectorAll<HTMLElement>("button[role=gridcell]")];
+  const target = cells[cells.indexOf(document.activeElement as HTMLElement) + step];
+  if (!target) return;
+  event.preventDefault();
+  target.focus();
+  target.click();
+}
+
 /** Solo el triángulo superior: cada par aparece una vez; el resto de la cuadrícula queda vacío. */
 export function MatrixGrid({
   matrix,
@@ -74,6 +91,7 @@ export function MatrixGrid({
       role="grid"
       aria-label={t("comparison.matrix.label")}
       className={styles.matrix}
+      onKeyDown={moveBetweenCells}
       style={{
         gridTemplateColumns: `minmax(0, 1fr) repeat(${String(matrix.documents.length)}, minmax(0, 1fr))`,
       }}
