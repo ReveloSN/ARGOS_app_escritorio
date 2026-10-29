@@ -169,3 +169,8 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - Caso 4857 contra 4587 (criterio 7): primero en la lista, con punto rojo, resaltado en el texto (`del`/`ins` con la clase `highRisk`) y sin leer ninguna etiqueta. Captura: `capturas/R2-despues-detalle-4857-vs-4587-1280.jpg`; matriz: `capturas/R2-despues-matriz-1280.jpg`. Pruebas de regresión: `changeList.test.tsx`, `matrixView.test.tsx`, `comparisonKeyboard.test.tsx`, `longNames.test.tsx`, `unifiedParagraphs.test.ts`.
 - Suite completa de la interfaz: 74 archivos, 428 pruebas; ESLint, tipos, Prettier y Stylelint sin avisos.
 - Sin verificar: tema claro con el rediseño; app empaquetada de Tauri; el mockup v2 no está en el repositorio (se trabajó con el encargo escrito).
+
+## Rediseño visual de Comparar · decisión sobre el presupuesto de 12 elementos
+- Decisión del usuario: los **modos de la cabecera** (3 pestañas: Versiones, Inconsistencias, Matriz) y las **decisiones** (3 botones: Es correcto, Es un error, Ignorar) se cuentan aparte; son controles fijos que no crecen con el contenido.
+- Cuenta con el detalle abierto (1280×800, motor real): 15 elementos interactivos visibles − 3 modos − 3 decisiones = **9 elementos** (≤ 12, cumple). Sin el detalle: 11 − 3 modos = 8. Los dos totales brutos (15 y 11) se conservan arriba como medición.
+- No se cambió código para esto; es un criterio de conteo. Sigue siendo cierto que la lista crece con la cantidad de cambios.

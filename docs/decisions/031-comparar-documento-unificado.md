@@ -12,6 +12,6 @@
 - **Datos:** ninguno nuevo; el riesgo, los tipos, las ediciones y lo movido ya los calculaba el motor (\\`ChangeResult\\`).
 - **Descartado:** la variante de dos columnas del mockup (el encargo pide solo la 1a); marcar cada fila con etiqueta de riesgo (era el problema); hacer cada marca del texto una parada de Tab (una por cambio; el teclado usa la lista y J / K).
 - **Consecuencias:**
-  - El presupuesto de 12 elementos interactivos se cumple fuera del detalle (11) y no con él abierto (15); crece con la cantidad de cambios. Pendiente decidir si se cuentan aparte los modos de la cabecera y las decisiones.
+  - El presupuesto de 12 elementos interactivos se cumple fuera del detalle (11) y no con él abierto (15); crece con la cantidad de cambios. Decidido: los 3 modos de la cabecera y las 3 decisiones se cuentan aparte, de modo que con el detalle abierto quedan 9 (ver registro).
   - \\`DocumentPanel.tsx\\` y \\`segmentRuns.ts\\` dejaron de usarse por la vista de versiones (el segundo sigue en la explicación); no se borraron.
   - Sin verificar: tema claro con el rediseño y la app empaquetada.
