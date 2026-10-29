@@ -36,10 +36,16 @@ function PanelValues({ values, isCompact }: { values: SideBySide; isCompact: boo
   );
 }
 
+/** En Comparar la decisión queda justo bajo la frase resumen y fija al pie mientras el detalle se lee. */
+function ActionsDock({ children }: { readonly children: ReactNode }) {
+  return <div className={styles.actionsDock}>{children}</div>;
+}
+
 /** Orden fijo: frase resumen, los dos valores, tres bloques, decisión y «Ver detalle». */
 export function PanelLayout(props: PanelLayoutProps) {
   const { t } = useI18n();
   const hasAiSuggestion = props.isAiSuggestion || props.meaning !== undefined;
+  const isCompact = props.isCompact ?? false;
   return (
     <section aria-label={props.label} className={styles.panel}>
       <header className={styles.header}>
@@ -52,9 +58,10 @@ export function PanelLayout(props: PanelLayoutProps) {
         <h3 className={styles.summary}>{props.blocks.summary}</h3>
         {hasAiSuggestion && <span className={styles.aiNote}>{t("explainPanel.aiNote")}</span>}
       </header>
-      {props.values && <PanelValues values={props.values} isCompact={props.isCompact ?? false} />}
-      <ExplanationBlocksView blocks={props.blocks} isCompact={props.isCompact ?? false} />
-      {props.actions}
+      {isCompact && <ActionsDock>{props.actions}</ActionsDock>}
+      {props.values && <PanelValues values={props.values} isCompact={isCompact} />}
+      <ExplanationBlocksView blocks={props.blocks} isCompact={isCompact} />
+      {!isCompact && props.actions}
       {props.detail}
     </section>
   );

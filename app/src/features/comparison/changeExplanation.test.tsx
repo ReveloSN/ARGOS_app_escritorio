@@ -55,7 +55,7 @@ describe("Panel de explicación de un cambio", () => {
     expect(panel().getByText("Sugerencia de IA, usted decide")).toBeInTheDocument();
   });
 
-  it("se entiende de un vistazo: frase, los dos valores, tres bloques y las decisiones debajo", async () => {
+  it("se entiende de un vistazo: frase, las decisiones justo debajo, los dos valores y tres bloques", async () => {
     const explainChange = vi.fn(() => Promise.resolve(TEMPLATE));
     await openFirstChange(explainChange);
 
@@ -72,7 +72,7 @@ describe("Panel de explicación de un cambio", () => {
     expect(titles).toHaveLength(3);
     expect(panel().getByText("Cambia un número o identificador.")).toBeInTheDocument();
     const decision = panel().getByRole("button", { name: /Es un error/ });
-    expect(titles[2]?.compareDocumentPosition(decision)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(titles[0]?.compareDocumentPosition(decision)).toBe(Node.DOCUMENT_POSITION_PRECEDING);
     expect(explainChange).not.toHaveBeenCalled();
   });
 
