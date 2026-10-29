@@ -1360,6 +1360,7 @@
     "labelAlert": "Explicación de la alerta",
     "sideA": "Documento A dice",
     "sideB": "Documento B dice",
+    "valuesToggle": "Ver qué dice cada documento",
     "absent": "No aparece en este documento",
     "changed": "Qué cambió",
     "why": "Por qué importa",

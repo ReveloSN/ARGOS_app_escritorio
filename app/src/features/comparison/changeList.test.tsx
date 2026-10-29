@@ -90,6 +90,8 @@ describe("Lista de cambios de Comparar", () => {
     const item = required(list.getAllByRole("listitem")[0]);
     const detail = within(item).getByRole("region", { name: /Explicación del cambio/ });
     expect(within(item).getByText(/Riesgo alto/)).toBeVisible();
+    expect(within(detail).getByText("Documento A dice")).not.toBeVisible();
+    await userEvent.click(within(detail).getByText("Ver qué dice cada documento"));
     expect(within(detail).getByText("Documento A dice")).toBeVisible();
     expect(within(detail).getByText("Documento B dice")).toBeVisible();
     expect(screen.queryByText(/^(Antes|Ahora)$/)).not.toBeInTheDocument();
@@ -101,6 +103,7 @@ describe("Lista de cambios de Comparar", () => {
   it("cada valor del detalle dice de qué archivo y de qué página o sección sale", async () => {
     const list = await openChanges();
     await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
+    await userEvent.click(list.getByText("Ver qué dice cada documento"));
 
     const cards = list.getAllByRole("region", { name: /Documento [AB] dice: / });
     expect(cards).toHaveLength(2);

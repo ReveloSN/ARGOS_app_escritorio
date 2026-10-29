@@ -20,6 +20,20 @@ interface PanelLayoutProps {
   /** Es-correcto / Es-un-error / Ignorar, siempre debajo de la explicación. */
   readonly actions: ReactNode;
   readonly detail: ReactNode;
+  /** Comparar: los dos valores quedan plegados y los tres bloques en una línea cada uno. */
+  readonly isCompact?: boolean | undefined;
+}
+
+/** Los dos valores; en el modo compacto se despliegan con un solo control, sin repetir el texto. */
+function PanelValues({ values, isCompact }: { values: SideBySide; isCompact: boolean }) {
+  const { t } = useI18n();
+  if (!isCompact) return <SideBySideValues values={values} />;
+  return (
+    <details className={styles.valuesFold}>
+      <summary className={styles.valuesToggle}>{t("explainPanel.valuesToggle")}</summary>
+      <SideBySideValues values={values} />
+    </details>
+  );
 }
 
 /** Orden fijo: frase resumen, los dos valores, tres bloques, decisión y «Ver detalle». */
@@ -38,8 +52,8 @@ export function PanelLayout(props: PanelLayoutProps) {
         <h3 className={styles.summary}>{props.blocks.summary}</h3>
         {hasAiSuggestion && <span className={styles.aiNote}>{t("explainPanel.aiNote")}</span>}
       </header>
-      {props.values && <SideBySideValues values={props.values} />}
-      <ExplanationBlocksView blocks={props.blocks} />
+      {props.values && <PanelValues values={props.values} isCompact={props.isCompact ?? false} />}
+      <ExplanationBlocksView blocks={props.blocks} isCompact={props.isCompact ?? false} />
       {props.actions}
       {props.detail}
     </section>

@@ -119,6 +119,33 @@
   font-size: var(--font-size-body);
 }
 
+.blocksCompact {
+  gap: var(--spacing-1-5);
+}
+
+.blocksCompact .block {
+  display: grid;
+  grid-template-columns: var(--size-block-title) minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: var(--spacing-2);
+}
+
+.valuesFold {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.valuesToggle {
+  color: var(--color-action-text);
+  font-size: var(--font-size-caption);
+  cursor: pointer;
+}
+
+.valuesFold[open] > .valuesToggle {
+  margin-bottom: var(--spacing-2);
+}
+
 .detailToggle {
   display: inline-flex;
   align-items: center;

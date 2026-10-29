@@ -1360,6 +1360,7 @@
     "labelAlert": "Explanation of the alert",
     "sideA": "Document A says",
     "sideB": "Document B says",
+    "valuesToggle": "See what each document says",
     "absent": "Does not appear in this document",
     "changed": "What changed",
     "why": "Why it matters",

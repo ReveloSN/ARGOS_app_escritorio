@@ -98,7 +98,11 @@ export function ItemDetail(props: ItemDetailProps) {
       </span>
       {content.risk && <RiskLevel risk={content.risk} />}
       {content.explain ? (
-        <ExplanationPanel target={content.explain} actions={<DecisionArea {...props} />} />
+        <ExplanationPanel
+          target={content.explain}
+          actions={<DecisionArea {...props} />}
+          isCompact
+        />
       ) : (
         <>
           <InconsistencyValues content={content} />

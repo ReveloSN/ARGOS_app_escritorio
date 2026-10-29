@@ -35,6 +35,7 @@ interface ExplanationPanelProps {
   readonly target: ExplainTarget;
   /** Es correcto / Es un error / Ignorar: van debajo de la explicación. */
   readonly actions: ReactNode;
+  readonly isCompact?: boolean | undefined;
 }
 
 /**
@@ -42,7 +43,7 @@ interface ExplanationPanelProps {
  * los dos valores, tres bloques y las decisiones. La plantilla local se ve al instante; con IA
  * activada y «Ver detalle», sus bloques la reemplazan como «Sugerencia de IA».
  */
-export function ExplanationPanel({ target, actions }: ExplanationPanelProps) {
+export function ExplanationPanel({ target, actions, isCompact }: ExplanationPanelProps) {
   const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const query = useDetailQuery(target, isOpen);
@@ -56,6 +57,7 @@ export function ExplanationPanel({ target, actions }: ExplanationPanelProps) {
       values={target.values}
       isAiSuggestion={result?.source === "ai"}
       actions={actions}
+      isCompact={isCompact}
       detail={
         <>
           <DetailToggle
