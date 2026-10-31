@@ -37,7 +37,7 @@ Recorrido de la app real con motor real en una carpeta de datos aislada (2 sesio
 
 | Cambio | Contenido | Estado |
 |---|---|---|
-| Comparar, lo esencial primero | Filtros, «Solo cambios importantes», tipo y leyenda en un panel plegable «Opciones» (con el conteo de activas) | ✅ Completa |
+| Comparar, lo esencial primero | Filtros, «Solo cambios importantes», tipo y leyenda en un panel plegable «Opciones» (con el nombre de lo que está activo) | ✅ Completa |
 | Cada dato una vez | La barra superior ya no repite el estado del asistente; una sola acción primaria en Inicio; atajos de las pestañas como teclas | ✅ Completa |
 | Nada recortado sin salida | Valores y títulos de alertas, valor del detalle, nombres largos de sesión (la cabecera ya no saca los botones de la ventana), tabla de Historial a 800 px | ✅ Completa |
 | Mensajes con salida | Archivo ilegible en Comparar, «sin diferencias» frente a «filtros», Inicio con revisiones guardadas, búsqueda sin resultados | ✅ Completa |
@@ -51,7 +51,7 @@ Recorrido de la app real con motor real en una carpeta de datos aislada (2 sesio
 | Inicio con datos | `SessionSnapshot` como única fuente: Inicio y la barra lateral muestran las mismas cifras | ✅ Completa |
 | Selector de sesión | Menú con las sesiones del historial, Nueva, Renombrar y Eliminar con deshacer; todo se recarga al cambiar | ✅ Completa |
 | Comparar contra todos | Documento base, «Contra: todos o uno», lista única etiquetada, filtro y resumen por documento, encabezados de la matriz, «Cerrar comparación» y Esc | ✅ Completa |
-| Comparar con un solo texto (variante 1a) | Texto unificado, línea superior con «Opciones», lista de una línea con punto de riesgo, detalle bajo la fila, matriz de triángulo superior, nombres largos (ADR 031) | ✅ Completa (rama rediseno-visual, sin push) |
+| Comparar con un solo texto (variante 1a) | Texto unificado, línea superior con «Opciones», lista de una línea con punto de riesgo, detalle bajo la fila, matriz de triángulo superior, nombres largos (ADR 031); crítica de diseño aplicada: decisiones fijas y con jerarquía, valores A y B plegados, Opciones que nombra lo activo, datos en monoespaciada | ✅ Completa (ramas rediseno-visual y critica-comparar, sin push) |
 | Explicación en bloques | Frase resumen, A/B lado a lado, tres bloques, decisiones y «Ver detalle»; la IA responde en bloques y la plantilla local los llena sin clave | ✅ Completa |
 | Etiquetas de la IA local | Solo los pares cambiados llevan sugerencia; lenguaje claro | ✅ Completa |
 
