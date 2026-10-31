@@ -825,7 +825,8 @@
       "action": "Close comparison",
       "hint": "Esc"
     },
-    "matrixHeader": "Compare {document} against all the others",
+    "matrixHeader": "Column: compare {document} against all the others",
+    "matrixRowHeader": "Row: compare {document} against all the others",
     "modes": {
       "label": "Comparison mode",
       "versions": "Compare versions",

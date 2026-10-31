@@ -1,4 +1,4 @@
-import { act, screen } from "@testing-library/react";
+import { act, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -60,5 +60,15 @@ describe("Matriz de documentos", () => {
 
     expect(screen.getByRole("combobox", { name: "Documento base" })).toHaveValue(first);
     expect(screen.getByRole("combobox", { name: "Contra" })).toHaveValue(second);
+  });
+
+  it("(regresión) la cuadrícula tiene filas y encabezados semánticos, y fila y columna se distinguen", async () => {
+    const grid = await openMatrix();
+
+    expect(within(grid).getAllByRole("row")).toHaveLength(4);
+    expect(within(grid).getAllByRole("columnheader")).toHaveLength(4);
+    expect(within(grid).getAllByRole("rowheader")).toHaveLength(3);
+    expect(within(grid).getAllByRole("button", { name: /^Columna: comparar/ })).toHaveLength(3);
+    expect(within(grid).getAllByRole("button", { name: /^Fila: comparar/ })).toHaveLength(3);
   });
 });

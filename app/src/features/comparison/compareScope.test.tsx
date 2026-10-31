@@ -98,7 +98,7 @@ describe("Comparar un documento contra todos", () => {
     expect(screen.getByRole("tab", { name: /Matriz/ })).toHaveAttribute("aria-selected", "true");
 
     const headers = screen.getAllByRole("button", {
-      name: `Comparar ${ANNEX} contra todos los demás`,
+      name: `Columna: comparar ${ANNEX} contra todos los demás`,
     });
     await userEvent.click(required(headers[0]));
     await userEvent.click(screen.getByRole("button", OPTIONS));
