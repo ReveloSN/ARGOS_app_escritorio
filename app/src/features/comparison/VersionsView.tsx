@@ -15,7 +15,7 @@ import { ItemDetail } from "./ItemDetail";
 import { changeDetail } from "./itemDetails";
 import type { ScopedList } from "./scopedList";
 import type { ComparisonView } from "./useComparisonView";
-import { useSyncedScroll } from "./useSyncedScroll";
+import { useDocumentViewport } from "./useDocumentViewport";
 
 interface VersionsViewProps {
   readonly comparison: ComparisonResult;
@@ -25,7 +25,7 @@ interface VersionsViewProps {
   readonly decisions: AlertDecisions;
 }
 
-/** Al elegir un cambio desde la lista o el minimapa, los dos paneles lo traen a la vista. */
+/** Al elegir un cambio desde la lista o el minimapa, el texto lo trae a la vista. */
 function useScrollToSelected(selected: number | undefined) {
   useEffect(() => {
     if (selected === undefined) return;
@@ -53,10 +53,10 @@ function UnrelatedVersions({ view }: { view: ComparisonView }) {
   );
 }
 
-/** Comparar versiones: dos paneles sincronizados, minimapa, lista de cambios y su detalle. */
+/** Comparar versiones: un solo texto con los cambios, minimapa, lista de cambios y su detalle. */
 export function VersionsView({ comparison, pair, list, view, decisions }: VersionsViewProps) {
   const { t } = useI18n();
-  const scroll = useSyncedScroll();
+  const documentView = useDocumentViewport();
   useScrollToSelected(view.selected);
   if (pair.seemsUnrelated) return <UnrelatedVersions view={view} />;
   const shown = list.pairChanges;
@@ -65,22 +65,25 @@ export function VersionsView({ comparison, pair, list, view, decisions }: Versio
   return (
     <div className={styles.versions}>
       <div
-        className={joinClassNames(styles.panels, view.isMinimapShown && styles.panelsWithMinimap)}
+        className={joinClassNames(
+          styles.documentArea,
+          view.isMinimapShown && styles.documentAreaWithMinimap,
+        )}
       >
         <UnifiedDocument
           pair={pair}
           changes={shown}
           selected={view.selected}
           onSelect={view.select}
-          scrollRef={scroll.second}
-          onScroll={scroll.onSecondScroll}
+          scrollRef={documentView.body}
+          onScroll={documentView.onScroll}
         />
         {view.isMinimapShown && (
           <ChangeMinimap
             pair={pair}
             changes={shown}
             selected={view.selected}
-            viewport={scroll.viewport}
+            viewport={documentView.viewport}
             onSelect={view.select}
           />
         )}

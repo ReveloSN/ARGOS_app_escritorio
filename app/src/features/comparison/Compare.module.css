@@ -228,13 +228,13 @@
   min-height: 0;
 }
 
-.panels {
+.documentArea {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   min-height: 0;
 }
 
-.panelsWithMinimap {
+.documentAreaWithMinimap {
   grid-template-columns: minmax(0, 1fr) var(--size-minimap);
 }
 
