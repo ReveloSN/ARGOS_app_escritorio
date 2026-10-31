@@ -893,6 +893,7 @@
     "list": {
       "title": "Changes",
       "navigate": "J K to navigate",
+      "decided": "{done} of {total} decided",
       "empty": "No changes match these filters.",
       "emptyHint": "Change them in “Options”.",
       "noDifferences": "There are no differences between these documents.",

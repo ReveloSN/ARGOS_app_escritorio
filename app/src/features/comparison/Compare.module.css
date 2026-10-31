@@ -447,8 +447,14 @@
 
 .listHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--spacing-2);
+  gap: var(--spacing-1) var(--spacing-2);
+}
+
+.listProgress {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-micro);
 }
 
 .listTitle,

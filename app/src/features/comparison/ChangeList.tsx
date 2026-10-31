@@ -63,23 +63,45 @@ function ImportanceControl(props: Pick<ChangeListProps, "shown" | "filters" | "o
   );
 }
 
+interface ListHeaderProps {
+  readonly hasHighRisk: boolean;
+  readonly done: number;
+  readonly total: number;
+}
+
+/** Título, qué significa el punto rojo, cuántos cambios van decididos y la pista de teclado. */
+function ListHeader({ hasHighRisk, done, total }: ListHeaderProps) {
+  const { t } = useI18n();
+  return (
+    <div className={styles.listHeader}>
+      <span className={styles.listTitle}>{t("comparison.list.title")}</span>
+      {hasHighRisk && (
+        <span className={styles.riskLegend}>
+          <span aria-hidden="true" className={styles.riskDot} />
+          {t("risk.highLong")}
+        </span>
+      )}
+      {total > 0 && (
+        <span className={styles.listProgress}>{t("comparison.list.decided", { done, total })}</span>
+      )}
+      <span className={styles.listHint}>{t("comparison.list.navigate")}</span>
+    </div>
+  );
+}
+
 /** Lista de cambios, uno por línea (J / K para navegar); los de riesgo alto van primero. */
 export function ChangeList(props: ChangeListProps) {
   const { t } = useI18n();
   const firstOther = props.visible.findIndex((change) => change.risk !== "high");
-  const hasHighRisk = firstOther !== 0 && props.visible.length > 0;
+  const isDecided = (change: ChangeResult) =>
+    props.decisions.some((decision) => decision.alertNumber === change.number);
   return (
     <div className={styles.listPanel}>
-      <div className={styles.listHeader}>
-        <span className={styles.listTitle}>{t("comparison.list.title")}</span>
-        {hasHighRisk && (
-          <span className={styles.riskLegend}>
-            <span aria-hidden="true" className={styles.riskDot} />
-            {t("risk.highLong")}
-          </span>
-        )}
-        <span className={styles.listHint}>{t("comparison.list.navigate")}</span>
-      </div>
+      <ListHeader
+        hasHighRisk={firstOther !== 0 && props.visible.length > 0}
+        done={props.visible.filter(isDecided).length}
+        total={props.visible.length}
+      />
       <ImportanceControl {...props} />
       <ul aria-label={t("comparison.list.title")} className={styles.items}>
         {props.visible.map((change, index) => (

@@ -8,12 +8,18 @@ import { comparison, NUMBER_CHANGE, pair, VERSION_CHANGES } from "../../test/com
 import { fakeEngineServices } from "../../test/engineFakes";
 import { renderApp, stubBrowser } from "../../test/renderApp";
 
+const DECIDED_FIRST = {
+  decisions: [{ alertNumber: 1, kind: "correct" as const, correctSide: null, decidedAt: "" }],
+  canUndo: true,
+};
+
 async function openChanges() {
   const result = comparison({
     pairs: [pair("Contrato_v2.docx", "Contrato_v3.docx", VERSION_CHANGES)],
   });
   const startComparison = vi.fn(() => Promise.resolve(result));
-  renderApp(fakeEngineServices({ comparisons: { startComparison } }));
+  const decide = vi.fn(() => Promise.resolve(DECIDED_FIRST));
+  renderApp(fakeEngineServices({ comparisons: { startComparison, decide } }));
   await act(() => Promise.resolve());
   await userEvent.click(screen.getByRole("button", { name: "Comparar dos versiones" }));
   const files = [new File(["a"], "v1.docx"), new File(["b"], "v2.docx")];
@@ -142,5 +148,15 @@ describe("Lista de cambios de Comparar", () => {
     expect(added.className).toMatch(/unifiedData/);
     expect(removed.querySelector("strong")).toHaveTextContent("85");
     expect(added.querySelector("strong")).toHaveTextContent("58");
+  });
+
+  it("(regresión) la cabecera de la lista cuenta cuántos cambios van decididos", async () => {
+    const list = await openChanges();
+    expect(screen.getByText("0 de 4 decididos")).toBeVisible();
+
+    await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
+    await userEvent.click(list.getByRole("button", { name: /Es correcto/ }));
+
+    expect(await screen.findByText("1 de 4 decididos")).toBeVisible();
   });
 });
