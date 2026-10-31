@@ -59,8 +59,9 @@ describe("Comparar documentos", () => {
 
     expect(startComparison).toHaveBeenCalledWith(expect.objectContaining({ mode: "versions" }));
     expect(await screen.findByRole("heading", { name: "Comparar documentos" })).toBeInTheDocument();
-    expect(screen.getAllByText("4857")[0]?.closest("del")).not.toBeNull();
-    expect(screen.getAllByText("4587")[0]?.closest("ins")).not.toBeNull();
+    const texts = (tag: string) => [...document.querySelectorAll(tag)].map((m) => m.textContent);
+    expect(texts("del")).toContain("4857");
+    expect(texts("ins")).toContain("4587");
     expect(screen.getAllByText("no").some((element) => element.tagName === "INS")).toBe(true);
     expect(screen.getByText(/Movido a Párrafo 2/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Cláusula penal/ })).toBeInTheDocument();

@@ -36,6 +36,19 @@ const MARK_STYLES: Readonly<Record<UnifiedMarkKind, string>> = {
   added: styles.unifiedAdded ?? "",
 };
 
+/** Los caracteres que difieren van en negrita: 4857 contra 4587 se ve en «85» y «58», sin leer ambos. */
+function MarkText({ run }: { readonly run: UnifiedRun }) {
+  const { core, text } = run;
+  if (!core) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, core.start)}
+      <strong className={styles.unifiedCore}>{text.slice(core.start, core.end)}</strong>
+      {text.slice(core.end)}
+    </>
+  );
+}
+
 function Run({ run, selected, onSelect }: RunProps) {
   if (!run.mark || run.changeNumber === undefined) return <>{run.text}</>;
   const number = run.changeNumber;
@@ -54,10 +67,11 @@ function Run({ run, selected, onSelect }: RunProps) {
           styles.unifiedMark,
           MARK_STYLES[run.mark],
           run.isHighRisk && styles.highRisk,
+          run.isData && styles.unifiedData,
           selected === number && styles.unifiedSelected,
         )}
       >
-        {run.text}
+        <MarkText run={run} />
       </Mark>
     </span>
   );

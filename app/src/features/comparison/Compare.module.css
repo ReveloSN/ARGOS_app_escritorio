@@ -278,6 +278,14 @@
   background: var(--color-risk-high-bg);
 }
 
+.unifiedData {
+  font-family: var(--font-family-mono);
+}
+
+.unifiedCore {
+  font-weight: var(--font-weight-semibold);
+}
+
 .unifiedSelected {
   outline: var(--border-width-strong) solid var(--diff-selected-outline);
   outline-offset: var(--outline-offset-mark);

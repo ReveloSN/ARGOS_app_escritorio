@@ -33,8 +33,22 @@ describe("texto unificado", () => {
 
     expect(first?.runs).toEqual([
       { text: "Contrato No. " },
-      { text: "4857", mark: "removed", changeNumber: 1, isHighRisk: true },
-      { text: "4587", mark: "added", changeNumber: 1, isHighRisk: true },
+      {
+        text: "4857",
+        mark: "removed",
+        changeNumber: 1,
+        isHighRisk: true,
+        isData: true,
+        core: { start: 1, end: 3 },
+      },
+      {
+        text: "4587",
+        mark: "added",
+        changeNumber: 1,
+        isHighRisk: true,
+        isData: true,
+        core: { start: 1, end: 3 },
+      },
     ]);
   });
 

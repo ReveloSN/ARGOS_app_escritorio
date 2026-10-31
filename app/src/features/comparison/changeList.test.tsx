@@ -21,6 +21,10 @@ async function openChanges() {
   return within(await screen.findByRole("list", { name: "Cambios" }));
 }
 
+function findMark(tag: "del" | "ins", text: string) {
+  return [...document.querySelectorAll(tag)].find((element) => element.textContent === text);
+}
+
 describe("Lista de cambios de Comparar", () => {
   beforeEach(stubBrowser);
   afterEach(() => {
@@ -57,8 +61,8 @@ describe("Lista de cambios de Comparar", () => {
     expect(NUMBER_CHANGE.risk).toBe("high");
     const first = required(onlyRows(list.getAllByRole("button"))[0]);
     expect(within(first).getByRole("img", { name: "Riesgo alto" })).toBeVisible();
-    const removed = screen.getByText("4857", { selector: "del" });
-    const added = required(screen.getByText("4587", { selector: "ins" }));
+    const removed = required(findMark("del", "4857"));
+    const added = required(findMark("ins", "4587"));
     expect(removed.className).toMatch(/highRisk/);
     expect(added.className).toMatch(/highRisk/);
   });
@@ -127,5 +131,16 @@ describe("Lista de cambios de Comparar", () => {
       "title",
       expect.stringContaining("queda marcada como ignorada"),
     );
+  });
+
+  it("(regresión) los datos van en monoespaciada y solo los caracteres que difieren van en negrita", async () => {
+    await openChanges();
+
+    const removed = required(findMark("del", "4857"));
+    const added = required(findMark("ins", "4587"));
+    expect(removed.className).toMatch(/unifiedData/);
+    expect(added.className).toMatch(/unifiedData/);
+    expect(removed.querySelector("strong")).toHaveTextContent("85");
+    expect(added.querySelector("strong")).toHaveTextContent("58");
   });
 });
