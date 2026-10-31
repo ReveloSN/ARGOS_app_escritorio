@@ -8,6 +8,7 @@ import { CASE_CHANGE, comparison, pair, VERSION_CHANGES } from "../../test/compa
 import { fakeEngineServices } from "../../test/engineFakes";
 import { inconsistency } from "../../test/inconsistencyFakes";
 import { renderApp, stubBrowser } from "../../test/renderApp";
+import { required } from "../../test/threeDocuments";
 
 const DECIDED = {
   decisions: [{ alertNumber: 2, kind: "error" as const, correctSide: null, decidedAt: "" }],
@@ -79,7 +80,16 @@ describe("Comparar documentos", () => {
     await userEvent.keyboard("e");
 
     expect(decide).toHaveBeenCalledWith("c1", { alertNumber: 2, kind: "error" });
-    expect(await screen.findByText("Se guardó: Es un error")).toBeInTheDocument();
+    const list = within(screen.getByRole("list", { name: "Cambios" }));
+    const decided = required(
+      onlyRows(list.getAllByRole("button")).find((row) => row.textContent?.includes("Es un error")),
+    );
+    expect(decided).not.toHaveAttribute("aria-current", "true");
+    expect(
+      onlyRows(list.getAllByRole("button")).filter(
+        (row) => row.getAttribute("aria-current") === "true",
+      ),
+    ).toHaveLength(1);
     await userEvent.keyboard("{Control>}z{/Control}");
     expect(undoDecision).toHaveBeenCalledWith("c1");
   });

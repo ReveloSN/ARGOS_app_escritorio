@@ -48,6 +48,7 @@ function DecisionArea({ content, decision, decisions }: ItemDetailProps) {
       )}
       <DecisionButtons
         current={decision?.kind}
+        emphasis={content.risk === "high" ? "error" : undefined}
         onDecide={(kind) => {
           decisions.decide({ alertNumber: content.number, kind });
         }}

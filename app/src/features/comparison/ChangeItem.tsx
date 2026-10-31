@@ -48,6 +48,7 @@ export function ChangeItem(props: ChangeItemProps) {
     <li className={joinClassNames(props.startsOthers && styles.itemAfterHigh)}>
       <button
         type="button"
+        data-change-row=""
         aria-current={isSelected}
         title={fullText(change)}
         className={joinClassNames(styles.item, isSelected && styles.itemSelected)}

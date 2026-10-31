@@ -114,4 +114,18 @@ describe("Lista de cambios de Comparar", () => {
       ).toBeVisible();
     });
   });
+
+  it("(regresión) en un riesgo alto «Es un error» va primero e «Ignorar» pesa menos y avisa su efecto", async () => {
+    const list = await openChanges();
+    await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
+
+    const group = within(list.getByRole("group", { name: /./ }));
+    const names = group.getAllByRole("button").map((button) => button.textContent ?? "");
+    expect(names[0]).toMatch(/Es un error/);
+    expect(names[2]).toMatch(/Ignorar/);
+    expect(group.getByRole("button", { name: /Ignorar/ })).toHaveAttribute(
+      "title",
+      expect.stringContaining("queda marcada como ignorada"),
+    );
+  });
 });
