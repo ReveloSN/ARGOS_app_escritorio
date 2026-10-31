@@ -10,16 +10,16 @@ import {
 } from "../../test/comparisonFakes";
 import { unifiedParagraphs } from "./unifiedParagraphs";
 
-// El motor incluye el espacio dentro de lo insertado: «no » y no «no».
+// El motor marca palabras sin espacios (WORD = S+): lo insertado es «no», no «no ».
 const NEGATED = {
   ...NEGATION_CHANGE,
   edits: [
     {
       kind: "inserted" as const,
       first: null,
-      second: { start: 16, end: 19 },
+      second: { start: 16, end: 18 },
       firstText: "",
-      secondText: "no ",
+      secondText: "no",
       characters: [],
     },
   ],
@@ -60,7 +60,7 @@ describe("texto unificado", () => {
     expect(negated?.runs.map((run) => run.text).join("")).toBe(
       "El arrendatario no podrá ceder el contrato.",
     );
-    expect(negated?.runs.filter((run) => run.mark).map((run) => run.text)).toEqual(["no "]);
+    expect(negated?.runs.filter((run) => run.mark).map((run) => run.text)).toEqual(["no"]);
   });
 
   it("un párrafo movido queda en B y deja en A una nota sin texto", () => {

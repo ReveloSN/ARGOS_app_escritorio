@@ -83,6 +83,34 @@ interface MergedTexts {
   readonly second: string;
 }
 
+const isWordEdge = (character: string | undefined) => Boolean(character?.trim());
+
+const touchesWords = (before: UnifiedRun, after: UnifiedRun) =>
+  isWordEdge(before.text.at(-1)) && isWordEdge(after.text.at(0));
+
+const isReplacement = (before: UnifiedRun, after: UnifiedRun) =>
+  before.mark === "removed" && after.mark === "added";
+
+/** Entre un tramo marcado y su vecino sin espacio hace falta uno; un reemplazo (A y B juntos) no lo lleva. */
+function needsSpaceBetween(before: UnifiedRun, after: UnifiedRun): boolean {
+  return (
+    touchesWords(before, after) &&
+    !isReplacement(before, after) &&
+    Boolean(before.mark ?? after.mark)
+  );
+}
+
+/**
+ * El motor marca las palabras sin sus espacios: «no» insertado entre «arrendador» y «responderá»
+ * quedaría «arrendadornoresponderá». Se devuelve el espacio que une cada palabra con su vecina.
+ */
+function withWordSpaces(runs: readonly UnifiedRun[]): UnifiedRun[] {
+  return runs.flatMap((run, index) => {
+    const before = runs[index - 1];
+    return before && needsSpaceBetween(before, run) ? [{ text: " " }, run] : [run];
+  });
+}
+
 /** Texto igual en A y en B y, entre medias, lo que A perdió y lo que B ganó. */
 export function mergedRuns({ change, first, second }: MergedTexts): UnifiedRun[] {
   const runs: UnifiedRun[] = [];
@@ -98,5 +126,5 @@ export function mergedRuns({ change, first, second }: MergedTexts): UnifiedRun[]
     cursors = { first: removed.end, second: added.end };
   }
   runs.push({ text: first.slice(cursors.first) });
-  return runs.filter((run) => run.text !== "");
+  return withWordSpaces(runs.filter((run) => run.text !== ""));
 }
