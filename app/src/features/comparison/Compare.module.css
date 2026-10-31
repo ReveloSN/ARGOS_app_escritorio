@@ -451,6 +451,14 @@
   line-height: var(--line-height-heading);
 }
 
+.riskLegend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-micro);
+}
+
 .listHint {
   margin-left: auto;
   color: var(--color-text-tertiary);

@@ -67,10 +67,17 @@ function ImportanceControl(props: Pick<ChangeListProps, "shown" | "filters" | "o
 export function ChangeList(props: ChangeListProps) {
   const { t } = useI18n();
   const firstOther = props.visible.findIndex((change) => change.risk !== "high");
+  const hasHighRisk = firstOther !== 0 && props.visible.length > 0;
   return (
     <div className={styles.listPanel}>
       <div className={styles.listHeader}>
         <span className={styles.listTitle}>{t("comparison.list.title")}</span>
+        {hasHighRisk && (
+          <span className={styles.riskLegend}>
+            <span aria-hidden="true" className={styles.riskDot} />
+            {t("risk.highLong")}
+          </span>
+        )}
         <span className={styles.listHint}>{t("comparison.list.navigate")}</span>
       </div>
       <ImportanceControl {...props} />

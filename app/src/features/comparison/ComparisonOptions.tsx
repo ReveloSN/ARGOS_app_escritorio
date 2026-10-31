@@ -3,18 +3,13 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Icon } from "../../components/atoms/Icon";
 import { Kbd } from "../../components/atoms/Kbd";
 import { useI18n } from "../../i18n/i18nContext";
-import type { ChangeFilters } from "./changeFilters";
+import { describeActiveOptions } from "./activeOptions";
 import styles from "./Compare.module.css";
 import { OptionsPanel, type OptionsPanelProps } from "./OptionsPanel";
 import { useShortcuts } from "../keyboard/useShortcuts";
 
 const OPTIONS_KEY = "o";
 const FOCUSABLE = "input, select, button";
-
-function activeCount(props: OptionsPanelProps): number {
-  const filters: ChangeFilters = props.filters;
-  return filters.ignored.size + Number(filters.type !== "all") + Number(props.isMinimapShown);
-}
 
 /** Esc cierra el panel antes que la comparación: se atiende primero y no llega a los demás. */
 function useEscapeToClose(isOpen: boolean, close: () => void): void {
@@ -53,14 +48,13 @@ function usePanelFocus() {
 
 /** Lo secundario de Comparar, plegado: lo esencial queda a la vista. Se abre con «O». */
 export function ComparisonOptions(props: OptionsPanelProps) {
-  const { t, tPlural } = useI18n();
+  const { t } = useI18n();
   const panelId = useId();
   const { isOpen, toggle, panel, close, flip } = usePanelFocus();
   useEscapeToClose(isOpen, close);
   useShortcuts([{ key: OPTIONS_KEY, run: flip }]);
-  const active = activeCount(props);
   const label = t("comparison.options.label");
-  const activeLabel = tPlural({ key: "comparison.options.active", count: active });
+  const active = describeActiveOptions(props.filters, t);
   return (
     <div className={styles.options}>
       <button
@@ -69,13 +63,13 @@ export function ComparisonOptions(props: OptionsPanelProps) {
         className={styles.optionsToggle}
         aria-expanded={isOpen}
         aria-controls={panelId}
-        aria-label={active > 0 ? `${label}, ${activeLabel}` : label}
+        aria-label={active ? `${label}, ${active}` : label}
         aria-keyshortcuts={OPTIONS_KEY}
         onClick={flip}
       >
         <Icon name={isOpen ? "expand_less" : "expand_more"} size="sm" />
         {label}
-        {active > 0 && <span className={styles.optionsCount}>{activeLabel}</span>}
+        {active && <span className={styles.optionsCount}>{active}</span>}
         <Kbd keys={[OPTIONS_KEY.toUpperCase()]} />
       </button>
       {isOpen && (

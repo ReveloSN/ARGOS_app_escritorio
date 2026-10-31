@@ -4,7 +4,6 @@ import { Button } from "../../components/atoms/Button";
 import { Checkbox } from "../../components/atoms/Checkbox";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
-import type { TranslationKey } from "../../i18n/translate";
 import type { ChangeResult } from "../../services/engine/comparisonTypes";
 import {
   COSMETIC_MATERIALITIES,
@@ -14,19 +13,9 @@ import {
   type CosmeticMateriality,
 } from "./changeFilters";
 import styles from "./Compare.module.css";
+import { IGNORE_LABELS, TYPE_LABELS } from "./optionLabels";
 
-const TYPE_CHIPS: readonly { readonly type: ChangeTypeFilter; readonly label: TranslationKey }[] = [
-  { type: "all", label: "comparison.types.all" },
-  { type: "removed", label: "comparison.types.removed" },
-  { type: "added", label: "comparison.types.added" },
-  { type: "modified", label: "comparison.types.modified" },
-  { type: "moved", label: "comparison.types.moved" },
-];
-const IGNORE_LABELS: Readonly<Record<CosmeticMateriality, TranslationKey>> = {
-  case: "comparison.ignore.case",
-  punctuation: "comparison.ignore.punctuation",
-  format: "comparison.ignore.format",
-};
+const TYPE_CHIPS: readonly ChangeTypeFilter[] = ["all", "removed", "added", "modified", "moved"];
 
 export interface OptionsPanelProps {
   /** Los cambios del alcance, después de ignorar los de forma: lo que cuentan los chips. */
@@ -61,17 +50,17 @@ function Row({ label, children }: { readonly label: string; readonly children: R
 function TypeChips({ changes, filters, onFilters }: OptionsPanelProps) {
   const { t } = useI18n();
   const counts = countByKind(changes);
-  return TYPE_CHIPS.map((chip) => (
+  return TYPE_CHIPS.map((type) => (
     <button
-      key={chip.type}
+      key={type}
       type="button"
-      aria-pressed={filters.type === chip.type}
-      className={joinClassNames(styles.chip, filters.type === chip.type && styles.chipActive)}
+      aria-pressed={filters.type === type}
+      className={joinClassNames(styles.chip, filters.type === type && styles.chipActive)}
       onClick={() => {
-        onFilters({ ...filters, type: chip.type });
+        onFilters({ ...filters, type });
       }}
     >
-      {t(chip.label)} {chip.type === "all" ? changes.length : counts[chip.type]}
+      {t(TYPE_LABELS[type])} {type === "all" ? changes.length : counts[type]}
     </button>
   ));
 }

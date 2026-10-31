@@ -859,10 +859,8 @@
     },
     "options": {
       "label": "Options",
-      "active": {
-        "one": "{count} active",
-        "other": "{count} active"
-      },
+      "ignoring": "Ignoring: {names}",
+      "showing": "Showing: {type}",
       "typeLabel": "Show",
       "legendLabel": "How to read the marks",
       "minimap": "Show the minimap",

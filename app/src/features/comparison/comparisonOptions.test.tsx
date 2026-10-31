@@ -27,11 +27,11 @@ describe("Opciones de Comparar", () => {
     vi.unstubAllGlobals();
   });
 
-  it("lo secundario va plegado y avisa cuántas opciones hay activas", async () => {
+  it("lo secundario va plegado y dice cuál es el filtro activo, con su nombre", async () => {
     const options = await openComparison();
 
     expect(options).toHaveAttribute("aria-expanded", "false");
-    expect(options).toHaveTextContent("1 activa");
+    expect(options).toHaveTextContent("Ignorando: formato");
     expect(screen.queryByRole("checkbox", { name: "mayúsculas" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /^Faltan/ })).not.toBeInTheDocument();
     expect(screen.queryByText("tachado = falta en B")).not.toBeInTheDocument();
@@ -93,7 +93,7 @@ describe("Opciones de Comparar", () => {
     await userEvent.click(screen.getByRole("checkbox", { name: "Mostrar el minimapa" }));
 
     expect(screen.getByRole("navigation", { name: "Minimapa de cambios" })).toBeVisible();
-    expect(options).toHaveAccessibleName("Opciones, 2 activas");
+    expect(options).toHaveAccessibleName("Opciones, Ignorando: formato");
     await userEvent.click(screen.getByRole("button", { name: "Ver la matriz de documentos" }));
     expect(screen.getByRole("tab", { name: "Matriz" })).toHaveAttribute("aria-selected", "true");
   });
@@ -109,5 +109,15 @@ describe("Opciones de Comparar", () => {
     expect(options).toHaveAttribute("aria-expanded", "false");
     expect(options).toHaveFocus();
     expect(screen.getByRole("heading", { name: "Comparar documentos" })).toBeVisible();
+  });
+
+  it("(regresión) el filtro por tipo se nombra en el botón y el minimapa no cuenta como filtro", async () => {
+    const options = await openComparison();
+    expect(screen.getAllByText("Riesgo alto", { selector: "span" }).length).toBeGreaterThan(0);
+
+    await userEvent.click(options);
+    await userEvent.click(screen.getByRole("button", { name: /^Faltan/ }));
+
+    expect(options).toHaveAccessibleName("Opciones, Ignorando: formato · Mostrando: Faltan");
   });
 });
