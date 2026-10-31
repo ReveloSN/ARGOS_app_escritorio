@@ -85,7 +85,7 @@ describe("Opciones de Comparar", () => {
     expect(screen.queryByText("faltan")).not.toBeInTheDocument();
   });
 
-  it("el minimapa y el enlace a la matriz salen de la vista principal y viven en Opciones", async () => {
+  it("(regresión) el minimapa vive en Opciones y la matriz solo se abre con su pestaña, no desde Opciones", async () => {
     const options = await openComparison();
     expect(screen.queryByRole("navigation", { name: "Minimapa de cambios" })).toBeNull();
 
@@ -94,7 +94,10 @@ describe("Opciones de Comparar", () => {
 
     expect(screen.getByRole("navigation", { name: "Minimapa de cambios" })).toBeVisible();
     expect(options).toHaveAccessibleName("Opciones, Ignorando: formato");
-    await userEvent.click(screen.getByRole("button", { name: "Ver la matriz de documentos" }));
+    expect(
+      screen.queryByRole("button", { name: "Ver la matriz de documentos" }),
+    ).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("tab", { name: "Matriz" }));
     expect(screen.getByRole("tab", { name: "Matriz" })).toHaveAttribute("aria-selected", "true");
   });
 

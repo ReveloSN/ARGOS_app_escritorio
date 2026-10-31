@@ -68,9 +68,6 @@ function VersionsTop({
           ),
           isMinimapShown: view.isMinimapShown,
           onMinimapShown: view.setMinimapShown,
-          onOpenMatrix: () => {
-            view.setTab("matrix");
-          },
         }}
       />
       {isAgainstAll && (

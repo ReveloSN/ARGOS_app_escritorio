@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-import { Button } from "../../components/atoms/Button";
 import { Checkbox } from "../../components/atoms/Checkbox";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
@@ -26,7 +25,6 @@ export interface OptionsPanelProps {
   readonly scopeSelector: ReactNode;
   readonly isMinimapShown: boolean;
   readonly onMinimapShown: (isShown: boolean) => void;
-  readonly onOpenMatrix: () => void;
 }
 
 function toggled(
@@ -96,9 +94,6 @@ export function OptionsPanel(props: OptionsPanelProps) {
         <span className={styles.legend}>{t("comparison.panel.legendFirst")}</span>
         <span className={styles.legend}>{t("comparison.panel.legendSecond")}</span>
       </Row>
-      <Button variant="secondary" onClick={props.onOpenMatrix}>
-        {t("comparison.options.matrix")}
-      </Button>
     </>
   );
 }

@@ -863,8 +863,7 @@
       "showing": "Mostrando: {type}",
       "typeLabel": "Mostrar",
       "legendLabel": "Cómo leer las marcas",
-      "minimap": "Mostrar el minimapa",
-      "matrix": "Ver la matriz de documentos"
+      "minimap": "Mostrar el minimapa"
     },
     "ignore": {
       "label": "Ignorar",
