@@ -9,6 +9,7 @@ from argus.domain.preferences import UserPreferences
 from argus.domain.review_session import NewReviewSession, ReviewSession
 from argus.infrastructure.history_location import DATABASE_FILE_NAME
 from tests.api.review_stream import REVIEW_NAME, post_review
+from tests.api.test_comparisons import compare_versions
 from tests.application.in_memory_repositories import RecordingFileOpener
 from tests.application.ocr_doubles import offline_adapters
 
@@ -125,3 +126,22 @@ def test_turning_on_the_retention_limit_deletes_expired_history_at_once(
 
     client.put("/preferences", headers=auth_headers, json={**update, "hasRetentionLimit": True})
     assert storage.sessions.list_created_before(datetime.now(UTC)) == ()
+
+
+def test_history_lists_comparisons_and_counts_their_decisions_in_the_metrics(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    comparison = compare_versions(client, auth_headers)
+    decisions_path = f"/comparisons/{comparison['id']}/decisions"
+    client.post(decisions_path, headers=auth_headers, json={"number": 2, "kind": "error"})
+
+    history = client.get("/history", headers=auth_headers).json()
+
+    (entry,) = history["comparisons"]
+    assert entry["id"] == comparison["id"]
+    assert entry["mode"] == "versions"
+    assert entry["documentCount"] == 2
+    assert entry["itemCount"] >= 2
+    assert entry["decidedCount"] == 1
+    assert history["metrics"]["resolvedAlerts"] == 1
+    assert history["metrics"]["realErrorCount"] == 1

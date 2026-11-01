@@ -31,6 +31,18 @@ class SqliteComparisonRepository:
                 ),
             )
 
+    def list_created_since(self, since: datetime) -> tuple[ComparisonReport, ...]:
+        with self._database.connect() as connection:
+            rows = connection.execute(
+                "SELECT id, created_at, payload FROM comparisons WHERE created_at >= ? "
+                "ORDER BY created_at DESC",
+                (to_stored_timestamp(since),),
+            ).fetchall()
+        return tuple(
+            ComparisonReport(row[0], from_stored_timestamp(row[1]), content_from_json(row[2]))
+            for row in rows
+        )
+
     def delete_created_before(self, moment: datetime) -> int:
         # Las claves foráneas en cascada borran también las decisiones de cada comparación.
         with self._database.connect() as connection:

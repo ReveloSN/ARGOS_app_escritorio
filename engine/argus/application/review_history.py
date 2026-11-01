@@ -13,6 +13,7 @@ from argus.domain.alert import NumberedAlert
 from argus.domain.decision import Decision
 from argus.domain.errors import SessionNotFoundError
 from argus.domain.review_session import ReviewSession
+from argus.domain.text_comparison.report import ComparisonReport
 from argus.domain.usage_metrics import UsageMetrics, compute_usage_metrics
 
 
@@ -25,9 +26,22 @@ class HistoryEntry:
 
 
 @dataclass(frozen=True)
+class ComparisonHistoryEntry:
+    """Una comparación del historial y cuántos de sus elementos ya tienen decisión."""
+
+    report: ComparisonReport
+    decided_count: int
+
+    @property
+    def item_count(self) -> int:
+        return len(self.report.numbered_changes) + len(self.report.content.inconsistencies)
+
+
+@dataclass(frozen=True)
 class HistoryOverview:
     entries: tuple[HistoryEntry, ...]
     metrics: UsageMetrics
+    comparisons: tuple[ComparisonHistoryEntry, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -44,6 +58,8 @@ class HistoryRepositories:
     sessions: SessionRepository
     alerts: AlertRepository
     decisions: DecisionRepository
+    comparisons: ComparisonRepository
+    comparison_decisions: DecisionRepository
 
 
 class ReviewHistory:
@@ -56,7 +72,22 @@ class ReviewHistory:
         sessions = self._repositories.sessions.list_created_since(since)
         decisions = {s.id: self._repositories.decisions.list_for(s.id) for s in sessions}
         entries = tuple(HistoryEntry(s, len(decisions[s.id])) for s in sessions)
-        return HistoryOverview(entries, compute_usage_metrics(sessions, decisions))
+        comparisons = self._comparison_entries(since)
+        compared = [d for entry in comparisons for d in self._comparison_decisions(entry)]
+        metrics = compute_usage_metrics(sessions, decisions, compared)
+        return HistoryOverview(entries, metrics, comparisons)
+
+    def _comparison_entries(self, since: datetime) -> tuple[ComparisonHistoryEntry, ...]:
+        reports = self._repositories.comparisons.list_created_since(since)
+        return tuple(
+            ComparisonHistoryEntry(
+                report, len(self._repositories.comparison_decisions.list_for(report.id))
+            )
+            for report in reports
+        )
+
+    def _comparison_decisions(self, entry: ComparisonHistoryEntry) -> tuple[Decision, ...]:
+        return self._repositories.comparison_decisions.list_for(entry.report.id)
 
     def records(self, since: datetime) -> tuple[HistoryRecord, ...]:
         return tuple(

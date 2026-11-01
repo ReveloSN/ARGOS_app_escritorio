@@ -100,6 +100,10 @@ class ComparisonRepository(Protocol):
         """La comparación, o ComparisonNotFoundError si no existe."""
         ...
 
+    def list_created_since(self, since: datetime) -> tuple[ComparisonReport, ...]:
+        """Las comparaciones desde `since`, de la más reciente a la más antigua."""
+        ...
+
     def delete_created_before(self, moment: datetime) -> int:
         """Borra las comparaciones anteriores a `moment` (con sus decisiones) y dice cuántas."""
         ...

@@ -36,7 +36,11 @@ MONEY_ALERT = Alert.from_candidate(candidate(EntityType.MONEY), RiskLevel.HIGH)
 
 def history_repositories() -> HistoryRepositories:
     return HistoryRepositories(
-        InMemorySessionRepository(), InMemoryAlertRepository(), InMemoryDecisionRepository()
+        InMemorySessionRepository(),
+        InMemoryAlertRepository(),
+        InMemoryDecisionRepository(),
+        InMemoryComparisonRepository(),
+        InMemoryDecisionRepository(),
     )
 
 
@@ -107,3 +111,19 @@ def test_purge_also_deletes_comparisons_older_than_the_retention() -> None:
     assert deleted == 1
     with pytest.raises(ComparisonNotFoundError):
         comparisons.get(old.id)
+
+
+def test_overview_lists_only_the_comparisons_of_the_period_with_their_decisions() -> None:
+    repositories = history_repositories()
+    content = ComparisonContent("Arrendamiento", ComparisonModeName.VERSIONS, (), ())
+    old = ComparisonReport.start(content, START)
+    recent = ComparisonReport.start(content, START + timedelta(days=40))
+    repositories.comparisons.save(old)
+    repositories.comparisons.save(recent)
+    repositories.comparison_decisions.save(recent.id, Decision(1, DecisionKind.ERROR, START))
+
+    overview = ReviewHistory(repositories).overview(since=START + timedelta(days=10))
+
+    assert [(e.report.id, e.decided_count) for e in overview.comparisons] == [(recent.id, 1)]
+    assert overview.metrics.resolved_alerts == 1
+    assert overview.metrics.real_error_count == 1

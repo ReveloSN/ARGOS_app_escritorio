@@ -244,7 +244,13 @@ def build_engine_services(
         delete_review=DeleteReviewSession(storage.sessions, archive),
         decisions=ReviewDecisions(DecisionRepositories(storage.sessions, storage.decisions), clock),
         history=ReviewHistory(
-            HistoryRepositories(storage.sessions, storage.alerts, storage.decisions)
+            HistoryRepositories(
+                storage.sessions,
+                storage.alerts,
+                storage.decisions,
+                storage.comparisons,
+                storage.comparison_decisions,
+            )
         ),
         search_documents=SearchDocuments(storage.sessions, storage.documents),
         open_document=OpenDocument(storage.documents, archive, opener),
