@@ -6,13 +6,19 @@
   border-radius: var(--radius-md);
   background: var(--toast-bg);
   color: var(--toast-fg);
-  white-space: nowrap;
+  max-width: 100%;
   opacity: 0;
   pointer-events: none;
   transform: translateY(var(--spacing-2));
   transition:
     opacity var(--duration-base) var(--easing-standard),
     transform var(--duration-base) var(--easing-standard);
+}
+
+/* Un nombre largo baja de línea: «Deshacer» no puede quedar fuera de la ventana. */
+.message {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .visible {
@@ -23,6 +29,7 @@
 
 .undo {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: var(--spacing-1-5);
   min-width: var(--size-button-min);

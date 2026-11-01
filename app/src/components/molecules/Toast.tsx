@@ -22,7 +22,7 @@ export function Toast({ message, visible, onUndo, hasUndoShortcut = true }: Toas
   return (
     <div role="status" className={joinClassNames(styles.toast, visible && styles.visible)}>
       <Icon name="check" size="md" />
-      <span>{message}</span>
+      <span className={styles.message}>{message}</span>
       {onUndo && (
         <button type="button" className={styles.undo} onClick={onUndo} tabIndex={visible ? 0 : -1}>
           {t("actions.undo")}
