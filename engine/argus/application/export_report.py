@@ -6,7 +6,7 @@ from typing import Protocol
 
 from argus.application.ports.clock import Clock
 from argus.application.ports.document_archive import FileOpener
-from argus.application.ports.repositories import SessionRepository
+from argus.application.ports.repositories import ComparisonRepository, SessionRepository
 from argus.domain.errors import ReportNotFoundError
 from argus.domain.report_document import ReportDocument, ReportFormat
 
@@ -37,6 +37,30 @@ class ReportFolder(Protocol):
         ...
 
 
+class CaseFileNames(Protocol):
+    """De qué se informa: el nombre del expediente o de la comparación, que da nombre a la carpeta."""
+
+    def name_of(self, subject_id: str) -> str:
+        """El nombre, o el error del dominio de «no existe» si el identificador no es válido."""
+        ...
+
+
+class SessionCaseFileNames:
+    def __init__(self, sessions: SessionRepository) -> None:
+        self._sessions = sessions
+
+    def name_of(self, subject_id: str) -> str:
+        return self._sessions.get(subject_id).name
+
+
+class ComparisonCaseFileNames:
+    def __init__(self, comparisons: ComparisonRepository) -> None:
+        self._comparisons = comparisons
+
+    def name_of(self, subject_id: str) -> str:
+        return self._comparisons.get(subject_id).content.name
+
+
 def safe_name(text: str) -> str:
     """Un nombre que sirve como carpeta o archivo en Windows y Linux: «Expediente_2026-118»."""
     return UNSAFE_CHARACTERS.sub("_", text.strip()).strip("_") or FILE_PREFIX
@@ -57,10 +81,13 @@ class ReportTools:
 
 
 class ExportReport:
-    """Caso de uso: maqueta el informe del expediente y lo guarda en su carpeta de Documentos."""
+    """Caso de uso: maqueta el informe y lo guarda en su carpeta de Documentos.
 
-    def __init__(self, sessions: SessionRepository, tools: ReportTools) -> None:
-        self._sessions = sessions
+    Sirve igual para un expediente que para una comparación: solo cambia de dónde sale el nombre.
+    """
+
+    def __init__(self, names: CaseFileNames, tools: ReportTools) -> None:
+        self._names = names
         self._tools = tools
 
     def folder(self, session_id: str) -> SavedReport:
@@ -76,21 +103,19 @@ class ExportReport:
         return self._tools.folder.save(self._case_file(request.session_id), file_name, content)
 
     def _case_file(self, session_id: str) -> str:
-        return safe_name(self._sessions.get(session_id).name)
+        return safe_name(self._names.name_of(session_id))
 
 
 class OpenReport:
     """«Abrir informe»: abre el archivo exportado con la aplicación del sistema."""
 
-    def __init__(
-        self, sessions: SessionRepository, folder: ReportFolder, opener: FileOpener
-    ) -> None:
-        self._sessions = sessions
+    def __init__(self, names: CaseFileNames, folder: ReportFolder, opener: FileOpener) -> None:
+        self._names = names
         self._folder = folder
         self._opener = opener
 
     def execute(self, session_id: str, file_name: str) -> None:
-        case_file = safe_name(self._sessions.get(session_id).name)
+        case_file = safe_name(self._names.name_of(session_id))
         path = self._folder.path_of(case_file, file_name)
         if path is None:
             raise ReportNotFoundError(file_name)

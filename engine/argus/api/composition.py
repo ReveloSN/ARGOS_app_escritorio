@@ -285,7 +285,9 @@ def build_engine_services(
             SendDependencies(build_attachment_readers(), values, clock, opener, data_directory),
         ),
         reports=build_report_services(
-            ReportDependencies(storage.sessions, clock, opener, settings.version),
+            ReportDependencies(
+                storage.sessions, storage.comparisons, clock, opener, settings.version
+            ),
             settings.reports_directory,
         ),
         ai_settings=build_ai_settings(storage.ai_settings, ai),

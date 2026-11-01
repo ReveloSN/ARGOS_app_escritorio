@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 
 from argus.api.settings import EngineSettings
 from tests.api.review_stream import post_review
+from tests.api.test_comparisons import compare_versions
 from tests.application.in_memory_repositories import RecordingFileOpener
 
 DOCUMENT = {
@@ -76,3 +77,27 @@ def test_a_report_that_is_no_longer_there_is_explained(
 
     assert response.status_code == 404
     assert response.json() == {"detail": "report_not_found"}
+
+
+def test_a_comparison_has_its_own_report_in_a_folder_named_after_it(
+    client: TestClient, auth_headers: dict[str, str], opener: RecordingFileOpener
+) -> None:
+    comparison = compare_versions(client, auth_headers)
+    url = f"/comparisons/{comparison['id']}/report"
+    body = {"format": "pdf", "document": DOCUMENT}
+
+    planned = client.get(url, headers=auth_headers).json()
+    saved = client.post(url, headers=auth_headers, json=body).json()
+    client.post(f"{url}/open", headers=auth_headers, json={"fileName": saved["fileName"]})
+
+    report = Path(planned["folder"]) / saved["fileName"]
+    assert report.read_bytes().startswith(b"%PDF")
+    assert opener.opened == [report]
+
+
+def test_a_comparison_that_does_not_exist_has_no_report(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    response = client.get("/comparisons/no-existe/report", headers=auth_headers)
+
+    assert response.status_code == 404
