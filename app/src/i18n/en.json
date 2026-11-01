@@ -299,6 +299,8 @@
       "other": "{count} alerts · sorted by risk"
     },
     "noInconsistencies": "No inconsistencies found",
+    "nothingToCompare": "Nothing to compare",
+    "nothingToCompareDescription": "Only one file could be read, and with a single file there are no differences to look for. Start a new review with at least two files.",
     "noInconsistenciesInRead": "No inconsistencies found in the files that were read",
     "unreadFiles": {
       "one": "{count} file could not be read and was not checked.",

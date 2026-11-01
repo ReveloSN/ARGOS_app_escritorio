@@ -63,4 +63,11 @@ describe("assistantStatus", () => {
     const medium = { ...REVIEW, documents: READABLE, alerts: [NAME_ALERT] };
     expect(statusWith({ review: medium }).condition).toBe("ready");
   });
+
+  it("(regresión) con un solo archivo leído y sin alertas no dice «sin inconsistencias»: no comparó nada", () => {
+    const single = { ...REVIEW, alerts: [], documents: READABLE.slice(0, 1) };
+
+    expect(statusWith({ review: single }).condition).toBe("ready");
+    expect(statusWith({ review: { ...single, documents: READABLE } }).condition).toBe("clear");
+  });
 });

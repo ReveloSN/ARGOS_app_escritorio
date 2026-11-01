@@ -36,4 +36,12 @@ describe("Sin inconsistencias", () => {
     expect(screen.getByText("No se encontraron inconsistencias")).toBeVisible();
     expect(screen.queryByText(/no se pudo leer/)).not.toBeInTheDocument();
   });
+
+  it("(regresión) con un solo archivo leído no afirma que no hay inconsistencias: no comparó nada", () => {
+    const [only] = REVIEW.documents;
+    renderWith({ ...REVIEW, documents: only ? [only] : [] });
+
+    expect(screen.getByText("No hay con qué comparar")).toBeVisible();
+    expect(screen.queryByText("No se encontraron inconsistencias")).not.toBeInTheDocument();
+  });
 });

@@ -139,7 +139,7 @@ describe("Asistente de IA", () => {
 
     await userEvent.click(screen.getByRole("button", { name: /^Expediente/ }));
     await userEvent.click(screen.getByRole("tab", { name: "Datos confirmados" }));
-    await userEvent.click(await screen.findByRole("button", { name: "Confirmar valor" }));
+    await userEvent.click(await screen.findByRole("button", { name: /^Confirmar valor/ }));
     await userEvent.keyboard("{Enter}");
 
     expect(addFact).toHaveBeenCalled();

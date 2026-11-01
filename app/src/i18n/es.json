@@ -299,6 +299,8 @@
       "other": "{count} alertas · ordenadas por riesgo"
     },
     "noInconsistencies": "No se encontraron inconsistencias",
+    "nothingToCompare": "No hay con qué comparar",
+    "nothingToCompareDescription": "Solo se pudo leer un archivo y con uno solo no hay diferencias que buscar. Haga una nueva revisión con al menos dos archivos.",
     "noInconsistenciesInRead": "No se encontraron inconsistencias en los archivos leídos",
     "unreadFiles": {
       "one": "{count} archivo no se pudo leer y no se revisó.",
