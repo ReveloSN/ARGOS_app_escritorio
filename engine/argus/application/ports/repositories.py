@@ -99,3 +99,7 @@ class ComparisonRepository(Protocol):
     def get(self, comparison_id: str) -> ComparisonReport:
         """La comparación, o ComparisonNotFoundError si no existe."""
         ...
+
+    def delete_created_before(self, moment: datetime) -> int:
+        """Borra las comparaciones anteriores a `moment` (con sus decisiones) y dice cuántas."""
+        ...

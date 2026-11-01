@@ -1,5 +1,6 @@
 """Construcción de las dependencias del motor: el único lugar que conoce los adaptadores."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -59,6 +60,7 @@ from argus.application.review_analyzers import (
 from argus.application.review_decisions import DecisionRepositories, ReviewDecisions
 from argus.application.review_history import (
     DiscardUnreviewedSession,
+    ExpirableHistory,
     HistoryRepositories,
     PurgeExpiredHistory,
     ReviewHistory,
@@ -180,6 +182,8 @@ class EngineServices:
     ocr_settings: ManageOcrSettings
     storage: ReviewStorage
     data_directory: Path
+    # Borra lo vencido si el historial tiene límite; corre al iniciar y al activar el límite.
+    purge_history: Callable[[], int]
 
 
 def build_review_storage(database_path: Path) -> ReviewStorage:
@@ -282,6 +286,7 @@ def build_engine_services(
         ocr_settings=build_ocr_settings(storage.ocr_settings, external.ocr),
         storage=storage,
         data_directory=data_directory,
+        purge_history=lambda: apply_history_retention(storage, archive),
     )
 
 
@@ -289,7 +294,8 @@ def apply_history_retention(storage: ReviewStorage, archive: DocumentArchive) ->
     """Al iniciar, borra las revisiones vencidas si el usuario limitó el historial a 90 días."""
     if not storage.preferences.get().has_retention_limit:
         return 0
-    return PurgeExpiredHistory(storage.sessions, archive, SystemClock()).execute(HISTORY_RETENTION)
+    history = ExpirableHistory(storage.sessions, storage.comparisons, archive)
+    return PurgeExpiredHistory(history, SystemClock()).execute(HISTORY_RETENTION)
 
 
 def build_attachment_readers() -> DocumentReaderFactory:

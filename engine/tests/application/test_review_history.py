@@ -5,6 +5,7 @@ import pytest
 from argus.application.ports.document_archive import ArchivedFile
 from argus.application.ports.document_reader import DocumentSource
 from argus.application.review_history import (
+    ExpirableHistory,
     HistoryRepositories,
     PurgeExpiredHistory,
     ReviewHistory,
@@ -13,10 +14,14 @@ from argus.application.review_session_use_cases import CloseReviewSession, Start
 from argus.domain.alert import Alert
 from argus.domain.decision import Decision, DecisionKind
 from argus.domain.entity import EntityType
+from argus.domain.errors import ComparisonNotFoundError
 from argus.domain.risk import RiskLevel
+from argus.domain.text_comparison.modes import ComparisonModeName
+from argus.domain.text_comparison.report import ComparisonContent, ComparisonReport
 from tests.application.in_memory_repositories import (
     START,
     InMemoryAlertRepository,
+    InMemoryComparisonRepository,
     InMemoryDecisionRepository,
     InMemoryDocumentArchive,
     InMemorySessionRepository,
@@ -77,8 +82,28 @@ def test_purge_deletes_sessions_older_than_the_retention_with_their_files() -> N
     archive.store(ArchivedFile(recent.id, 0, DocumentSource("b.pdf", b"%PDF")))
 
     # El reloj marca 120 días desde el inicio: la primera sesión tiene 120 días y la otra, 60.
-    deleted = PurgeExpiredHistory(sessions, archive, days).execute(timedelta(days=90))
+    history = ExpirableHistory(sessions, InMemoryComparisonRepository(), archive)
+    deleted = PurgeExpiredHistory(history, days).execute(timedelta(days=90))
 
     assert deleted == 1
     assert list(sessions.sessions) == [recent.id]
     assert list(archive.files) == [(recent.id, 0)]
+
+
+def test_purge_also_deletes_comparisons_older_than_the_retention() -> None:
+    sessions, archive = InMemorySessionRepository(), InMemoryDocumentArchive()
+    comparisons = InMemoryComparisonRepository()
+    clock = SteppingClock(start=START + timedelta(days=120))
+    content = ComparisonContent("Arrendamiento", ComparisonModeName.VERSIONS, (), ())
+    old = ComparisonReport.start(content, START)
+    comparisons.save(old)
+    comparisons.save(ComparisonReport.start(content, START + timedelta(days=100)))
+
+    # Hoy son 120 días después del inicio: la comparación vieja tiene 120 y la otra, 20.
+    deleted = PurgeExpiredHistory(ExpirableHistory(sessions, comparisons, archive), clock).execute(
+        timedelta(days=90)
+    )
+
+    assert deleted == 1
+    with pytest.raises(ComparisonNotFoundError):
+        comparisons.get(old.id)

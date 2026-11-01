@@ -111,3 +111,17 @@ def test_without_retention_limit_the_history_is_kept(tmp_path: Path) -> None:
     )
 
     assert services.storage.sessions.get(session.id) == session
+
+
+def test_turning_on_the_retention_limit_deletes_expired_history_at_once(
+    client: TestClient, auth_headers: dict[str, str], settings: EngineSettings
+) -> None:
+    store_old_session(settings.data_directory)
+    storage = build_review_storage(settings.data_directory / DATABASE_FILE_NAME)
+    update = {"sensitivity": "balanced", "comparedCategories": ["amounts"]}
+
+    client.put("/preferences", headers=auth_headers, json={**update, "hasRetentionLimit": False})
+    assert storage.sessions.list_created_before(datetime.now(UTC)) != ()
+
+    client.put("/preferences", headers=auth_headers, json={**update, "hasRetentionLimit": True})
+    assert storage.sessions.list_created_before(datetime.now(UTC)) == ()

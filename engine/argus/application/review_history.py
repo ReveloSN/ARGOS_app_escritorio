@@ -5,6 +5,7 @@ from argus.application.ports.clock import Clock
 from argus.application.ports.document_archive import DocumentArchive
 from argus.application.ports.repositories import (
     AlertRepository,
+    ComparisonRepository,
     DecisionRepository,
     SessionRepository,
 )
@@ -72,20 +73,31 @@ class ReviewHistory:
         )
 
 
-class PurgeExpiredHistory:
-    """Borra las revisiones más antiguas que el periodo de retención, con la copia de sus archivos."""
+@dataclass(frozen=True)
+class ExpirableHistory:
+    """Todo lo que el historial guarda y vence con el periodo de retención."""
 
-    def __init__(self, sessions: SessionRepository, archive: DocumentArchive, clock: Clock) -> None:
-        self._sessions = sessions
-        self._archive = archive
+    sessions: SessionRepository
+    comparisons: ComparisonRepository
+    archive: DocumentArchive
+
+
+class PurgeExpiredHistory:
+    """Borra lo más antiguo que el periodo de retención: revisiones con la copia de sus archivos y
+    comparaciones, que guardan el texto completo de los documentos."""
+
+    def __init__(self, history: ExpirableHistory, clock: Clock) -> None:
+        self._history = history
         self._clock = clock
 
     def execute(self, retention: timedelta) -> int:
-        expired = self._sessions.list_created_before(self._clock.now() - retention)
+        """Cuántas revisiones y comparaciones se borraron en total."""
+        cutoff = self._clock.now() - retention
+        expired = self._history.sessions.list_created_before(cutoff)
         for session in expired:
-            self._sessions.delete(session.id)
-            self._archive.delete_session(session.id)
-        return len(expired)
+            self._history.sessions.delete(session.id)
+            self._history.archive.delete_session(session.id)
+        return len(expired) + self._history.comparisons.delete_created_before(cutoff)
 
 
 class DiscardUnreviewedSession:

@@ -1,3 +1,6 @@
+from dataclasses import replace
+from datetime import timedelta
+
 import pytest
 
 from argus.domain.decision import Decision, DecisionKind
@@ -84,3 +87,33 @@ def test_decisions_of_a_comparison_are_stored_apart_from_reviews(
     assert SqliteDecisionRepository(database).list_for(saved.id) == ()
     with pytest.raises(ComparisonNotFoundError):
         decisions.save("no-existe", Decision(1, DecisionKind.ERROR, STARTED))
+
+
+def test_comparisons_older_than_the_cutoff_are_deleted_with_their_decisions(
+    database: SqliteDatabase,
+) -> None:
+    repository = SqliteComparisonRepository(database)
+    old, recent = report(), replace(report(), created_at=STARTED + timedelta(days=100))
+    repository.save(old)
+    repository.save(recent)
+    decisions = SqliteDecisionRepository(database, COMPARISON_DECISIONS)
+    decisions.save(old.id, Decision(1, DecisionKind.ERROR, STARTED))
+
+    deleted = repository.delete_created_before(STARTED + timedelta(days=90))
+
+    assert deleted == 1
+    assert repository.get(recent.id) == recent
+    with pytest.raises(ComparisonNotFoundError):
+        repository.get(old.id)
+    with database.connect() as connection:
+        remaining = connection.execute("SELECT COUNT(*) FROM comparison_decisions").fetchone()
+    assert remaining == (0,)
+
+
+def test_nothing_is_deleted_when_every_comparison_is_recent(database: SqliteDatabase) -> None:
+    repository = SqliteComparisonRepository(database)
+    saved = report()
+    repository.save(saved)
+
+    assert repository.delete_created_before(STARTED) == 0
+    assert repository.get(saved.id) == saved
