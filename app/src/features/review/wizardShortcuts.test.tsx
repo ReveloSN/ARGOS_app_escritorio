@@ -58,3 +58,26 @@ describe("Atajos de Nueva revisión", () => {
     expect(startReview).not.toHaveBeenCalled();
   });
 });
+
+describe("Nombre de la sesión obligatorio", () => {
+  beforeEach(stubBrowser);
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("(regresión) sin nombre el error se anuncia y el foco va al campo", async () => {
+    renderApp(fakeEngineServices());
+    const user = userEvent.setup();
+    await user.click(
+      within(screen.getByRole("main")).getByRole("button", { name: /Nueva revisión/ }),
+    );
+    await user.upload(screen.getByLabelText("Elegir archivos"), [
+      new File(["Contrato No. 1234"], "contrato.txt"),
+    ]);
+
+    await user.keyboard("{Control>}{Enter}{/Control}");
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Escriba un nombre");
+    expect(screen.getByLabelText("Nombre de la sesión")).toHaveFocus();
+  });
+});

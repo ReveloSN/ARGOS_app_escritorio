@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useEffect, useId, useRef } from "react";
 
 import { Icon } from "./Icon";
 import styles from "./TextField.module.css";
@@ -23,6 +23,11 @@ export function TextField({
 }: TextFieldProps) {
   const inputId = useId();
   const errorId = useId();
+  const input = useRef<HTMLInputElement>(null);
+  // Al aparecer un error el foco va al campo: es lo que hay que corregir y se anuncia ahí.
+  useEffect(() => {
+    if (error) input.current?.focus();
+  }, [error]);
 
   return (
     <div className={styles.field}>
@@ -30,6 +35,7 @@ export function TextField({
         {label}
       </label>
       <input
+        ref={input}
         id={inputId}
         className={styles.input}
         value={value}
@@ -49,7 +55,7 @@ export function TextField({
         }}
       />
       {error && (
-        <span id={errorId} className={styles.error}>
+        <span id={errorId} role="alert" className={styles.error}>
           <Icon name="report" size="xs" />
           {error}
         </span>

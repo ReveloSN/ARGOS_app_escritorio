@@ -16,7 +16,7 @@ import styles from "./Send.module.css";
 import { useSendReview } from "./sendContext";
 import { useOpenCorrected, useSendDecisions } from "./useSendDecisions";
 
-const OPEN_SHORTCUT = [MODIFIER_KEY, "Enter"];
+const OPEN_SHORTCUT = [MODIFIER_KEY, "↵"];
 
 function SendHeader({ review }: { review: SendReviewResult }) {
   const { t } = useI18n();
