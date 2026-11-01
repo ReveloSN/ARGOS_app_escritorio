@@ -22,6 +22,12 @@ export function pendingHighCount(review: SendReviewResult): number {
   return pendingIssues(review).filter((issue) => issue.risk === "high").length;
 }
 
+/** Problemas marcados como error que ARGUS no puede corregir: el borrador sigue igual. */
+export function unfixedErrorCount(review: SendReviewResult): number {
+  return review.issues.filter((issue) => !issue.fix && decisionOf(review, issue) === "error")
+    .length;
+}
+
 /** Las correcciones que el usuario aceptó al marcar el problema como error. */
 export function appliedFixes(review: SendReviewResult): SendFixResult[] {
   return review.issues.flatMap((issue) =>

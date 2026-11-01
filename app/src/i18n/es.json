@@ -1158,6 +1158,11 @@
         "other": "{count} problemas en el borrador"
       },
       "review": "Revise cada uno antes de enviar. ARGUS no envía el correo.",
+      "unfixed": {
+        "one": "{count} problema marcado como error sin corregir",
+        "other": "{count} problemas marcados como error sin corregir"
+      },
+      "unfixedReview": "ARGUS no cambia el texto del correo: corríjalo usted antes de enviarlo.",
       "ready": "El borrador está listo",
       "readyCaseFile": "Adjuntos, periodo y destinatarios coinciden con el expediente.",
       "readyAlone": "El periodo y los adjuntos coinciden con lo que dice el correo."
@@ -1170,6 +1175,10 @@
       "pending": {
         "one": "Queda {count} problema sin resolver.",
         "other": "Quedan {count} problemas sin resolver."
+      },
+      "unfixed": {
+        "one": "Marcó {count} problema que ARGUS no puede corregir por usted.",
+        "other": "Marcó {count} problemas que ARGUS no puede corregir por usted."
       },
       "none": "Sin problemas pendientes."
     },

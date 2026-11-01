@@ -1158,6 +1158,11 @@
         "other": "{count} problems in the draft"
       },
       "review": "Check each one before sending. ARGUS does not send the email.",
+      "unfixed": {
+        "one": "{count} problem marked as an error and not fixed",
+        "other": "{count} problems marked as errors and not fixed"
+      },
+      "unfixedReview": "ARGUS does not change the text of the email: fix it yourself before sending.",
       "ready": "The draft is ready",
       "readyCaseFile": "Attachments, period and recipients match the case file.",
       "readyAlone": "The period and the attachments match what the email says."
@@ -1170,6 +1175,10 @@
       "pending": {
         "one": "{count} problem left.",
         "other": "{count} problems left."
+      },
+      "unfixed": {
+        "one": "You marked {count} problem that ARGUS cannot fix for you.",
+        "other": "You marked {count} problems that ARGUS cannot fix for you."
       },
       "none": "No pending problems."
     },

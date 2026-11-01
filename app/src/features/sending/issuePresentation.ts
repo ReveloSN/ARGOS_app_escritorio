@@ -2,7 +2,7 @@ import type { EyeState } from "../../components/atoms/eyeShapes";
 import type { I18n } from "../../i18n/i18nContext";
 import type { DecisionKindValue } from "../../services/engine/reviewTypes";
 import type { SendIssueResult, SendReviewResult } from "../../services/engine/sendTypes";
-import { decisionOf, pendingHighCount, pendingIssues } from "./sendState";
+import { decisionOf, pendingHighCount, pendingIssues, unfixedErrorCount } from "./sendState";
 
 type Texts = Pick<I18n, "t" | "tPlural">;
 
@@ -57,37 +57,57 @@ export function issueTexts(
   };
 }
 
-function headline(pending: number, { t, tPlural }: Texts): string {
-  return pending
-    ? tPlural({ key: "sending.summary.problems", count: pending })
-    : t("sending.summary.ready");
+/** Lo que queda por resolver: lo pendiente y lo marcado como error que ARGUS no pudo corregir. */
+interface Remaining {
+  readonly pending: number;
+  readonly high: number;
+  readonly unfixed: number;
 }
 
-function footer(pending: number, high: number, { t, tPlural }: Texts): string {
-  if (high) return tPlural({ key: "sending.footer.high", count: high });
-  if (pending) return tPlural({ key: "sending.footer.pending", count: pending });
+function headline(remaining: Remaining, { t, tPlural }: Texts): string {
+  if (remaining.pending) {
+    return tPlural({ key: "sending.summary.problems", count: remaining.pending });
+  }
+  if (remaining.unfixed) {
+    return tPlural({ key: "sending.summary.unfixed", count: remaining.unfixed });
+  }
+  return t("sending.summary.ready");
+}
+
+function footer(remaining: Remaining, { t, tPlural }: Texts): string {
+  if (remaining.high) return tPlural({ key: "sending.footer.high", count: remaining.high });
+  if (remaining.pending) {
+    return tPlural({ key: "sending.footer.pending", count: remaining.pending });
+  }
+  if (remaining.unfixed) {
+    return tPlural({ key: "sending.footer.unfixed", count: remaining.unfixed });
+  }
   return t("sending.footer.none");
 }
 
-function subline(review: SendReviewResult, pending: number, { t }: Texts): string {
-  if (pending) return t("sending.summary.review");
+function subline(review: SendReviewResult, remaining: Remaining, { t }: Texts): string {
+  if (remaining.pending) return t("sending.summary.review");
+  if (remaining.unfixed) return t("sending.summary.unfixedReview");
   return review.sessionId ? t("sending.summary.readyCaseFile") : t("sending.summary.readyAlone");
 }
 
-function eyeState(pending: number, high: number): EyeState {
+function eyeState({ pending, high, unfixed }: Remaining): EyeState {
   if (high) return "alert";
-  return pending ? "doubt" : "success";
+  return pending || unfixed ? "doubt" : "success";
 }
 
 /** Encabezado del panel y pie de la pantalla, según lo que queda por resolver (mockup). */
 export function summaryTexts(review: SendReviewResult, texts: Texts) {
-  const pending = pendingIssues(review).length;
-  const high = pendingHighCount(review);
+  const remaining: Remaining = {
+    pending: pendingIssues(review).length,
+    high: pendingHighCount(review),
+    unfixed: unfixedErrorCount(review),
+  };
   return {
-    headline: headline(pending, texts),
-    subline: subline(review, pending, texts),
-    footer: footer(pending, high, texts),
-    isBlocking: high > 0,
-    eye: eyeState(pending, high),
+    headline: headline(remaining, texts),
+    subline: subline(review, remaining, texts),
+    footer: footer(remaining, texts),
+    isBlocking: remaining.high > 0,
+    eye: eyeState(remaining),
   };
 }

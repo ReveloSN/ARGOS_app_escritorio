@@ -1,8 +1,23 @@
 import { describe, expect, it } from "vitest";
 
+import { MESSAGES_BY_LOCALE } from "../../i18n/messages";
+import {
+  translate,
+  translatePlural,
+  type TranslationKey,
+  type TranslationParams,
+} from "../../i18n/translate";
 import { decided, sendReview } from "../../test/sendFakes";
 import { markRuns, paragraphsOf } from "./draftMarks";
+import { summaryTexts } from "./issuePresentation";
 import { correctedAttachments, correctedRecipients, pendingHighCount } from "./sendState";
+
+const messages = MESSAGES_BY_LOCALE.es;
+const I18N_ES = {
+  t: (key: TranslationKey, params?: TranslationParams) => translate(messages, key, params),
+  tPlural: (request: Parameters<typeof translatePlural>[2]) =>
+    translatePlural(messages, "es", request),
+};
 
 describe("Revisar antes de enviar", () => {
   it("marca cada problema en su primera aparición dentro del texto", () => {
@@ -36,5 +51,19 @@ describe("Revisar antes de enviar", () => {
 
     expect(correctedAttachments(review)).toHaveLength(2);
     expect(correctedRecipients(review, review.draft.cc)).toEqual(review.draft.cc);
+  });
+
+  it("(regresión) un problema marcado como error y sin corrección no deja decir «listo»", () => {
+    const base = sendReview([decided(1, "error"), decided(2, "error")]);
+    const withoutFix = {
+      ...base,
+      issues: base.issues.map((issue) => (issue.number === 1 ? { ...issue, fix: null } : issue)),
+    };
+
+    expect(summaryTexts(base, I18N_ES).headline).toBe("El borrador está listo");
+    const summary = summaryTexts(withoutFix, I18N_ES);
+    expect(summary.headline).toBe("1 problema marcado como error sin corregir");
+    expect(summary.footer).toContain("no puede corregir por usted");
+    expect(summary.eye).toBe("doubt");
   });
 });
