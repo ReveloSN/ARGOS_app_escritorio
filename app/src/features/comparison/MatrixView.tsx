@@ -17,7 +17,7 @@ interface MatrixViewProps {
 
 /** Matriz de 3 o más documentos: una celda por par (triángulo superior), solo con su conteo. */
 export function MatrixView({ comparison, view }: MatrixViewProps) {
-  const { t } = useI18n();
+  const { t, tPlural } = useI18n();
   const matrix = comparisonMatrix(comparison, view.filters.ignored);
   const [pairIndex, setPairIndex] = useState(view.pairIndex);
   const openSelected = () => {
@@ -32,9 +32,12 @@ export function MatrixView({ comparison, view }: MatrixViewProps) {
       <div className={styles.tableWrap}>
         <p className={styles.intro}>
           {t("comparison.matrix.intro", {
-            documents: matrix.documents.length,
-            pairs: comparison.pairs.length,
-            different: withDifferences,
+            documents: tPlural({
+              key: "comparison.matrix.documents",
+              count: matrix.documents.length,
+            }),
+            pairs: tPlural({ key: "comparison.matrix.pairs", count: comparison.pairs.length }),
+            different: tPlural({ key: "comparison.matrix.different", count: withDifferences }),
           })}
         </p>
         <MatrixGrid

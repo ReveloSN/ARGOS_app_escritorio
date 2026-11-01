@@ -24,10 +24,14 @@ function asOptions(names: readonly string[]): SelectOption[] {
 
 /** Elige el documento base y contra qué se compara: todos los demás o uno concreto. */
 export function ScopeSelector({ comparison, scope, onScope }: ScopeSelectorProps) {
-  const { t } = useI18n();
+  const { t, tPlural } = useI18n();
+  const others = otherDocuments(comparison, scope.base);
   const against: SelectOption[] = [
-    { value: ALL_VALUE, label: t("comparison.scope.allOthers") },
-    ...asOptions(otherDocuments(comparison, scope.base)),
+    {
+      value: ALL_VALUE,
+      label: tPlural({ key: "comparison.scope.allOthers", count: others.length }),
+    },
+    ...asOptions(others),
   ];
   return (
     <div role="group" aria-label={t("comparison.scope.label")} className={styles.scopeSelector}>

@@ -22,6 +22,17 @@
   transition: background-color var(--duration-fast) var(--easing-decelerate);
 }
 
+.subject {
+  flex: 1 0 100%;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.emphasized {
+  border-color: var(--button-primary-bg);
+  font-weight: var(--font-weight-medium);
+}
+
 .tertiary {
   flex: 0 1 auto;
   border-color: transparent;

@@ -812,7 +812,10 @@
       "label": "What to compare",
       "base": "Base document",
       "against": "Against",
-      "allOthers": "All the other documents",
+      "allOthers": {
+        "one": "The other document",
+        "other": "All the other documents"
+      },
       "allHeading": "{base} against all the others",
       "baseBadge": "Base",
       "versus": "against {document}",
@@ -905,6 +908,8 @@
     },
     "detail": {
       "empty": "—",
+      "aboutChange": "About this change",
+      "aboutData": "About this data point",
       "saved": "Saved: {decision}",
       "removedTitle": "This text is missing in B",
       "addedTitle": "This text was added in B",
@@ -919,7 +924,15 @@
       "action": "Change mode"
     },
     "inconsistencies": {
-      "intro": "{data} data points that do not match, searched in {documents} documents. There is no confirmed case data yet.",
+      "intro": "{found} in {documents}. There is no confirmed case data yet.",
+      "found": {
+        "one": "{count} data point does not match",
+        "other": "{count} data points do not match"
+      },
+      "documents": {
+        "one": "{count} document",
+        "other": "{count} documents"
+      },
       "data": "Data",
       "noConfirmed": "No confirmed value",
       "notFound": "Not present",
@@ -930,7 +943,19 @@
     },
     "matrix": {
       "label": "Difference matrix",
-      "intro": "{documents} documents · {pairs} pairs · {different} pairs with differences. Select a cell to see the pair.",
+      "intro": "{documents} · {pairs} · {different}. Select a cell to see the pair.",
+      "documents": {
+        "one": "{count} document",
+        "other": "{count} documents"
+      },
+      "pairs": {
+        "one": "{count} pair",
+        "other": "{count} pairs"
+      },
+      "different": {
+        "one": "{count} pair with differences",
+        "other": "{count} pairs with differences"
+      },
       "axis": "Rows × columns",
       "selectedPair": "Selected pair",
       "versus": "versus",

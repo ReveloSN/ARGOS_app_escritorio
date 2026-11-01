@@ -1,39 +1,12 @@
-import { act, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { onlyRows } from "../../test/changeRows";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { required } from "../../test/threeDocuments";
-import { comparison, NUMBER_CHANGE, pair, VERSION_CHANGES } from "../../test/comparisonFakes";
-import { fakeEngineServices } from "../../test/engineFakes";
-import { renderApp, stubBrowser } from "../../test/renderApp";
-
-const DECIDED_FIRST = {
-  decisions: [{ alertNumber: 1, kind: "correct" as const, correctSide: null, decidedAt: "" }],
-  canUndo: true,
-};
-
-const ALL_DECIDED = {
-  decisions: [1, 2, 3, 4].map((alertNumber) => ({
-    ...DECIDED_FIRST.decisions[0],
-    alertNumber,
-  })),
-  canUndo: true,
-};
-
-async function openChanges(decided = DECIDED_FIRST) {
-  const result = comparison({
-    pairs: [pair("Contrato_v2.docx", "Contrato_v3.docx", VERSION_CHANGES)],
-  });
-  const startComparison = vi.fn(() => Promise.resolve(result));
-  const decide = vi.fn(() => Promise.resolve(decided));
-  renderApp(fakeEngineServices({ comparisons: { startComparison, decide } }));
-  await act(() => Promise.resolve());
-  await userEvent.click(screen.getByRole("button", { name: "Comparar dos versiones" }));
-  const files = [new File(["a"], "v1.docx"), new File(["b"], "v2.docx")];
-  await userEvent.upload(screen.getByLabelText("Elegir documentos"), files);
-  return within(await screen.findByRole("list", { name: "Cambios" }));
-}
+import { openChanges } from "../../test/changeListHarness";
+import { NUMBER_CHANGE } from "../../test/comparisonFakes";
+import { stubBrowser } from "../../test/renderApp";
 
 function findMark(tag: "del" | "ins", text: string) {
   return [...document.querySelectorAll(tag)].find((element) => element.textContent === text);
@@ -133,20 +106,6 @@ describe("Lista de cambios de Comparar", () => {
     });
   });
 
-  it("(regresión) en un riesgo alto «Es un error» va primero e «Ignorar» pesa menos y avisa su efecto", async () => {
-    const list = await openChanges();
-    await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
-
-    const group = within(list.getByRole("group", { name: /./ }));
-    const names = group.getAllByRole("button").map((button) => button.textContent ?? "");
-    expect(names[0]).toMatch(/Es un error/);
-    expect(names[2]).toMatch(/Ignorar/);
-    expect(group.getByRole("button", { name: /Ignorar/ })).toHaveAttribute(
-      "title",
-      expect.stringContaining("queda marcada como ignorada"),
-    );
-  });
-
   it("(regresión) los datos van en monoespaciada y solo los caracteres que difieren van en negrita", async () => {
     await openChanges();
 
@@ -156,24 +115,5 @@ describe("Lista de cambios de Comparar", () => {
     expect(added.className).toMatch(/unifiedData/);
     expect(removed.querySelector("strong")).toHaveTextContent("85");
     expect(added.querySelector("strong")).toHaveTextContent("58");
-  });
-
-  it("(regresión) la cabecera de la lista cuenta cuántos cambios van decididos", async () => {
-    const list = await openChanges();
-    expect(screen.getByText("0 de 4 decididos")).toBeVisible();
-
-    await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
-    await userEvent.click(list.getByRole("button", { name: /Es correcto/ }));
-
-    expect(await screen.findByText("1 de 4 decididos")).toBeVisible();
-  });
-
-  it("(regresión) con todos decididos la cabecera dice que la revisión está completa", async () => {
-    const list = await openChanges(ALL_DECIDED as typeof DECIDED_FIRST);
-
-    await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
-    await userEvent.click(list.getByRole("button", { name: /Es correcto/ }));
-
-    expect(await screen.findByText("Revisión completa · 4 de 4")).toBeVisible();
   });
 });

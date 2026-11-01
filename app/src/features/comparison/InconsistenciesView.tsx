@@ -19,7 +19,7 @@ interface InconsistenciesViewProps {
 
 /** «Buscar inconsistencias»: cada dato encontrado y qué dice de él cada documento. */
 export function InconsistenciesView({ comparison, view, decisions }: InconsistenciesViewProps) {
-  const { t } = useI18n();
+  const { t, tPlural } = useI18n();
   const documents = comparison.documents
     .filter((doc) => doc.status === "read")
     .map((doc) => doc.name);
@@ -47,7 +47,13 @@ export function InconsistenciesView({ comparison, view, decisions }: Inconsisten
     <div className={styles.versions}>
       <div className={styles.tableWrap}>
         <p className={styles.intro}>
-          {t("comparison.inconsistencies.intro", { data: rows.length, documents: columns.length })}
+          {t("comparison.inconsistencies.intro", {
+            found: tPlural({ key: "comparison.inconsistencies.found", count: rows.length }),
+            documents: tPlural({
+              key: "comparison.inconsistencies.documents",
+              count: columns.length,
+            }),
+          })}
         </p>
         <div
           role="table"

@@ -812,7 +812,10 @@
       "label": "Qué comparar",
       "base": "Documento base",
       "against": "Contra",
-      "allOthers": "Todos los demás documentos",
+      "allOthers": {
+        "one": "El otro documento",
+        "other": "Todos los demás documentos"
+      },
       "allHeading": "{base} frente a todos los demás",
       "baseBadge": "Base",
       "versus": "contra {document}",
@@ -905,6 +908,8 @@
     },
     "detail": {
       "empty": "—",
+      "aboutChange": "Sobre este cambio",
+      "aboutData": "Sobre este dato",
       "saved": "Se guardó: {decision}",
       "removedTitle": "Este texto falta en B",
       "addedTitle": "Este texto se agregó en B",
@@ -919,7 +924,15 @@
       "action": "Cambiar de modo"
     },
     "inconsistencies": {
-      "intro": "{data} datos que no coinciden, buscados en {documents} documentos. Todavía no hay datos confirmados del expediente.",
+      "intro": "{found} en {documents}. Todavía no hay datos confirmados del expediente.",
+      "found": {
+        "one": "{count} dato no coincide",
+        "other": "{count} datos no coinciden"
+      },
+      "documents": {
+        "one": "{count} documento",
+        "other": "{count} documentos"
+      },
       "data": "Dato",
       "noConfirmed": "Sin dato confirmado",
       "notFound": "No aparece",
@@ -930,7 +943,19 @@
     },
     "matrix": {
       "label": "Matriz de diferencias",
-      "intro": "{documents} documentos · {pairs} pares · {different} pares con diferencias. Seleccione una celda para ver el par.",
+      "intro": "{documents} · {pairs} · {different}. Seleccione una celda para ver el par.",
+      "documents": {
+        "one": "{count} documento",
+        "other": "{count} documentos"
+      },
+      "pairs": {
+        "one": "{count} par",
+        "other": "{count} pares"
+      },
+      "different": {
+        "one": "{count} par con diferencias",
+        "other": "{count} pares con diferencias"
+      },
       "axis": "Filas × columnas",
       "selectedPair": "Par seleccionado",
       "versus": "frente a",
