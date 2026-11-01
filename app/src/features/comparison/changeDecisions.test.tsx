@@ -47,7 +47,9 @@ describe("Decisiones en la lista de cambios", () => {
     await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
     await userEvent.click(list.getByRole("button", { name: /Es correcto/ }));
 
-    expect(await screen.findByText("Revisión completa · 4 de 4")).toBeVisible();
+    expect(
+      await screen.findByText("Revisión completa. 4 correctos. Ya puede exportar el informe."),
+    ).toBeVisible();
   });
 
   it("(regresión) «Se guardó» va debajo de los botones: al decidir, los botones no se mueven", async () => {

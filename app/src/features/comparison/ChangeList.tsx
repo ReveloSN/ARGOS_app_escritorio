@@ -6,6 +6,8 @@ import type { ChangeResult } from "../../services/engine/comparisonTypes";
 import type { DecisionResult } from "../../services/engine/reviewTypes";
 import { importantCount, type ChangeFilters } from "./changeFilters";
 import { ChangeItem } from "./ChangeItem";
+import { decisionTotals } from "./reviewTotals";
+import { ReviewComplete } from "./ReviewComplete";
 import styles from "./Compare.module.css";
 
 interface ChangeListProps {
@@ -81,13 +83,8 @@ function ListHeader({ hasHighRisk, done, total }: ListHeaderProps) {
           {t("risk.highLong")}
         </span>
       )}
-      {total > 0 && (
-        <span className={styles.listProgress}>
-          {t(done === total ? "comparison.list.complete" : "comparison.list.decided", {
-            done,
-            total,
-          })}
-        </span>
+      {total > 0 && done < total && (
+        <span className={styles.listProgress}>{t("comparison.list.decided", { done, total })}</span>
       )}
       <span className={styles.listHint}>{t("comparison.list.navigate")}</span>
     </div>
@@ -100,13 +97,16 @@ export function ChangeList(props: ChangeListProps) {
   const firstOther = props.visible.findIndex((change) => change.risk !== "high");
   const isDecided = (change: ChangeResult) =>
     props.decisions.some((decision) => decision.alertNumber === change.number);
+  const done = props.visible.filter(isDecided).length;
+  const isComplete = props.visible.length > 0 && done === props.visible.length;
   return (
     <div className={styles.listPanel}>
       <ListHeader
         hasHighRisk={firstOther !== 0 && props.visible.length > 0}
-        done={props.visible.filter(isDecided).length}
+        done={done}
         total={props.visible.length}
       />
+      {isComplete && <ReviewComplete totals={decisionTotals(props.visible, props.decisions)} />}
       <ImportanceControl {...props} />
       <ul aria-label={t("comparison.list.title")} className={styles.items}>
         {props.visible.map((change, index) => (

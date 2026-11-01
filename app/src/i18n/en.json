@@ -981,7 +981,21 @@
       "title": "Changes",
       "navigate": "J K to navigate",
       "decided": "{done} of {total} decided",
-      "complete": "Review complete · {total} of {total}",
+      "completeNote": "Review complete. {summary}. You can now export the report.",
+      "totals": {
+        "error": {
+          "one": "{count} error",
+          "other": "{count} errors"
+        },
+        "correct": {
+          "one": "{count} correct",
+          "other": "{count} correct"
+        },
+        "ignored": {
+          "one": "{count} ignored",
+          "other": "{count} ignored"
+        }
+      },
       "empty": "No changes match these filters.",
       "emptyHint": "Change them in “Options”.",
       "noDifferences": "There are no differences between these documents.",

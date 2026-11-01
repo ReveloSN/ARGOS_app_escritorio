@@ -994,3 +994,13 @@
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
 }
+
+.reviewComplete {
+  margin: 0;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: var(--border-width) solid var(--color-action-text);
+  border-radius: var(--radius-md);
+  color: var(--color-action-text);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+}
