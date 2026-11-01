@@ -989,3 +989,8 @@
     border-left: 0;
   }
 }
+
+.pairMore {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}

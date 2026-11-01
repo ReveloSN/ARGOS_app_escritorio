@@ -1042,6 +1042,10 @@
       },
       "axis": "Filas × columnas",
       "selectedPair": "Par seleccionado",
+      "more": {
+        "one": "y {count} diferencia más",
+        "other": "y {count} diferencias más"
+      },
       "versus": "frente a",
       "open": "Abrir el par",
       "cellChanges": {

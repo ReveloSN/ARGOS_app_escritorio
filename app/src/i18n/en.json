@@ -1042,6 +1042,10 @@
       },
       "axis": "Rows × columns",
       "selectedPair": "Selected pair",
+      "more": {
+        "one": "and {count} more difference",
+        "other": "and {count} more differences"
+      },
       "versus": "versus",
       "open": "Open the pair",
       "cellChanges": {

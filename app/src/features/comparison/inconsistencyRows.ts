@@ -44,12 +44,19 @@ function contradicting(
 /** Con un dato confirmado, el lado que lo contradice no coincide. Si no, el lado que aparece en
  * menos documentos; a igualdad, el segundo. Un solo valor (fecha imposible, campo vacío) es el
  * que no está bien. */
-function oddSide(alert: AlertResult, confirmed: FactResult | undefined): AlertSideResult {
+function oddSide(
+  alert: AlertResult,
+  confirmed: FactResult | undefined,
+): AlertSideResult | undefined {
   const { first, second } = alert;
   if (!second) return first;
   const contradicted = contradicting({ ...alert, second }, confirmed);
   if (contradicted) return contradicted;
-  return documentsOf(first).size < documentsOf(second).size ? first : second;
+  const firstCount = documentsOf(first).size;
+  const secondCount = documentsOf(second).size;
+  // Con el mismo número de documentos no hay mayoría: ningún valor se marca como el que no coincide.
+  if (firstCount === secondCount) return undefined;
+  return firstCount < secondCount ? first : second;
 }
 
 function cellFor(

@@ -38,6 +38,18 @@ describe("Datos confirmados como referencia de las inconsistencias", () => {
     expect(activeFacts([retired, confirmedFact({ id: 2 })]).map((fact) => fact.id)).toEqual([2]);
   });
 
+  it("(regresión) con un valor en cada documento no hay mayoría: no se marca ninguno", () => {
+    const tied = {
+      ...ALERT,
+      first: { ...ALERT.first, occurrences: ALERT.first.occurrences.slice(0, 1) },
+    };
+    const columns = inconsistencyColumns([], [tied]);
+
+    const [row] = inconsistencyRows([tied], columns);
+
+    expect(row?.cells.some((cell) => cell?.isOdd)).toBe(false);
+  });
+
   it("(regresión) marca ≠ en el valor que contradice el dato confirmado, no en el de la mayoría", () => {
     const columns = inconsistencyColumns([], [ALERT]);
     const marked = (value: string) =>
