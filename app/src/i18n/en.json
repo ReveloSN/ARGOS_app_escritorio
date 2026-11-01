@@ -38,6 +38,11 @@
     "deleteTitle": "Delete the session “{name}”?",
     "deleteBody": "Its alerts, its decisions and the copy of its files are deleted.",
     "deleteHint": "You will have a few seconds to undo it.",
+    "deleteFailed": {
+      "what": "We could not delete the session “{name}”.",
+      "why": "The analysis engine did not respond, so the session is still saved.",
+      "todo": "Open it from History and delete it again."
+    },
     "deleteConfirm": "Delete session",
     "deleted": "Session “{name}” deleted",
     "failed": {
@@ -294,6 +299,11 @@
       "other": "{count} alerts · sorted by risk"
     },
     "noInconsistencies": "No inconsistencies found",
+    "noInconsistenciesInRead": "No inconsistencies found in the files that were read",
+    "unreadFiles": {
+      "one": "{count} file could not be read and was not checked.",
+      "other": "{count} files could not be read and were not checked."
+    },
     "comparedFiles": {
       "one": "{count} file was compared and its values match.",
       "other": "{count} files were compared and their values match."

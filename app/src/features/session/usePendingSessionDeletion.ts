@@ -10,12 +10,22 @@ export interface PendingSessionDeletion {
   readonly deleted: ReviewResult | null;
   readonly schedule: () => void;
   readonly undo: () => void;
+  /** La sesión que el motor no pudo borrar, hasta que se cierre el aviso. */
+  readonly failedDeletion: ReviewResult | null;
+  readonly dismissFailure: () => void;
 }
 
-function useDeletionQueue(onChange: (pending: ReviewResult | null) => void): DeletionQueue {
+function useDeletionQueue(
+  onChange: (pending: ReviewResult | null) => void,
+  onDeleteFailed: (review: ReviewResult) => void,
+): DeletionQueue {
   const { reviews } = useEngineServices();
   const queue = useRef(
-    new DeletionQueue({ deleteSession: (id) => reviews.deleteReview(id), onChange }),
+    new DeletionQueue({
+      deleteSession: (id) => reviews.deleteReview(id),
+      onChange,
+      onDeleteFailed,
+    }),
   );
   useEffect(() => {
     const current = queue.current;
@@ -33,7 +43,8 @@ function useDeletionQueue(onChange: (pending: ReviewResult | null) => void): Del
 export function usePendingSessionDeletion(): PendingSessionDeletion {
   const { review, showReview, discardReview } = useReview();
   const [deleted, setDeleted] = useState<ReviewResult | null>(null);
-  const queue = useDeletionQueue(setDeleted);
+  const [failedDeletion, setFailedDeletion] = useState<ReviewResult | null>(null);
+  const queue = useDeletionQueue(setDeleted, setFailedDeletion);
   const schedule = () => {
     if (!review) return;
     queue.schedule(review);
@@ -43,5 +54,8 @@ export function usePendingSessionDeletion(): PendingSessionDeletion {
     const restored = queue.undo();
     if (restored) showReview(restored);
   };
-  return { deleted, schedule, undo };
+  const dismissFailure = () => {
+    setFailedDeletion(null);
+  };
+  return { deleted, schedule, undo, failedDeletion, dismissFailure };
 }

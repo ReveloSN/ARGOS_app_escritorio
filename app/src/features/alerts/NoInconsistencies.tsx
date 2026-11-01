@@ -16,12 +16,19 @@ export function NoInconsistencies({ review, closer }: NoInconsistenciesProps) {
   const { t, tPlural } = useI18n();
   const { setTab } = useResultsView();
   const read = review.documents.filter((document) => document.status === "read").length;
+  const unread = review.documents.length - read;
+  const hasUnread = unread > 0;
+  const compared = tPlural({ key: "results.comparedFiles", count: read });
   return (
     <EmptyState
-      isReassuring
-      icon="check"
-      title={t("results.noInconsistencies")}
-      description={tPlural({ key: "results.comparedFiles", count: read })}
+      isReassuring={!hasUnread}
+      icon={hasUnread ? "info" : "check"}
+      title={t(hasUnread ? "results.noInconsistenciesInRead" : "results.noInconsistencies")}
+      description={
+        hasUnread
+          ? `${compared} ${tPlural({ key: "results.unreadFiles", count: unread })}`
+          : compared
+      }
       actions={
         <>
           {!isReadOnly(review) && (

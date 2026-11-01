@@ -38,6 +38,11 @@
     "deleteTitle": "¿Eliminar la sesión «{name}»?",
     "deleteBody": "Se eliminan sus alertas, sus decisiones y la copia de sus archivos.",
     "deleteHint": "Tendrá unos segundos para deshacerlo.",
+    "deleteFailed": {
+      "what": "No pudimos eliminar la sesión «{name}».",
+      "why": "El motor de análisis no respondió, así que la sesión sigue guardada.",
+      "todo": "Ábrala desde el Historial y elimínela de nuevo."
+    },
     "deleteConfirm": "Eliminar sesión",
     "deleted": "Sesión «{name}» eliminada",
     "failed": {
@@ -294,6 +299,11 @@
       "other": "{count} alertas · ordenadas por riesgo"
     },
     "noInconsistencies": "No se encontraron inconsistencias",
+    "noInconsistenciesInRead": "No se encontraron inconsistencias en los archivos leídos",
+    "unreadFiles": {
+      "one": "{count} archivo no se pudo leer y no se revisó.",
+      "other": "{count} archivos no se pudieron leer y no se revisaron."
+    },
     "comparedFiles": {
       "one": "Se comparó {count} archivo y sus valores coinciden.",
       "other": "Se compararon {count} archivos y sus valores coinciden."

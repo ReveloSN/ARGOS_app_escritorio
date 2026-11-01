@@ -13,8 +13,23 @@ interface HistorySessionsProps {
   readonly selectedId: string | undefined;
   readonly onSelect: (id: string) => void;
   readonly onOpen: (id: string) => void;
+  /** La sesión que no se pudo abrir: se explica sobre la tabla, con un botón para reintentar. */
+  readonly failedOpenId?: string | undefined;
   readonly onRetry: () => void;
   readonly onNewReview: () => void;
+}
+
+function OpenFailure({ onRetry }: { readonly onRetry: () => void }) {
+  const { t } = useI18n();
+  return (
+    <ErrorMessage
+      tone="inline"
+      what={t("history.sessionFailed.what")}
+      why={t("history.sessionFailed.why")}
+      todo={t("history.sessionFailed.todo")}
+      primaryAction={{ label: t("history.retry"), onClick: onRetry }}
+    />
+  );
 }
 
 /** Las sesiones del periodo, o por qué no se muestran (sin revisiones o el motor no respondió). */
@@ -54,6 +69,13 @@ export function HistorySessions(props: HistorySessionsProps) {
   }
   return (
     <div className={styles.sessions}>
+      {props.failedOpenId !== undefined && (
+        <OpenFailure
+          onRetry={() => {
+            if (props.failedOpenId !== undefined) props.onOpen(props.failedOpenId);
+          }}
+        />
+      )}
       <SessionHistoryTable
         rows={state.data.sessions.map((session) => toSessionRow(session, i18n))}
         selectedId={props.selectedId}

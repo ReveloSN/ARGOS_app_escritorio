@@ -10,7 +10,7 @@ interface SessionNoticeProps {
   readonly switching: SessionSwitch;
 }
 
-/** Avisos de la sesión: «eliminada» con Deshacer, y el fallo al abrir otra sesión. */
+/** Avisos de la sesión: «eliminada» con Deshacer, y los fallos al abrir otra o al eliminar. */
 export function SessionNotice({ deletion, switching }: SessionNoticeProps) {
   const { t } = useI18n();
   return (
@@ -24,6 +24,18 @@ export function SessionNotice({ deletion, switching }: SessionNoticeProps) {
           primaryAction={{
             label: t("sessionMenu.failed.dismiss"),
             onClick: switching.dismissFailure,
+          }}
+        />
+      )}
+      {deletion.failedDeletion && (
+        <ErrorMessage
+          tone="neutral"
+          what={t("sessionMenu.deleteFailed.what", { name: deletion.failedDeletion.session.name })}
+          why={t("sessionMenu.deleteFailed.why")}
+          todo={t("sessionMenu.deleteFailed.todo")}
+          primaryAction={{
+            label: t("sessionMenu.failed.dismiss"),
+            onClick: deletion.dismissFailure,
           }}
         />
       )}
