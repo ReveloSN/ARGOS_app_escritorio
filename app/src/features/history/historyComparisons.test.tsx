@@ -49,7 +49,9 @@ describe("Comparaciones en el Historial", () => {
     const list = await openHistory(vi.fn());
 
     expect(list.getByText("Arrendamiento Fontibón")).toBeVisible();
-    expect(list.getByText("2 documentos · 1 de 3 decididos")).toBeVisible();
+    expect(
+      list.getByText("2 documentos · 1 de 3 decididos entre cambios e inconsistencias"),
+    ).toBeVisible();
     expect(screen.getByText("en 2 sesiones y 1 comparación")).toBeVisible();
   });
 

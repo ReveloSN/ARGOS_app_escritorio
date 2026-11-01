@@ -101,7 +101,7 @@ Recorrido de la app real con motor real en una carpeta de datos aislada (2 sesio
 - Un número sin moneda (por ejemplo una celda de Excel) todavía no se toma como monto.
 - «Abrir en Comparar» (contradicción) y «Guardar en el expediente» (Enviar) esperan poder agregar documentos a una revisión existente.
 - Las comparaciones aparecen en el Historial y se borran con la retención de 90 días, que ahora también corre al activar el límite en Ajustes (ADR 032). Las comparaciones cerradas se reabren desde el Historial o, mientras la app sigue abierta, desde «Últimas comparaciones».
-- Comparar con archivos sueltos no usa los datos confirmados del Expediente; «Revisar antes de enviar» no compara montos ni fechas del cuerpo del correo contra el adjunto, y un número sin moneda sigue sin tomarse como monto.
+- Las inconsistencias de Comparar se leen contra los datos confirmados del Expediente abierto (sin expediente abierto no hay referencia); «Revisar antes de enviar» no compara montos ni fechas del cuerpo del correo contra el adjunto, y un número sin moneda sigue sin tomarse como monto.
 - «Comparar contra todos» usa los pares que el motor ya calculó: con tres o más archivos son todos contra todos; un modo encadenado (versiones) solo ofrece sus pares consecutivos.
 - El selector de sesión solo aparece con una sesión activa; sin ella, las sesiones guardadas se abren desde Historial (Inicio lo indica).
 - Pendiente de la revisión autónoma: el minimapa de Comparar no se movió a «Opciones»; las filas de la lista de alertas son altas en ventanas estrechas; no se probó la app empaquetada de Tauri ni la IA con clave real; el modo estricto de React solo existe en desarrollo (el arreglo del foco de los diálogos se comprobó ahí).

@@ -59,7 +59,11 @@ export function InconsistencyRow(props: InconsistencyRowProps) {
           <RiskTag level={row.alert.risk} />
           <span className={styles.dataName}>{entityTypeLabel(row.alert.entityType, t)}</span>
         </button>
-        <span className={styles.cellSource}>{t("comparison.inconsistencies.noConfirmed")}</span>
+        <span className={styles.cellSource}>
+          {row.confirmed
+            ? t("comparison.inconsistencies.confirmed", { value: row.confirmed.value })
+            : t("comparison.inconsistencies.noConfirmed")}
+        </span>
         {decision && <span className={styles.itemStatus}>{t(DECISION_LABELS[decision.kind])}</span>}
       </div>
       {row.cells.map((cell, index) => (

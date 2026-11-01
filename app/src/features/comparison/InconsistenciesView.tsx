@@ -5,9 +5,12 @@ import { useI18n } from "../../i18n/i18nContext";
 import type { ComparisonResult } from "../../services/engine/comparisonTypes";
 import type { AlertDecisions } from "../alerts/useAlertDecisions";
 import styles from "./Compare.module.css";
+import { confirmedFactFor } from "./confirmedFacts";
+import { InconsistenciesIntro, InconsistenciesLegend } from "./InconsistenciesNotes";
 import { inconsistencyColumns, inconsistencyRows } from "./inconsistencyRows";
 import { InconsistencyRow } from "./InconsistencyRow";
 import { ItemDetail } from "./ItemDetail";
+import { useConfirmedFacts } from "./useConfirmedFacts";
 import { inconsistencyDetail } from "./itemDetails";
 import type { ComparisonView } from "./useComparisonView";
 
@@ -19,12 +22,15 @@ interface InconsistenciesViewProps {
 
 /** «Buscar inconsistencias»: cada dato encontrado y qué dice de él cada documento. */
 export function InconsistenciesView({ comparison, view, decisions }: InconsistenciesViewProps) {
-  const { t, tPlural } = useI18n();
+  const { t } = useI18n();
+  const facts = useConfirmedFacts();
   const documents = comparison.documents
     .filter((doc) => doc.status === "read")
     .map((doc) => doc.name);
   const columns = inconsistencyColumns(documents, comparison.inconsistencies);
-  const rows = inconsistencyRows(comparison.inconsistencies, columns);
+  const rows = inconsistencyRows(comparison.inconsistencies, columns, (alert) =>
+    confirmedFactFor(alert, facts),
+  );
   const selected = comparison.inconsistencies.find((alert) => alert.number === view.selected);
   const firstNumber = rows[0]?.alert.number;
   // Al llegar desde «Versiones» la selección es de un cambio: se pasa a la primera inconsistencia.
@@ -46,15 +52,11 @@ export function InconsistenciesView({ comparison, view, decisions }: Inconsisten
   return (
     <div className={styles.versions}>
       <div className={styles.tableWrap}>
-        <p className={styles.intro}>
-          {t("comparison.inconsistencies.intro", {
-            found: tPlural({ key: "comparison.inconsistencies.found", count: rows.length }),
-            documents: tPlural({
-              key: "comparison.inconsistencies.documents",
-              count: columns.length,
-            }),
-          })}
-        </p>
+        <InconsistenciesIntro
+          dataCount={rows.length}
+          documentCount={columns.length}
+          hasConfirmedFacts={facts.length > 0}
+        />
         <div
           role="table"
           className={styles.table}
@@ -83,7 +85,7 @@ export function InconsistenciesView({ comparison, view, decisions }: Inconsisten
             />
           ))}
         </div>
-        <p className={styles.legendNote}>{t("comparison.inconsistencies.legend")}</p>
+        <InconsistenciesLegend isConfirmedReference={rows.some((row) => row.confirmed)} />
       </div>
       <aside className={styles.aside}>
         {selected && (

@@ -279,7 +279,7 @@
 }
 
 .footerText {
-  flex: 1;
+  flex: 1 1 40ch;
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
 }

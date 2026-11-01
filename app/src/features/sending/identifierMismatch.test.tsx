@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { fakeEngineServices } from "../../test/engineFakes";
 import { renderApp, stubBrowser } from "../../test/renderApp";
-import { sendReview } from "../../test/sendFakes";
+import { decided, sendReview } from "../../test/sendFakes";
 
 const NUMBER_ISSUE = {
   number: 1,
@@ -39,5 +39,31 @@ describe("Revisar antes de enviar: el número de contrato no coincide con el adj
     const issues = within(screen.getByRole("list", { name: "Problemas" }));
     expect(issues.getByText("Cita el número 4587 y el adjunto dice 4857")).toBeVisible();
     expect(issues.getByText(/en Contrato_4857_v3\.docx el número es 4857/)).toBeVisible();
+  });
+
+  it("(regresión) marcarlo como error no promete corregir el correo: ARGUS no cambia su texto", async () => {
+    const review = {
+      ...sendReview(),
+      draft: { ...sendReview().draft, subject: "Contrato No. 4587 firmado" },
+      issues: [NUMBER_ISSUE],
+    };
+    const decide = vi.fn(() =>
+      Promise.resolve({ decisions: [decided(1, "error")], canUndo: true }),
+    );
+    renderApp(
+      fakeEngineServices({ sending: { reviewDraft: () => Promise.resolve(review), decide } }),
+    );
+    await act(() => Promise.resolve());
+    await userEvent.click(screen.getByRole("button", { name: /^Revisar antes de enviar/ }));
+    await userEvent.upload(screen.getByLabelText("Elegir borrador"), new File(["x"], "r.eml"));
+
+    await userEvent.click(await screen.findByRole("button", { name: "Es un error" }));
+
+    expect(
+      await screen.findByText(
+        "Problema 1 marcado como error. ARGUS no cambia el texto del correo.",
+      ),
+    ).toBeVisible();
+    expect(screen.queryByText(/se aplicará en la copia/)).not.toBeInTheDocument();
   });
 });

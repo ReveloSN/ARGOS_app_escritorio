@@ -472,7 +472,7 @@
       "listLabel": "Comparaciones del historial",
       "open": "Abrir comparación",
       "openLabel": "Abrir la comparación «{name}»",
-      "summary": "{documents} · {decided} de {total} decididos",
+      "summary": "{documents} · {decided} de {total} decididos entre cambios e inconsistencias",
       "documents": {
         "one": "{count} documento",
         "other": "{count} documentos"
@@ -1005,7 +1005,9 @@
       "action": "Cambiar de modo"
     },
     "inconsistencies": {
-      "intro": "{found} en {documents}. Todavía no hay datos confirmados del expediente.",
+      "intro": "{found} en {documents}.",
+      "noFacts": "Todavía no hay datos confirmados del expediente.",
+      "confirmed": "Confirmado: {value}",
       "found": {
         "one": "{count} dato no coincide",
         "other": "{count} datos no coinciden"
@@ -1019,6 +1021,7 @@
       "notFound": "No aparece",
       "odd": "No coincide",
       "legend": "≠ marca el valor que no coincide con la mayoría de los documentos.",
+      "legendConfirmed": "≠ marca el valor que no coincide con el dato confirmado del expediente.",
       "emptyTitle": "No se encontraron inconsistencias",
       "emptyDescription": "Los documentos coinciden en identificadores, montos, fechas, nombres y periodos."
     },
@@ -1292,6 +1295,7 @@
     },
     "decided": {
       "error": "Problema {number}: se aplicará en la copia del borrador.",
+      "errorMarked": "Problema {number} marcado como error. ARGUS no cambia el texto del correo.",
       "correct": "Problema {number} marcado como «Es correcto».",
       "ignored": "Problema {number} ignorado."
     }

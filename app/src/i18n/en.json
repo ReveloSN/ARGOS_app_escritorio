@@ -472,7 +472,7 @@
       "listLabel": "History comparisons",
       "open": "Open comparison",
       "openLabel": "Open the comparison “{name}”",
-      "summary": "{documents} · {decided} of {total} decided",
+      "summary": "{documents} · {decided} of {total} changes and inconsistencies decided",
       "documents": {
         "one": "{count} document",
         "other": "{count} documents"
@@ -1005,7 +1005,9 @@
       "action": "Change mode"
     },
     "inconsistencies": {
-      "intro": "{found} in {documents}. There is no confirmed case data yet.",
+      "intro": "{found} in {documents}.",
+      "noFacts": "There is no confirmed case data yet.",
+      "confirmed": "Confirmed: {value}",
       "found": {
         "one": "{count} data point does not match",
         "other": "{count} data points do not match"
@@ -1019,6 +1021,7 @@
       "notFound": "Not present",
       "odd": "Does not match",
       "legend": "≠ marks the value that does not match most documents.",
+      "legendConfirmed": "≠ marks the value that does not match the confirmed case data.",
       "emptyTitle": "No inconsistencies found",
       "emptyDescription": "The documents match in identifiers, amounts, dates, names and periods."
     },
@@ -1292,6 +1295,7 @@
     },
     "decided": {
       "error": "Problem {number}: it will be applied to the copy of the draft.",
+      "errorMarked": "Problem {number} marked as an error. ARGUS does not change the text of the email.",
       "correct": "Problem {number} marked as “It is correct”.",
       "ignored": "Problem {number} ignored."
     }

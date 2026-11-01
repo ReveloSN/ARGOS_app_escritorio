@@ -1,3 +1,4 @@
+import type { FactResult } from "../../services/engine/factTypes";
 import type {
   AlertResult,
   AlertSideResult,
@@ -15,6 +16,8 @@ export interface InconsistencyCell {
 
 export interface InconsistencyRow {
   readonly alert: AlertResult;
+  /** El dato confirmado del expediente que sirve de referencia, si lo hay. */
+  readonly confirmed: FactResult | undefined;
   /** Una celda por documento, en el orden de las columnas; undefined si no aparece. */
   readonly cells: readonly (InconsistencyCell | undefined)[];
 }
@@ -23,16 +26,38 @@ function documentsOf(side: AlertSideResult): Set<string> {
   return new Set(side.occurrences.map((occurrence) => occurrence.document));
 }
 
-/** El lado que aparece en menos documentos es el que no coincide; a igualdad, el segundo.
- * Un solo valor (fecha imposible, campo vacío) es el que no está bien. */
-function oddSide(alert: AlertResult): AlertSideResult {
+function agrees(side: AlertSideResult, fact: FactResult): boolean {
+  return side.value === fact.value || side.normalizedValue === fact.value;
+}
+
+/** El lado que contradice el dato confirmado, si uno lo contradice y el otro no. */
+function contradicting(
+  alert: AlertResult & { readonly second: AlertSideResult },
+  confirmed: FactResult | undefined,
+): AlertSideResult | undefined {
+  if (!confirmed) return undefined;
+  const { first, second } = alert;
+  if (agrees(first, confirmed) === agrees(second, confirmed)) return undefined;
+  return agrees(first, confirmed) ? second : first;
+}
+
+/** Con un dato confirmado, el lado que lo contradice no coincide. Si no, el lado que aparece en
+ * menos documentos; a igualdad, el segundo. Un solo valor (fecha imposible, campo vacío) es el
+ * que no está bien. */
+function oddSide(alert: AlertResult, confirmed: FactResult | undefined): AlertSideResult {
   const { first, second } = alert;
   if (!second) return first;
+  const contradicted = contradicting({ ...alert, second }, confirmed);
+  if (contradicted) return contradicted;
   return documentsOf(first).size < documentsOf(second).size ? first : second;
 }
 
-function cellFor(alert: AlertResult, document: string): InconsistencyCell | undefined {
-  const odd = oddSide(alert);
+function cellFor(
+  alert: AlertResult,
+  document: string,
+  confirmed: FactResult | undefined,
+): InconsistencyCell | undefined {
+  const odd = oddSide(alert, confirmed);
   for (const side of alertSides(alert)) {
     const occurrence = side.occurrences.find((item) => item.document === document);
     if (occurrence) return { value: side.value, occurrence, isOdd: side === odd };
@@ -55,9 +80,14 @@ export function inconsistencyColumns(
 export function inconsistencyRows(
   alerts: readonly AlertResult[],
   columns: readonly string[],
+  confirmedOf: (alert: AlertResult) => FactResult | undefined = () => undefined,
 ): InconsistencyRow[] {
-  return alerts.map((alert) => ({
-    alert,
-    cells: columns.map((document) => cellFor(alert, document)),
-  }));
+  return alerts.map((alert) => {
+    const confirmed = confirmedOf(alert);
+    return {
+      alert,
+      confirmed,
+      cells: columns.map((document) => cellFor(alert, document, confirmed)),
+    };
+  });
 }

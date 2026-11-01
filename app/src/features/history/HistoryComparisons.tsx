@@ -40,7 +40,7 @@ export function HistoryComparisons({ comparisons, onOpen, failedId }: HistoryCom
             <span className={styles.comparisonName} title={item.name}>
               {item.name}
             </span>
-            <span className={styles.comparisonMeta}>
+            <span className={styles.comparisonDate}>
               {format.dateTime(new Date(item.createdAt))}
             </span>
             <span className={styles.comparisonMeta}>

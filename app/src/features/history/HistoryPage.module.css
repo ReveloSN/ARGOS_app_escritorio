@@ -112,10 +112,20 @@
   white-space: nowrap;
 }
 
-.comparisonMeta {
+.comparisonMeta,
+.comparisonDate {
   color: var(--color-text-secondary);
   font-family: var(--font-family-mono);
   font-size: var(--font-size-caption);
+}
+
+.comparisonMeta {
+  flex: 1 1 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.comparisonDate {
   white-space: nowrap;
 }
 

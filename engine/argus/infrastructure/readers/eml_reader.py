@@ -11,6 +11,7 @@ from argus.domain.errors import UnreadableDocumentError, UnreadableReason
 from argus.domain.locations import EmailPart, EmailPartLocation, SourceLocation
 from argus.infrastructure.readers.fragments import build_fragments
 from argus.infrastructure.readers.html_text import html_to_text
+from argus.infrastructure.readers.text_reader import decode_text
 
 UNNAMED_ATTACHMENT = "adjunto_sin_nombre"
 BODY_PREFERENCE = ("plain", "html")
@@ -76,11 +77,22 @@ def _subject_texts(message: EmailMessage) -> Iterator[tuple[str, SourceLocation]
     yield str(message["subject"] or ""), SUBJECT_LOCATION
 
 
+def _decoded_content(part: MIMEPart) -> str:
+    """El texto de una parte; sin `charset` declarado se prueba UTF-8 y, si no, Windows-1252.
+
+    El estándar supone ASCII y dejaría «d��as» en un correo sin charset escrito en UTF-8.
+    """
+    if part.get_content_charset() is not None:
+        return str(part.get_content())
+    payload = part.get_payload(decode=True)
+    return decode_text(payload) if isinstance(payload, bytes) else str(part.get_content())
+
+
 def _body_texts(message: EmailMessage) -> Iterator[tuple[str, SourceLocation]]:
     body = message.get_body(preferencelist=BODY_PREFERENCE)
     if body is None:
         return
-    content = str(body.get_content())
+    content = _decoded_content(body)
     if body.get_content_subtype() == "html":
         content = html_to_text(content)
     yield from ((line, BODY_LOCATION) for line in content.splitlines())
