@@ -45,3 +45,9 @@ detrás, texto UTF-16) y avisos que afirmaban que todo coincidía cuando no era 
   a la comparación de archivos sueltos con un expediente que no esté abierto, detectar en el
   correo fechas distintas a las del adjunto (se cubren el número de contrato y los montos) y agregar
   documentos a una revisión existente.
+
+## Enmienda · lectura de filas y conflictos entre documentos
+
+- **Extracción por fila:** `EntityExtractionPipeline` lee además cada fila de tabla u hoja como una frase, para reconocer «Contrato No.» | «4857»; solo se conservan los valores que cruzan celdas y se ubican en la celda donde termina el valor.
+- **Conflicto entre documentos:** dos valores parecidos que aparecen exactamente en los mismos documentos (inicio y cuotas, en cada versión) ya no son una contradicción; sí lo sigue siendo un error dentro de un documento frente a otro que tiene el valor correcto.
+- **Ubicación de filas:** un cambio en una fila de tabla o de hoja se cita por su fila, no por la columna o la celda de la primera celda.

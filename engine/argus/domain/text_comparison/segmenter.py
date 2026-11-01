@@ -41,7 +41,7 @@ def split_blocks(text: str) -> Iterator[TextSpan]:
             yield TextSpan(start + leading, start + len(piece.rstrip()))
 
 
-def _row_key(location: SourceLocation) -> tuple[str, int] | None:
+def row_key(location: SourceLocation) -> tuple[str, int] | None:
     """Tabla (u hoja) y fila de una celda; None si el fragmento no es una celda."""
     if isinstance(location, TableCellLocation):
         return (f"tabla {location.table}", location.row)
@@ -62,7 +62,7 @@ class DocumentSegmenter:
         )
 
     def _blocks(self, document: Document) -> Iterator[_Block]:
-        by_row = groupby(document.fragments, key=lambda fragment: _row_key(fragment.location))
+        by_row = groupby(document.fragments, key=lambda fragment: row_key(fragment.location))
         for row, fragments in by_row:
             if row is None:
                 texts = (_text_blocks(document.name, fragment) for fragment in fragments)
