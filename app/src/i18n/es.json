@@ -1277,6 +1277,11 @@
         "title": "Menciona «{mentioned}» y el adjunto es de otro periodo",
         "body": "El texto dice «{marked}». El adjunto {attached} corresponde a otro periodo."
       },
+      "amount_mismatch": {
+        "kind": "Monto",
+        "title": "Cita {mentioned} y el adjunto dice {attached}",
+        "body": "El correo menciona «{marked}»; en {document} el monto es {attached}. Revise cuál es el correcto: ARGUS no cambia el texto del correo."
+      },
       "identifier_mismatch": {
         "kind": "Número",
         "title": "Cita el número {mentioned} y el adjunto dice {attached}",

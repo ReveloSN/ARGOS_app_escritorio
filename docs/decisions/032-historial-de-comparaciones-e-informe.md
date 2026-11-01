@@ -29,7 +29,7 @@ detrás, texto UTF-16) y avisos que afirmaban que todo coincidía cuando no era 
   miles; antes «USD 1,200.50» se normalizaba en silencio como 1,2.
 - **Texto:** el lector acepta UTF-16 y UTF-32 con marca de orden de bytes y rechaza como
   corrupto un archivo con caracteres nulos, en lugar de aceptar un binario como texto.
-- **Correo:** un `.eml` sin ningún encabezado de correo es `NotADraftEmailError`. Nueva verificación `IdentifierMismatchCheck`: el número de contrato citado en el asunto o el cuerpo que no está en ningún adjunto pero se parece a uno que sí (una sustitución o dos caracteres vecinos intercambiados, mínimo 4 caracteres) es un problema de riesgo alto sin corrección automática. Con números sin parecido no se avisa: no se sabe si hablan de otro contrato. `DraftPart` gana `SUBJECT` para marcarlo en el asunto.
+- **Correo:** un `.eml` sin ningún encabezado de correo es `NotADraftEmailError`. Nueva familia de verificaciones `NearMissCheck`: un valor citado en el asunto o el cuerpo que no está en ningún adjunto pero se parece a uno que sí (una sustitución, una omisión o dos caracteres vecinos intercambiados, mínimo 4 caracteres) es un problema de riesgo alto sin corrección automática. Dos subclases: `IdentifierMismatchCheck` (número de contrato: 4587 frente a 4857) y `AmountMismatchCheck` (monto ya normalizado con su moneda: $ 18.450.000 frente a $ 18.540.000; otra moneda no se parece). Con valores sin parecido no se avisa: no se sabe si hablan de otra cosa. `DraftPart` gana `SUBJECT` para marcar el asunto.
 - **Inconsistencias:** los datos confirmados del expediente abierto son la referencia de «Buscar inconsistencias»: se muestra el valor confirmado y se marca con ≠ el que lo contradice. Sin expediente abierto no hay referencia y se dice.
 - **Honestidad de los avisos:** «No se encontraron inconsistencias» dice cuántos archivos no se
   leyeron; «Revisar antes de enviar» no dice «listo» si quedan problemas marcados como error sin
@@ -43,5 +43,5 @@ detrás, texto UTF-16) y avisos que afirmaban que todo coincidía cuando no era 
 - Un informe de comparación se guarda en `Documentos/ARGUS/<nombre de la comparación>`.
 - No se hizo (decisión de producto o riesgo): tratar un número sin moneda como monto, comparar
   a la comparación de archivos sueltos con un expediente que no esté abierto, detectar en el
-  correo montos o fechas distintos a los del adjunto (solo se cubre el número de contrato) y agregar
+  correo fechas distintas a las del adjunto (se cubren el número de contrato y los montos) y agregar
   documentos a una revisión existente.

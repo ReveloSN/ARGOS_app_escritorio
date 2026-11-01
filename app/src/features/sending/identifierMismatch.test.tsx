@@ -66,4 +66,33 @@ describe("Revisar antes de enviar: el número de contrato no coincide con el adj
     ).toBeVisible();
     expect(screen.queryByText(/se aplicará en la copia/)).not.toBeInTheDocument();
   });
+
+  it("un monto del cuerpo que se parece al del adjunto se marca y dice cómo está escrito en cada lado", async () => {
+    const base = sendReview();
+    const review = {
+      ...base,
+      draft: { ...base.draft, body: "El canon es de $ 18.450.000 mensuales." },
+      issues: [
+        {
+          ...NUMBER_ISSUE,
+          kind: "amount_mismatch" as const,
+          part: "body" as const,
+          markedText: "$ 18.450.000",
+          params: {
+            mentioned: "$ 18.450.000",
+            attached: "$ 18.540.000",
+            document: "Contrato_4857_v3.docx",
+          },
+        },
+      ],
+    };
+    renderApp(fakeEngineServices({ sending: { reviewDraft: () => Promise.resolve(review) } }));
+    await act(() => Promise.resolve());
+    await userEvent.click(screen.getByRole("button", { name: /^Revisar antes de enviar/ }));
+    await userEvent.upload(screen.getByLabelText("Elegir borrador"), new File(["x"], "r.eml"));
+
+    expect(await screen.findByText("$ 18.450.000", { selector: "mark" })).toBeVisible();
+    const issues = within(screen.getByRole("list", { name: "Problemas" }));
+    expect(issues.getByText("Cita $ 18.450.000 y el adjunto dice $ 18.540.000")).toBeVisible();
+  });
 });

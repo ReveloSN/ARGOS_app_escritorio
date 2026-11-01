@@ -1277,6 +1277,11 @@
         "title": "It mentions “{mentioned}” and the attachment is from another period",
         "body": "The text says “{marked}”. The attachment {attached} is from another period."
       },
+      "amount_mismatch": {
+        "kind": "Amount",
+        "title": "It cites {mentioned} and the attachment says {attached}",
+        "body": "The email mentions “{marked}”; in {document} the amount is {attached}. Check which one is correct: ARGUS does not change the text of the email."
+      },
       "identifier_mismatch": {
         "kind": "Number",
         "title": "It cites number {mentioned} and the attachment says {attached}",

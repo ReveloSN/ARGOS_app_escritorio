@@ -27,6 +27,8 @@ class SendIssueKind(StrEnum):
     FOREIGN_RECIPIENT = "foreign_recipient"
     # «Contrato No. 4587» en el correo y el adjunto dice 4857.
     IDENTIFIER_MISMATCH = "identifier_mismatch"
+    # «$ 18.450.000» en el correo y el adjunto dice $ 18.540.000.
+    AMOUNT_MISMATCH = "amount_mismatch"
 
 
 class SendFixKind(StrEnum):

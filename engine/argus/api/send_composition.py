@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+from argus.application.amount_mismatch_check import AmountMismatchCheck
 from argus.application.decision_history import DecisionHistories
 from argus.application.document_reader_factory import DocumentReaderFactory
 from argus.application.draft_checks import ForeignRecipientCheck, MissingAttachmentCheck
@@ -61,6 +62,7 @@ def build_send_checks(values: EntityExtractionPipeline) -> list[SendCheck]:
     return [
         PeriodMismatchCheck(values),
         IdentifierMismatchCheck(values),
+        AmountMismatchCheck(values),
         MissingAttachmentCheck(),
         ForeignRecipientCheck(),
     ]

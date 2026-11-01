@@ -3,7 +3,11 @@
 import type { DecisionInput, DecisionsResult, RiskLevelValue } from "./reviewTypes";
 
 export type SendIssueKindValue =
-  "period_mismatch" | "identifier_mismatch" | "missing_attachment" | "foreign_recipient";
+  | "period_mismatch"
+  | "identifier_mismatch"
+  | "amount_mismatch"
+  | "missing_attachment"
+  | "foreign_recipient";
 export type SendFixKindValue = "replace_attachment" | "add_attachment" | "remove_recipient";
 export type DraftPartValue = "subject" | "body" | "to" | "cc";
 
