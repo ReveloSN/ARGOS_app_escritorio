@@ -662,7 +662,7 @@
       "localDescription": "Los archivos se leen y comparan en este equipo, incluida la lectura por OCR. ARGUS no envía su contenido a internet ni a servidores externos; solo sale lo que usted confirme enviar a un servicio que activó en Ajustes.",
       "retention": "Guardar el historial de decisiones durante 90 días",
       "folder": "Carpeta del historial",
-      "retentionOn": "Las revisiones de más de 90 días, con la copia de sus archivos, se borran al iniciar ARGUS.",
+      "retentionOn": "Las revisiones y comparaciones de más de 90 días, con la copia de sus archivos, se borran al iniciar ARGUS y al activar esta opción.",
       "retentionOff": "El historial se conserva sin límite de tiempo.",
       "changeFolder": "Cambiar carpeta",
       "chooseFolder": "Elegir la carpeta del historial",
