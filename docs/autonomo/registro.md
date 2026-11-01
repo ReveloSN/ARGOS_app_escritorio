@@ -237,3 +237,17 @@ Tendencia de Comparar: 29 → 27 → 25 → 27. El detector dio 0 hallazgos, sin
 
 - **Montos en el correo:** `AmountMismatchCheck` (junto a la de contratos, sobre la base común `NearMissCheck`) avisa de un monto del asunto o del cuerpo que se parece al del adjunto: es el segundo caso guía del producto. Riesgo alto, sin corrección automática. Pruebas con el extractor real de montos.
 - **Expediente e Historial a 1100 px (la ventana mínima):** el panel lateral dejaba la tabla sin ancho y sus acciones o columnas quedaban fuera de pantalla. El área de contenido es ahora un contenedor de consultas y, con poco ancho, el panel pasa debajo (verificado a 1100 px: «Guardar» y «Estado» a la vista). Las filas de Datos confirmados se eligen con Enter o Espacio.
+
+## Tercera auditoría (Inicio, Nueva revisión, Enviar, Ajustes, búsqueda y tutorial)
+
+Un agente revisó el resto de pantallas con 12 hallazgos verificados. Atendidos:
+
+- **P0 · afirmación falsa:** con un solo archivo leído la app decía «No se encontraron inconsistencias» y el asistente «Sin inconsistencias». Ahora dice «No hay con qué comparar» y el asistente queda en «Listo»: «sin inconsistencias» exige al menos dos archivos leídos.
+- **Textos que prometían lo que no hay:** «texto pegado» (la pantalla de carga no lo ofrece; ahora «PDF, DOCX, XLSX, EML o TXT») y el paso 2 del tutorial, que describía una confirmación de datos que ese paso no tiene.
+- **Estado vacío transitorio:** Inicio decía «Todavía no hay revisiones» mientras consultaba el historial; ahora no muestra nada hasta saberlo.
+- **Teclado:** la búsqueda (Ctrl K) y el tutorial atrapan el foco y lo devuelven a quien los abrió (hook `useModalFocus`, compartido con `ModalDialog`); un error de campo se anuncia (`role="alert"`) y lleva el foco al campo; el atajo de continuar se escribe «Ctrl ↵» en todas las pantallas.
+- **Revisar antes de enviar:** lo marcado como error sin corrección sigue resaltado (es justo lo que hay que corregir a mano) y la marca numérica ya no se pega al valor para un lector de pantalla («4587 (problema 1)»).
+
+No atendidos: perder el foco en `body` al cambiar de paso o de pantalla (el arreglo general, mover el foco al encabezado, toca todas las rutas y no se pudo cubrir con pruebas sin riesgo); los mensajes de privacidad («Análisis local…») no dependen de que la IA o el OCR en la nube estén activos; «Quitar» y «Acciones» repiten su nombre accesible en cada fila; archivos duplicados o de un formato no soportado se aceptan al cargar y fallan después; «Leer y comparar 0 archivos» en el botón deshabilitado; «0 alertas pendientes de 0» en la barra lateral y en Inicio con sesión sin alertas (la barra lateral no se tocó).
+
+El agente vio un monto sin marcar en el correo porque su motor se inició antes de agregar la verificación de montos: no era un fallo.
