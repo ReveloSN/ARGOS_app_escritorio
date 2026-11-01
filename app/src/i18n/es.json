@@ -464,6 +464,7 @@
     "periodLabel": "Periodo",
     "period": "Periodo: últimos {days} días",
     "export": "Exportar registro (CSV)",
+    "exported": "Se exportó «{name}» a la carpeta de descargas.",
     "exportFileName": "registro-argus-{date}.csv",
     "tableLabel": "Sesiones del historial",
     "comparisons": {
@@ -1252,6 +1253,11 @@
         "kind": "Periodo",
         "title": "Menciona «{mentioned}» y el adjunto es de otro periodo",
         "body": "El texto dice «{marked}». El adjunto {attached} corresponde a otro periodo."
+      },
+      "identifier_mismatch": {
+        "kind": "Número",
+        "title": "Cita el número {mentioned} y el adjunto dice {attached}",
+        "body": "El correo menciona «{marked}»; en {document} el número es {attached}. Revise cuál es el correcto: ARGUS no cambia el texto del correo."
       },
       "missing_attachment": {
         "kind": "Adjunto",

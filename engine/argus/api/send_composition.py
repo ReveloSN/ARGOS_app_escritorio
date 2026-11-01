@@ -7,6 +7,7 @@ from argus.application.decision_history import DecisionHistories
 from argus.application.document_reader_factory import DocumentReaderFactory
 from argus.application.draft_checks import ForeignRecipientCheck, MissingAttachmentCheck
 from argus.application.entity_extraction_pipeline import EntityExtractionPipeline
+from argus.application.identifier_mismatch_check import IdentifierMismatchCheck
 from argus.application.period_mismatch_check import PeriodMismatchCheck
 from argus.application.ports.clock import Clock
 from argus.application.ports.document_archive import DocumentArchive, FileOpener
@@ -57,7 +58,12 @@ class SendDependencies:
 
 
 def build_send_checks(values: EntityExtractionPipeline) -> list[SendCheck]:
-    return [PeriodMismatchCheck(values), MissingAttachmentCheck(), ForeignRecipientCheck()]
+    return [
+        PeriodMismatchCheck(values),
+        IdentifierMismatchCheck(values),
+        MissingAttachmentCheck(),
+        ForeignRecipientCheck(),
+    ]
 
 
 def build_send_services(storage: SendStorage, dependencies: SendDependencies) -> SendServices:

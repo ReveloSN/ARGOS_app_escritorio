@@ -12,6 +12,7 @@ from argus.domain.validation import require_positive, require_text, require_time
 class DraftPart(StrEnum):
     """Dónde se marca el problema en el borrador."""
 
+    SUBJECT = "subject"
     BODY = "body"
     TO = "to"
     CC = "cc"
@@ -24,6 +25,8 @@ class SendIssueKind(StrEnum):
     MISSING_ATTACHMENT = "missing_attachment"
     # Un destinatario que no aparece entre los contactos del expediente.
     FOREIGN_RECIPIENT = "foreign_recipient"
+    # «Contrato No. 4587» en el correo y el adjunto dice 4857.
+    IDENTIFIER_MISMATCH = "identifier_mismatch"
 
 
 class SendFixKind(StrEnum):

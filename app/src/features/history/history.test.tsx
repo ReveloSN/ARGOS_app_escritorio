@@ -88,6 +88,9 @@ describe("Historial", () => {
     expect(csv).toContain('"Sesión";"Fecha de la sesión";"Alerta"');
     expect(csv).toContain('"Revisión de prueba"');
     expect(csv).toContain('"Es un error";"1234"');
+    expect(
+      await screen.findByText(/^Se exportó «registro-argus-.*.csv» a la carpeta/),
+    ).toBeVisible();
     click.mockRestore();
   });
 

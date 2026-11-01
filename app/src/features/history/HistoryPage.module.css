@@ -118,3 +118,9 @@
   font-size: var(--font-size-caption);
   white-space: nowrap;
 }
+
+.exported {
+  margin: 0;
+  color: var(--color-action-text);
+  font-size: var(--font-size-caption);
+}

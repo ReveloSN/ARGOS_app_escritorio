@@ -87,7 +87,9 @@ export function DraftView({ review }: DraftViewProps) {
         <Recipients review={review} part="to" />
         <Recipients review={review} part="cc" />
         <span className={styles.headerLabel}>{t("sending.draft.subject")}</span>
-        <span className={styles.subject}>{review.draft.subject}</span>
+        <span className={styles.subject}>
+          <MarkedText text={review.draft.subject} marks={pendingMarks(review, "subject")} />
+        </span>
       </div>
       <div className={styles.body}>
         {paragraphsOf(review.draft.body).map((paragraph, index) => (

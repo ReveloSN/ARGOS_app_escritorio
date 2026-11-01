@@ -464,6 +464,7 @@
     "periodLabel": "Period",
     "period": "Period: last {days} days",
     "export": "Export log (CSV)",
+    "exported": "“{name}” was exported to the downloads folder.",
     "exportFileName": "argus-log-{date}.csv",
     "tableLabel": "History sessions",
     "comparisons": {
@@ -1252,6 +1253,11 @@
         "kind": "Period",
         "title": "It mentions “{mentioned}” and the attachment is from another period",
         "body": "The text says “{marked}”. The attachment {attached} is from another period."
+      },
+      "identifier_mismatch": {
+        "kind": "Number",
+        "title": "It cites number {mentioned} and the attachment says {attached}",
+        "body": "The email mentions “{marked}”; in {document} the number is {attached}. Check which one is correct: ARGUS does not change the text of the email."
       },
       "missing_attachment": {
         "kind": "Attachment",
