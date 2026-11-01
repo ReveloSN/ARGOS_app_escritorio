@@ -32,3 +32,5 @@ Decidir avanza al siguiente cambio sin decidir y la lista avisa cuando la revisi
 Inconsistencias se opera con Tab y Enter y abre con la primera fila elegida. El detalle de Comparar omite «Qué cambió» (lo dice la frase resumen) y los encabezados siguen el orden h1 → h2 → h3. Detalle en `docs/autonomo/registro.md`.
 
 También en la tercera crítica: el orden de las decisiones es fijo (el riesgo alto resalta «Es un error» sin moverlo), una línea «Sobre este cambio» o «Sobre este dato» dice sobre qué se decide y los conteos usan plurales.
+
+Con poco ancho útil el lateral de Comparar pasa debajo del texto (consulta de contenedor) y «Se guardó» se muestra bajo los botones para que no se muevan al decidir.

@@ -1,6 +1,7 @@
 /* Pantalla Comparar documentos (mockup «ARGUS Comparar»). */
 
 .workspace {
+  container-type: inline-size;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
@@ -955,4 +956,21 @@
   margin: 0 0 var(--spacing-2);
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
+}
+
+/* Con poco ancho el texto no cabe junto al lateral: el lateral pasa debajo y cada uno se desplaza solo. */
+@container (max-width: 85ch) {
+  .versions {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .unified {
+    border-right: 0;
+    border-bottom: var(--border-width) solid var(--color-border-strong);
+  }
+
+  .aside {
+    border-left: 0;
+  }
 }

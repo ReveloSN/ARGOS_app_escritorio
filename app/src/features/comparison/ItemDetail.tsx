@@ -30,11 +30,21 @@ interface ItemDetailProps {
   readonly decisions: AlertDecisions;
 }
 
-/** «Se guardó: …» con Deshacer, y los botones Es correcto / Es un error / Ignorar. */
+/** Los botones Es correcto / Es un error / Ignorar y, debajo, «Se guardó: …» con Deshacer: así los botones no se mueven al decidir. */
 function DecisionArea({ content, decision, decisions }: ItemDetailProps) {
   const { t } = useI18n();
   return (
     <>
+      <DecisionButtons
+        current={decision?.kind}
+        emphasis={content.risk === "high" ? "error" : undefined}
+        subject={t(
+          content.explain ? "comparison.detail.aboutChange" : "comparison.detail.aboutData",
+        )}
+        onDecide={(kind) => {
+          decisions.decide({ alertNumber: content.number, kind });
+        }}
+      />
       {decision && (
         <div role="status" className={styles.saved}>
           <Icon name="check" size="sm" />
@@ -46,16 +56,6 @@ function DecisionArea({ content, decision, decisions }: ItemDetailProps) {
           )}
         </div>
       )}
-      <DecisionButtons
-        current={decision?.kind}
-        emphasis={content.risk === "high" ? "error" : undefined}
-        subject={t(
-          content.explain ? "comparison.detail.aboutChange" : "comparison.detail.aboutData",
-        )}
-        onDecide={(kind) => {
-          decisions.decide({ alertNumber: content.number, kind });
-        }}
-      />
     </>
   );
 }

@@ -49,4 +49,16 @@ describe("Decisiones en la lista de cambios", () => {
 
     expect(await screen.findByText("Revisión completa · 4 de 4")).toBeVisible();
   });
+
+  it("(regresión) «Se guardó» va debajo de los botones: al decidir, los botones no se mueven", async () => {
+    const list = await openChanges();
+    const firstRow = () => required(onlyRows(list.getAllByRole("button"))[0]);
+    await userEvent.click(firstRow());
+    await userEvent.click(list.getByRole("button", { name: /Es correcto/ }));
+    await userEvent.click(firstRow());
+
+    const saved = await screen.findByText(/Se guardó: Es correcto/);
+    const group = list.getByRole("group", { name: "Sobre este cambio" });
+    expect(group.compareDocumentPosition(saved) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });
