@@ -918,8 +918,18 @@
 
 .closeRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-2);
+}
+
+/* Los botones no se encogen (se cortaría su etiqueta): si no caben, bajan de línea. */
+.closeRow > * {
+  flex: none;
+}
+
+.closeRow > .grow {
+  flex: 1 1 0;
 }
 
 .grow {
