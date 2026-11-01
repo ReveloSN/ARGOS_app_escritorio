@@ -36,6 +36,8 @@ describe("Revisar antes de enviar: el número de contrato no coincide con el adj
 
     expect(await screen.findByText("1 problema en el borrador")).toBeVisible();
     expect(screen.getByText("4587", { selector: "mark" })).toBeVisible();
+    // Quien lee con un lector de pantalla oye de qué problema es la marca, sin que el número se pegue al valor.
+    expect(screen.getByText("(problema 1)", { exact: false })).toBeInTheDocument();
     const issues = within(screen.getByRole("list", { name: "Problemas" }));
     expect(issues.getByText("Cita el número 4587 y el adjunto dice 4857")).toBeVisible();
     expect(issues.getByText(/en Contrato_4857_v3\.docx el número es 4857/)).toBeVisible();
@@ -65,6 +67,8 @@ describe("Revisar antes de enviar: el número de contrato no coincide con el adj
       ),
     ).toBeVisible();
     expect(screen.queryByText(/se aplicará en la copia/)).not.toBeInTheDocument();
+    // Sigue marcado en el asunto: es justo lo que hay que corregir a mano.
+    expect(screen.getByText("4587", { selector: "mark" })).toBeVisible();
   });
 
   it("un monto del cuerpo que se parece al del adjunto se marca y dice cómo está escrito en cada lado", async () => {

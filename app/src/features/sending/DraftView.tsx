@@ -4,7 +4,7 @@ import type { SendReviewResult } from "../../services/engine/sendTypes";
 import { fileTypeLabel } from "../review/fileTypeLabel";
 import { markRuns, paragraphsOf, type DraftMark } from "./draftMarks";
 import styles from "./Send.module.css";
-import { correctedAttachments, correctedRecipients, pendingIssues } from "./sendState";
+import { correctedAttachments, correctedRecipients, markedIssues } from "./sendState";
 
 const BYTES_PER_KILOBYTE = 1024;
 
@@ -17,20 +17,26 @@ interface DraftViewProps {
 }
 
 function MarkedText({ text, marks }: { text: string; marks: readonly DraftMark[] }) {
+  const { t } = useI18n();
   return markRuns(text, marks).map((run, index) =>
     run.kind === "text" ? (
       <span key={index}>{run.text}</span>
     ) : (
       <span key={index}>
         <mark className={joinClassNames(styles.mark, styles[run.mark.risk])}>{run.text}</mark>
-        <sup className={styles.markNumber}>{run.mark.number}</sup>
+        <sup aria-hidden="true" className={styles.markNumber}>
+          {run.mark.number}
+        </sup>
+        <span className="visually-hidden">
+          {t("sending.draft.markLabel", { number: run.mark.number })}
+        </span>
       </span>
     ),
   );
 }
 
 function pendingMarks(review: SendReviewResult, part: string): DraftMark[] {
-  return pendingIssues(review)
+  return markedIssues(review)
     .filter((issue) => issue.part === part)
     .map((issue) => ({ text: issue.markedText, number: issue.number, risk: issue.risk }));
 }

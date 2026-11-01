@@ -1233,6 +1233,7 @@
       "to": "To",
       "cc": "CC",
       "subject": "Subject",
+      "markLabel": " (issue {number})",
       "noCopy": "(no copy)",
       "attachments": "Attachments ({count})",
       "attachmentsLabel": "Attachments",

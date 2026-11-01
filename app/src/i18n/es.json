@@ -1233,6 +1233,7 @@
       "to": "Para",
       "cc": "CC",
       "subject": "Asunto",
+      "markLabel": " (problema {number})",
       "noCopy": "(sin copia)",
       "attachments": "Adjuntos ({count})",
       "attachmentsLabel": "Adjuntos",
