@@ -15,6 +15,12 @@ const SHORTCUTS: readonly { readonly keys: readonly string[]; readonly label: Tr
   { keys: ["I"], label: "settings.shortcuts.ignore" },
   { keys: ["/"], label: "settings.shortcuts.searchAlerts" },
   { keys: [MODIFIER_KEY, "Z"], label: "settings.shortcuts.undo" },
+  { keys: [MODIFIER_KEY, "O"], label: "settings.shortcuts.chooseFiles" },
+  { keys: [MODIFIER_KEY, "↵"], label: "settings.shortcuts.continue" },
+  { keys: [MODIFIER_KEY, "E"], label: "settings.shortcuts.exportReport" },
+  { keys: ["Esc"], label: "settings.shortcuts.close" },
+  { keys: ["O"], label: "settings.shortcuts.compareOptions" },
+  { keys: ["1", "2", "3"], label: "settings.shortcuts.compareTabs" },
 ];
 
 /** Ajustes > Atajos de teclado: todo se puede hacer sin ratón (CLAUDE.md §9). */

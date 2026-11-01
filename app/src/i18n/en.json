@@ -658,7 +658,13 @@
       "error": "It is an error",
       "ignore": "Ignore",
       "searchAlerts": "Search alerts",
-      "undo": "Undo the last decision"
+      "undo": "Undo the last decision",
+      "chooseFiles": "Choose files",
+      "continue": "Continue: read the files or open the draft in the mail app",
+      "exportReport": "Export the report",
+      "close": "Close a panel or the comparison",
+      "compareOptions": "Compare options",
+      "compareTabs": "Compare tabs"
     },
     "unavailable": {
       "what": "We could not load these settings.",

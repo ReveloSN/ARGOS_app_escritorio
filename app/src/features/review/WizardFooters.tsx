@@ -1,9 +1,15 @@
 import { Button } from "../../components/atoms/Button";
 import { MODIFIER_KEY } from "../../components/atoms/Kbd";
 import { useI18n } from "../../i18n/i18nContext";
+import { useShortcuts } from "../keyboard/useShortcuts";
 import styles from "./ReviewSteps.module.css";
 
 const CONTINUE_SHORTCUT = [MODIFIER_KEY, "↵"];
+
+/** El atajo que el botón principal muestra (Ctrl Enter) lo acciona, también al escribir el nombre. */
+function useContinueShortcut(isEnabled: boolean, run: () => void): void {
+  useShortcuts([{ key: "Enter", withModifier: true, isActiveWhileTyping: true, run }], isEnabled);
+}
 
 interface SelectionFooterProps {
   readonly fileCount: number;
@@ -19,6 +25,7 @@ export function SelectionFooter({
   onAnalyze,
 }: SelectionFooterProps) {
   const { t, tPlural } = useI18n();
+  useContinueShortcut(fileCount > 0 && !isReading, onAnalyze);
   return (
     <>
       <span role="status" className={styles.footerMessage}>
@@ -49,6 +56,7 @@ interface ConfirmationFooterProps {
 
 export function ConfirmationFooter(props: ConfirmationFooterProps) {
   const { t, tPlural } = useI18n();
+  useContinueShortcut(props.readCount > 0, props.onContinue);
   return (
     <>
       <span className={styles.footerMessage}>

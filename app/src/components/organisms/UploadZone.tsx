@@ -1,4 +1,4 @@
-import { useId, useState, type DragEvent } from "react";
+import { useEffect, useId, useState, type DragEvent } from "react";
 
 import { useI18n } from "../../i18n/i18nContext";
 import { Button } from "../atoms/Button";
@@ -9,6 +9,22 @@ import styles from "./UploadZone.module.css";
 
 const CHOOSE_SHORTCUT = [MODIFIER_KEY, "O"];
 const PASTE_SHORTCUT = [MODIFIER_KEY, "V"];
+const CHOOSE_KEY = "o";
+
+/** El atajo que el botón muestra (Ctrl O) abre el selector de archivos mientras la zona está a la vista. */
+function useChooseFilesShortcut(inputId: string): void {
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== CHOOSE_KEY) return;
+      event.preventDefault();
+      document.getElementById(inputId)?.click();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [inputId]);
+}
 
 interface UploadZoneProps {
   readonly onFilesSelected: (files: readonly File[]) => void;
@@ -20,6 +36,7 @@ export function UploadZone({ onFilesSelected, onPasteText }: UploadZoneProps) {
   const { t, tPlural } = useI18n();
   const inputId = useId();
   const [draggedCount, setDraggedCount] = useState(0);
+  useChooseFilesShortcut(inputId);
 
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();

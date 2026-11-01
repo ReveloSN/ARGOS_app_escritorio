@@ -658,7 +658,13 @@
       "error": "Es un error",
       "ignore": "Ignorar",
       "searchAlerts": "Buscar en alertas",
-      "undo": "Deshacer la última decisión"
+      "undo": "Deshacer la última decisión",
+      "chooseFiles": "Elegir archivos",
+      "continue": "Continuar: leer los archivos o abrir el borrador en el correo",
+      "exportReport": "Exportar el informe",
+      "close": "Cerrar un panel o la comparación",
+      "compareOptions": "Opciones de Comparar",
+      "compareTabs": "Pestañas de Comparar"
     },
     "unavailable": {
       "what": "No pudimos cargar estos ajustes.",
