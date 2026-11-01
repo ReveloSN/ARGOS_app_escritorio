@@ -55,7 +55,7 @@ export function HistoryHeader({ days, state, onDaysChange }: HistoryHeaderProps)
       {state.status === "ready" && (
         <MetricsStrip
           label={t("history.metrics.label")}
-          metrics={toMetricViews(state.data.metrics, i18n)}
+          metrics={toMetricViews(state.data.metrics, state.data.comparisons.length, i18n)}
         />
       )}
     </div>

@@ -27,6 +27,7 @@ export const TWO_SESSIONS: HistoryResult = {
     realErrorRate: null,
     meanReviewSeconds: null,
   },
+  comparisons: [],
   sessions: [
     {
       id: "s-2",

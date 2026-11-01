@@ -33,12 +33,22 @@ export function toSessionRow(session: HistorySessionResult, i18n: HistoryContext
   };
 }
 
-function resolvedMetric(metrics: UsageMetricsResult, i18n: HistoryContext): MetricView {
+/** «en 2 sesiones y 1 comparación»: las decisiones de las comparaciones también cuentan. */
+function resolvedMetric(
+  metrics: UsageMetricsResult,
+  comparisonCount: number,
+  i18n: HistoryContext,
+): MetricView {
+  const sessions = i18n.tPlural({ key: "history.metrics.inSessions", count: metrics.sessionCount });
+  const comparisons = i18n.tPlural({
+    key: "history.metrics.andComparisons",
+    count: comparisonCount,
+  });
   return {
     id: "resolved",
     label: i18n.t("history.metrics.resolved"),
     value: String(metrics.resolvedAlerts),
-    detail: i18n.tPlural({ key: "history.metrics.inSessions", count: metrics.sessionCount }),
+    detail: comparisonCount > 0 ? `${sessions} ${comparisons}` : sessions,
   };
 }
 
@@ -69,9 +79,13 @@ function errorsMetric(metrics: UsageMetricsResult, i18n: HistoryContext): Metric
 }
 
 /** Las tres métricas del mockup; sin datos muestran «—» y explican por qué. */
-export function toMetricViews(metrics: UsageMetricsResult, i18n: HistoryContext): MetricView[] {
+export function toMetricViews(
+  metrics: UsageMetricsResult,
+  comparisonCount: number,
+  i18n: HistoryContext,
+): MetricView[] {
   return [
-    resolvedMetric(metrics, i18n),
+    resolvedMetric(metrics, comparisonCount, i18n),
     durationMetric(metrics, i18n),
     errorsMetric(metrics, i18n),
   ];

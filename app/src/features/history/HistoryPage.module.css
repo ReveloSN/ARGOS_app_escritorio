@@ -71,3 +71,50 @@
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
 }
+
+.comparisons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-6);
+}
+
+.comparisonsTitle {
+  margin: 0;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+}
+
+.comparisonList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comparisonRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2-5) var(--spacing-3);
+  border-top: var(--border-width) solid var(--color-border-default);
+  background: var(--color-background-surface);
+}
+
+.comparisonName {
+  flex: 1 1 var(--size-column-session-min);
+  min-width: 0;
+  overflow: hidden;
+  font-weight: var(--font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.comparisonMeta {
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  white-space: nowrap;
+}

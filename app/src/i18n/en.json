@@ -466,6 +466,22 @@
     "export": "Export log (CSV)",
     "exportFileName": "argus-log-{date}.csv",
     "tableLabel": "History sessions",
+    "comparisons": {
+      "title": "Comparisons",
+      "listLabel": "History comparisons",
+      "open": "Open comparison",
+      "openLabel": "Open the comparison “{name}”",
+      "summary": "{documents} · {decided} of {total} decided",
+      "documents": {
+        "one": "{count} document",
+        "other": "{count} documents"
+      },
+      "failed": {
+        "what": "We could not open this comparison.",
+        "why": "The analysis engine did not respond or the comparison is no longer saved.",
+        "todo": "Try again. If it keeps failing, run the comparison again."
+      }
+    },
     "columns": {
       "session": "Session",
       "date": "Date",
@@ -487,6 +503,10 @@
       "inSessions": {
         "one": "in {count} session",
         "other": "in {count} sessions"
+      },
+      "andComparisons": {
+        "one": "and {count} comparison",
+        "other": "and {count} comparisons"
       },
       "duration": "Average review time",
       "durationDetail": "from upload to close",

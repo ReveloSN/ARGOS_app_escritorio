@@ -2,32 +2,10 @@ import { act, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { HistoryResult } from "../../services/engine/historyTypes";
 import { fakeEngineServices } from "../../test/engineFakes";
+import { HISTORY } from "../../test/historyFixtures";
 import { renderApp, stubBrowser } from "../../test/renderApp";
-import { CLOSED_REVIEW, REVIEW } from "../../test/reviewFixtures";
-
-const HISTORY: HistoryResult = {
-  metrics: {
-    sessionCount: 1,
-    resolvedAlerts: 1,
-    realErrorCount: 0,
-    realErrorRate: 0,
-    meanReviewSeconds: 60,
-  },
-  sessions: [
-    {
-      id: "s-1",
-      name: "Revisión de prueba",
-      createdAt: REVIEW.session.createdAt,
-      closedAt: CLOSED_REVIEW.session.closedAt,
-      status: "closed",
-      documentCount: 3,
-      alertCount: 2,
-      decidedCount: 1,
-    },
-  ],
-};
+import { CLOSED_REVIEW } from "../../test/reviewFixtures";
 
 describe("Historial cuando una sesión no se puede abrir", () => {
   beforeEach(stubBrowser);

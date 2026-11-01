@@ -5,6 +5,7 @@ import { SessionHistoryTable } from "../../components/organisms/SessionHistoryTa
 import { useI18n } from "../../i18n/i18nContext";
 import type { HistoryResult } from "../../services/engine/historyTypes";
 import type { QueryState } from "../engine/useEngineQuery";
+import { HistoryComparisons } from "./HistoryComparisons";
 import { toSessionRow } from "./historyPresentation";
 import styles from "./HistoryPage.module.css";
 
@@ -15,6 +16,8 @@ interface HistorySessionsProps {
   readonly onOpen: (id: string) => void;
   /** La sesión que no se pudo abrir: se explica sobre la tabla, con un botón para reintentar. */
   readonly failedOpenId?: string | undefined;
+  readonly onOpenComparison: (id: string) => void;
+  readonly failedComparisonId: string | undefined;
   readonly onRetry: () => void;
   readonly onNewReview: () => void;
 }
@@ -51,6 +54,16 @@ export function HistorySessions(props: HistorySessionsProps) {
     );
   }
   if (state.status === "loading") return <div className={styles.sessions} aria-busy="true" />;
+  const comparisons = (
+    <HistoryComparisons
+      comparisons={state.data.comparisons}
+      onOpen={props.onOpenComparison}
+      failedId={props.failedComparisonId}
+    />
+  );
+  if (state.data.sessions.length === 0 && state.data.comparisons.length > 0) {
+    return <div className={styles.sessions}>{comparisons}</div>;
+  }
   if (state.data.sessions.length === 0) {
     return (
       <div className={styles.sessions}>
@@ -82,6 +95,7 @@ export function HistorySessions(props: HistorySessionsProps) {
         onSelect={props.onSelect}
         onOpen={props.onOpen}
       />
+      {comparisons}
     </div>
   );
 }

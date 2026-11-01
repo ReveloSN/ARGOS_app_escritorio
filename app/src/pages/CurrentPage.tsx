@@ -64,6 +64,7 @@ export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPag
             navigation.openTab("alerts");
           }}
           onOpenAlert={navigation.openAlert}
+          onOpenComparison={navigation.openCompare}
           onNewReview={navigation.openNewReview}
         />
       );

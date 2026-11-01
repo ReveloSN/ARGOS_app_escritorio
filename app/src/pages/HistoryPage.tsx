@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { useComparison } from "../features/comparison/comparisonContext";
 import { useEngineServices } from "../features/engine/EngineServicesContext";
 import { useEngineQuery } from "../features/engine/useEngineQuery";
 import { HistoryHeader } from "../features/history/HistoryHeader";
@@ -15,6 +16,7 @@ interface HistoryPageProps {
   readonly selectedId?: string | undefined;
   readonly onOpenReview: () => void;
   readonly onOpenAlert: (number: number) => void;
+  readonly onOpenComparison: () => void;
   readonly onNewReview: () => void;
 }
 
@@ -23,13 +25,16 @@ export function HistoryPage({
   selectedId,
   onOpenReview,
   onOpenAlert,
+  onOpenComparison,
   onNewReview,
 }: HistoryPageProps) {
-  const { history, reviews } = useEngineServices();
+  const { history, reviews, comparisons } = useEngineServices();
+  const { showComparison } = useComparison();
   const { showReview } = useReview();
   const [days, setDays] = useState(DEFAULT_PERIOD_DAYS);
   const [selected, setSelected] = useState(selectedId);
   const [failedOpenId, setFailedOpenId] = useState<string | undefined>(undefined);
+  const [failedComparisonId, setFailedComparisonId] = useState<string | undefined>(undefined);
   const query = useEngineQuery(String(days), () => history.history(days));
   const sessions = query.state.status === "ready" ? query.state.data.sessions : [];
   const current = selected ?? sessions[0]?.id;
@@ -45,6 +50,19 @@ export function HistoryPage({
     });
   };
 
+  const openComparison = (id: string) => {
+    setFailedComparisonId(undefined);
+    void comparisons.openComparison(id).then(
+      (comparison) => {
+        showComparison(comparison);
+        onOpenComparison();
+      },
+      () => {
+        setFailedComparisonId(id);
+      },
+    );
+  };
+
   return (
     <div className={styles.layout}>
       <HistoryHeader days={days} state={query.state} onDaysChange={setDays} />
@@ -54,6 +72,8 @@ export function HistoryPage({
         onSelect={setSelected}
         onOpen={openSession}
         failedOpenId={failedOpenId}
+        onOpenComparison={openComparison}
+        failedComparisonId={failedComparisonId}
         onRetry={query.reload}
         onNewReview={onNewReview}
       />

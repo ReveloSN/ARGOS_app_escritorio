@@ -466,6 +466,22 @@
     "export": "Exportar registro (CSV)",
     "exportFileName": "registro-argus-{date}.csv",
     "tableLabel": "Sesiones del historial",
+    "comparisons": {
+      "title": "Comparaciones",
+      "listLabel": "Comparaciones del historial",
+      "open": "Abrir comparación",
+      "openLabel": "Abrir la comparación «{name}»",
+      "summary": "{documents} · {decided} de {total} decididos",
+      "documents": {
+        "one": "{count} documento",
+        "other": "{count} documentos"
+      },
+      "failed": {
+        "what": "No pudimos abrir esta comparación.",
+        "why": "El motor de análisis no respondió o la comparación ya no está guardada.",
+        "todo": "Reintente. Si sigue fallando, haga la comparación de nuevo."
+      }
+    },
     "columns": {
       "session": "Sesión",
       "date": "Fecha",
@@ -487,6 +503,10 @@
       "inSessions": {
         "one": "en {count} sesión",
         "other": "en {count} sesiones"
+      },
+      "andComparisons": {
+        "one": "y {count} comparación",
+        "other": "y {count} comparaciones"
       },
       "duration": "Tiempo medio de revisión",
       "durationDetail": "desde cargar hasta cerrar",
