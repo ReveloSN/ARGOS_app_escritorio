@@ -895,6 +895,7 @@
       "title": "Changes",
       "navigate": "J K to navigate",
       "decided": "{done} of {total} decided",
+      "complete": "Review complete · {total} of {total}",
       "empty": "No changes match these filters.",
       "emptyHint": "Change them in “Options”.",
       "noDifferences": "There are no differences between these documents.",

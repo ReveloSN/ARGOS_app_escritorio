@@ -895,6 +895,7 @@
       "title": "Cambios",
       "navigate": "J K para navegar",
       "decided": "{done} de {total} decididos",
+      "complete": "Revisión completa · {total} de {total}",
       "empty": "Ningún cambio con estos filtros.",
       "emptyHint": "Cámbielos en «Opciones».",
       "noDifferences": "No hay diferencias entre estos documentos.",

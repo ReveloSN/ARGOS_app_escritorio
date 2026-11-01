@@ -98,12 +98,13 @@
 
 /* El botón queda en la línea superior y el panel ocupa una fila propia debajo. */
 .options {
-  display: contents;
+  position: relative;
+  display: flex;
+  margin-left: auto;
 }
 
 .optionsToggle {
   display: inline-flex;
-  margin-left: auto;
   align-items: center;
   gap: var(--spacing-1);
   min-height: var(--size-control-sm);
@@ -126,14 +127,20 @@
 }
 
 .optionsPanel {
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  right: 0;
   display: flex;
-  flex: 1 1 100%;
+  width: max-content;
+  max-width: calc(var(--size-dialog) * 2);
   flex-direction: column;
   gap: var(--spacing-2-5);
   padding: var(--spacing-3);
   border: var(--border-width) solid var(--color-border-default);
   border-radius: var(--radius-md);
   background: var(--color-background-surface);
+  box-shadow: var(--shadow-overlay);
 }
 
 .optionsRow .legend {

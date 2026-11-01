@@ -82,7 +82,12 @@ function ListHeader({ hasHighRisk, done, total }: ListHeaderProps) {
         </span>
       )}
       {total > 0 && (
-        <span className={styles.listProgress}>{t("comparison.list.decided", { done, total })}</span>
+        <span className={styles.listProgress}>
+          {t(done === total ? "comparison.list.complete" : "comparison.list.decided", {
+            done,
+            total,
+          })}
+        </span>
       )}
       <span className={styles.listHint}>{t("comparison.list.navigate")}</span>
     </div>

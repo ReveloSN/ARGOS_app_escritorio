@@ -13,12 +13,20 @@ const DECIDED_FIRST = {
   canUndo: true,
 };
 
-async function openChanges() {
+const ALL_DECIDED = {
+  decisions: [1, 2, 3, 4].map((alertNumber) => ({
+    ...DECIDED_FIRST.decisions[0],
+    alertNumber,
+  })),
+  canUndo: true,
+};
+
+async function openChanges(decided = DECIDED_FIRST) {
   const result = comparison({
     pairs: [pair("Contrato_v2.docx", "Contrato_v3.docx", VERSION_CHANGES)],
   });
   const startComparison = vi.fn(() => Promise.resolve(result));
-  const decide = vi.fn(() => Promise.resolve(DECIDED_FIRST));
+  const decide = vi.fn(() => Promise.resolve(decided));
   renderApp(fakeEngineServices({ comparisons: { startComparison, decide } }));
   await act(() => Promise.resolve());
   await userEvent.click(screen.getByRole("button", { name: "Comparar dos versiones" }));
@@ -158,5 +166,14 @@ describe("Lista de cambios de Comparar", () => {
     await userEvent.click(list.getByRole("button", { name: /Es correcto/ }));
 
     expect(await screen.findByText("1 de 4 decididos")).toBeVisible();
+  });
+
+  it("(regresión) con todos decididos la cabecera dice que la revisión está completa", async () => {
+    const list = await openChanges(ALL_DECIDED as typeof DECIDED_FIRST);
+
+    await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
+    await userEvent.click(list.getByRole("button", { name: /Es correcto/ }));
+
+    expect(await screen.findByText("Revisión completa · 4 de 4")).toBeVisible();
   });
 });
