@@ -9,7 +9,6 @@ import {
   NEGATION_CHANGE,
   NUMBER_CHANGE,
   REMOVED_ANNEX_CHANGE,
-  V2,
   V3,
 } from "../../test/comparisonFakes";
 import { changeBlocks, shorten, withAiStructure } from "./explanationBlocks";
@@ -32,11 +31,11 @@ describe("bloques de la explicación de un cambio", () => {
     );
   });
 
-  it("agregar o quitar una palabra también muestra las dos frases", () => {
+  it("(regresión) agregar o quitar una palabra lo dice con esa palabra, no con la oración entera", () => {
     const summary = changeBlocks(NEGATION_CHANGE, t).summary;
 
-    expect(summary).toContain(V2[1]?.text);
-    expect(summary).toContain(V3[2]?.text);
+    expect(summary).toBe("En el documento B se agregó «no».");
+    expect(summary).not.toContain(V3[2]?.text);
   });
 
   it("los tres bloques salen del tema del cambio", () => {

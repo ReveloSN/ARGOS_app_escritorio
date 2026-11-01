@@ -2,7 +2,7 @@ import type { ChangeKindValue, ChangeResult } from "../../services/engine/compar
 import type { ExplanationStructureResult } from "../../services/engine/aiTypes";
 import type { TranslationKey } from "../../i18n/translate";
 import type { Translate } from "../alerts/alertPresentation";
-import { changeValues } from "../comparison/changePresentation";
+import { changeValues, editedValues } from "../comparison/changePresentation";
 
 /** Lo que se lee en cinco segundos: una frase y tres bloques cortos con títulos fijos. */
 export interface ExplanationBlocks {
@@ -28,7 +28,18 @@ export function shorten(text: string): string {
   return `${text.slice(0, MAX_QUOTED_CHARACTERS)}${ELLIPSIS}`;
 }
 
+/** Una palabra que solo se agrega o solo se quita se dice así: «se agregó «no»», no la oración entera. */
+function wordSummary(change: ChangeResult, t: Translate): string | undefined {
+  const { before, after } = editedValues(change);
+  if (change.kind !== "modified" || Boolean(before) === Boolean(after)) return undefined;
+  return after
+    ? t(SUMMARY_KEYS.added, { text: shorten(after) })
+    : t(SUMMARY_KEYS.removed, { text: shorten(before) });
+}
+
 function changeSummary(change: ChangeResult, t: Translate): string {
+  const wordsOnly = wordSummary(change, t);
+  if (wordsOnly) return wordsOnly;
   const values = changeValues(change);
   return t(SUMMARY_KEYS[change.kind], {
     text: shorten(values.before || values.after),

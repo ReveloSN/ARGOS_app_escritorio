@@ -6,7 +6,7 @@ import type { ChangeResult } from "../../services/engine/comparisonTypes";
 import type { DecisionResult } from "../../services/engine/reviewTypes";
 import { describeLocation } from "../alerts/alertPresentation";
 import { DECISION_LABELS } from "../alerts/useAlertDecisions";
-import { changeSegment, changeValues } from "./changePresentation";
+import { changeRowValues, changeSegment, changeValues } from "./changePresentation";
 import styles from "./Compare.module.css";
 import { RiskDot } from "./RiskDot";
 
@@ -23,13 +23,21 @@ interface ChangeItemProps {
   readonly detail?: ReactNode;
 }
 
+/** «+ » si solo se agrega una palabra y «− » si solo se quita; nada en un reemplazo. */
+function oneSidedSign(change: ChangeResult, before: string, after: string): string {
+  if (change.kind !== "modified" || (before && after)) return "";
+  return after ? "+ " : "− ";
+}
+
+/** «4857 → 4587»; si solo se agrega o solo se quita, «+ no» o «− plazo»: lo cambiado, no la oración. */
 function ItemValues({ change }: { change: ChangeResult }) {
-  const values = changeValues(change);
+  const { before, after } = changeRowValues(change);
   return (
     <span className={styles.itemValues}>
-      {values.before && <span className={styles.before}>{values.before}</span>}
-      {values.before && values.after && " → "}
-      {values.after && <span className={styles.after}>{values.after}</span>}
+      {oneSidedSign(change, before, after)}
+      {before && <span className={styles.before}>{before}</span>}
+      {before && after && " → "}
+      {after && <span className={styles.after}>{after}</span>}
     </span>
   );
 }

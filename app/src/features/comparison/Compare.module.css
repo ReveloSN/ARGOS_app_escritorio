@@ -614,7 +614,9 @@
 }
 
 .itemStatus {
+  flex: none;
   color: var(--color-action-text);
+  white-space: nowrap;
   font-size: var(--font-size-caption);
 }
 
