@@ -251,3 +251,13 @@ Un agente revisó el resto de pantallas con 12 hallazgos verificados. Atendidos:
 No atendidos: perder el foco en `body` al cambiar de paso o de pantalla (el arreglo general, mover el foco al encabezado, toca todas las rutas y no se pudo cubrir con pruebas sin riesgo); los mensajes de privacidad («Análisis local…») no dependen de que la IA o el OCR en la nube estén activos; «Quitar» y «Acciones» repiten su nombre accesible en cada fila; archivos duplicados o de un formato no soportado se aceptan al cargar y fallan después; «Leer y comparar 0 archivos» en el botón deshabilitado; «0 alertas pendientes de 0» en la barra lateral y en Inicio con sesión sin alertas (la barra lateral no se tocó).
 
 El agente vio un monto sin marcar en el correo porque su motor se inició antes de agregar la verificación de montos: no era un fallo.
+
+## Prueba con archivos reales (DOCX, XLSX, PDF y EML)
+
+Un agente generó contratos DOCX con tabla, hojas XLSX, un PDF y un correo con adjuntos, y los pasó por la interfaz con el motor de pruebas. Pasan: el cambio 4857 → 4587 (riesgo alto, párrafo 1), el monto, la negación «+ no» y las celdas de la tabla; la matriz y «Buscar inconsistencias» con tres formatos; las dos alertas entre DOCX, XLSX y PDF citando archivo y celda; y en «Revisar antes de enviar» los tres problemas (periodo, número y monto) sin decir «listo». Sin errores de consola. Tiempos: la primera comparación DOCX tardó unos 40 s (no se confirmó si fue la carga inicial del motor), el resto entre 1 y 8 s.
+
+Encontró y se corrigió:
+- **Ubicación equivocada:** un cambio en una fila de tabla o de hoja citaba la celda de la primera columna («Tabla 1 · fila 2, columna 1», «Hoja Tarifas · A2») aunque el valor estuviera en otra. Ahora se cita la fila entera («Tabla 1 · fila 2», «Hoja Tarifas · fila 2»), en la lista, el detalle y el informe.
+- **Falsos positivos de fechas:** «Buscar inconsistencias» marcaba como contradicción dos fechas distintas (inicio y cuotas) que estaban en los dos documentos. Una regla del motor decía que bastaba con que los valores abarcaran dos documentos; ahora, si los dos valores aparecen exactamente en los mismos documentos, son dos datos distintos. Un error dentro de un documento frente a otro que tiene el valor correcto sigue marcándose (hay pruebas de las dos cosas).
+
+No se atendieron: el número de contrato escrito en una celda y su etiqueta en la vecina («Contrato No.» | 4857) no se reconoce como número de contrato (el extractor exige la etiqueta junto al valor); el aviso «Se guardó…» del informe sigue visible al cambiar de pestaña.
