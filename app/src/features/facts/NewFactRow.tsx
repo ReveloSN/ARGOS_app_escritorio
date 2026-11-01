@@ -18,7 +18,7 @@ const ENTITY_TYPES: readonly EntityTypeValue[] = [
 ];
 
 interface NewFactRowProps {
-  readonly onAdd: (input: FactInput) => void;
+  readonly onAdd: (input: FactInput, onSaved: () => void) => void;
   readonly onDone: () => void;
 }
 
@@ -30,8 +30,8 @@ export function NewFactRow({ onAdd, onDone }: NewFactRowProps) {
   const [value, setValue] = useState("");
   const canSave = Boolean(label.trim() && value.trim());
   const save = () => {
-    onAdd({ label: label.trim(), entityType, value: value.trim() });
-    onDone();
+    // La fila se cierra al guardarse; si el motor lo rechaza, lo escrito se conserva para corregirlo.
+    onAdd({ label: label.trim(), entityType, value: value.trim() }, onDone);
   };
   return (
     <div role="row" className={joinClassNames(styles.row, styles.bodyRow, styles.newRow)}>
