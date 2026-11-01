@@ -58,3 +58,43 @@ def test_numbers_without_currency_are_not_amounts(text: str) -> None:
 
 def test_matches_are_money_entities() -> None:
     assert {match.type for match in EXTRACTOR.extract("$ 1.000 y 2 millones")} == {EntityType.MONEY}
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("Canon de 18.450.000 COP", "COP:18450000"),
+        ("Valor: 18.450.000 pesos", "COP:18450000"),
+        ("Depósito de 1.200 USD", "USD:1200"),
+        ("Pago de 300 dólares", "USD:300"),
+        ("Pago de 300 DOLARES", "USD:300"),
+    ],
+)
+def test_currency_written_after_the_number_is_recognized(text: str, expected: str) -> None:
+    assert normalized_values(EXTRACTOR, text) == [expected]
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("USD 1,200.50", "USD:1200.5"),
+        ("$ 1,250,000", "COP:1250000"),
+        ("US$ 12,345.67", "USD:12345.67"),
+    ],
+)
+def test_us_number_format_is_not_misread_as_a_decimal(text: str, expected: str) -> None:
+    assert normalized_values(EXTRACTOR, text) == [expected]
+
+
+def test_es_co_decimals_with_one_or_two_digits_still_use_the_comma() -> None:
+    assert normalized_values(EXTRACTOR, "USD 1.250,50") == ["USD:1250.5"]
+    assert normalized_values(EXTRACTOR, "$ 36,9") == ["COP:36.9"]
+
+
+def test_an_amount_with_currency_on_both_sides_is_counted_once() -> None:
+    assert normalized_values(EXTRACTOR, "$ 18.450.000 pesos") == ["COP:18450000"]
+
+
+@pytest.mark.parametrize("text", ["Plazo de 36 meses", "Hay 40 pesos de diferencia en 3 pagos"])
+def test_a_trailing_word_that_is_not_a_currency_is_ignored(text: str) -> None:
+    assert "meses" not in " ".join(normalized_values(EXTRACTOR, text))
