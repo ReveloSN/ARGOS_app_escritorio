@@ -5,7 +5,7 @@ import type {
   PairComparisonResult,
 } from "../../services/engine/comparisonTypes";
 import type { AlertResult, AlertSideResult } from "../../services/engine/reviewTypes";
-import { alertTitle, describeLocation, type Translate } from "../alerts/alertPresentation";
+import { alertTitle, describeSegmentLocation, type Translate } from "../alerts/alertPresentation";
 import { changeBlocks } from "../explanation/explanationBlocks";
 import type { ExplainTarget } from "../explanation/explainTarget";
 import { changeSideValues } from "../explanation/sideValues";
@@ -29,7 +29,7 @@ function changeHeading(change: ChangeResult, t: Translate) {
     risk: change.risk,
     icon: appearance.icon,
     kind: t(appearance.label),
-    location: segment ? describeLocation(segment.location, t) : "",
+    location: segment ? describeSegmentLocation(segment, t) : "",
     title: t(CHANGE_TITLES[change.kind]),
   };
 }
@@ -56,7 +56,7 @@ function explainTarget({ change, pair, comparisonId }: ChangeSource, t: Translat
     ? [
         {
           text: segment.text,
-          source: `${segment.document} · ${describeLocation(segment.location, t)}`,
+          source: `${segment.document} · ${describeSegmentLocation(segment, t)}`,
         },
       ]
     : [];
@@ -67,7 +67,7 @@ function explainTarget({ change, pair, comparisonId }: ChangeSource, t: Translat
     quotes,
     blocks: changeBlocks(change, t),
     meaning: change.meaning ? meaningLabel(change.meaning, t) : undefined,
-    values: changeSideValues(change, pair, (segment) => describeLocation(segment.location, t)),
+    values: changeSideValues(change, pair, (segment) => describeSegmentLocation(segment, t)),
   };
 }
 

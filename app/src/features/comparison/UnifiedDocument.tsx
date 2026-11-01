@@ -4,7 +4,7 @@ import { Icon } from "../../components/atoms/Icon";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ChangeResult, PairComparisonResult } from "../../services/engine/comparisonTypes";
-import { describeLocation } from "../alerts/alertPresentation";
+import { describeSegmentLocation } from "../alerts/alertPresentation";
 import styles from "./Compare.module.css";
 import {
   unifiedParagraphs,
@@ -85,7 +85,7 @@ function MovedAway({ paragraph }: { readonly paragraph: UnifiedParagraph }) {
     <p className={styles.movedAway} data-change={paragraph.moved?.change.number}>
       <Icon name="swap_vert" size="xs" />
       {t("comparison.unified.movedTo", {
-        location: destination ? describeLocation(destination.location, t) : "",
+        location: destination ? describeSegmentLocation(destination, t) : "",
       })}
     </p>
   );

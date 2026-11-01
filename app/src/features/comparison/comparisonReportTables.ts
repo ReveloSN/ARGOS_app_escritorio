@@ -4,7 +4,7 @@ import type {
   SegmentResult,
 } from "../../services/engine/comparisonTypes";
 import type { ReportCellData, ReportDocumentData } from "../../services/engine/reportTypes";
-import { describeLocation, entityTypeLabel } from "../alerts/alertPresentation";
+import { describeSegmentLocation, entityTypeLabel } from "../alerts/alertPresentation";
 import { NO_SECOND_VALUE } from "../alerts/alertSides";
 import { sideCell, type ReportTexts } from "../report/reportSections";
 import { CHANGE_KIND_APPEARANCE, changeValues } from "./changePresentation";
@@ -28,7 +28,7 @@ function segmentCell(
   { t }: ReportTexts,
 ): ReportCellData {
   if (!segment || !text) return { text: NO_SECOND_VALUE };
-  return { text, detail: `${segment.document} · ${describeLocation(segment.location, t)}` };
+  return { text, detail: `${segment.document} · ${describeSegmentLocation(segment, t)}` };
 }
 
 function changeRow(

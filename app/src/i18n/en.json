@@ -109,6 +109,8 @@
     "paragraph": "Paragraph {paragraph}",
     "tableCell": "Table {table} · row {row}, column {column}",
     "sheetCell": "Sheet {sheet} · {cell}",
+    "tableRow": "Table {table} · row {row}",
+    "sheetRow": "Sheet {sheet} · row {row}",
     "subject": "Email subject",
     "body": "Email body",
     "line": "Line {line}"

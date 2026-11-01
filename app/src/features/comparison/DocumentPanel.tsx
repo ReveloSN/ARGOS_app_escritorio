@@ -3,7 +3,7 @@ import type { Ref, UIEvent } from "react";
 import { DiffMark } from "../../components/atoms/DiffMark";
 import { Icon } from "../../components/atoms/Icon";
 import { useI18n } from "../../i18n/i18nContext";
-import { describeLocation } from "../alerts/alertPresentation";
+import { describeSegmentLocation } from "../alerts/alertPresentation";
 import type { TranslationKey } from "../../i18n/translate";
 import styles from "./Compare.module.css";
 import type { PanelSegment, PanelSide, TextRun } from "./segmentRuns";
@@ -73,7 +73,7 @@ function MovedNote({
       <Icon name="swap_vert" size="xs" />
       {t("comparison.panel.moved", {
         side: t(SIDE_LABELS[OTHER_SIDE[side]]),
-        location: other ? describeLocation(other.location, t) : "",
+        location: other ? describeSegmentLocation(other, t) : "",
       })}
     </button>
   );

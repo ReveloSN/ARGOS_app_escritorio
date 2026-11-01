@@ -109,6 +109,8 @@
     "paragraph": "Párrafo {paragraph}",
     "tableCell": "Tabla {table} · fila {row}, columna {column}",
     "sheetCell": "Hoja {sheet} · {cell}",
+    "tableRow": "Tabla {table} · fila {row}",
+    "sheetRow": "Hoja {sheet} · fila {row}",
     "subject": "Asunto del correo",
     "body": "Cuerpo del correo",
     "line": "Línea {line}"

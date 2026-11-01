@@ -4,7 +4,7 @@ import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ChangeResult } from "../../services/engine/comparisonTypes";
 import type { DecisionResult } from "../../services/engine/reviewTypes";
-import { describeLocation } from "../alerts/alertPresentation";
+import { describeSegmentLocation } from "../alerts/alertPresentation";
 import { DECISION_LABELS } from "../alerts/useAlertDecisions";
 import { changeRowValues, changeSegment, changeValues } from "./changePresentation";
 import styles from "./Compare.module.css";
@@ -66,9 +66,7 @@ export function ChangeItem(props: ChangeItemProps) {
       >
         <RiskDot risk={change.risk} />
         <ItemValues change={change} />
-        {segment && (
-          <span className={styles.itemWhere}>{describeLocation(segment.location, t)}</span>
-        )}
+        {segment && <span className={styles.itemWhere}>{describeSegmentLocation(segment, t)}</span>}
         {against && (
           <span className={styles.itemAgainst} title={against}>
             {t("comparison.scope.versus", { document: against })}

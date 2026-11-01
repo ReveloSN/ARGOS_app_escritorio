@@ -33,6 +33,28 @@ export function describeLocation(location: SourceLocationResult, t: Translate): 
   return LOCATION_DESCRIPTIONS[location.kind](location, t);
 }
 
+const TRAILING_DIGITS = /\d+$/;
+
+function describeRow(location: SourceLocationResult, t: Translate): string | undefined {
+  if (location.kind === "table_cell") return t("origin.tableRow", location);
+  if (location.kind !== "sheet_cell") return undefined;
+  const row = TRAILING_DIGITS.exec(location.cell)?.[0] ?? "";
+  return t("origin.sheetRow", { sheet: location.sheet, row });
+}
+
+/**
+ * Dónde está un segmento de una comparación. Una fila de tabla o de hoja se cita entera: el
+ * motor guarda la ubicación de su primera celda y decir «columna 1» o «A2» sería falso cuando el
+ * cambio está en otra celda de la misma fila.
+ */
+export function describeSegmentLocation(
+  segment: { readonly kind: string; readonly location: SourceLocationResult },
+  t: Translate,
+): string {
+  const row = segment.kind === "table_row" ? describeRow(segment.location, t) : undefined;
+  return row ?? describeLocation(segment.location, t);
+}
+
 export function entityTypeLabel(entityType: EntityTypeValue, t: Translate): string {
   return t(`entityTypes.${entityType}`);
 }
