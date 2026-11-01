@@ -860,6 +860,50 @@
       "breakdown": "Changes by document",
       "noChanges": "no changes"
     },
+    "report": {
+      "action": "Export report",
+      "formatLabel": "Report format",
+      "pdf": "PDF",
+      "docx": "Word",
+      "exporting": "Preparing the report…",
+      "title": "Comparison report",
+      "comparedOn": "Compared on {date}",
+      "heading": "{number}. {title}",
+      "parts": {
+        "summary": "Summary",
+        "changes": "Changes",
+        "inconsistencies": "Inconsistencies between documents"
+      },
+      "summary": {
+        "one": "{count} document was compared on {date}.",
+        "other": "{count} documents were compared on {date}."
+      },
+      "metrics": {
+        "changes": {
+          "one": "change",
+          "other": "changes"
+        },
+        "high": {
+          "one": "high risk",
+          "other": "high risk"
+        },
+        "inconsistencies": {
+          "one": "inconsistency",
+          "other": "inconsistencies"
+        },
+        "decided": {
+          "one": "decided",
+          "other": "decided"
+        }
+      },
+      "columns": {
+        "change": "Change",
+        "before": "Before · source",
+        "after": "After · source",
+        "decision": "Decision",
+        "data": "Data"
+      }
+    },
     "close": {
       "action": "Close comparison",
       "hint": "Esc"

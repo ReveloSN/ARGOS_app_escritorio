@@ -3,11 +3,16 @@ import { Kbd } from "../../components/atoms/Kbd";
 import { Breadcrumb } from "../../components/molecules/Breadcrumb";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
+import type { ComparisonResult } from "../../services/engine/comparisonTypes";
+import { ExportFeedback } from "../report/ExportFeedback";
 import styles from "./Compare.module.css";
 import { COMPARE_TABS } from "./compareTabs";
+import { ExportComparisonReport } from "./ExportComparisonReport";
+import { useComparisonReportExport } from "./useComparisonReportExport";
 import type { CompareTab } from "./useComparisonView";
 
 interface CompareHeaderProps {
+  readonly comparison: ComparisonResult;
   readonly tab: CompareTab;
   readonly crumb: string;
   readonly onTab: (tab: CompareTab) => void;
@@ -15,8 +20,9 @@ interface CompareHeaderProps {
 }
 
 /** «Comparar documentos»: breadcrumb y los tres modos (versiones, inconsistencias, matriz). */
-export function CompareHeader({ tab, crumb, onTab, onClose }: CompareHeaderProps) {
+export function CompareHeader({ comparison, tab, crumb, onTab, onClose }: CompareHeaderProps) {
   const { t } = useI18n();
+  const report = useComparisonReportExport(comparison);
   return (
     <div className={styles.header}>
       <div className={styles.closeRow}>
@@ -27,6 +33,7 @@ export function CompareHeader({ tab, crumb, onTab, onClose }: CompareHeaderProps
           ]}
         />
         <span className={styles.grow} />
+        <ExportComparisonReport report={report} />
         <Button icon="close" shortcut={[t("comparison.close.hint")]} onClick={onClose}>
           {t("comparison.close.action")}
         </Button>
@@ -53,6 +60,12 @@ export function CompareHeader({ tab, crumb, onTab, onClose }: CompareHeaderProps
           ))}
         </div>
       </div>
+      <ExportFeedback
+        report={report}
+        onRetry={() => {
+          report.export("pdf");
+        }}
+      />
     </div>
   );
 }

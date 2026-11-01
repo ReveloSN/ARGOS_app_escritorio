@@ -83,6 +83,7 @@ export function CompareTop(props: CompareTopProps) {
   return (
     <div className={styles.top}>
       <CompareHeader
+        comparison={props.comparison}
         tab={view.tab}
         crumb={props.crumb}
         onTab={view.setTab}

@@ -958,6 +958,11 @@
   font-size: var(--font-size-caption);
 }
 
+.exportFormats {
+  display: flex;
+  gap: var(--spacing-1-5);
+}
+
 /* Con poco ancho el texto no cabe junto al lateral: el lateral pasa debajo y cada uno se desplaza solo. */
 @container (max-width: 85ch) {
   .versions {

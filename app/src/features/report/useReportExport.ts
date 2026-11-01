@@ -53,3 +53,9 @@ export function useReportExport(sessionId: string) {
 }
 
 export type ReportExport = ReturnType<typeof useReportExport>;
+
+/** Lo que `ExportFeedback` necesita saber de una exportación, sea de una revisión o de una comparación. */
+export interface ExportOutcome {
+  readonly status: ExportStatus;
+  readonly open: (fileName: string) => Promise<void>;
+}
