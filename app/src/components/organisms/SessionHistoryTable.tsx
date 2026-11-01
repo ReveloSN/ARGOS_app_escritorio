@@ -1,3 +1,5 @@
+import type { KeyboardEvent } from "react";
+
 import { useI18n } from "../../i18n/i18nContext";
 import type { TranslationKey } from "../../i18n/translate";
 import { Icon } from "../atoms/Icon";
@@ -34,6 +36,16 @@ interface SessionHistoryTableProps {
   readonly onSelect: (id: string) => void;
   /** Enter o doble clic: abre la revisión. */
   readonly onOpen: (id: string) => void;
+}
+
+/** Flecha abajo o arriba: pasa a la fila vecina y la elige, para ver sus decisiones sin abrirla. */
+function stepToNeighbour(event: KeyboardEvent<HTMLTableRowElement>): void {
+  const direction = event.key === "ArrowDown" ? "nextElementSibling" : "previousElementSibling";
+  const neighbour = event.currentTarget[direction];
+  if (!(neighbour instanceof HTMLElement)) return;
+  event.preventDefault();
+  neighbour.focus();
+  neighbour.click();
 }
 
 /** Sesiones del historial; la seleccionada muestra sus decisiones en el panel lateral. */
@@ -75,6 +87,11 @@ export function SessionHistoryTable({
             }}
             onKeyDown={(event) => {
               if (event.key === "Enter") onOpen(row.id);
+              if (event.key === " ") {
+                event.preventDefault();
+                onSelect(row.id);
+              }
+              if (event.key === "ArrowDown" || event.key === "ArrowUp") stepToNeighbour(event);
             }}
           >
             <td title={row.name} className={styles.name}>

@@ -53,4 +53,39 @@ describe("MetricsStrip y SessionHistoryTable", () => {
     expect(onSelect).toHaveBeenCalledWith("s-1");
     expect(onOpen).toHaveBeenCalledWith("s-1");
   });
+
+  it("(regresión) con el teclado Espacio elige la fila y las flechas pasan a la vecina eligiéndola", async () => {
+    const onSelect = vi.fn();
+    const base = {
+      date: "13/10/2026",
+      files: 2,
+      alerts: 1,
+      decided: "—",
+      statusIcon: "pending",
+      statusLabel: "En curso",
+    };
+    renderWithProviders(
+      <SessionHistoryTable
+        selectedId={undefined}
+        onSelect={onSelect}
+        onOpen={vi.fn()}
+        rows={[
+          { ...base, id: "s-1", name: "Primera" },
+          { ...base, id: "s-2", name: "Segunda" },
+        ]}
+      />,
+    );
+    const [, first, second] = screen.getAllByRole("row");
+
+    first?.focus();
+    await userEvent.keyboard(" ");
+    expect(onSelect).toHaveBeenLastCalledWith("s-1");
+
+    await userEvent.keyboard("{ArrowDown}");
+    expect(onSelect).toHaveBeenLastCalledWith("s-2");
+    expect(second).toHaveFocus();
+    await userEvent.keyboard("{ArrowUp}");
+    expect(onSelect).toHaveBeenLastCalledWith("s-1");
+    expect(first).toHaveFocus();
+  });
 });

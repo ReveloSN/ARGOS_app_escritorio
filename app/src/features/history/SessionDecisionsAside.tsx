@@ -21,7 +21,15 @@ export function SessionDecisionsAside({
   onOpenAlert,
 }: SessionDecisionsAsideProps) {
   const { t, format } = useI18n();
-  if (state.status === "loading") return <aside className={styles.aside} aria-busy="true" />;
+  if (state.status === "loading") {
+    return (
+      <aside className={styles.aside} aria-busy="true">
+        <p role="status" className={styles.loading}>
+          {t("history.loadingSession")}
+        </p>
+      </aside>
+    );
+  }
   if (state.status === "failed") {
     return (
       <aside className={styles.aside}>

@@ -467,11 +467,13 @@
     "exported": "“{name}” was exported to the downloads folder.",
     "exportFileName": "argus-log-{date}.csv",
     "tableLabel": "History sessions",
+    "loading": "Loading the history…",
+    "loadingSession": "Loading the session…",
     "comparisons": {
       "title": "Comparisons",
       "listLabel": "History comparisons",
       "open": "Open comparison",
-      "openLabel": "Open the comparison “{name}”",
+      "openLabel": "Open comparison “{name}”",
       "summary": "{documents} · {decided} of {total} changes and inconsistencies decided",
       "documents": {
         "one": "{count} document",

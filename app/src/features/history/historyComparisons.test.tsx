@@ -59,7 +59,7 @@ describe("Comparaciones en el Historial", () => {
     const openComparison = vi.fn(() => Promise.resolve(comparison()));
     const list = await openHistory(openComparison);
 
-    await userEvent.click(list.getByRole("button", { name: /Abrir la comparación/ }));
+    await userEvent.click(list.getByRole("button", { name: /Abrir comparación «/ }));
 
     expect(openComparison).toHaveBeenCalledWith("c1");
     expect(await screen.findByRole("heading", { name: "Comparar documentos" })).toBeVisible();
@@ -72,7 +72,7 @@ describe("Comparaciones en el Historial", () => {
       .mockResolvedValue(comparison());
     const list = await openHistory(openComparison);
 
-    await userEvent.click(list.getByRole("button", { name: /Abrir la comparación/ }));
+    await userEvent.click(list.getByRole("button", { name: /Abrir comparación «/ }));
 
     expect(await screen.findByText("No pudimos abrir esta comparación.")).toBeVisible();
     await userEvent.click(screen.getByRole("button", { name: "Reintentar" }));

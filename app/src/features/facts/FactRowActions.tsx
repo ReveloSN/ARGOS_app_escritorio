@@ -1,6 +1,7 @@
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { TranslationKey } from "../../i18n/translate";
+import { entityTypeLabel, type Translate } from "../alerts/alertPresentation";
 import { isRetired, type FactRow } from "./factRows";
 import styles from "./Facts.module.css";
 import type { FactChanges } from "./useFactChanges";
@@ -69,6 +70,11 @@ function actionsFor({ row, view, changes }: FactRowActionsProps): RowAction[] {
   ];
 }
 
+function rowName(row: FactRow, t: Translate): string {
+  if (row.kind === "fact") return row.fact.label;
+  return entityTypeLabel(row.pending.entityType, t);
+}
+
 /** Editar y Retirar; Restaurar si está retirado; Confirmar valor si aún no está confirmado. */
 export function FactRowActions(props: FactRowActionsProps) {
   const { t } = useI18n();
@@ -77,6 +83,7 @@ export function FactRowActions(props: FactRowActionsProps) {
       key={action.id}
       type="button"
       title={t(action.title)}
+      aria-label={`${t(action.label)} ${rowName(props.row, t)}`}
       className={joinClassNames(styles.action, action.isDanger && styles.actionDanger)}
       onClick={(event) => {
         event.stopPropagation();

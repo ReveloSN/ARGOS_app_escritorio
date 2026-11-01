@@ -467,11 +467,13 @@
     "exported": "Se exportó «{name}» a la carpeta de descargas.",
     "exportFileName": "registro-argus-{date}.csv",
     "tableLabel": "Sesiones del historial",
+    "loading": "Cargando el historial…",
+    "loadingSession": "Cargando la sesión…",
     "comparisons": {
       "title": "Comparaciones",
       "listLabel": "Comparaciones del historial",
       "open": "Abrir comparación",
-      "openLabel": "Abrir la comparación «{name}»",
+      "openLabel": "Abrir comparación «{name}»",
       "summary": "{documents} · {decided} de {total} decididos entre cambios e inconsistencias",
       "documents": {
         "one": "{count} documento",

@@ -53,7 +53,15 @@ export function HistorySessions(props: HistorySessionsProps) {
       </div>
     );
   }
-  if (state.status === "loading") return <div className={styles.sessions} aria-busy="true" />;
+  if (state.status === "loading") {
+    return (
+      <div className={styles.sessions} aria-busy="true">
+        <p role="status" className={styles.loading}>
+          {t("history.loading")}
+        </p>
+      </div>
+    );
+  }
   const comparisons = (
     <HistoryComparisons
       comparisons={state.data.comparisons}

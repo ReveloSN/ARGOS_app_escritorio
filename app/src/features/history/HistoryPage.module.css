@@ -115,8 +115,11 @@
 .comparisonMeta,
 .comparisonDate {
   color: var(--color-text-secondary);
-  font-family: var(--font-family-mono);
   font-size: var(--font-size-caption);
+}
+
+.comparisonDate {
+  font-family: var(--font-family-mono);
 }
 
 .comparisonMeta {
@@ -132,5 +135,12 @@
 .exported {
   margin: 0;
   color: var(--color-action-text);
+  font-size: var(--font-size-caption);
+}
+
+.loading {
+  margin: 0;
+  padding: var(--spacing-3);
+  color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
 }
