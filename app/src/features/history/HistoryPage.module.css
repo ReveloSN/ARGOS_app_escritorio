@@ -144,3 +144,20 @@
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
 }
+
+/* Sin ancho para la tabla y el panel lado a lado, el panel de decisiones pasa debajo. */
+@container (max-width: 150ch) {
+  .layout {
+    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .header {
+    grid-column: 1;
+  }
+
+  .aside {
+    border-top: var(--border-width) solid var(--color-border-default);
+    border-inline-start: 0;
+  }
+}

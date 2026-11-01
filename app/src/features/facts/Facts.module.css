@@ -384,3 +384,16 @@
   margin: 0;
   color: var(--color-text-secondary);
 }
+
+/* Sin ancho para la tabla y el panel lado a lado, el panel pasa debajo y cada uno se desplaza solo. */
+@container (max-width: 160ch) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .aside {
+    border-top: var(--border-width) solid var(--color-border-strong);
+    border-left: 0;
+  }
+}
