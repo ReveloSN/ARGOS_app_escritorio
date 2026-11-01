@@ -55,7 +55,7 @@ export function PanelLayout(props: PanelLayoutProps) {
             {props.meaning}
           </span>
         )}
-        <h3 className={styles.summary}>{props.blocks.summary}</h3>
+        <h2 className={styles.summary}>{props.blocks.summary}</h2>
         {hasAiSuggestion && <span className={styles.aiNote}>{t("explainPanel.aiNote")}</span>}
       </header>
       {isCompact && <ActionsDock>{props.actions}</ActionsDock>}

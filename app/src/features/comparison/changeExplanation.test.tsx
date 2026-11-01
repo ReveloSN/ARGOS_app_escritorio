@@ -55,7 +55,7 @@ describe("Panel de explicación de un cambio", () => {
     expect(panel().getByText("Sugerencia de IA, usted decide")).toBeInTheDocument();
   });
 
-  it("se entiende de un vistazo: frase, las decisiones justo debajo, los dos valores y tres bloques", async () => {
+  it("se entiende de un vistazo: frase, las decisiones justo debajo, los dos valores, por qué importa y qué hacer", async () => {
     const explainChange = vi.fn(() => Promise.resolve(TEMPLATE));
     await openFirstChange(explainChange);
 
@@ -66,11 +66,9 @@ describe("Panel de explicación de un cambio", () => {
     const b = panel().getByRole("region", { name: "Documento B dice: Contrato_v3.docx" });
     expect(within(a).getByText("4857").tagName).toBe("MARK");
     expect(within(b).getByText("4587").tagName).toBe("MARK");
-    const titles = ["Qué cambió", "Por qué importa", "Qué puede hacer"].map((title) =>
-      panel().getByText(title),
-    );
-    expect(titles).toHaveLength(3);
-    expect(panel().getByText("Cambia un número o identificador.")).toBeInTheDocument();
+    const titles = ["Por qué importa", "Qué puede hacer"].map((title) => panel().getByText(title));
+    expect(titles).toHaveLength(2);
+    expect(panel().queryByText("Qué cambió")).not.toBeInTheDocument();
     const decision = panel().getByRole("button", { name: /Es un error/ });
     expect(titles[0]?.compareDocumentPosition(decision)).toBe(Node.DOCUMENT_POSITION_PRECEDING);
     expect(explainChange).not.toHaveBeenCalled();
@@ -139,7 +137,7 @@ describe("Panel de explicación de un cambio", () => {
     await userEvent.click(panel().getByRole("button", { name: "Ver detalle" }));
 
     expect(await screen.findByText(/El proveedor rechazó la clave/)).toBeInTheDocument();
-    expect(panel().getByText("Cambia un número o identificador.")).toBeInTheDocument();
+    expect(panel().getByText("Qué puede hacer")).toBeInTheDocument();
     expect(panel().getByText("Explicación de ARGUS")).toBeInTheDocument();
   });
 

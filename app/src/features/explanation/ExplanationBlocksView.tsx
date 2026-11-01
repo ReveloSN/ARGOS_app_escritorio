@@ -20,11 +20,13 @@ interface ExplanationBlocksViewProps {
   readonly isCompact: boolean;
 }
 
+/** En el modo compacto la frase resumen ya dice qué cambió: quedan el porqué y qué hacer. */
 export function ExplanationBlocksView({ blocks, isCompact }: ExplanationBlocksViewProps) {
   const { t } = useI18n();
+  const shown = isCompact ? BLOCKS.filter((block) => block.field !== "changed") : BLOCKS;
   return (
     <dl className={joinClassNames(styles.blocks, isCompact && styles.blocksCompact)}>
-      {BLOCKS.map((block) => (
+      {shown.map((block) => (
         <div key={block.field} className={styles.block}>
           <dt className={styles.blockTitle}>{t(block.title)}</dt>
           <dd className={styles.blockText}>{blocks[block.field]}</dd>

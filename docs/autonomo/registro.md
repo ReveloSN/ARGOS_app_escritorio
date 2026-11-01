@@ -194,3 +194,12 @@ Nota: las horas de las entradas son las de sus commits (America/Bogota); antes d
 - **Opciones:** ahora es un panel que flota sobre el documento y ya no empuja el contenido. «Solo importantes» y los filtros por tipo siguen separados, por decisión tuya.
 - **Detalle:** «Ver qué dice cada documento» alcanza la altura mínima de control (26 px).
 - **No verificado:** tema claro ni la app empaquetada con Tauri; `DocumentPanel.tsx` ya no se usa pero no se borró; los números de línea vienen del motor.
+
+## Tercera crítica de Comparar (25/40) · rama critica-comparar
+
+Tendencia 29 → 27 → 25: cada ronda la evalúa un revisor nuevo con un texto de prueba distinto y más exigente; no se atribuye a regresiones.
+
+- **Inconsistencias con teclado:** las filas eran un `div` con clic; ahora cada dato es un botón (Tab y Enter) y la vista abre con la primera fila elegida. Antes, al pasar de Versiones a Inconsistencias, la selección era de un cambio y el panel quedaba vacío, y C/E/I podían decidir un número ajeno. Prueba nueva: `inconsistencyKeyboard.test.tsx`.
+- **Panel de detalle:** en Comparar ya no se repite «Qué cambió» (lo dice la frase resumen, la fila y los valores A y B); quedan «Por qué importa» y «Qué puede hacer». Alertas no cambia. Los encabezados pasan a h1 → h2 → h3 (antes saltaban a h3 y h4).
+- **Agrupamiento de cambios:** reproducido con un documento de varios párrafos: salen 5 cambios separados, cada uno con su fila. Solo se juntan las ediciones que están dentro de un mismo párrafo (así salió 1 cambio con el texto de prueba de la crítica). Es decisión del motor; separar por edición dentro de un párrafo no se hizo.
+- **Sin hacer (P2):** orden de los botones C/E/I según el riesgo, decisiones sin objeto («Es un error en B»), plurales («1 datos», «1 pares»), vista de 720 px, el desplazamiento de 20 px por el aviso «Se guardó».

@@ -20,7 +20,7 @@ function ValueCard({ title, value }: ValueCardProps) {
   const { t } = useI18n();
   return (
     <section aria-label={`${t(title)}: ${value.document}`} className={styles.valueCard}>
-      <h4 className={styles.valueTitle}>{t(title)}</h4>
+      <h3 className={styles.valueTitle}>{t(title)}</h3>
       <span title={value.document} className={styles.valueDocument}>
         {value.document}
       </span>

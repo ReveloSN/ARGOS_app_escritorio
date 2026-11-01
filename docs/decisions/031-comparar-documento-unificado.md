@@ -26,3 +26,7 @@
 ### Enmienda · segunda crítica (27/40)
 
 Decidir avanza al siguiente cambio sin decidir y la lista avisa cuando la revisión está completa. Opciones es un panel flotante, la matriz una cuadrícula con roles y las filas de una palabra muestran «+»/«−». Detalle en `docs/autonomo/registro.md`.
+
+### Enmienda · tercera crítica (25/40)
+
+Inconsistencias se opera con Tab y Enter y abre con la primera fila elegida. El detalle de Comparar omite «Qué cambió» (lo dice la frase resumen) y los encabezados siguen el orden h1 → h2 → h3. Detalle en `docs/autonomo/registro.md`.
