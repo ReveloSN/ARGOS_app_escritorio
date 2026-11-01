@@ -3,9 +3,12 @@ from email.message import EmailMessage
 from email.parser import BytesParser
 from pathlib import Path
 
+import pytest
+
 from argus.api.composition import build_attachment_readers
 from argus.application.ports.document_reader import DocumentSource
 from argus.application.ports.drafts import DraftCorrections
+from argus.domain.errors import NotADraftEmailError
 from argus.infrastructure.drafts.eml_draft_reader import EmlDraftReader
 from argus.infrastructure.drafts.eml_draft_writer import EmlDraftWriter
 from argus.infrastructure.drafts.file_system_draft_outbox import FileSystemDraftOutbox
@@ -84,3 +87,18 @@ def test_the_outbox_saves_the_copy_in_its_own_folder_and_opens_it(tmp_path: Path
     (opened,) = opener.opened
     assert opened == tmp_path / "r1" / "Remision.eml"
     assert opened.read_bytes() == b"copia"
+
+
+def test_a_text_file_named_eml_is_not_a_draft() -> None:
+    reader = EmlDraftReader(build_attachment_readers())
+
+    with pytest.raises(NotADraftEmailError):
+        reader.read(DocumentSource("notaeml.eml", b"no es un correo, solo texto"))
+
+
+def test_a_draft_with_only_a_subject_is_still_a_draft() -> None:
+    reader = EmlDraftReader(build_attachment_readers())
+
+    content = reader.read(DocumentSource("borrador.eml", b"Subject: Contrato 4857\n\nHola"))
+
+    assert content.draft.subject == "Contrato 4857"
