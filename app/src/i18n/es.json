@@ -115,7 +115,7 @@
   },
   "upload": {
     "prompt": "Arrastre los archivos aquí o elíjalos desde el equipo",
-    "formats": "PDF, DOCX, XLSX, EML o texto pegado · hasta 10 MB por archivo",
+    "formats": "PDF, DOCX, XLSX, EML o TXT · hasta 10 MB por archivo",
     "choose": "Elegir archivos",
     "paste": "Pegar texto",
     "dropping": {
@@ -1469,14 +1469,14 @@
       "load": {
         "say": "Soy un asistente de IA. Leo sus documentos en este equipo.",
         "title": "1. Cargue los documentos de un expediente",
-        "body": "Arrastre el contrato, sus anexos, la hoja de tarifas o el correo que va a enviar. ARGUS lee PDF, DOCX, XLSX, EML y texto pegado.",
+        "body": "Arrastre el contrato, sus anexos, la hoja de tarifas o el correo que va a enviar. ARGUS lee PDF, DOCX, XLSX, EML y TXT.",
         "local": "Los archivos no salen de este equipo.",
         "addMore": "Puede agregar más documentos en cualquier momento."
       },
       "confirm": {
         "say": "Si no estoy seguro de un dato, se lo pregunto.",
-        "title": "2. Confirme lo que se leyó",
-        "body": "Antes de comparar, revise el número de contrato, las partes, los montos y las fechas que se encontraron. Lo que usted confirme queda en el expediente como fuente de verdad.",
+        "title": "2. Compruebe lo que se leyó",
+        "body": "Antes de comparar, vea qué archivos se leyeron y cuáles no: los que no se puedan leer no se incluyen. Los datos que usted confirme después, en la pestaña «Datos confirmados», quedan en el expediente como fuente de verdad.",
         "reused": "Los datos confirmados se usan en todas las revisiones del expediente.",
         "editable": "Puede editarlos o retirarlos después."
       },

@@ -21,8 +21,9 @@ interface HomePageProps {
   readonly onOpenHistory: () => void;
 }
 
-function EmptySummary({ savedCount }: { readonly savedCount: number }) {
+function EmptySummary({ savedCount }: { readonly savedCount: number | undefined }) {
   const { t, tPlural } = useI18n();
+  if (savedCount === undefined) return <div aria-busy="true" />;
   if (savedCount === 0) {
     return (
       <>
@@ -48,7 +49,7 @@ function SessionSummary({
   onCompare,
 }: Pick<HomePageProps, "onContinueReview" | "onCompare"> & {
   snapshot: SessionSnapshot;
-  savedCount: number;
+  savedCount: number | undefined;
 }) {
   const reopen = useReopenComparison();
   if (isEmptySnapshot(snapshot)) return <EmptySummary savedCount={savedCount} />;
@@ -81,7 +82,7 @@ export function HomePage({
   const assistant = useAssistantStatus();
   const snapshot = useSessionSnapshot();
   const savedCount = useSavedSessionCount(snapshot.review?.id);
-  const hasSavedReviewsToOpen = isEmptySnapshot(snapshot) && savedCount > 0;
+  const hasSavedReviewsToOpen = isEmptySnapshot(snapshot) && (savedCount ?? 0) > 0;
 
   return (
     <div className={styles.home}>

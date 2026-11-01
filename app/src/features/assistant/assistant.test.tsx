@@ -46,7 +46,9 @@ describe("Asistente de IA", () => {
     });
     expect(dialog).toHaveTextContent("1 de 3");
     await userEvent.keyboard("{Enter}");
-    expect(screen.getByRole("heading", { name: "2. Confirme lo que se leyó" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "2. Compruebe lo que se leyó" }),
+    ).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: /Siguiente/ }));
     await userEvent.click(screen.getByRole("button", { name: /Empezar/ }));
 

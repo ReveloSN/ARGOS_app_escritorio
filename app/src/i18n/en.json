@@ -115,7 +115,7 @@
   },
   "upload": {
     "prompt": "Drag the files here or choose them from your computer",
-    "formats": "PDF, DOCX, XLSX, EML or pasted text · up to 10 MB per file",
+    "formats": "PDF, DOCX, XLSX, EML or TXT · up to 10 MB per file",
     "choose": "Choose files",
     "paste": "Paste text",
     "dropping": {
@@ -1469,14 +1469,14 @@
       "load": {
         "say": "I am an AI assistant. I read your documents on this computer.",
         "title": "1. Load the documents of a case file",
-        "body": "Drag in the contract, its annexes, the rate sheet or the email you are about to send. ARGUS reads PDF, DOCX, XLSX, EML and pasted text.",
+        "body": "Drag in the contract, its annexes, the rate sheet or the email you are about to send. ARGUS reads PDF, DOCX, XLSX, EML and TXT.",
         "local": "Files never leave this computer.",
         "addMore": "You can add more documents at any time."
       },
       "confirm": {
         "say": "If I am not sure about a value, I ask you.",
-        "title": "2. Confirm what was read",
-        "body": "Before comparing, check the contract number, parties, amounts and dates that were found. What you confirm stays in the case file as the source of truth.",
+        "title": "2. Check what was read",
+        "body": "Before comparing, see which files were read and which were not: files that cannot be read are left out. The values you confirm afterwards, in the Confirmed data tab, stay in the case file as the source of truth.",
         "reused": "Confirmed values are used in every review of the case file.",
         "editable": "You can edit or retire them later."
       },
