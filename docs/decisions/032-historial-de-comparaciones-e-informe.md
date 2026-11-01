@@ -29,7 +29,7 @@ detrás, texto UTF-16) y avisos que afirmaban que todo coincidía cuando no era 
   miles; antes «USD 1,200.50» se normalizaba en silencio como 1,2.
 - **Texto:** el lector acepta UTF-16 y UTF-32 con marca de orden de bytes y rechaza como
   corrupto un archivo con caracteres nulos, en lugar de aceptar un binario como texto.
-- **Correo:** un `.eml` sin ningún encabezado de correo es `NotADraftEmailError`.
+- **Correo:** un `.eml` sin ningún encabezado de correo es `NotADraftEmailError`. Nueva verificación `IdentifierMismatchCheck`: el número de contrato citado en el asunto o el cuerpo que no está en ningún adjunto pero se parece a uno que sí (una sustitución o dos caracteres vecinos intercambiados, mínimo 4 caracteres) es un problema de riesgo alto sin corrección automática. Con números sin parecido no se avisa: no se sabe si hablan de otro contrato. `DraftPart` gana `SUBJECT` para marcarlo en el asunto.
 - **Honestidad de los avisos:** «No se encontraron inconsistencias» dice cuántos archivos no se
   leyeron; «Revisar antes de enviar» no dice «listo» si quedan problemas marcados como error sin
   corrección; el Historial y el borrado de sesión explican en 3 partes cuando fallan.
@@ -42,4 +42,5 @@ detrás, texto UTF-16) y avisos que afirmaban que todo coincidía cuando no era 
 - Un informe de comparación se guarda en `Documentos/ARGUS/<nombre de la comparación>`.
 - No se hizo (decisión de producto o riesgo): tratar un número sin moneda como monto, comparar
   contra los datos confirmados del Expediente cuando los archivos son sueltos, detectar en el
-  correo montos o fechas distintos a los del adjunto, y agregar documentos a una revisión existente.
+  correo montos o fechas distintos a los del adjunto (solo se cubre el número de contrato) y agregar
+  documentos a una revisión existente.
