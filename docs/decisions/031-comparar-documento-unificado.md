@@ -17,8 +17,12 @@
   - Sin verificar: tema claro con el rediseño y la app empaquetada.
 
 ## Enmienda · crítica de diseño (29/40)
-- El detalle del cambio muestra primero la frase resumen y las decisiones (fijas al pie del lateral); los valores A y B quedan plegados tras «Ver qué dice cada documento» y siguen mostrando archivo y página o sección al abrirlos. Los tres bloques de explicación van en una fila cada uno. Solo en Comparar: el panel de Alertas no cambia.
+- El detalle del cambio muestra primero la frase resumen y las decisiones (el bloque de decisiones se queda pegado arriba del lateral al desplazarlo); los valores A y B quedan plegados tras «Ver qué dice cada documento» y siguen mostrando archivo y página o sección al abrirlos. Los tres bloques de explicación van en una fila cada uno. Solo en Comparar: el panel de Alertas no cambia.
 - En riesgo alto «Es un error» va primero e «Ignorar» es un botón terciario; decidir lleva al siguiente cambio.
 - «Opciones» nombra lo activo («Ignorando: formato · Mostrando: Faltan»); el minimapa no cuenta como filtro; la matriz solo se abre con su pestaña. La lista lleva una leyenda de «Riesgo alto».
 - Montos, fechas e identificadores sueltos van en monoespaciada y, dentro de un par, solo los caracteres que difieren van en negrita (se calculan con los dos valores que da el motor).
 - Presupuesto de 12 elementos: se cuentan aparte los 3 modos y las 3 decisiones; con el detalle abierto quedan 9.
+
+### Enmienda · segunda crítica (27/40)
+
+Decidir avanza al siguiente cambio sin decidir y la lista avisa cuando la revisión está completa. Opciones es un panel flotante, la matriz una cuadrícula con roles y las filas de una palabra muestran «+»/«−». Detalle en `docs/autonomo/registro.md`.

@@ -149,6 +149,9 @@
 }
 
 .valuesToggle {
+  display: flex;
+  align-items: center;
+  min-height: var(--size-control-sm);
   color: var(--color-action-text);
   font-size: var(--font-size-caption);
   cursor: pointer;
