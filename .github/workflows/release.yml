@@ -29,12 +29,10 @@ jobs:
           - os: ubuntu-22.04-arm
             artifact: Linux-arm64
             bundles: deb,rpm,appimage
-          # Apple silicon (M1 y posteriores) e Intel. Sin firma ni notarización (ADR 029).
+          # Solo Apple silicon: onnxruntime 1.31 ya no publica ruedas para macOS Intel (ADR 029).
+          # Sin firma ni notarización.
           - os: macos-latest
             artifact: macOS-arm64
-            bundles: dmg
-          - os: macos-15-intel
-            artifact: macOS-x64
             bundles: dmg
     steps:
       - uses: actions/checkout@v4
