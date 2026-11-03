@@ -19,11 +19,23 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            bundles: msi
+            artifact: Windows-x64
+            bundles: msi,nsis
           # La versión más antigua de Ubuntu disponible: el AppImage y el motor empaquetado
           # funcionan en distribuciones con una glibc igual o más nueva.
           - os: ubuntu-22.04
-            bundles: deb,appimage
+            artifact: Linux-x64
+            bundles: deb,rpm,appimage
+          - os: ubuntu-22.04-arm
+            artifact: Linux-arm64
+            bundles: deb,rpm,appimage
+          # Apple silicon (M1 y posteriores) e Intel. Sin firma ni notarización (ADR 029).
+          - os: macos-latest
+            artifact: macOS-arm64
+            bundles: dmg
+          - os: macos-15-intel
+            artifact: macOS-x64
+            bundles: dmg
     steps:
       - uses: actions/checkout@v4
 
@@ -59,6 +71,10 @@ jobs:
       - name: Instalar Tesseract (Linux)
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+
+      - name: Instalar Tesseract (macOS)
+        if: runner.os == 'macOS'
+        run: brew install tesseract
 
       - name: Incluir Tesseract
         working-directory: engine
@@ -97,14 +113,36 @@ jobs:
         working-directory: app
         run: npm run tauri -- build --config src-tauri/tauri.bundle.conf.json --bundles ${{ matrix.bundles }}
 
+      # Windows también sale como zip portable: el ejecutable con el motor, los modelos y Tesseract
+      # al lado (en Windows los recursos se buscan junto al .exe).
+      - name: Zip portable (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          version=$(node -p "require('./app/src-tauri/tauri.conf.json').version")
+          stage="portable/ARGUS"
+          mkdir -p "$stage"
+          cp app/src-tauri/target/release/argus.exe "$stage/"
+          cp -r engine/dist/argus-engine "$stage/engine"
+          cp -r engine/models "$stage/models"
+          cp -r engine/dist/tesseract "$stage/tesseract"
+          mkdir -p out
+          powershell -NoProfile -Command "Compress-Archive -Path portable/ARGUS -DestinationPath out/ARGUS_${version}_x64_portable.zip"
+
+      - name: Reunir instaladores
+        shell: bash
+        run: |
+          mkdir -p out
+          find app/src-tauri/target/release/bundle -type f \
+            \( -name '*.msi' -o -name '*-setup.exe' -o -name '*.deb' -o -name '*.rpm' \
+               -o -name '*.AppImage' -o -name '*.dmg' \) -exec cp {} out/ \;
+          ls -lh out
+
       - uses: actions/upload-artifact@v4
         with:
-          name: argus-${{ runner.os }}
+          name: argus-${{ matrix.artifact }}
           if-no-files-found: error
-          path: |
-            app/src-tauri/target/release/bundle/msi/*.msi
-            app/src-tauri/target/release/bundle/deb/*.deb
-            app/src-tauri/target/release/bundle/appimage/*.AppImage
+          path: out/*
 
   release:
     name: Publicar versión
@@ -119,8 +157,13 @@ jobs:
           path: installers
           merge-multiple: true
 
-      # Instaladores sin firma de código por ahora (ADR 017): Windows mostrará SmartScreen.
+      - name: Sumas SHA-256
+        working-directory: installers
+        run: sha256sum * | tee SHA256SUMS.txt
+
+      # Instaladores sin firma de código por ahora (ADR 017 y 029): Windows mostrará SmartScreen
+      # y macOS pedirá abrir la app desde Ajustes › Privacidad y seguridad.
       - uses: softprops/action-gh-release@v2
         with:
-          files: installers/**/*
+          files: installers/*
           generate_release_notes: true

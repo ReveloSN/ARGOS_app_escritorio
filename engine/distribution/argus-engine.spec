@@ -30,10 +30,15 @@ hiddenimports += (
     + collect_submodules("anthropic")
 )
 # keyring elige el llavero del sistema por entry points: sus metadatos y sus backends deben
-# viajar con el motor (Administrador de credenciales en Windows, Secret Service en Linux).
+# viajar con el motor (Administrador de credenciales en Windows, Keychain en macOS, Secret Service en Linux).
 datas += copy_metadata("keyring")
 hiddenimports += collect_submodules("keyring.backends")
-hiddenimports += ["win32ctypes.core"] if sys.platform == "win32" else ["secretstorage", "jeepney"]
+# macOS usa el llavero del sistema (Keychain) con un backend que ya está en keyring.backends.
+KEYRING_EXTRA_IMPORTS = {
+    "win32": ["win32ctypes.core"],
+    "darwin": [],
+}
+hiddenimports += KEYRING_EXTRA_IMPORTS.get(sys.platform, ["secretstorage", "jeepney"])
 # La versión que informa /health sale de los metadatos del paquete instalado.
 datas += copy_metadata("argus-engine")
 # uvicorn elige su bucle y protocolos en tiempo de ejecución.
