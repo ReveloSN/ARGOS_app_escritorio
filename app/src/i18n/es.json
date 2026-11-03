@@ -330,6 +330,7 @@
     "reviewedAt": "revisado el {date}",
     "closedAt": "cerrada el {date}",
     "closeReview": "Cerrar revisión",
+    "compare": "Comparar",
     "decidedLabel": "Decididas",
     "decidedProgress": "{decided} de {total}",
     "searchAlerts": "Buscar en alertas",

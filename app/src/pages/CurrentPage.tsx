@@ -117,6 +117,7 @@ function ReviewPage({ route, navigation, onSearchDocuments }: ReviewPageProps) {
       review={review}
       closer={navigation.closer}
       onReport={navigation.openReport}
+      onCompare={navigation.openCompare}
       onOpenAlert={navigation.openAlert}
       onSearchDocuments={onSearchDocuments}
     />
