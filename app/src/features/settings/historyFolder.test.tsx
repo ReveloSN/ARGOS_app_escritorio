@@ -81,7 +81,7 @@ describe("Carpeta del historial", () => {
     await userEvent.click(await openPrivacy());
 
     expect(moveHistoryFolder).not.toHaveBeenCalled();
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.queryByText("No movimos el historial.")).not.toBeInTheDocument();
   });
 
   it("explica por qué no movió el historial y deja elegir otra carpeta", async () => {

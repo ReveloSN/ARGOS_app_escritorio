@@ -675,6 +675,12 @@
       "moving": "Copiando el historial a la nueva carpeta. El motor de análisis se reiniciará al terminar.",
       "moved": "El historial ya está en la nueva carpeta. La carpeta anterior se conservó; puede borrarla cuando quiera."
     },
+    "loadFailed": {
+      "what": "No pudimos cargar los ajustes de {section}.",
+      "why": "El motor de análisis no respondió: todavía está arrancando o no está en marcha.",
+      "todo": "Reintente en unos segundos. Si sigue igual, cierre ARGUS y ábralo de nuevo.",
+      "retry": "Reintentar"
+    },
     "shortcuts": {
       "newReview": "Nueva revisión",
       "search": "Buscar en la pantalla actual",
@@ -741,6 +747,7 @@
       "removeKey": "Quitar clave",
       "keyStored": "Clave guardada en el llavero del sistema.",
       "keyMissing": "Sin clave, «Ver detalle» usa la explicación local.",
+      "section": "IA",
       "loading": "Cargando los ajustes de IA…",
       "failed": "No se pudieron cargar los ajustes de IA: el motor de análisis no respondió.",
       "keychain": {
@@ -767,6 +774,7 @@
       "onboarding": "Ver primeros pasos"
     },
     "ocr": {
+      "section": "OCR",
       "loading": "Cargando los ajustes de OCR…",
       "failed": "No se pudieron cargar los ajustes de OCR: el motor de análisis no respondió.",
       "localAvailable": "El OCR local (Tesseract) está listo en este equipo. «Activar OCR» lo usa por defecto.",

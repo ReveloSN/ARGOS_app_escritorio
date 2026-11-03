@@ -675,6 +675,12 @@
       "moving": "Copying the history to the new folder. The analysis engine will restart when it finishes.",
       "moved": "The history is now in the new folder. The previous folder was kept; you can delete it whenever you want."
     },
+    "loadFailed": {
+      "what": "We could not load the {section} settings.",
+      "why": "The analysis engine did not respond: it is still starting or it is not running.",
+      "todo": "Try again in a few seconds. If it stays the same, close ARGUS and open it again.",
+      "retry": "Try again"
+    },
     "shortcuts": {
       "newReview": "New review",
       "search": "Search the current screen",
@@ -741,6 +747,7 @@
       "removeKey": "Remove key",
       "keyStored": "Key saved in the system keychain.",
       "keyMissing": "Without a key, “See details” uses the local explanation.",
+      "section": "AI",
       "loading": "Loading AI settings…",
       "failed": "AI settings could not be loaded: the analysis engine did not respond.",
       "keychain": {
@@ -767,6 +774,7 @@
       "onboarding": "View getting started"
     },
     "ocr": {
+      "section": "OCR",
       "loading": "Loading OCR settings…",
       "failed": "OCR settings could not be loaded: the analysis engine did not respond.",
       "localAvailable": "Local OCR (Tesseract) is ready on this computer. “Enable OCR” uses it by default.",
