@@ -1,6 +1,6 @@
 # ARGUS
 
-Aplicación de escritorio para Windows y Linux que compara documentos, correos y archivos relacionados, y detecta inconsistencias antes de que usted firme o envíe. Por ejemplo, «Contrato No. 4857» en un archivo y «4587» en su anexo, o un correo que habla del «informe de junio» con un adjunto de mayo.
+Aplicación de escritorio para Windows, Linux y macOS que compara documentos, correos y archivos relacionados, y detecta inconsistencias antes de que usted firme o envíe. Por ejemplo, «Contrato No. 4857» en un archivo y «4587» en su anexo, o un correo que habla del «informe de junio» con un adjunto de mayo.
 
 Cada alerta muestra los dos valores con el archivo, la página y el fragmento de donde salen. La decisión siempre es suya: «Es correcto», «Es un error» o «Ignorar», con opción de deshacer.
 
@@ -23,16 +23,21 @@ Los instaladores se generan en GitHub Actions, en el workflow «Instaladores»:
 
 | Sistema | Archivo |
 |---|---|
-| Windows 10 u 11 | `.msi` |
-| Debian, Ubuntu y derivadas | `.deb` |
-| Otras distribuciones Linux | `.AppImage` |
+| Windows 10 u 11 (x64) | `.msi`, instalador `-setup.exe` o zip portable |
+| Debian, Ubuntu y derivadas (x64 y ARM64) | `.deb` |
+| Fedora, openSUSE y derivadas (x64 y ARM64) | `.rpm` |
+| Otras distribuciones Linux (x64 y ARM64) | `.AppImage` |
+| macOS, Apple silicon (M1 o posterior) | `.dmg` (`aarch64`) |
+| macOS, Intel | `.dmg` (`x64`) |
 
-Los instaladores llevan el motor, los modelos de lenguaje y Tesseract con español e inglés, así que **funcionan sin internet desde la primera vez**. No tienen firma de código: Windows muestra SmartScreen al instalar («Más información › Ejecutar de todas formas»).
+Cada versión trae también `SHA256SUMS.txt` para verificar las descargas. No hay versión de 32 bits, Android ni iOS (ver ADR 029).
+
+Los instaladores llevan el motor, los modelos de lenguaje y Tesseract con español e inglés, así que **funcionan sin internet desde la primera vez**. No tienen firma de código: Windows muestra SmartScreen al instalar («Más información › Ejecutar de todas formas») y macOS pide abrir la app desde Ajustes › Privacidad y seguridad («Abrir de todos modos»).
 
 ## Privacidad
 
 - Los archivos se leen y comparan en su equipo. Ningún contenido sale de él sin que usted lo active en Ajustes y confirme cada envío.
-- Las claves de Anthropic, DeepSeek y Google Cloud se guardan en el llavero del sistema operativo: el Administrador de credenciales en Windows y Secret Service en Linux. Nunca van a archivos ni al historial.
+- Las claves de Anthropic, DeepSeek y Google Cloud se guardan en el llavero del sistema operativo: el Administrador de credenciales en Windows, Keychain en macOS y Secret Service en Linux. Nunca van a archivos ni al historial.
 - El historial se guarda en su carpeta de datos, o en la que usted elija en Ajustes. Opcionalmente se borra a los 90 días.
 
 ## Desarrollo
