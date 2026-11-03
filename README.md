@@ -1,6 +1,6 @@
 # ARGUS
 
-Aplicación de escritorio para Windows, Linux y macOS que compara documentos, correos y archivos relacionados, y detecta inconsistencias antes de que usted firme o envíe. Por ejemplo, «Contrato No. 4857» en un archivo y «4587» en su anexo, o un correo que habla del «informe de junio» con un adjunto de mayo.
+Aplicación de escritorio para Windows, Linux y macOS (Apple silicon) que compara documentos, correos y archivos relacionados, y detecta inconsistencias antes de que usted firme o envíe. Por ejemplo, «Contrato No. 4857» en un archivo y «4587» en su anexo, o un correo que habla del «informe de junio» con un adjunto de mayo.
 
 Cada alerta muestra los dos valores con el archivo, la página y el fragmento de donde salen. La decisión siempre es suya: «Es correcto», «Es un error» o «Ignorar», con opción de deshacer.
 
@@ -27,10 +27,9 @@ Los instaladores se generan en GitHub Actions, en el workflow «Instaladores»:
 | Debian, Ubuntu y derivadas (x64 y ARM64) | `.deb` |
 | Fedora, openSUSE y derivadas (x64 y ARM64) | `.rpm` |
 | Otras distribuciones Linux (x64 y ARM64) | `.AppImage` |
-| macOS, Apple silicon (M1 o posterior) | `.dmg` (`aarch64`) |
-| macOS, Intel | `.dmg` (`x64`) |
+| macOS, Apple silicon (M1 o posterior) | `.dmg` |
 
-Cada versión trae también `SHA256SUMS.txt` para verificar las descargas. No hay versión de 32 bits, Android ni iOS (ver ADR 029).
+Cada versión trae también `SHA256SUMS.txt` para verificar las descargas. No hay versión de 32 bits, macOS Intel, Android ni iOS (ver ADR 029).
 
 Los instaladores llevan el motor, los modelos de lenguaje y Tesseract con español e inglés, así que **funcionan sin internet desde la primera vez**. No tienen firma de código: Windows muestra SmartScreen al instalar («Más información › Ejecutar de todas formas») y macOS pide abrir la app desde Ajustes › Privacidad y seguridad («Abrir de todos modos»).
 
