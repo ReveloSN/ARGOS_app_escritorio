@@ -15,6 +15,10 @@ export interface MenuAction {
   readonly startsGroup?: boolean;
   readonly isEmphasized?: boolean;
   readonly isMuted?: boolean;
+  /** Segunda línea bajo la etiqueta (por ejemplo, los datos de una sesión). */
+  readonly detail?: string;
+  /** Presente: es una opción de una lista donde una sola está activa (menuitemradio). */
+  readonly isChecked?: boolean;
   readonly onSelect: () => void;
 }
 
@@ -22,12 +26,14 @@ interface ActionMenuProps {
   readonly label: string;
   readonly actions: readonly MenuAction[];
   readonly onClose: () => void;
+  /** Desde qué borde del contenedor se abre; «end» es el predeterminado. */
+  readonly align?: "start" | "end";
 }
 
 const MOVES: Readonly<Record<string, number>> = { ArrowDown: 1, ArrowUp: -1 };
 
 /** Menú inline «⋯» de los mockups: decide sin abrir el detalle, todo operable con teclado. */
-export function ActionMenu({ label, actions, onClose }: ActionMenuProps) {
+export function ActionMenu({ label, actions, onClose, align = "end" }: ActionMenuProps) {
   const menu = useRef<HTMLDivElement>(null);
   useDismiss(menu, onClose);
   useEffect(() => {
@@ -43,12 +49,19 @@ export function ActionMenu({ label, actions, onClose }: ActionMenuProps) {
     items[(current + step + items.length) % items.length]?.focus();
   };
   return (
-    <div ref={menu} role="menu" aria-label={label} className={styles.menu} onKeyDown={moveFocus}>
+    <div
+      ref={menu}
+      role="menu"
+      aria-label={label}
+      className={joinClassNames(styles.menu, align === "start" && styles.alignStart)}
+      onKeyDown={moveFocus}
+    >
       {actions.map((action) => (
         <button
           key={action.id}
           type="button"
-          role="menuitem"
+          role={action.isChecked === undefined ? "menuitem" : "menuitemradio"}
+          aria-checked={action.isChecked}
           className={joinClassNames(
             styles.item,
             action.startsGroup && styles.groupStart,
@@ -61,7 +74,10 @@ export function ActionMenu({ label, actions, onClose }: ActionMenuProps) {
           }}
         >
           <Icon name={action.icon} size="sm" />
-          <span className={styles.label}>{action.label}</span>
+          <span className={styles.label}>
+            {action.label}
+            {action.detail && <span className={styles.detail}>{action.detail}</span>}
+          </span>
           {action.shortcut && <span className={styles.shortcut}>{action.shortcut}</span>}
         </button>
       ))}

@@ -18,7 +18,7 @@ const ENTITY_TYPES: readonly EntityTypeValue[] = [
 ];
 
 interface NewFactRowProps {
-  readonly onAdd: (input: FactInput) => void;
+  readonly onAdd: (input: FactInput, onSaved: () => void) => void;
   readonly onDone: () => void;
 }
 
@@ -30,13 +30,21 @@ export function NewFactRow({ onAdd, onDone }: NewFactRowProps) {
   const [value, setValue] = useState("");
   const canSave = Boolean(label.trim() && value.trim());
   const save = () => {
-    onAdd({ label: label.trim(), entityType, value: value.trim() });
-    onDone();
+    // La fila se cierra al guardarse; si el motor lo rechaza, lo escrito se conserva para corregirlo.
+    onAdd({ label: label.trim(), entityType, value: value.trim() }, onDone);
   };
   return (
-    <div role="row" className={joinClassNames(styles.row, styles.bodyRow, styles.newRow)}>
+    <div
+      role="row"
+      className={joinClassNames(styles.row, styles.bodyRow, styles.newRow)}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") onDone();
+      }}
+    >
       <span role="cell" className={styles.dataCell}>
         <input
+          // El nombre es lo primero que se escribe: la fila nueva abre con el foco ahí.
+          autoFocus
           aria-label={t("facts.form.label")}
           placeholder={t("facts.form.labelPlaceholder")}
           className={styles.textInput}
@@ -71,7 +79,6 @@ export function NewFactRow({ onAdd, onDone }: NewFactRowProps) {
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter" && canSave) save();
-            if (event.key === "Escape") onDone();
           }}
         />
       </span>

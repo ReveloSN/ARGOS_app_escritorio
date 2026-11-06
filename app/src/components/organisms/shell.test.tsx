@@ -108,7 +108,7 @@ describe("Topbar", () => {
     const onOpenSearch = vi.fn();
     renderWithProviders(
       <Topbar
-        sessionName={SESSION.name}
+        session={<span>{SESSION.name}</span>}
         assistantStatus={{
           text: "Leyendo 3 de 5 archivos",
           isHighRisk: false,

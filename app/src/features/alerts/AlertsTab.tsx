@@ -7,11 +7,12 @@ import { useI18n } from "../../i18n/i18nContext";
 import type { ReviewResult } from "../../services/engine/reviewTypes";
 import { AlertFiltersBar } from "./AlertFiltersBar";
 import styles from "./AlertsTab.module.css";
+import { shortcutHints } from "./alertShortcutHints";
 import { AlertsToolbar, SEARCH_KEY } from "./AlertsToolbar";
 import { NoMatchingAlerts } from "./NoMatchingAlerts";
 import { useResultsView } from "./resultsViewContext";
 import type { AlertDecisions } from "./useAlertDecisions";
-import { UNDO_KEYS, useDecisionShortcuts } from "./useDecisionShortcuts";
+import { useDecisionShortcuts } from "./useDecisionShortcuts";
 import { useRowActions } from "./useRowActions";
 import { useVisibleAlerts } from "./useVisibleAlerts";
 
@@ -92,15 +93,7 @@ export function AlertsTab({ review, decisions, onOpenAlert, onSearchDocuments }:
           </p>
         )}
       </div>
-      <ShortcutBar
-        hints={[
-          { keys: ["J", "K"], label: t("shortcuts.move") },
-          { keys: ["↵"], label: t("shortcuts.open") },
-          { keys: ["C", "E", "I"], label: t("shortcuts.decide") },
-          { keys: [SEARCH_KEY], label: t("shortcuts.search") },
-          { keys: UNDO_KEYS, label: t("shortcuts.undo") },
-        ]}
-      />
+      <ShortcutBar hints={shortcutHints(review, t)} />
     </>
   );
 }

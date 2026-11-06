@@ -4,6 +4,7 @@ import { useI18n } from "../../i18n/i18nContext";
 import { Icon } from "../atoms/Icon";
 import { joinClassNames } from "../joinClassNames";
 import { useDismiss } from "../useDismiss";
+import { useModalFocus } from "../useModalFocus";
 import styles from "./SearchDialog.module.css";
 
 export interface SearchExcerpt {
@@ -45,6 +46,7 @@ export function SearchDialog(props: SearchDialogProps) {
   const [active, setActive] = useState(0);
   const items = props.groups.flatMap((group) => group.items);
   useDismiss(dialog, props.onClose);
+  const trapTab = useModalFocus(dialog);
   useEffect(() => {
     setActive(0);
   }, [props.groups]);
@@ -67,6 +69,7 @@ export function SearchDialog(props: SearchDialogProps) {
         aria-modal="true"
         aria-label={props.placeholder}
         className={styles.dialog}
+        onKeyDown={trapTab}
       >
         <label className={styles.field}>
           <Icon name="search" size="md" />

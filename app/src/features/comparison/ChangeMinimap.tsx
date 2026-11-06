@@ -5,7 +5,7 @@ import { useI18n } from "../../i18n/i18nContext";
 import type { ChangeResult, PairComparisonResult } from "../../services/engine/comparisonTypes";
 import { CHANGE_KIND_APPEARANCE, changeSegment } from "./changePresentation";
 import styles from "./Compare.module.css";
-import type { Viewport } from "./useSyncedScroll";
+import type { Viewport } from "./useDocumentViewport";
 
 const PERCENT = 100;
 

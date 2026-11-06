@@ -19,6 +19,8 @@ interface ButtonProps {
   /** Para la acción principal de un diálogo: Enter la activa al abrirlo. */
   readonly autoFocus?: boolean;
   readonly onClick?: () => void;
+  /** Cuando varios botones dicen lo mismo («Abrir») y el nombre debe aclarar sobre qué actúan. */
+  readonly ariaLabel?: string;
 }
 
 // Ancho mínimo y padding flexible: el texto traducido puede crecer sin cortarse.
@@ -31,12 +33,14 @@ export function Button({
   disabled = false,
   autoFocus = false,
   onClick,
+  ariaLabel,
 }: ButtonProps) {
   return (
     <button
       type="button"
       className={joinClassNames(styles.button, styles[variant], styles[size])}
       disabled={disabled}
+      aria-label={ariaLabel}
       autoFocus={autoFocus}
       onClick={onClick}
     >

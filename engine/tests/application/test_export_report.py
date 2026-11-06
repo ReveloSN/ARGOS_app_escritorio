@@ -8,6 +8,7 @@ from argus.application.export_report import (
     OpenReport,
     ReportTools,
     SavedReport,
+    SessionCaseFileNames,
     safe_name,
 )
 from argus.application.review_session_use_cases import StartReviewSession
@@ -57,7 +58,8 @@ def case_file() -> tuple[InMemorySessionRepository, ReviewSession]:
 def exporter(folder: InMemoryReportFolder) -> tuple[ExportReport, ReviewSession]:
     sessions, session = case_file()
     renderers = {ReportFormat.PDF: TitleRenderer("pdf"), ReportFormat.DOCX: TitleRenderer("docx")}
-    return ExportReport(sessions, ReportTools(renderers, folder, SteppingClock())), session
+    names = SessionCaseFileNames(sessions)
+    return ExportReport(names, ReportTools(renderers, folder, SteppingClock())), session
 
 
 def test_names_the_report_after_the_case_file_and_the_date() -> None:
@@ -93,7 +95,7 @@ def test_opens_only_a_report_that_is_still_there() -> None:
     saved = export.execute(ExportRequest(session.id, ReportFormat.PDF, report_document()))
     sessions, _ = case_file()
     sessions.save(session)
-    report = OpenReport(sessions, folder, opener)
+    report = OpenReport(SessionCaseFileNames(sessions), folder, opener)
 
     report.execute(session.id, saved.file_name)
 

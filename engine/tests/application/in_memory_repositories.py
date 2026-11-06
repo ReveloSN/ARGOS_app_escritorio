@@ -198,6 +198,16 @@ class InMemoryComparisonRepository:
         except KeyError:
             raise ComparisonNotFoundError(comparison_id) from None
 
+    def list_created_since(self, since: datetime) -> tuple[ComparisonReport, ...]:
+        recent = (report for report in self._reports.values() if report.created_at >= since)
+        return tuple(sorted(recent, key=lambda report: report.created_at, reverse=True))
+
+    def delete_created_before(self, moment: datetime) -> int:
+        expired = [key for key, report in self._reports.items() if report.created_at < moment]
+        for key in expired:
+            del self._reports[key]
+        return len(expired)
+
 
 class InMemoryConfirmedFactRepository:
     def __init__(self) -> None:

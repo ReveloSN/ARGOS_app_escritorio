@@ -16,6 +16,43 @@
     "compare": "Compare",
     "send": "Check before sending"
   },
+  "sessionMenu": {
+    "trigger": "Switch session. Active session: {name}",
+    "menuLabel": "Sessions",
+    "documents": {
+      "one": "{count} document",
+      "other": "{count} documents"
+    },
+    "pending": {
+      "one": "{count} pending alert",
+      "other": "{count} pending alerts"
+    },
+    "closed": "closed",
+    "new": "New session",
+    "rename": "Rename",
+    "delete": "Delete",
+    "renameTitle": "Rename the session",
+    "renameField": "Session name",
+    "renameSave": "Save name",
+    "cancel": "Cancel",
+    "deleteTitle": "Delete the session “{name}”?",
+    "deleteBody": "Its alerts, its decisions and the copy of its files are deleted.",
+    "deleteHint": "You will have a few seconds to undo it.",
+    "deleteFailed": {
+      "what": "We could not delete the session “{name}”.",
+      "why": "The analysis engine did not respond, so the session is still saved.",
+      "todo": "Open it from History and delete it again."
+    },
+    "deleteConfirm": "Delete session",
+    "deleted": "Session “{name}” deleted",
+    "failed": {
+      "what": "We could not complete the change to the session.",
+      "why": "The analysis engine did not respond.",
+      "todo": "Try again in a few seconds.",
+      "retry": "Try again",
+      "dismiss": "Dismiss notice"
+    }
+  },
   "topbar": {
     "session": "Session",
     "searchPlaceholder": "Search alerts and documents",
@@ -72,13 +109,15 @@
     "paragraph": "Paragraph {paragraph}",
     "tableCell": "Table {table} · row {row}, column {column}",
     "sheetCell": "Sheet {sheet} · {cell}",
+    "tableRow": "Table {table} · row {row}",
+    "sheetRow": "Sheet {sheet} · row {row}",
     "subject": "Email subject",
     "body": "Email body",
     "line": "Line {line}"
   },
   "upload": {
-    "prompt": "Drag more files here or choose them from your computer",
-    "formats": "PDF, DOCX, XLSX, EML or pasted text · up to 10 MB per file",
+    "prompt": "Drag the files here or choose them from your computer",
+    "formats": "PDF, DOCX, XLSX, EML or TXT · up to 10 MB per file",
     "choose": "Choose files",
     "paste": "Paste text",
     "dropping": {
@@ -113,7 +152,32 @@
     "title": "No reviews yet",
     "description": "Load the documents you are about to send or sign. ARGUS compares them with each other and shows you the differences before you finish.",
     "note": "Files are analyzed on this computer.",
-    "compareVersions": "Compare two versions"
+    "compareVersions": "Compare two versions",
+    "saved": {
+      "title": "No review is open",
+      "description": {
+        "one": "You have {count} saved review. Open it from the history or start a new one.",
+        "other": "You have {count} saved reviews. Open them from the history or start a new one."
+      },
+      "openHistory": "View history"
+    },
+    "overview": {
+      "label": "Active session status",
+      "closed": "Closed · read only",
+      "documents": {
+        "one": "{count} document loaded",
+        "other": "{count} documents loaded"
+      },
+      "riskList": "Pending alerts by risk",
+      "continue": "Continue the review",
+      "viewResults": "View the closed review",
+      "comparisonsTitle": "Latest comparisons",
+      "comparison": {
+        "one": "{documents} documents · {count} change",
+        "other": "{documents} documents · {count} changes"
+      },
+      "openComparison": "Open comparison “{name}”"
+    }
   },
   "engineUnavailable": {
     "what": "The analysis engine is not responding.",
@@ -186,7 +250,9 @@
       "what": "We couldn't read «{name}».",
       "why": "It's a scanned image with no text.",
       "todo": "Upload it again with selectable text.",
-      "todoOcr": "Upload it again with selectable text or enable OCR to read it."
+      "todoOcr": "Upload it again with selectable text or enable OCR to read it.",
+      "whyEmpty": "The file has no text.",
+      "todoEmpty": "Check that it is the right file and upload it again."
     },
     "encrypted": {
       "what": "«{name}» is password protected.",
@@ -235,6 +301,13 @@
       "other": "{count} alerts · sorted by risk"
     },
     "noInconsistencies": "No inconsistencies found",
+    "nothingToCompare": "Nothing to compare",
+    "nothingToCompareDescription": "Only one file could be read, and with a single file there are no differences to look for. Start a new review with at least two files.",
+    "noInconsistenciesInRead": "No inconsistencies found in the files that were read",
+    "unreadFiles": {
+      "one": "{count} file could not be read and was not checked.",
+      "other": "{count} files could not be read and were not checked."
+    },
     "comparedFiles": {
       "one": "{count} file was compared and its values match.",
       "other": "{count} files were compared and their values match."
@@ -257,6 +330,7 @@
     "reviewedAt": "reviewed on {date}",
     "closedAt": "closed on {date}",
     "closeReview": "Close review",
+    "compare": "Compare",
     "decidedLabel": "Decided",
     "decidedProgress": "{decided} of {total}",
     "searchAlerts": "Search alerts",
@@ -395,8 +469,27 @@
     "periodLabel": "Period",
     "period": "Period: last {days} days",
     "export": "Export log (CSV)",
+    "exported": "“{name}” was exported to the downloads folder.",
     "exportFileName": "argus-log-{date}.csv",
     "tableLabel": "History sessions",
+    "loading": "Loading the history…",
+    "loadingSession": "Loading the session…",
+    "comparisons": {
+      "title": "Comparisons",
+      "listLabel": "History comparisons",
+      "open": "Open comparison",
+      "openLabel": "Open comparison “{name}”",
+      "summary": "{documents} · {decided} of {total} changes and inconsistencies decided",
+      "documents": {
+        "one": "{count} document",
+        "other": "{count} documents"
+      },
+      "failed": {
+        "what": "We could not open this comparison.",
+        "why": "The analysis engine did not respond or the comparison is no longer saved.",
+        "todo": "Try again. If it keeps failing, run the comparison again."
+      }
+    },
     "columns": {
       "session": "Session",
       "date": "Date",
@@ -418,6 +511,10 @@
       "inSessions": {
         "one": "in {count} session",
         "other": "in {count} sessions"
+      },
+      "andComparisons": {
+        "one": "and {count} comparison",
+        "other": "and {count} comparisons"
       },
       "duration": "Average review time",
       "durationDetail": "from upload to close",
@@ -510,7 +607,7 @@
     "settingsPlaceholder": "Search settings",
     "typeMore": "Type at least 2 letters.",
     "searching": "Searching…",
-    "noResults": "No results for “{query}”.",
+    "noResults": "No results for “{query}”. Try another word or fewer letters.",
     "failed": "We could not search: the analysis engine did not respond. Type again to retry.",
     "openFailed": "We could not open “{name}”. Try again."
   },
@@ -572,12 +669,18 @@
       "localDescription": "Files are read and compared on this computer, including OCR. ARGUS does not send their content to the internet or to external servers; only what you confirm sending to a service you enabled in Settings leaves it.",
       "retention": "Keep the decision history for 90 days",
       "folder": "History folder",
-      "retentionOn": "Reviews older than 90 days, with the copy of their files, are deleted when ARGUS starts.",
+      "retentionOn": "Reviews and comparisons older than 90 days, with the copy of their files, are deleted when ARGUS starts and when you turn this option on.",
       "retentionOff": "The history is kept with no time limit.",
       "changeFolder": "Change folder",
       "chooseFolder": "Choose the history folder",
       "moving": "Copying the history to the new folder. The analysis engine will restart when it finishes.",
       "moved": "The history is now in the new folder. The previous folder was kept; you can delete it whenever you want."
+    },
+    "loadFailed": {
+      "what": "We could not load the {section} settings.",
+      "why": "The analysis engine did not respond: it is still starting or it is not running.",
+      "todo": "Try again in a few seconds. If it stays the same, close ARGUS and open it again.",
+      "retry": "Try again"
     },
     "shortcuts": {
       "newReview": "New review",
@@ -589,7 +692,13 @@
       "error": "It is an error",
       "ignore": "Ignore",
       "searchAlerts": "Search alerts",
-      "undo": "Undo the last decision"
+      "undo": "Undo the last decision",
+      "chooseFiles": "Choose files",
+      "continue": "Continue: read the files or open the draft in the mail app",
+      "exportReport": "Export the report",
+      "close": "Close a panel or the comparison",
+      "compareOptions": "Compare options",
+      "compareTabs": "Compare tabs"
     },
     "unavailable": {
       "what": "We could not load these settings.",
@@ -632,13 +741,14 @@
     },
     "ai": {
       "toggle": "Explain changes with AI",
-      "description": "When you ask to “Explain this change” or “Explain this alert”, ARGUS sends {provider} only the origin fragments. Detection and analysis stay local.",
+      "description": "When you open “See details” on a change or an alert, ARGUS sends {provider} only the origin fragments. Detection and analysis stay local.",
       "model": "Provider: {provider} · model {model}",
       "keyLabel": "{provider} API key",
       "saveKey": "Save key",
       "removeKey": "Remove key",
       "keyStored": "Key saved in the system keychain.",
-      "keyMissing": "Without a key, “Explain this change” and “Explain this alert” use the local explanation.",
+      "keyMissing": "Without a key, “See details” uses the local explanation.",
+      "section": "AI",
       "loading": "Loading AI settings…",
       "failed": "AI settings could not be loaded: the analysis engine did not respond.",
       "keychain": {
@@ -665,6 +775,7 @@
       "onboarding": "View getting started"
     },
     "ocr": {
+      "section": "OCR",
       "loading": "Loading OCR settings…",
       "failed": "OCR settings could not be loaded: the analysis engine did not respond.",
       "localAvailable": "Local OCR (Tesseract) is ready on this computer. “Enable OCR” uses it by default.",
@@ -741,6 +852,80 @@
   },
   "comparison": {
     "title": "Compare documents",
+    "fromSession": {
+      "title": "Case file documents",
+      "description": "They are already loaded: choose which ones to compare without uploading them again.",
+      "compare": {
+        "one": "Compare {count} selected",
+        "other": "Compare the {count} selected"
+      }
+    },
+    "scope": {
+      "label": "What to compare",
+      "base": "Base document",
+      "against": "Against",
+      "allOthers": {
+        "one": "The other document",
+        "other": "All the other documents"
+      },
+      "allHeading": "{base} against all the others",
+      "baseBadge": "Base",
+      "versus": "against {document}",
+      "filterLabel": "Filter by document",
+      "allDocuments": "All documents",
+      "breakdown": "Changes by document",
+      "noChanges": "no changes"
+    },
+    "report": {
+      "action": "Export report",
+      "formatLabel": "Report format",
+      "pdf": "PDF",
+      "docx": "Word",
+      "exporting": "Preparing the report…",
+      "title": "Comparison report",
+      "comparedOn": "Compared on {date}",
+      "heading": "{number}. {title}",
+      "parts": {
+        "summary": "Summary",
+        "changes": "Changes",
+        "inconsistencies": "Inconsistencies between documents"
+      },
+      "summary": {
+        "one": "{count} document was compared on {date}.",
+        "other": "{count} documents were compared on {date}."
+      },
+      "metrics": {
+        "changes": {
+          "one": "change",
+          "other": "changes"
+        },
+        "high": {
+          "one": "high risk",
+          "other": "high risk"
+        },
+        "inconsistencies": {
+          "one": "inconsistency",
+          "other": "inconsistencies"
+        },
+        "decided": {
+          "one": "decided",
+          "other": "decided"
+        }
+      },
+      "columns": {
+        "change": "Change",
+        "before": "Before · source",
+        "after": "After · source",
+        "decision": "Decision",
+        "data": "Data"
+      }
+    },
+    "close": {
+      "action": "Close comparison",
+      "hint": "Esc"
+    },
+    "matrixHeader": "Column: compare {document} against all the others",
+    "matrixRowHeader": "Row: compare {document} against all the others",
     "modes": {
       "label": "Comparison mode",
       "versions": "Compare versions",
@@ -772,6 +957,14 @@
         "other": "moved"
       }
     },
+    "options": {
+      "label": "Options",
+      "ignoring": "Ignoring: {names}",
+      "showing": "Showing: {type}",
+      "typeLabel": "Show",
+      "legendLabel": "How to read the marks",
+      "minimap": "Show the minimap"
+    },
     "ignore": {
       "label": "Ignore",
       "case": "case",
@@ -799,20 +992,39 @@
     },
     "list": {
       "title": "Changes",
-      "count": "{visible} of {total}",
       "navigate": "J K to navigate",
-      "importantOnly": "Important changes only: numbers, dates, names and negations",
-      "empty": "No changes match these filters."
+      "decided": "{done} of {total} decided",
+      "completeNote": "Review complete. {summary}. You can now export the report.",
+      "totals": {
+        "error": {
+          "one": "{count} error",
+          "other": "{count} errors"
+        },
+        "correct": {
+          "one": "{count} correct",
+          "other": "{count} correct"
+        },
+        "ignored": {
+          "one": "{count} ignored",
+          "other": "{count} ignored"
+        }
+      },
+      "empty": "No changes match these filters.",
+      "emptyHint": "Change them in “Options”.",
+      "noDifferences": "There are no differences between these documents.",
+      "all": "All",
+      "important": "Important only",
+      "filterLabel": "Which changes to see"
     },
     "detail": {
       "empty": "—",
+      "aboutChange": "About this change",
+      "aboutData": "About this data point",
       "saved": "Saved: {decision}",
       "removedTitle": "This text is missing in B",
       "addedTitle": "This text was added in B",
       "modifiedTitle": "The text changed between A and B",
-      "movedTitle": "This text moved",
-      "inA": "In A",
-      "inB": "In B"
+      "movedTitle": "This text moved"
     },
     "decided": "Change {number} marked as “{decision}”.",
     "unrelated": {
@@ -822,28 +1034,57 @@
       "action": "Change mode"
     },
     "inconsistencies": {
-      "intro": "{data} data points that do not match, searched in {documents} documents. There is no confirmed case data yet.",
+      "intro": "{found} in {documents}.",
+      "noFacts": "There is no confirmed case data yet.",
+      "confirmed": "Confirmed: {value}",
+      "found": {
+        "one": "{count} data point does not match",
+        "other": "{count} data points do not match"
+      },
+      "documents": {
+        "one": "{count} document",
+        "other": "{count} documents"
+      },
       "data": "Data",
       "noConfirmed": "No confirmed value",
       "notFound": "Not present",
       "odd": "Does not match",
       "legend": "≠ marks the value that does not match most documents.",
+      "legendConfirmed": "≠ marks the value that does not match the confirmed case data.",
       "emptyTitle": "No inconsistencies found",
       "emptyDescription": "The documents match in identifiers, amounts, dates, names and periods."
     },
     "matrix": {
       "label": "Difference matrix",
-      "intro": "{documents} documents · {pairs} pairs · {different} pairs with differences. Select a cell to see the pair.",
-      "axis": "Rows × columns",
-      "same": "same document",
-      "noDifferences": "no differences",
-      "changes": {
-        "one": "change",
-        "other": "changes"
+      "intro": "{documents} · {pairs} · {different}. Select a cell to see the pair.",
+      "documents": {
+        "one": "{count} document",
+        "other": "{count} documents"
       },
+      "pairs": {
+        "one": "{count} pair",
+        "other": "{count} pairs"
+      },
+      "different": {
+        "one": "{count} pair with differences",
+        "other": "{count} pairs with differences"
+      },
+      "axis": "Rows × columns",
       "selectedPair": "Selected pair",
+      "more": {
+        "one": "and {count} more difference",
+        "other": "and {count} more differences"
+      },
       "versus": "versus",
-      "open": "Open the pair"
+      "open": "Open the pair",
+      "cellChanges": {
+        "one": "{count} change",
+        "other": "{count} changes"
+      },
+      "cellHigh": {
+        "one": "High risk, {count} change",
+        "other": "High risk, {count} changes"
+      }
     },
     "start": {
       "title": "Choose two or more documents",
@@ -858,9 +1099,22 @@
       "failedTodo": "Choose the documents again to retry."
     },
     "meaning": {
-      "label": "AI: {meaning}",
-      "reworded": "Reworded",
-      "meaning_change": "Change of meaning"
+      "reworded": "Reworded, same meaning",
+      "meaning_change": "Possible change of meaning"
+    },
+    "unified": {
+      "label": "Text with the changes",
+      "movedTo": "Moved to {location}"
+    },
+    "summary": {
+      "changes": {
+        "one": "{count} change",
+        "other": "{count} changes"
+      },
+      "important": {
+        "one": "{count} important",
+        "other": "{count} important"
+      }
     }
   },
   "facts": {
@@ -990,6 +1244,7 @@
       "to": "To",
       "cc": "CC",
       "subject": "Subject",
+      "markLabel": " (issue {number})",
       "noCopy": "(no copy)",
       "attachments": "Attachments ({count})",
       "attachmentsLabel": "Attachments",
@@ -1005,6 +1260,11 @@
         "other": "{count} problems in the draft"
       },
       "review": "Check each one before sending. ARGUS does not send the email.",
+      "unfixed": {
+        "one": "{count} problem marked as an error and not fixed",
+        "other": "{count} problems marked as errors and not fixed"
+      },
+      "unfixedReview": "ARGUS does not change the text of the email: fix it yourself before sending.",
       "ready": "The draft is ready",
       "readyCaseFile": "Attachments, period and recipients match the case file.",
       "readyAlone": "The period and the attachments match what the email says."
@@ -1018,6 +1278,10 @@
         "one": "{count} problem left.",
         "other": "{count} problems left."
       },
+      "unfixed": {
+        "one": "You marked {count} problem that ARGUS cannot fix for you.",
+        "other": "You marked {count} problems that ARGUS cannot fix for you."
+      },
       "none": "No pending problems."
     },
     "issue": {
@@ -1026,6 +1290,16 @@
         "kind": "Period",
         "title": "It mentions “{mentioned}” and the attachment is from another period",
         "body": "The text says “{marked}”. The attachment {attached} is from another period."
+      },
+      "amount_mismatch": {
+        "kind": "Amount",
+        "title": "It cites {mentioned} and the attachment says {attached}",
+        "body": "The email mentions “{marked}”; in {document} the amount is {attached}. Check which one is correct: ARGUS does not change the text of the email."
+      },
+      "identifier_mismatch": {
+        "kind": "Number",
+        "title": "It cites number {mentioned} and the attachment says {attached}",
+        "body": "The email mentions “{marked}”; in {document} the number is {attached}. Check which one is correct: ARGUS does not change the text of the email."
       },
       "missing_attachment": {
         "kind": "Attachment",
@@ -1060,6 +1334,7 @@
     },
     "decided": {
       "error": "Problem {number}: it will be applied to the copy of the draft.",
+      "errorMarked": "Problem {number} marked as an error. ARGUS does not change the text of the email.",
       "correct": "Problem {number} marked as “It is correct”.",
       "ignored": "Problem {number} ignored."
     }
@@ -1206,14 +1481,14 @@
       "load": {
         "say": "I am an AI assistant. I read your documents on this computer.",
         "title": "1. Load the documents of a case file",
-        "body": "Drag in the contract, its annexes, the rate sheet or the email you are about to send. ARGUS reads PDF, DOCX, XLSX, EML and pasted text.",
+        "body": "Drag in the contract, its annexes, the rate sheet or the email you are about to send. ARGUS reads PDF, DOCX, XLSX, EML and TXT.",
         "local": "Files never leave this computer.",
         "addMore": "You can add more documents at any time."
       },
       "confirm": {
         "say": "If I am not sure about a value, I ask you.",
-        "title": "2. Confirm what was read",
-        "body": "Before comparing, check the contract number, parties, amounts and dates that were found. What you confirm stays in the case file as the source of truth.",
+        "title": "2. Check what was read",
+        "body": "Before comparing, see which files were read and which were not: files that cannot be read are left out. The values you confirm afterwards, in the Confirmed data tab, stay in the case file as the source of truth.",
         "reused": "Confirmed values are used in every review of the case file.",
         "editable": "You can edit or retire them later."
       },
@@ -1243,16 +1518,117 @@
       "cancel": "Cancel"
     }
   },
-  "explain": {
-    "toggle": {
-      "change": "Explain this change",
-      "alert": "Explain this alert"
+  "explainPanel": {
+    "label": "Explanation of the change",
+    "labelAlert": "Explanation of the alert",
+    "sideA": "Document A says",
+    "sideB": "Document B says",
+    "valuesToggle": "See what each document says",
+    "absent": "Does not appear in this document",
+    "changed": "What changed",
+    "why": "Why it matters",
+    "todo": "What you can do",
+    "detail": "See details",
+    "aiNote": "AI suggestion, you decide",
+    "summary": {
+      "removed": "Document B is missing “{text}”.",
+      "added": "Document B adds “{text}”.",
+      "modified": "In document B, “{before}” becomes “{after}”.",
+      "moved": "In document B, “{text}” is in a different place."
     },
+    "topics": {
+      "negation": {
+        "changed": "A negation (“not”, “nor”, “without”) appears or disappears.",
+        "why": "What the text allows can become forbidden, or the other way around.",
+        "todo": "Read the whole sentence in both documents and confirm the change is intended."
+      },
+      "amount": {
+        "changed": "An amount changes.",
+        "why": "A different value changes what is paid or charged.",
+        "todo": "Compare it with the agreed value and fix the document that is wrong."
+      },
+      "date": {
+        "changed": "A date changes.",
+        "why": "It can move deadlines, validity periods or due dates.",
+        "todo": "Check the right date against the agreement."
+      },
+      "number": {
+        "changed": "A number or identifier changes.",
+        "why": "It may refer to another contract, another document or another quantity.",
+        "todo": "Confirm the right number and fix the document that has it wrong."
+      },
+      "party": {
+        "changed": "The name or identification of a party changes.",
+        "why": "The document could bind or favor another person or company.",
+        "todo": "Check the name or tax ID against an official document."
+      },
+      "case": {
+        "changed": "Only the capitalization changes.",
+        "why": "The meaning is the same.",
+        "todo": "You can mark it as correct or ignore it."
+      },
+      "punctuation": {
+        "changed": "Only the punctuation changes.",
+        "why": "The meaning is almost always the same, but a comma can move a condition.",
+        "todo": "Read it once and, if it is fine, mark it as correct or ignore it."
+      },
+      "format": {
+        "changed": "Only spacing or formatting changes.",
+        "why": "The content is the same.",
+        "todo": "You can ignore it."
+      },
+      "added": {
+        "changed": "Text was added that the other document does not have.",
+        "why": "It can create an obligation or a right that did not exist before.",
+        "todo": "Read the new text and confirm it was agreed."
+      },
+      "removed": {
+        "changed": "Text that was in the other document was removed.",
+        "why": "It can remove an obligation, a right or a condition.",
+        "todo": "Ask whether the omission was intended; if not, restore the text."
+      },
+      "moved": {
+        "changed": "The text is the same, but it is in a different place.",
+        "why": "Changing the order can change which clause it applies to.",
+        "todo": "Check that it is still under the right clause."
+      },
+      "reworded": {
+        "changed": "It is written in a different way.",
+        "why": "The meaning seems to be the same.",
+        "todo": "Compare it quickly and mark it as correct if it matches."
+      },
+      "meaning_change": {
+        "changed": "The wording changes and so does what the text says.",
+        "why": "Two versions that say different things can lead to different decisions.",
+        "todo": "Read both texts and decide which one is right."
+      },
+      "wording": {
+        "changed": "The wording changes.",
+        "why": "It is not clear whether the meaning is the same.",
+        "todo": "Compare both texts to confirm."
+      }
+    },
+    "alert": {
+      "why": {
+        "contract_id": "A different contract number may refer to another agreement.",
+        "tax_id": "A different tax ID may identify another person or company.",
+        "money": "A different amount changes what is paid or charged.",
+        "date": "A different date can move deadlines and due dates.",
+        "person_name": "A different name may point to another person.",
+        "organization_name": "A different company name may point to another company.",
+        "period": "A different period can send or charge for another month."
+      },
+      "todo": {
+        "pair": "Check which of the two values is right and fix the document that is wrong.",
+        "single": "Check the data in the document and fix it if it is wrong."
+      }
+    }
+  },
+  "explain": {
     "loading": "Preparing the explanation…",
     "failed": "The explanation could not be obtained: the analysis engine did not respond. Close it and open it again.",
     "aiLabel": "AI suggestion",
     "templateLabel": "ARGUS explanation",
-    "aiNote": "This is a suggestion: the decision is still yours.",
     "retry": "Retry",
     "fallback": {
       "no_key": {

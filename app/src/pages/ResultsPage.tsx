@@ -17,6 +17,7 @@ interface ResultsPageProps {
   readonly review: ReviewResult;
   readonly closer: ReviewCloser;
   readonly onReport: () => void;
+  readonly onCompare: () => void;
   readonly onOpenAlert: (number: number) => void;
   readonly onSearchDocuments?: ((query: string) => void) | undefined;
 }
@@ -26,6 +27,7 @@ export function ResultsPage({
   review,
   closer,
   onReport,
+  onCompare,
   onOpenAlert,
   onSearchDocuments,
 }: ResultsPageProps) {
@@ -39,7 +41,13 @@ export function ResultsPage({
 
   return (
     <div className={styles.layout}>
-      <ResultsHeader review={review} closer={closer} onAddFact={startAdding} onReport={onReport} />
+      <ResultsHeader
+        review={review}
+        closer={closer}
+        onAddFact={startAdding}
+        onReport={onReport}
+        onCompare={onCompare}
+      />
       {tab === "facts" && (
         <FactsTab
           review={review}

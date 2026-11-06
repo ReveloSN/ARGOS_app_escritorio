@@ -29,9 +29,21 @@ export interface HistorySessionResult {
   readonly decidedCount: number;
 }
 
+export interface HistoryComparisonResult {
+  readonly id: string;
+  readonly name: string;
+  readonly mode: string;
+  readonly createdAt: string;
+  readonly documentCount: number;
+  /** Cambios más inconsistencias: lo que hay que decidir. */
+  readonly itemCount: number;
+  readonly decidedCount: number;
+}
+
 export interface HistoryResult {
   readonly metrics: UsageMetricsResult;
   readonly sessions: readonly HistorySessionResult[];
+  readonly comparisons: readonly HistoryComparisonResult[];
 }
 
 export interface HistoryRecordResult {

@@ -87,14 +87,14 @@ describe("Expediente: datos confirmados", () => {
     );
     await openFacts();
 
-    await userEvent.click(await screen.findByRole("button", { name: "Confirmar valor" }));
+    await userEvent.click(await screen.findByRole("button", { name: /^Confirmar valor/ }));
     await userEvent.keyboard("{Enter}");
     expect(addFact).toHaveBeenCalledWith(REVIEW.session.id, {
       label: "Monto",
       entityType: "money",
       value: "$ 18.450.000",
     });
-    await userEvent.click(rowNamed(/Número de contrato/).getByRole("button", { name: "Retirar" }));
+    await userEvent.click(rowNamed(/Número de contrato/).getByRole("button", { name: /^Retirar/ }));
     expect(retireFact).toHaveBeenCalledWith(REVIEW.session.id, 1);
     await userEvent.keyboard("{Control>}z{/Control}");
     expect(undoFact).toHaveBeenCalledWith(REVIEW.session.id);
@@ -110,7 +110,7 @@ describe("Expediente: datos confirmados", () => {
     );
     await openFacts();
 
-    await userEvent.click(await screen.findByRole("button", { name: "Editar" }));
+    await userEvent.click(await screen.findByRole("button", { name: /^Editar/ }));
     const input = screen.getByRole("textbox", { name: "Nuevo valor" });
     await userEvent.clear(input);
     await userEvent.type(input, "pendiente{Enter}");
@@ -138,7 +138,7 @@ describe("Expediente: datos confirmados", () => {
     expect(
       screen.getByText("El dato está retirado y no se usa en las comparaciones."),
     ).toBeInTheDocument();
-    await userEvent.click(screen.getByRole("button", { name: "Restaurar" }));
+    await userEvent.click(screen.getByRole("button", { name: /^Restaurar/ }));
     expect(restoreFact).toHaveBeenCalledWith(REVIEW.session.id, 1);
   });
 
@@ -151,6 +151,6 @@ describe("Expediente: datos confirmados", () => {
 
     expect(await screen.findByText("1 lo contradice")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Agregar dato" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Retirar" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Retirar/ })).not.toBeInTheDocument();
   });
 });

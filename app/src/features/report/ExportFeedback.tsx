@@ -4,10 +4,10 @@ import { Button } from "../../components/atoms/Button";
 import { ErrorMessage } from "../../components/molecules/ErrorMessage";
 import { useI18n } from "../../i18n/i18nContext";
 import styles from "./Report.module.css";
-import type { ReportExport } from "./useReportExport";
+import type { ExportOutcome } from "./useReportExport";
 
 interface ExportFeedbackProps {
-  readonly report: ReportExport;
+  readonly report: ExportOutcome;
   readonly onRetry: () => void;
 }
 
@@ -16,7 +16,7 @@ function Saved({
   fileName,
   folder,
 }: {
-  report: ReportExport;
+  report: ExportOutcome;
   fileName: string;
   folder: string;
 }) {

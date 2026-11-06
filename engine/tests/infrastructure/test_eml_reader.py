@@ -67,3 +67,14 @@ def test_email_without_text_or_attachments_is_reported(reader: EmlDocumentReader
         reader.read(DocumentSource("vacio.eml", EmailMessage().as_bytes()))
 
     assert raised.value.reason is UnreadableReason.NO_TEXT
+
+
+@pytest.mark.parametrize("encoding", ["utf-8", "cp1252"])
+def test_a_body_without_a_declared_charset_keeps_its_accents(
+    reader: EmlDocumentReader, encoding: str
+) -> None:
+    raw = "Subject: Remisión\nContent-Type: text/plain\n\nBuenos días, adjunto el contrato.\n"
+
+    document = reader.read(DocumentSource("sin_charset.eml", raw.encode(encoding)))
+
+    assert "Buenos días, adjunto el contrato." in all_text(document)

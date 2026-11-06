@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from argus.domain.errors import ComparisonNotFoundError
 from argus.domain.text_comparison.report import ComparisonReport
 from argus.infrastructure.persistence.comparison_serialization import (
@@ -28,6 +30,26 @@ class SqliteComparisonRepository:
                     content_to_json(content),
                 ),
             )
+
+    def list_created_since(self, since: datetime) -> tuple[ComparisonReport, ...]:
+        with self._database.connect() as connection:
+            rows = connection.execute(
+                "SELECT id, created_at, payload FROM comparisons WHERE created_at >= ? "
+                "ORDER BY created_at DESC",
+                (to_stored_timestamp(since),),
+            ).fetchall()
+        return tuple(
+            ComparisonReport(row[0], from_stored_timestamp(row[1]), content_from_json(row[2]))
+            for row in rows
+        )
+
+    def delete_created_before(self, moment: datetime) -> int:
+        # Las claves foráneas en cascada borran también las decisiones de cada comparación.
+        with self._database.connect() as connection:
+            deleted = connection.execute(
+                "DELETE FROM comparisons WHERE created_at < ?", (to_stored_timestamp(moment),)
+            )
+            return deleted.rowcount
 
     def get(self, comparison_id: str) -> ComparisonReport:
         with self._database.connect() as connection:

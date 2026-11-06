@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "../../components/atoms/Button";
 import { Icon } from "../../components/atoms/Icon";
 import { ReticleMotif } from "../../components/atoms/ReticleMotif";
 import { joinClassNames } from "../../components/joinClassNames";
+import { useModalFocus } from "../../components/useModalFocus";
 import { useI18n } from "../../i18n/i18nContext";
 import { useShortcuts } from "../keyboard/useShortcuts";
 import { useAssistantPreferences } from "./assistantContext";
@@ -76,6 +77,8 @@ export function OnboardingGate() {
 function OnboardingDialog() {
   const { t } = useI18n();
   const { closeOnboarding } = useAssistantPreferences();
+  const dialog = useRef<HTMLDivElement>(null);
+  const trapTab = useModalFocus(dialog);
   const [current, setCurrent] = useState(0);
   const step = ONBOARDING_STEPS[current] ?? ONBOARDING_STEPS[0];
   const isLast = current === ONBOARDING_STEPS.length - 1;
@@ -87,7 +90,14 @@ function OnboardingDialog() {
   };
   return (
     <div className={styles.backdrop}>
-      <div role="dialog" aria-modal="true" aria-labelledby={TITLE_ID} className={styles.dialog}>
+      <div
+        ref={dialog}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={TITLE_ID}
+        className={styles.dialog}
+        onKeyDown={trapTab}
+      >
         <div className={styles.header}>
           <span>{t("assistant.onboarding.heading")}</span>
           <span className={styles.mono}>

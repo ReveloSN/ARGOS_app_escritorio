@@ -11,6 +11,7 @@ from typing import Protocol
 
 from argus.application.alert_explanation import Explanation, ExplanationPart
 from argus.application.ports.repositories import ComparisonRepository
+from argus.application.text_comparison.structured_explanation import ExplanationStructure
 from argus.domain.alert import Alert
 from argus.domain.errors import ComparisonItemNotFoundError
 from argus.domain.text_comparison.change import Change, ChangeKind, Materiality
@@ -109,6 +110,8 @@ class ChangeExplanation:
     parts: tuple[ExplanationPart, ...] = ()
     text: str = ""
     fallback_reason: FallbackReason | None = None
+    # Los cuatro bloques cortos cuando la IA los entregó; con plantilla, la interfaz los arma.
+    structure: ExplanationStructure | None = None
 
 
 class ChangeExplainer(Protocol):

@@ -77,6 +77,11 @@
   font-size: var(--font-size-caption);
 }
 
+/* El nombre del archivo es lo que se guarda: no se corta, se parte donde haga falta. */
+.fileName {
+  overflow-wrap: anywhere;
+}
+
 .brand {
   display: flex;
   align-items: center;

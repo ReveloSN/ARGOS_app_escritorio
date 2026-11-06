@@ -9,7 +9,18 @@ export interface AssistantChrome {
   readonly topbar: AssistantStatusLine;
 }
 
-/** El mismo estado en la barra lateral (ojo y texto) y en la barra superior (texto corto). */
+/**
+ * El estado vive en la barra lateral (ojo y texto). La barra superior solo lo retoma cuando la
+ * lateral está contraída o cuando hay algo que atender: el avance de la lectura o «Reintentar».
+ */
+export function topbarStatusFor(
+  topbar: AssistantStatusLine,
+  isSidebarCollapsed: boolean,
+): AssistantStatusLine | undefined {
+  const needsAttention = topbar.progress !== undefined || topbar.retry !== undefined;
+  return isSidebarCollapsed || needsAttention ? topbar : undefined;
+}
+
 export function useAssistantChrome(): AssistantChrome {
   const { t } = useI18n();
   const { statusMonitor } = useEngineServices();

@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Form, UploadFile
-from fastapi.responses import StreamingResponse
+from fastapi.responses import Response, StreamingResponse
 
 from argus.api.composition import EngineServices
 from argus.api.ocr_options import OcrOptions, ocr_options
@@ -14,6 +14,7 @@ from argus.api.review_response import (
 from argus.api.schemas.review import (
     DecisionRequestBody,
     DecisionsResponse,
+    RenameSessionBody,
     ReviewResponse,
     SessionResponse,
 )
@@ -21,6 +22,8 @@ from argus.api.uploads import event_stream_response, uploaded_sources
 from argus.application.decision_history import DecisionRequest
 from argus.application.run_review import ReviewRequest
 from argus.domain.decision import CorrectSide, DecisionKind
+
+NO_CONTENT = 204
 
 
 def build_reviews_router(services: EngineServices) -> APIRouter:
@@ -47,6 +50,22 @@ def build_reviews_router(services: EngineServices) -> APIRouter:
     @router.post("/{session_id}/close")
     def close_review(session_id: str) -> SessionResponse:
         return session_response(services.close_review.execute(session_id))
+
+    return router
+
+
+def build_session_management_router(services: EngineServices) -> APIRouter:
+    """Renombrar y eliminar una sesión guardada."""
+    router = APIRouter(prefix="/reviews")
+
+    @router.patch("/{session_id}")
+    def rename_review(session_id: str, body: RenameSessionBody) -> SessionResponse:
+        return session_response(services.rename_review.execute(session_id, body.name))
+
+    @router.delete("/{session_id}", status_code=NO_CONTENT)
+    def delete_review(session_id: str) -> Response:
+        services.delete_review.execute(session_id)
+        return Response(status_code=NO_CONTENT)
 
     return router
 

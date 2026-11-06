@@ -31,7 +31,7 @@ function reviewFields({ name, ocr, replaces }: ReviewRequest): Record<string, st
   };
 }
 
-/** Revisiones en el motor: iniciar con avance por archivo, reabrir, cerrar y decidir. */
+/** Revisiones en el motor: iniciar con avance por archivo, reabrir, renombrar, eliminar, cerrar y decidir. */
 export class ReviewClient implements ReviewGateway {
   constructor(private readonly http: EngineHttp) {}
 
@@ -52,6 +52,16 @@ export class ReviewClient implements ReviewGateway {
   closeReview(sessionId: string): Promise<SessionResult> {
     const path = sessionPath(sessionId, "/close");
     return this.http.json({ path, timeoutMs: REQUEST_TIMEOUT_MS, method: "POST" });
+  }
+
+  renameReview(sessionId: string, name: string): Promise<SessionResult> {
+    const path = sessionPath(sessionId);
+    return this.http.json({ path, timeoutMs: REQUEST_TIMEOUT_MS, method: "PATCH", body: { name } });
+  }
+
+  deleteReview(sessionId: string): Promise<void> {
+    const path = sessionPath(sessionId);
+    return this.http.empty({ path, timeoutMs: REQUEST_TIMEOUT_MS, method: "DELETE" });
   }
 
   decide(sessionId: string, decision: DecisionInput): Promise<DecisionsResult> {

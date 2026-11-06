@@ -38,7 +38,7 @@ function Quotes({ quotes }: { quotes: readonly ExplainQuote[] }) {
   );
 }
 
-/** Plantilla local o «Sugerencia de IA», siempre con la cita de su origen (CLAUDE.md §15). */
+/** El texto largo de «Ver detalle»: plantilla local o «Sugerencia de IA», con la cita de su origen. */
 export function ExplanationResult({ result, quotes, onRetry }: ExplanationResultProps) {
   const i18n = useI18n();
   const { t } = i18n;
@@ -50,7 +50,6 @@ export function ExplanationResult({ result, quotes, onRetry }: ExplanationResult
       </span>
       <span>{isAi ? result.text : explanationText(result.parts, i18n)}</span>
       <Quotes quotes={quotes} />
-      {isAi && <span className={styles.explanationNote}>{t("explain.aiNote")}</span>}
       {result.fallbackReason && <FallbackNotice reason={result.fallbackReason} onRetry={onRetry} />}
     </div>
   );

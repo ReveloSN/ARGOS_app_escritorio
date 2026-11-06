@@ -18,8 +18,22 @@ export function pendingIssues(review: SendReviewResult): SendIssueResult[] {
   return review.issues.filter((issue) => decisionOf(review, issue) === undefined);
 }
 
+/** Lo que se sigue marcando en el borrador: lo pendiente y lo marcado como error que ARGUS no corrige. */
+export function markedIssues(review: SendReviewResult): SendIssueResult[] {
+  return review.issues.filter((issue) => {
+    const decision = decisionOf(review, issue);
+    return decision === undefined || (decision === "error" && !issue.fix);
+  });
+}
+
 export function pendingHighCount(review: SendReviewResult): number {
   return pendingIssues(review).filter((issue) => issue.risk === "high").length;
+}
+
+/** Problemas marcados como error que ARGUS no puede corregir: el borrador sigue igual. */
+export function unfixedErrorCount(review: SendReviewResult): number {
+  return review.issues.filter((issue) => !issue.fix && decisionOf(review, issue) === "error")
+    .length;
 }
 
 /** Las correcciones que el usuario aceptó al marcar el problema como error. */

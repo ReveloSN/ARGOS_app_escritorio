@@ -109,6 +109,34 @@ describe("Tabs", () => {
     expect(screen.getByRole("tab", { name: /Alertas/ })).toHaveAttribute("aria-selected", "true");
     expect(onSelect).toHaveBeenCalledWith("files");
   });
+
+  it("(regresión) solo la pestaña elegida entra con Tab y las flechas cambian de pestaña", async () => {
+    const onSelect = vi.fn();
+    renderWithProviders(
+      <Tabs
+        label={"Secciones"}
+        selectedId="alerts"
+        onSelect={onSelect}
+        tabs={[
+          { id: "alerts", label: "Alertas" },
+          { id: "files", label: "Archivos" },
+          { id: "facts", label: "Datos" },
+        ]}
+      />,
+    );
+    const tabs = screen.getAllByRole("tab");
+    expect(tabs.map((tab) => tab.getAttribute("tabindex"))).toEqual(["0", "-1", "-1"]);
+
+    tabs[0]?.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    expect(onSelect).toHaveBeenLastCalledWith("files");
+    await userEvent.keyboard("{ArrowLeft}");
+    expect(onSelect).toHaveBeenLastCalledWith("facts");
+    await userEvent.keyboard("{End}");
+    expect(onSelect).toHaveBeenLastCalledWith("facts");
+    await userEvent.keyboard("{Home}");
+    expect(onSelect).toHaveBeenLastCalledWith("alerts");
+  });
 });
 
 describe("StepIndicator", () => {

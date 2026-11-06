@@ -72,6 +72,11 @@
 
 .table {
   display: grid;
+  /* Dato y Valor confirmado no pueden quedar sin ancho: si no caben, el contenedor se desplaza. */
+  min-width: calc(
+    var(--size-facts-columns-min) + var(--size-facts-column-confirmed) +
+      var(--size-facts-column-status) + var(--size-facts-column-actions)
+  );
   grid-template-columns:
     minmax(0, 1fr) minmax(0, 1.3fr) var(--size-facts-column-confirmed)
     var(--size-facts-column-status) var(--size-facts-column-actions);
@@ -378,4 +383,17 @@
   max-width: var(--size-readable-narrow);
   margin: 0;
   color: var(--color-text-secondary);
+}
+
+/* Sin ancho para la tabla y el panel lado a lado, el panel pasa debajo y cada uno se desplaza solo. */
+@container (max-width: 160ch) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .aside {
+    border-top: var(--border-width) solid var(--color-border-strong);
+    border-left: 0;
+  }
 }

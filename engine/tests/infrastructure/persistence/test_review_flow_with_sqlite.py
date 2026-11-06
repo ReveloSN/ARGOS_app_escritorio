@@ -68,7 +68,13 @@ def test_usage_metrics_are_computed_from_the_stored_history(storage: ReviewStora
     close.execute(second.id)
 
     history = ReviewHistory(
-        HistoryRepositories(storage.sessions, storage.alerts, storage.decisions)
+        HistoryRepositories(
+            storage.sessions,
+            storage.alerts,
+            storage.decisions,
+            storage.comparisons,
+            storage.comparison_decisions,
+        )
     )
     metrics = history.overview(since=START).metrics
 

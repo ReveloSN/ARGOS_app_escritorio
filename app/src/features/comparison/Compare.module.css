@@ -1,7 +1,9 @@
 /* Pantalla Comparar documentos (mockup «ARGUS Comparar»). */
 
 .workspace {
+  container-type: inline-size;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   height: 100%;
   min-height: 0;
@@ -66,7 +68,6 @@
   color: var(--button-primary-fg);
 }
 
-.modeKey,
 .markNumber,
 .itemNumber,
 .listHint {
@@ -76,6 +77,7 @@
 
 .toolbar {
   display: flex;
+  min-width: 0;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-4);
@@ -85,6 +87,7 @@
 .counters,
 .ignores {
   display: flex;
+  min-width: 0;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-2);
@@ -92,6 +95,71 @@
 
 .ignores {
   margin-left: auto;
+}
+
+/* El botón queda en la línea superior y el panel ocupa una fila propia debajo. */
+.options {
+  position: relative;
+  display: flex;
+  margin-left: auto;
+}
+
+.optionsToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  min-height: var(--size-control-sm);
+  padding: 0 var(--spacing-2);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: var(--font-size-caption);
+  cursor: pointer;
+}
+
+.optionsToggle:hover {
+  border-color: var(--color-border-strong);
+}
+
+.optionsCount {
+  color: var(--color-text-tertiary);
+}
+
+.optionsPanel {
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  right: 0;
+  display: flex;
+  width: max-content;
+  max-width: calc(var(--size-dialog) * 2);
+  flex-direction: column;
+  gap: var(--spacing-2-5);
+  padding: var(--spacing-3);
+  border: var(--border-width) solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+  box-shadow: var(--shadow-overlay);
+}
+
+.optionsRow .legend {
+  margin-left: 0;
+}
+
+.optionsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.unreadable {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-5);
 }
 
 .sideBadge {
@@ -168,14 +236,82 @@
   min-height: 0;
 }
 
-.panels {
+.documentArea {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) var(--size-minimap);
+  grid-template-columns: minmax(0, 1fr);
   min-height: 0;
+}
+
+.documentAreaWithMinimap {
+  grid-template-columns: minmax(0, 1fr) var(--size-minimap);
+}
+
+.unified {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+  border-right: var(--border-width) solid var(--color-border-default);
+}
+
+.unifiedBody {
+  overflow: auto;
+  padding: var(--spacing-5) var(--spacing-6);
+  background: var(--color-background-surface);
+  font-family: var(--font-family-serif);
+  font-size: var(--font-size-emphasis);
+  line-height: var(--line-height-reading);
+}
+
+.unifiedMark {
+  border-radius: var(--radius-xs);
+  color: inherit;
+  text-underline-offset: var(--text-underline-offset);
+}
+
+.unifiedRemoved {
+  color: var(--color-text-secondary);
+  text-decoration: line-through var(--color-text-secondary);
+}
+
+.markTarget + .markTarget .unifiedAdded {
+  margin-inline-start: var(--spacing-1);
+}
+
+.unifiedAdded {
+  text-decoration: underline var(--color-action-primary) var(--border-width-strong);
+}
+
+.highRisk {
+  background: var(--color-risk-high-bg);
+}
+
+.unifiedData {
+  font-family: var(--font-family-mono);
+}
+
+.unifiedCore {
+  font-weight: var(--font-weight-semibold);
+}
+
+.unifiedSelected {
+  outline: var(--border-width-strong) solid var(--diff-selected-outline);
+  outline-offset: var(--outline-offset-mark);
+}
+
+.movedAway {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  margin: 0 0 var(--spacing-3);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-caption);
 }
 
 .panel {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   min-height: 0;
   border-right: var(--border-width) solid var(--color-border-default);
@@ -299,13 +435,34 @@
 }
 
 .detail {
-  border-top: var(--border-width) solid var(--color-border-default);
+  margin-bottom: var(--spacing-2);
+  padding-inline: var(--spacing-1);
+  border-bottom: var(--border-width) solid var(--color-border-default);
+}
+
+.riskLevel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.riskLevelHigh {
+  color: var(--color-risk-high);
 }
 
 .listHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--spacing-2);
+  gap: var(--spacing-1) var(--spacing-2);
+}
+
+.listProgress {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-micro);
 }
 
 .listTitle,
@@ -314,6 +471,14 @@
   font-size: var(--font-size-heading);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-heading);
+}
+
+.riskLegend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-micro);
 }
 
 .listHint {
@@ -352,11 +517,12 @@
 }
 
 .item {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  display: flex;
+  align-items: center;
   gap: var(--spacing-2);
   width: 100%;
-  padding: var(--spacing-2) var(--spacing-1);
+  min-height: var(--size-control-lg);
+  padding: var(--spacing-1) var(--spacing-1);
   border: 0;
   border-bottom: var(--border-width) solid var(--color-border-default);
   background: transparent;
@@ -364,6 +530,30 @@
   font: inherit;
   text-align: start;
   cursor: pointer;
+}
+
+.itemAfterHigh {
+  margin-top: var(--spacing-3);
+}
+
+.riskDot,
+.riskDotSpace {
+  flex: none;
+  width: var(--size-risk-dot);
+  height: var(--size-risk-dot);
+}
+
+.riskDot {
+  border-radius: 50%;
+  background: var(--color-risk-high);
+}
+
+.itemWhere {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  white-space: nowrap;
 }
 
 .item:hover {
@@ -413,6 +603,8 @@
 }
 
 .itemValues {
+  flex: 0 1 auto;
+  min-width: 0;
   overflow: hidden;
   font-family: var(--font-family-mono);
   font-size: var(--font-size-caption);
@@ -430,7 +622,9 @@
 }
 
 .itemStatus {
+  flex: none;
   color: var(--color-action-text);
+  white-space: nowrap;
   font-size: var(--font-size-caption);
 }
 
@@ -531,6 +725,20 @@
   padding: var(--spacing-2) var(--spacing-3);
 }
 
+.dataSelect {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
 .dataName {
   font-weight: var(--font-weight-medium);
 }
@@ -564,6 +772,10 @@
 }
 
 .matrixCell {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  font-family: var(--font-family-mono);
   cursor: pointer;
 }
 
@@ -571,6 +783,16 @@
   background: var(--color-background-subtle);
   color: var(--color-text-tertiary);
   font-size: var(--font-size-caption);
+}
+
+.matrixCellHigh {
+  background: var(--color-risk-high-bg);
+  color: var(--color-risk-high);
+  font-weight: var(--font-weight-semibold);
+}
+
+.matrixCellEmpty {
+  color: var(--color-text-tertiary);
 }
 
 .matrixCount {
@@ -635,11 +857,150 @@
   font-size: var(--font-size-micro);
 }
 
-.detailMeaning {
-  align-self: flex-start;
-  padding: 0 var(--spacing-1-5);
-  border: var(--border-width) solid var(--color-border-strong);
-  border-radius: var(--radius-xs);
+.scopeSelector {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacing-3);
+}
+
+.itemAgainst {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chipText {
+  display: inline-block;
+  max-width: var(--size-chip-text);
+  overflow: hidden;
+  vertical-align: bottom;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.breakdown {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-caption);
+}
+
+.breakdownTitle {
+  padding-block-end: var(--spacing-1);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  text-align: start;
+}
+
+.breakdownDocument {
+  max-width: var(--size-chip-text);
+  padding-inline-end: var(--spacing-3);
+  overflow: hidden;
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-regular);
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.headerButton {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  cursor: pointer;
+}
+
+.closeRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+/* Los botones no se encogen (se cortaría su etiqueta): si no caben, bajan de línea. */
+.closeRow > * {
+  flex: none;
+}
+
+.closeRow > .grow {
+  flex: 1 1 0;
+}
+
+.grow {
+  flex: 1;
+}
+
+.fromSession {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-background-surface);
+}
+
+.fromSessionTitle {
+  margin: 0;
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-semibold);
+}
+
+.fromSessionList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fromSessionHint {
+  margin: 0 0 var(--spacing-2);
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
+}
+
+.exportFormats {
+  display: flex;
+  gap: var(--spacing-1-5);
+}
+
+/* Con poco ancho el texto no cabe junto al lateral: el lateral pasa debajo y cada uno se desplaza solo. */
+@container (max-width: 85ch) {
+  .versions {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .unified {
+    border-right: 0;
+    border-bottom: var(--border-width) solid var(--color-border-strong);
+  }
+
+  .aside {
+    border-left: 0;
+  }
+}
+
+.pairMore {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.reviewComplete {
+  margin: 0;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: var(--border-width) solid var(--color-action-text);
+  border-radius: var(--radius-md);
+  color: var(--color-action-text);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
 }

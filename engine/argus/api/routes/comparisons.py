@@ -7,7 +7,11 @@ from argus.api.comparison_events import comparison_events
 from argus.api.comparison_response import to_comparison_response
 from argus.api.composition import EngineServices
 from argus.api.review_response import decisions_response
-from argus.api.schemas.comparison import ComparisonDecisionBody, ComparisonResponse
+from argus.api.schemas.comparison import (
+    ComparisonDecisionBody,
+    ComparisonResponse,
+    SessionComparisonBody,
+)
 from argus.api.schemas.review import DecisionsResponse
 from argus.api.uploads import event_stream_response, uploaded_sources
 from argus.application.decision_history import DecisionRequest
@@ -46,5 +50,20 @@ def build_comparisons_router(services: EngineServices) -> APIRouter:
     @router.post("/{comparison_id}/decisions/undo")
     def undo_decision(comparison_id: str) -> DecisionsResponse:
         return decisions_response(services.comparisons.decisions.undo(comparison_id))
+
+    return router
+
+
+def build_session_comparisons_router(services: EngineServices) -> APIRouter:
+    """Comparar archivos que ya están en el expediente, sin volver a cargarlos."""
+    router = APIRouter(prefix="/comparisons")
+
+    @router.post("/from-session")
+    async def create_comparison_from_session(body: SessionComparisonBody) -> StreamingResponse:
+        sources = services.session_sources.sources_for(body.session_id, body.documents)
+        comparison_mode = services.comparisons.modes.mode_for(body.mode)
+        request = ComparisonRequest(body.name.strip(), comparison_mode, sources)
+        events = comparison_events(services.comparisons.run, request, services.explainer)
+        return event_stream_response(events)
 
     return router

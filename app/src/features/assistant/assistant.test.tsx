@@ -46,7 +46,9 @@ describe("Asistente de IA", () => {
     });
     expect(dialog).toHaveTextContent("1 de 3");
     await userEvent.keyboard("{Enter}");
-    expect(screen.getByRole("heading", { name: "2. Confirme lo que se leyó" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "2. Compruebe lo que se leyó" }),
+    ).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: /Siguiente/ }));
     await userEvent.click(screen.getByRole("button", { name: /Empezar/ }));
 
@@ -79,6 +81,25 @@ describe("Asistente de IA", () => {
     expect(sidebarStatus()).toHaveTextContent("Listo");
     expect(sidebarStatus().querySelector("svg")).toBeNull();
     expect(storage.read("argus.assistant")).toBe("hidden");
+  });
+
+  it("dice el estado normal una sola vez: en la barra lateral y no en la superior", async () => {
+    renderApp(fakeEngineServices(), REVIEW, memoryStorage(SEEN));
+    await act(() => Promise.resolve());
+
+    expect(sidebarStatus()).toHaveTextContent("No pudo leer un archivo");
+    expect(within(screen.getByRole("banner")).queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("con la barra lateral contraída, la barra superior retoma el estado", async () => {
+    renderApp(fakeEngineServices(), REVIEW, memoryStorage(SEEN));
+    await act(() => Promise.resolve());
+
+    await userEvent.keyboard("{Control>}b{/Control}");
+
+    expect(within(screen.getByRole("banner")).getByRole("status")).toHaveTextContent(
+      "No pudo leer un archivo",
+    );
   });
 
   it("«Reducir movimiento» se aplica a toda la app y se recuerda", async () => {
@@ -120,7 +141,7 @@ describe("Asistente de IA", () => {
 
     await userEvent.click(screen.getByRole("button", { name: /^Expediente/ }));
     await userEvent.click(screen.getByRole("tab", { name: "Datos confirmados" }));
-    await userEvent.click(await screen.findByRole("button", { name: "Confirmar valor" }));
+    await userEvent.click(await screen.findByRole("button", { name: /^Confirmar valor/ }));
     await userEvent.keyboard("{Enter}");
 
     expect(addFact).toHaveBeenCalled();

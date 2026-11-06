@@ -21,6 +21,8 @@ export interface EngineServices {
   readonly facts: FactGateway;
   readonly sending: SendGateway;
   readonly reports: ReportGateway;
+  /** El informe de una comparación: mismo formato, otro origen. */
+  readonly comparisonReports: ReportGateway;
   readonly ai: AiGateway;
   readonly ocr: OcrGateway;
   readonly history: HistorySource;

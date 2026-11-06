@@ -20,7 +20,8 @@ from argus.api.server import (
 )
 from tests.api.conftest import TEST_TOKEN
 
-STARTUP_TIMEOUT_SECONDS = 30
+# El arranque en frío importa spaCy y el SDK de Anthropic: en Windows puede pasar de 25 s.
+STARTUP_TIMEOUT_SECONDS = 120
 SHUTDOWN_TIMEOUT_SECONDS = 10
 
 

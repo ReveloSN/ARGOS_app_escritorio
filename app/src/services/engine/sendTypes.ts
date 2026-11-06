@@ -2,9 +2,14 @@
 
 import type { DecisionInput, DecisionsResult, RiskLevelValue } from "./reviewTypes";
 
-export type SendIssueKindValue = "period_mismatch" | "missing_attachment" | "foreign_recipient";
+export type SendIssueKindValue =
+  | "period_mismatch"
+  | "identifier_mismatch"
+  | "amount_mismatch"
+  | "missing_attachment"
+  | "foreign_recipient";
 export type SendFixKindValue = "replace_attachment" | "add_attachment" | "remove_recipient";
-export type DraftPartValue = "body" | "to" | "cc";
+export type DraftPartValue = "subject" | "body" | "to" | "cc";
 
 export interface DraftAttachmentResult {
   readonly name: string;
@@ -32,7 +37,7 @@ export interface SendIssueResult {
   readonly kind: SendIssueKindValue;
   readonly risk: RiskLevelValue;
   readonly part: DraftPartValue;
-  /** El texto exacto que se marca en el cuerpo, en «Para» o en «CC». */
+  /** El texto exacto que se marca en el asunto, el cuerpo, «Para» o «CC». */
   readonly markedText: string;
   readonly params: Readonly<Record<string, string>>;
   readonly fix: SendFixResult | null;

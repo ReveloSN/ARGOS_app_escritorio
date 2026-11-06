@@ -4,7 +4,7 @@ import { Sidebar } from "./components/organisms/Sidebar";
 import { Topbar } from "./components/organisms/Topbar";
 import { AppShell } from "./components/templates/AppShell";
 import { OnboardingGate } from "./features/assistant/OnboardingDialog";
-import { useAssistantChrome } from "./features/assistant/useAssistantChrome";
+import { topbarStatusFor, useAssistantChrome } from "./features/assistant/useAssistantChrome";
 import { useShortcuts } from "./features/keyboard/useShortcuts";
 import {
   HOME_ROUTE,
@@ -12,8 +12,13 @@ import {
   sectionOf,
   type AppRoute,
 } from "./features/navigation/appRoute";
-import { useReview } from "./features/review/reviewContext";
 import { useActiveSessionSummary } from "./features/review/useActiveSessionSummary";
+import { SessionNotice } from "./features/session/SessionNotice";
+import { SessionSwitcher } from "./features/session/SessionSwitcher";
+import { usePendingSessionDeletion } from "./features/session/usePendingSessionDeletion";
+import { useSessionRename } from "./features/session/useSessionRename";
+import { useSessionSnapshot } from "./features/session/useSessionSnapshot";
+import { useSessionSwitch } from "./features/session/useSessionSwitch";
 import { GlobalSearch } from "./features/search/GlobalSearch";
 import { useGlobalSearch } from "./features/search/useGlobalSearch";
 import { CurrentPage } from "./pages/CurrentPage";
@@ -22,8 +27,11 @@ const NEW_REVIEW_ROUTE: AppRoute = { page: "newReview" };
 
 /** Arranca en Inicio; sesión activa y contadores aparecen solo con una revisión real. */
 export function App() {
-  const { review } = useReview();
-  const indicators = useActiveSessionSummary(review);
+  const snapshot = useSessionSnapshot();
+  const indicators = useActiveSessionSummary(snapshot.review);
+  const switching = useSessionSwitch();
+  const renaming = useSessionRename();
+  const deletion = usePendingSessionDeletion();
   const [route, setRoute] = useState<AppRoute>(HOME_ROUTE);
   const [collapsed, setCollapsed] = useState(false);
   const search = useGlobalSearch(route, setRoute);
@@ -71,8 +79,20 @@ export function App() {
       }
       topbar={
         <Topbar
-          sessionName={review?.session.name}
-          assistantStatus={assistant.topbar}
+          session={
+            snapshot.review && (
+              <SessionSwitcher
+                active={snapshot.review}
+                renaming={renaming}
+                onSwitch={switching.switchTo}
+                onNewSession={() => {
+                  setRoute(NEW_REVIEW_ROUTE);
+                }}
+                onDelete={deletion.schedule}
+              />
+            )
+          }
+          assistantStatus={topbarStatusFor(assistant.topbar, collapsed)}
           searchPlaceholder={search.scope?.placeholder}
           onOpenSearch={
             search.open &&
@@ -88,6 +108,7 @@ export function App() {
         <GlobalSearch scope={search.scope} initialQuery={search.query} onClose={search.close} />
       )}
       <OnboardingGate />
+      <SessionNotice deletion={deletion} switching={switching} />
     </AppShell>
   );
 }

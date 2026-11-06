@@ -1,18 +1,14 @@
 import { act, screen, within } from "@testing-library/react";
+import { onlyRows } from "../../test/changeRows";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { ComparisonRequest, ComparisonResult } from "../../services/engine/comparisonTypes";
-import {
-  CASE_CHANGE,
-  comparison,
-  MOVED_CHANGE,
-  pair,
-  VERSION_CHANGES,
-} from "../../test/comparisonFakes";
+import { CASE_CHANGE, comparison, pair, VERSION_CHANGES } from "../../test/comparisonFakes";
 import { fakeEngineServices } from "../../test/engineFakes";
 import { inconsistency } from "../../test/inconsistencyFakes";
 import { renderApp, stubBrowser } from "../../test/renderApp";
+import { required } from "../../test/threeDocuments";
 
 const DECIDED = {
   decisions: [{ alertNumber: 2, kind: "error" as const, correctSide: null, decidedAt: "" }],
@@ -63,9 +59,11 @@ describe("Comparar documentos", () => {
 
     expect(startComparison).toHaveBeenCalledWith(expect.objectContaining({ mode: "versions" }));
     expect(await screen.findByRole("heading", { name: "Comparar documentos" })).toBeInTheDocument();
-    expect(screen.getAllByText("4857")[0]?.closest("mark")).not.toBeNull();
+    const texts = (tag: string) => [...document.querySelectorAll(tag)].map((m) => m.textContent);
+    expect(texts("del")).toContain("4857");
+    expect(texts("ins")).toContain("4587");
     expect(screen.getAllByText("no").some((element) => element.tagName === "INS")).toBe(true);
-    expect(screen.getByText(/Movido: en A está en Párrafo 3/)).toBeInTheDocument();
+    expect(screen.getByText(/Movido a Párrafo 2/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Cláusula penal/ })).toBeInTheDocument();
   });
 
@@ -83,7 +81,16 @@ describe("Comparar documentos", () => {
     await userEvent.keyboard("e");
 
     expect(decide).toHaveBeenCalledWith("c1", { alertNumber: 2, kind: "error" });
-    expect(await screen.findByText("Se guardó: Es un error")).toBeInTheDocument();
+    const list = within(screen.getByRole("list", { name: "Cambios" }));
+    const decided = required(
+      onlyRows(list.getAllByRole("button")).find((row) => row.textContent?.includes("Es un error")),
+    );
+    expect(decided).not.toHaveAttribute("aria-current", "true");
+    expect(
+      onlyRows(list.getAllByRole("button")).filter(
+        (row) => row.getAttribute("aria-current") === "true",
+      ),
+    ).toHaveLength(1);
     await userEvent.keyboard("{Control>}z{/Control}");
     expect(undoDecision).toHaveBeenCalledWith("c1");
   });
@@ -94,14 +101,15 @@ describe("Comparar documentos", () => {
     });
     await compare(fakeEngineServices({ comparisons: { startComparison: startingWith(withCase) } }));
     const list = within(await screen.findByRole("list", { name: "Cambios" }));
-    expect(list.getAllByRole("button")).toHaveLength(5);
+    expect(onlyRows(list.getAllByRole("button"))).toHaveLength(5);
 
+    await userEvent.click(screen.getByRole("button", { name: /^Opciones/ }));
     await userEvent.click(screen.getByRole("checkbox", { name: "mayúsculas" }));
-    expect(list.getAllByRole("button")).toHaveLength(4);
+    expect(onlyRows(list.getAllByRole("button"))).toHaveLength(4);
     await userEvent.click(screen.getByRole("button", { name: /^Movidas/ }));
-    expect(list.getAllByRole("button")).toHaveLength(1);
-    expect(list.getByRole("button")).toHaveAccessibleName(
-      expect.stringContaining(String(MOVED_CHANGE.number)),
+    expect(onlyRows(list.getAllByRole("button"))).toHaveLength(1);
+    expect(onlyRows(list.getAllByRole("button"))[0]).toHaveAccessibleName(
+      expect.stringContaining("Párrafo 2"),
     );
   });
 
@@ -136,8 +144,9 @@ describe("Comparar documentos", () => {
       expect.objectContaining({ mode: "contract_annexes" }),
     );
     expect(await screen.findByRole("grid", { name: "Matriz de diferencias" })).toBeInTheDocument();
-    expect(screen.getAllByText("sin diferencias")).toHaveLength(4);
+    expect(screen.getAllByRole("gridcell")).toHaveLength(3);
     await userEvent.click(screen.getByRole("button", { name: /Abrir el par/ }));
+    await userEvent.click(screen.getByRole("button", { name: /^Opciones/ }));
     expect(screen.getByText("tachado = falta en B")).toBeInTheDocument();
   });
 

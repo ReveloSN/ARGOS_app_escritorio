@@ -40,6 +40,7 @@ const LOCAL: ChangeExplanationResult = {
   parts: CONTRACT_ALERT.explanation,
   text: "",
   fallbackReason: null,
+  structure: null,
 };
 const FROM_AI: ChangeExplanationResult = {
   ...LOCAL,
@@ -57,7 +58,7 @@ async function openAlertAndExplain(
   await userEvent.click(screen.getByRole("button", { name: /^Expediente/ }));
   const table = screen.getByRole("table", { name: "Lista de alertas" });
   await userEvent.click(within(table).getAllByRole("row")[2] ?? table);
-  await userEvent.click(screen.getByRole("button", { name: "Explicar esta alerta" }));
+  await userEvent.click(screen.getByRole("button", { name: "Ver detalle" }));
 }
 
 describe("Explicar esta alerta", () => {
@@ -75,8 +76,33 @@ describe("Explicar esta alerta", () => {
     expect(screen.getByText(FROM_AI.text)).toBeInTheDocument();
     expect(screen.getByText("contrato.txt · Línea 1")).toBeInTheDocument();
     expect(screen.getByText("anexo.pdf · Página 3")).toBeInTheDocument();
-    expect(screen.getByText(/la decisión sigue siendo suya/)).toBeInTheDocument();
+    expect(screen.getByText("Sugerencia de IA, usted decide")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Es un error/ })).toBeEnabled();
+  });
+
+  it("sin pedir nada, la alerta se lee en cinco segundos: frase, tres bloques y decisiones debajo", async () => {
+    const explainAlert = vi.fn(() => Promise.resolve(LOCAL));
+    renderApp(fakeEngineServices({ ai: { explainAlert } }), REVIEW);
+    await act(() => Promise.resolve());
+    await userEvent.click(screen.getByRole("button", { name: /^Expediente/ }));
+    const table = screen.getByRole("table", { name: "Lista de alertas" });
+    await userEvent.click(within(table).getAllByRole("row")[2] ?? table);
+
+    const panel = within(screen.getByRole("region", { name: "Explicación de la alerta" }));
+    expect(
+      panel.getByRole("heading", {
+        name: /«contrato.txt» y «anexo.pdf» citan números de contrato/,
+      }),
+    ).toBeInTheDocument();
+    const titles = ["Qué cambió", "Por qué importa", "Qué puede hacer"].map((title) =>
+      panel.getByText(title),
+    );
+    expect(
+      panel.getByText(/Un número de contrato distinto puede referirse a otro acuerdo/),
+    ).toBeVisible();
+    const decision = panel.getByRole("button", { name: /Es un error/ });
+    expect(titles[2]?.compareDocumentPosition(decision)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(explainAlert).not.toHaveBeenCalled();
   });
 
   it("una alerta de un solo valor cita su único origen", async () => {

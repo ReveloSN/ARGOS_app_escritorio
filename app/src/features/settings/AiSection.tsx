@@ -6,6 +6,7 @@ import { ErrorMessage } from "../../components/molecules/ErrorMessage";
 import { useI18n } from "../../i18n/i18nContext";
 import type { AiSettingsResult } from "../../services/engine/aiTypes";
 import styles from "./Settings.module.css";
+import { SettingsLoadState } from "./SettingsLoadState";
 import { useAiSettings, type AiSettingsControl } from "./useAiSettings";
 
 interface SectionProps {
@@ -104,11 +105,13 @@ export function AiSection({ onSaved }: { onSaved: () => void }) {
   const { t } = useI18n();
   const control = useAiSettings(onSaved);
   if (control.state.status !== "ready") {
-    const failed = control.state.status === "failed";
     return (
-      <p className={styles.description}>
-        {t(failed ? "settings.ai.failed" : "settings.ai.loading")}
-      </p>
+      <SettingsLoadState
+        isFailed={control.state.status === "failed"}
+        loading="settings.ai.loading"
+        section={t("settings.ai.section")}
+        onRetry={control.reload}
+      />
     );
   }
   const settings = control.state.data;

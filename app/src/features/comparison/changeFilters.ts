@@ -1,8 +1,4 @@
-import type {
-  ChangeKindValue,
-  ChangeResult,
-  MaterialityValue,
-} from "../../services/engine/comparisonTypes";
+import type { ChangeKindValue, ChangeResult } from "../../services/engine/comparisonTypes";
 
 export type ChangeTypeFilter = "all" | ChangeKindValue;
 /** Cambios de forma que la pantalla permite ocultar (mayúsculas, puntuación, formato). */
@@ -28,15 +24,6 @@ export const DEFAULT_FILTERS: ChangeFilters = {
   ignored: new Set<CosmeticMateriality>(["format"]),
 };
 
-// «Solo cambios importantes»: números, fechas, nombres y negaciones (los montos son números).
-const IMPORTANT: ReadonlySet<MaterialityValue> = new Set<MaterialityValue>([
-  "amount",
-  "number",
-  "date",
-  "party",
-  "negation",
-]);
-
 export function isHiddenByIgnore(
   change: ChangeResult,
   ignored: ReadonlySet<CosmeticMateriality>,
@@ -46,8 +33,18 @@ export function isHiddenByIgnore(
   );
 }
 
+/** Importante es lo de riesgo alto: montos, identificadores, fechas, negaciones (lo decide el motor). */
 export function isImportant(change: ChangeResult): boolean {
-  return change.materialities.some((materiality) => IMPORTANT.has(materiality));
+  return change.risk === "high";
+}
+
+/** Los de riesgo alto primero, sin cambiar el orden dentro de cada grupo. */
+export function highRiskFirst(changes: readonly ChangeResult[]): ChangeResult[] {
+  return [...changes.filter(isImportant), ...changes.filter((change) => !isImportant(change))];
+}
+
+export function importantCount(changes: readonly ChangeResult[]): number {
+  return changes.filter(isImportant).length;
 }
 
 /** Los cambios que siguen visibles después de ignorar los de forma (contadores y minimapa). */

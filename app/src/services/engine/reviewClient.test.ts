@@ -107,4 +107,30 @@ describe("ReviewClient", () => {
     expect(url).toBe("http://127.0.0.1:5000/reviews/s%201/decisions");
     expect(init?.body).toBe('{"alertNumber":2,"kind":"error"}');
   });
+
+  it("renombra y elimina una sesión", async () => {
+    const renamed = { id: "s 1", name: "Nuevo", createdAt: "", closedAt: null };
+    const fetchResource = vi.fn<FetchResource>((_url, init) =>
+      Promise.resolve(
+        init.method === "DELETE" ? new Response(null, { status: 204 }) : jsonResponse(renamed),
+      ),
+    );
+    const client = clientWith(fetchResource);
+
+    const session = await client.renameReview("s 1", "Nuevo");
+    await client.deleteReview("s 1");
+
+    const [renameUrl, renameInit] = fetchResource.mock.calls[0] ?? [];
+    const [deleteUrl, deleteInit] = fetchResource.mock.calls[1] ?? [];
+    expect(session).toEqual(renamed);
+    expect([renameUrl, renameInit?.method, renameInit?.body]).toEqual([
+      "http://127.0.0.1:5000/reviews/s%201",
+      "PATCH",
+      '{"name":"Nuevo"}',
+    ]);
+    expect([deleteUrl, deleteInit?.method]).toEqual([
+      "http://127.0.0.1:5000/reviews/s%201",
+      "DELETE",
+    ]);
+  });
 });

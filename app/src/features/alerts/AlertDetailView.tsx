@@ -18,7 +18,6 @@ import {
 import styles from "./AlertViews.module.css";
 import { DetailDecision } from "./DetailDecision";
 import { describeDifference } from "./differenceDescription";
-import { explanationText } from "./explanationText";
 import { OpenDocumentFailure } from "./OpenDocumentFailure";
 import type { AlertDecisions } from "./useAlertDecisions";
 import type { DocumentOpener } from "./useOpenDocument";
@@ -70,7 +69,6 @@ export function AlertDetailView(props: AlertDetailViewProps) {
             <span>{t("alertDetail.position", { number: alert.number, total })}</span>
           </div>
           <h1 className={styles.title}>{alertTitle(alert, t)}</h1>
-          <p className={styles.explanation}>{explanationText(alert.explanation, i18n)}</p>
         </div>
         <div className={styles.navigation}>
           <Button
@@ -103,8 +101,10 @@ export function AlertDetailView(props: AlertDetailViewProps) {
         second={alert.second ? compared(alert.second) : undefined}
       />
       <DifferenceLine {...difference} />
-      <ExplanationPanel target={alertExplainTarget(review.session.id, alert, t)} />
-      <DetailDecision {...props} />
+      <ExplanationPanel
+        target={alertExplainTarget(review.session.id, alert, i18n)}
+        actions={<DetailDecision {...props} />}
+      />
     </div>
   );
 }

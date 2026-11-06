@@ -17,10 +17,18 @@ interface ResultsHeaderProps {
   readonly onAddFact: () => void;
   /** «Generar informe»: también en una revisión cerrada, que se puede documentar. */
   readonly onReport: () => void;
+  /** «Comparar»: abre la pantalla de comparación con los documentos de este expediente. */
+  readonly onCompare: () => void;
 }
 
 /** Encabezado del expediente: ruta, nombre, resumen, «Agregar dato», «Cerrar revisión» y pestañas. */
-export function ResultsHeader({ review, closer, onAddFact, onReport }: ResultsHeaderProps) {
+export function ResultsHeader({
+  review,
+  closer,
+  onAddFact,
+  onReport,
+  onCompare,
+}: ResultsHeaderProps) {
   const { t } = useI18n();
   const { tab, setTab } = useResultsView();
   const tabs = [
@@ -42,9 +50,14 @@ export function ResultsHeader({ review, closer, onAddFact, onReport }: ResultsHe
       />
       <div className={styles.titleRow}>
         <div className={styles.heading}>
-          <h1 className={styles.title}>{review.session.name}</h1>
+          <h1 className={styles.title} title={review.session.name}>
+            {review.session.name}
+          </h1>
           <ReviewSummaryLine review={review} />
         </div>
+        <Button size="md" icon="difference" onClick={onCompare}>
+          {t("results.compare")}
+        </Button>
         <Button size="md" icon="description" onClick={onReport}>
           {t("report.generate")}
         </Button>

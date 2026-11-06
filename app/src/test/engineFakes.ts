@@ -35,6 +35,7 @@ export interface FakeEngineOptions {
   readonly facts?: Partial<EngineServices["facts"]>;
   readonly sending?: Partial<EngineServices["sending"]>;
   readonly reports?: Partial<EngineServices["reports"]>;
+  readonly comparisonReports?: Partial<EngineServices["comparisonReports"]>;
   readonly ai?: Partial<EngineServices["ai"]>;
   readonly ocr?: Partial<EngineServices["ocr"]>;
   readonly history?: Partial<EngineServices["history"]>;
@@ -49,6 +50,8 @@ function fakeReviews(overrides: FakeEngineOptions["reviews"]): EngineServices["r
     startReview: notConfigured(),
     openReview: notConfigured(),
     closeReview: notConfigured(),
+    renameReview: notConfigured(),
+    deleteReview: notConfigured(),
     decide: notConfigured(),
     undoDecision: notConfigured(),
     ...overrides,
@@ -60,6 +63,7 @@ function fakeComparisons(
 ): EngineServices["comparisons"] {
   return {
     startComparison: notConfigured(),
+    startSessionComparison: notConfigured(),
     openComparison: notConfigured(),
     decide: notConfigured(),
     undoDecision: notConfigured(),
@@ -149,6 +153,7 @@ export function fakeEngineServices(options: FakeEngineOptions = {}): EngineServi
     facts: fakeFacts(options.facts),
     sending: fakeSending(options.sending),
     reports: fakeReports(options.reports),
+    comparisonReports: fakeReports(options.comparisonReports),
     ai: fakeAi(options.ai),
     ocr: fakeOcr(options.ocr),
     history: { history: notConfigured(), records: notConfigured(), ...options.history },

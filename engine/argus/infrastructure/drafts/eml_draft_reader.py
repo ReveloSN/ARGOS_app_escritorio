@@ -4,6 +4,7 @@ from argus.application.document_reader_factory import DocumentReaderFactory
 from argus.application.ports.document_reader import DocumentSource
 from argus.application.ports.drafts import DraftContent
 from argus.domain.document import Document
+from argus.domain.errors import NotADraftEmailError
 from argus.domain.send_review import DraftAttachment, EmailDraft
 from argus.infrastructure.readers.eml_reader import (
     attachment_bytes,
@@ -12,6 +13,13 @@ from argus.infrastructure.readers.eml_reader import (
     parse_email,
     read_attachment,
 )
+
+# Un correo siempre trae alguno de estos encabezados; un texto cualquiera con extensión .eml, ninguno.
+IDENTIFYING_HEADERS = ("from", "to", "cc", "subject", "date")
+
+
+def has_email_headers(message: EmailMessage) -> bool:
+    return any(message[header] is not None for header in IDENTIFYING_HEADERS)
 
 
 def addresses(message: EmailMessage, header: str) -> tuple[str, ...]:
@@ -30,6 +38,8 @@ class EmlDraftReader:
 
     def read(self, source: DocumentSource) -> DraftContent:
         message = parse_email(source)
+        if not has_email_headers(message):
+            raise NotADraftEmailError(source.name)
         parts = list(message.iter_attachments())
         draft = EmailDraft(
             source.name,

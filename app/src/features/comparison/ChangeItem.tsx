@@ -1,68 +1,80 @@
-import { Icon } from "../../components/atoms/Icon";
+import type { ReactNode } from "react";
+
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ChangeResult } from "../../services/engine/comparisonTypes";
 import type { DecisionResult } from "../../services/engine/reviewTypes";
-import { describeLocation } from "../alerts/alertPresentation";
+import { describeSegmentLocation } from "../alerts/alertPresentation";
 import { DECISION_LABELS } from "../alerts/useAlertDecisions";
-import { CHANGE_KIND_APPEARANCE, changeSegment, changeValues } from "./changePresentation";
+import { changeRowValues, changeSegment, changeValues } from "./changePresentation";
 import styles from "./Compare.module.css";
-import { meaningLabel } from "./meaningLabel";
+import { RiskDot } from "./RiskDot";
 
 interface ChangeItemProps {
   readonly change: ChangeResult;
   readonly decision: DecisionResult | undefined;
   readonly isSelected: boolean;
+  /** El primero de los que no son de riesgo alto: lleva un pequeño espacio antes. */
+  readonly startsOthers: boolean;
+  /** «Contra todos»: el documento contra el que ocurre el cambio. */
+  readonly against?: string | undefined;
   readonly onSelect: (number: number) => void;
+  /** El detalle del cambio elegido se abre aquí mismo, bajo su fila. */
+  readonly detail?: ReactNode;
 }
 
+/** «+ » si solo se agrega una palabra y «− » si solo se quita; nada en un reemplazo. */
+function oneSidedSign(change: ChangeResult, before: string, after: string): string {
+  if (change.kind !== "modified" || (before && after)) return "";
+  return after ? "+ " : "− ";
+}
+
+/** «4857 → 4587»; si solo se agrega o solo se quita, «+ no» o «− plazo»: lo cambiado, no la oración. */
 function ItemValues({ change }: { change: ChangeResult }) {
-  const values = changeValues(change);
+  const { before, after } = changeRowValues(change);
   return (
     <span className={styles.itemValues}>
-      {values.before && <span className={styles.before}>{values.before}</span>}
-      {values.before && values.after && " → "}
-      {values.after && <span className={styles.after}>{values.after}</span>}
+      {oneSidedSign(change, before, after)}
+      {before && <span className={styles.before}>{before}</span>}
+      {before && after && " → "}
+      {after && <span className={styles.after}>{after}</span>}
     </span>
   );
 }
 
-/** Un cambio de la lista: tipo, lugar, valores, sugerencia de IA y decisión tomada. */
-export function ChangeItem({ change, decision, isSelected, onSelect }: ChangeItemProps) {
+function fullText(change: ChangeResult): string {
+  const values = changeValues(change);
+  return [values.before, values.after].filter(Boolean).join(" → ");
+}
+
+/** Un cambio, en una línea: su texto corto y su ubicación; la decisión tomada, si la hay. */
+export function ChangeItem(props: ChangeItemProps) {
   const { t } = useI18n();
-  const appearance = CHANGE_KIND_APPEARANCE[change.kind];
+  const { change, decision, isSelected, against } = props;
   const segment = changeSegment(change);
   return (
-    <li>
+    <li className={joinClassNames(props.startsOthers && styles.itemAfterHigh)}>
       <button
         type="button"
+        data-change-row=""
         aria-current={isSelected}
+        title={fullText(change)}
         className={joinClassNames(styles.item, isSelected && styles.itemSelected)}
         onClick={() => {
-          onSelect(change.number);
+          props.onSelect(change.number);
         }}
       >
-        <span className={styles.itemNumber}>{change.number}</span>
-        <span className={styles.itemBody}>
-          <span className={joinClassNames(styles.itemKind, styles[change.kind])}>
-            <Icon name={appearance.icon} size="xs" />
-            {t(appearance.label)}
-            {segment && (
-              <span className={styles.itemLocation}>
-                {" "}
-                · {describeLocation(segment.location, t)}
-              </span>
-            )}
+        <RiskDot risk={change.risk} />
+        <ItemValues change={change} />
+        {segment && <span className={styles.itemWhere}>{describeSegmentLocation(segment, t)}</span>}
+        {against && (
+          <span className={styles.itemAgainst} title={against}>
+            {t("comparison.scope.versus", { document: against })}
           </span>
-          <ItemValues change={change} />
-          <span className={styles.itemFooter}>
-            {change.meaning && <span>{meaningLabel(change.meaning, t)}</span>}
-            {decision && (
-              <span className={styles.itemStatus}>{t(DECISION_LABELS[decision.kind])}</span>
-            )}
-          </span>
-        </span>
+        )}
+        {decision && <span className={styles.itemStatus}>{t(DECISION_LABELS[decision.kind])}</span>}
       </button>
+      {props.detail}
     </li>
   );
 }

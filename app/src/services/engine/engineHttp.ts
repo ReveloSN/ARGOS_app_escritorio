@@ -2,7 +2,7 @@ import type { EngineConnection, EngineConnectionSource } from "./engineConnectio
 import { readServerSentEvents, type ServerSentEvent } from "./serverSentEvents";
 
 export type FetchResource = (input: string, init: RequestInit) => Promise<Response>;
-export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export interface EngineRequest {
   readonly path: string;

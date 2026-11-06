@@ -26,6 +26,21 @@ function standalonePage(page: AppRoute["page"]): ReactNode {
   return page === "send" ? <SendPage /> : null;
 }
 
+function homePage(navigation: PageNavigation): ReactNode {
+  return (
+    <HomePage
+      onNewReview={navigation.openNewReview}
+      onCompare={navigation.openCompare}
+      onContinueReview={() => {
+        navigation.openTab("alerts");
+      }}
+      onOpenHistory={() => {
+        navigation.openHistory();
+      }}
+    />
+  );
+}
+
 /** La pantalla de la ruta actual. */
 export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPageProps) {
   const navigation = usePageNavigation(onNavigate);
@@ -49,6 +64,7 @@ export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPag
             navigation.openTab("alerts");
           }}
           onOpenAlert={navigation.openAlert}
+          onOpenComparison={navigation.openCompare}
           onNewReview={navigation.openNewReview}
         />
       );
@@ -59,7 +75,7 @@ export function CurrentPage({ route, onNavigate, onSearchDocuments }: CurrentPag
         <ReviewPage route={route} navigation={navigation} onSearchDocuments={onSearchDocuments} />
       );
     case "home":
-      return <HomePage onNewReview={navigation.openNewReview} onCompare={navigation.openCompare} />;
+      return homePage(navigation);
   }
 }
 
@@ -73,7 +89,7 @@ interface ReviewPageProps {
 function ReviewPage({ route, navigation, onSearchDocuments }: ReviewPageProps) {
   const { review } = useReview();
   if (!review) {
-    return <HomePage onNewReview={navigation.openNewReview} onCompare={navigation.openCompare} />;
+    return homePage(navigation);
   }
   if (route.page === "report") {
     return (
@@ -101,6 +117,7 @@ function ReviewPage({ route, navigation, onSearchDocuments }: ReviewPageProps) {
       review={review}
       closer={navigation.closer}
       onReport={navigation.openReport}
+      onCompare={navigation.openCompare}
       onOpenAlert={navigation.openAlert}
       onSearchDocuments={onSearchDocuments}
     />

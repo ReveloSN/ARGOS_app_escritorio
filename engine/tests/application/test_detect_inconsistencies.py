@@ -143,3 +143,33 @@ def test_types_without_comparator_are_not_compared() -> None:
     )
 
     assert only_money.execute(index) == ()
+
+
+def test_two_values_present_in_the_same_documents_are_two_data_points_not_a_conflict() -> None:
+    # La fecha de inicio y la de la primera cuota, en cada versión del contrato.
+    index = EntityIndex(
+        [
+            entity(EntityType.DATE, "2026-01-05", CONTRACT),
+            entity(EntityType.DATE, "2026-02-05", CONTRACT),
+            entity(EntityType.DATE, "2026-01-05", ANNEX),
+            entity(EntityType.DATE, "2026-02-05", ANNEX),
+        ]
+    )
+
+    assert detector().execute(index) == ()
+
+
+def test_a_typo_inside_one_document_is_still_reported_when_another_document_has_the_right_one() -> (
+    None
+):
+    index = EntityIndex(
+        [
+            entity(EntityType.CONTRACT_ID, "4857", CONTRACT),
+            entity(EntityType.CONTRACT_ID, "4587", CONTRACT),
+            entity(EntityType.CONTRACT_ID, "4857", ANNEX),
+        ]
+    )
+
+    (alert,) = detector().execute(index)
+
+    assert {alert.first.normalized_value, second_side(alert).normalized_value} == {"4857", "4587"}

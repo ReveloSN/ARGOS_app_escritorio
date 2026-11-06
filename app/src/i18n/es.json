@@ -16,6 +16,43 @@
     "compare": "Comparar",
     "send": "Revisar antes de enviar"
   },
+  "sessionMenu": {
+    "trigger": "Cambiar de sesión. Sesión activa: {name}",
+    "menuLabel": "Sesiones",
+    "documents": {
+      "one": "{count} documento",
+      "other": "{count} documentos"
+    },
+    "pending": {
+      "one": "{count} alerta pendiente",
+      "other": "{count} alertas pendientes"
+    },
+    "closed": "cerrada",
+    "new": "Nueva sesión",
+    "rename": "Renombrar",
+    "delete": "Eliminar",
+    "renameTitle": "Renombrar la sesión",
+    "renameField": "Nombre de la sesión",
+    "renameSave": "Guardar nombre",
+    "cancel": "Cancelar",
+    "deleteTitle": "¿Eliminar la sesión «{name}»?",
+    "deleteBody": "Se eliminan sus alertas, sus decisiones y la copia de sus archivos.",
+    "deleteHint": "Tendrá unos segundos para deshacerlo.",
+    "deleteFailed": {
+      "what": "No pudimos eliminar la sesión «{name}».",
+      "why": "El motor de análisis no respondió, así que la sesión sigue guardada.",
+      "todo": "Ábrala desde el Historial y elimínela de nuevo."
+    },
+    "deleteConfirm": "Eliminar sesión",
+    "deleted": "Sesión «{name}» eliminada",
+    "failed": {
+      "what": "No pudimos completar el cambio en la sesión.",
+      "why": "El motor de análisis no respondió.",
+      "todo": "Inténtelo de nuevo en unos segundos.",
+      "retry": "Reintentar",
+      "dismiss": "Cerrar aviso"
+    }
+  },
   "topbar": {
     "session": "Sesión",
     "searchPlaceholder": "Buscar en alertas y documentos",
@@ -72,13 +109,15 @@
     "paragraph": "Párrafo {paragraph}",
     "tableCell": "Tabla {table} · fila {row}, columna {column}",
     "sheetCell": "Hoja {sheet} · {cell}",
+    "tableRow": "Tabla {table} · fila {row}",
+    "sheetRow": "Hoja {sheet} · fila {row}",
     "subject": "Asunto del correo",
     "body": "Cuerpo del correo",
     "line": "Línea {line}"
   },
   "upload": {
-    "prompt": "Arrastre más archivos aquí o elíjalos desde el equipo",
-    "formats": "PDF, DOCX, XLSX, EML o texto pegado · hasta 10 MB por archivo",
+    "prompt": "Arrastre los archivos aquí o elíjalos desde el equipo",
+    "formats": "PDF, DOCX, XLSX, EML o TXT · hasta 10 MB por archivo",
     "choose": "Elegir archivos",
     "paste": "Pegar texto",
     "dropping": {
@@ -113,7 +152,32 @@
     "title": "Todavía no hay revisiones",
     "description": "Cargue los documentos que va a enviar o firmar. ARGUS los compara entre sí y le muestra las diferencias antes de que finalice.",
     "note": "Los archivos se analizan en este equipo.",
-    "compareVersions": "Comparar dos versiones"
+    "compareVersions": "Comparar dos versiones",
+    "saved": {
+      "title": "No hay una revisión abierta",
+      "description": {
+        "one": "Tiene {count} revisión guardada. Ábrala desde el historial o empiece una nueva.",
+        "other": "Tiene {count} revisiones guardadas. Ábralas desde el historial o empiece una nueva."
+      },
+      "openHistory": "Ver el historial"
+    },
+    "overview": {
+      "label": "Estado de la sesión activa",
+      "closed": "Cerrada · solo lectura",
+      "documents": {
+        "one": "{count} documento cargado",
+        "other": "{count} documentos cargados"
+      },
+      "riskList": "Alertas pendientes por riesgo",
+      "continue": "Continuar la revisión",
+      "viewResults": "Ver la revisión cerrada",
+      "comparisonsTitle": "Últimas comparaciones",
+      "comparison": {
+        "one": "{documents} documentos · {count} cambio",
+        "other": "{documents} documentos · {count} cambios"
+      },
+      "openComparison": "Abrir comparación «{name}»"
+    }
   },
   "engineUnavailable": {
     "what": "El motor de análisis no responde.",
@@ -186,7 +250,9 @@
       "what": "No pudimos leer «{name}».",
       "why": "Es una imagen escaneada sin texto.",
       "todo": "Súbalo de nuevo con texto seleccionable.",
-      "todoOcr": "Súbalo de nuevo con texto seleccionable o actívelo para lectura por OCR."
+      "todoOcr": "Súbalo de nuevo con texto seleccionable o actívelo para lectura por OCR.",
+      "whyEmpty": "El archivo no tiene texto.",
+      "todoEmpty": "Revise que sea el archivo correcto y cárguelo de nuevo."
     },
     "encrypted": {
       "what": "«{name}» está protegido con contraseña.",
@@ -235,6 +301,13 @@
       "other": "{count} alertas · ordenadas por riesgo"
     },
     "noInconsistencies": "No se encontraron inconsistencias",
+    "nothingToCompare": "No hay con qué comparar",
+    "nothingToCompareDescription": "Solo se pudo leer un archivo y con uno solo no hay diferencias que buscar. Haga una nueva revisión con al menos dos archivos.",
+    "noInconsistenciesInRead": "No se encontraron inconsistencias en los archivos leídos",
+    "unreadFiles": {
+      "one": "{count} archivo no se pudo leer y no se revisó.",
+      "other": "{count} archivos no se pudieron leer y no se revisaron."
+    },
     "comparedFiles": {
       "one": "Se comparó {count} archivo y sus valores coinciden.",
       "other": "Se compararon {count} archivos y sus valores coinciden."
@@ -257,6 +330,7 @@
     "reviewedAt": "revisado el {date}",
     "closedAt": "cerrada el {date}",
     "closeReview": "Cerrar revisión",
+    "compare": "Comparar",
     "decidedLabel": "Decididas",
     "decidedProgress": "{decided} de {total}",
     "searchAlerts": "Buscar en alertas",
@@ -395,8 +469,27 @@
     "periodLabel": "Periodo",
     "period": "Periodo: últimos {days} días",
     "export": "Exportar registro (CSV)",
+    "exported": "Se exportó «{name}» a la carpeta de descargas.",
     "exportFileName": "registro-argus-{date}.csv",
     "tableLabel": "Sesiones del historial",
+    "loading": "Cargando el historial…",
+    "loadingSession": "Cargando la sesión…",
+    "comparisons": {
+      "title": "Comparaciones",
+      "listLabel": "Comparaciones del historial",
+      "open": "Abrir comparación",
+      "openLabel": "Abrir comparación «{name}»",
+      "summary": "{documents} · {decided} de {total} decididos entre cambios e inconsistencias",
+      "documents": {
+        "one": "{count} documento",
+        "other": "{count} documentos"
+      },
+      "failed": {
+        "what": "No pudimos abrir esta comparación.",
+        "why": "El motor de análisis no respondió o la comparación ya no está guardada.",
+        "todo": "Reintente. Si sigue fallando, haga la comparación de nuevo."
+      }
+    },
     "columns": {
       "session": "Sesión",
       "date": "Fecha",
@@ -418,6 +511,10 @@
       "inSessions": {
         "one": "en {count} sesión",
         "other": "en {count} sesiones"
+      },
+      "andComparisons": {
+        "one": "y {count} comparación",
+        "other": "y {count} comparaciones"
       },
       "duration": "Tiempo medio de revisión",
       "durationDetail": "desde cargar hasta cerrar",
@@ -510,7 +607,7 @@
     "settingsPlaceholder": "Buscar en ajustes",
     "typeMore": "Escriba al menos 2 letras.",
     "searching": "Buscando…",
-    "noResults": "Sin resultados para «{query}».",
+    "noResults": "Sin resultados para «{query}». Pruebe con otra palabra o con menos letras.",
     "failed": "No pudimos buscar: el motor de análisis no respondió. Escriba de nuevo para reintentar.",
     "openFailed": "No pudimos abrir «{name}». Inténtelo de nuevo."
   },
@@ -572,12 +669,18 @@
       "localDescription": "Los archivos se leen y comparan en este equipo, incluida la lectura por OCR. ARGUS no envía su contenido a internet ni a servidores externos; solo sale lo que usted confirme enviar a un servicio que activó en Ajustes.",
       "retention": "Guardar el historial de decisiones durante 90 días",
       "folder": "Carpeta del historial",
-      "retentionOn": "Las revisiones de más de 90 días, con la copia de sus archivos, se borran al iniciar ARGUS.",
+      "retentionOn": "Las revisiones y comparaciones de más de 90 días, con la copia de sus archivos, se borran al iniciar ARGUS y al activar esta opción.",
       "retentionOff": "El historial se conserva sin límite de tiempo.",
       "changeFolder": "Cambiar carpeta",
       "chooseFolder": "Elegir la carpeta del historial",
       "moving": "Copiando el historial a la nueva carpeta. El motor de análisis se reiniciará al terminar.",
       "moved": "El historial ya está en la nueva carpeta. La carpeta anterior se conservó; puede borrarla cuando quiera."
+    },
+    "loadFailed": {
+      "what": "No pudimos cargar los ajustes de {section}.",
+      "why": "El motor de análisis no respondió: todavía está arrancando o no está en marcha.",
+      "todo": "Reintente en unos segundos. Si sigue igual, cierre ARGUS y ábralo de nuevo.",
+      "retry": "Reintentar"
     },
     "shortcuts": {
       "newReview": "Nueva revisión",
@@ -589,7 +692,13 @@
       "error": "Es un error",
       "ignore": "Ignorar",
       "searchAlerts": "Buscar en alertas",
-      "undo": "Deshacer la última decisión"
+      "undo": "Deshacer la última decisión",
+      "chooseFiles": "Elegir archivos",
+      "continue": "Continuar: leer los archivos o abrir el borrador en el correo",
+      "exportReport": "Exportar el informe",
+      "close": "Cerrar un panel o la comparación",
+      "compareOptions": "Opciones de Comparar",
+      "compareTabs": "Pestañas de Comparar"
     },
     "unavailable": {
       "what": "No pudimos cargar estos ajustes.",
@@ -632,13 +741,14 @@
     },
     "ai": {
       "toggle": "Explicar cambios con IA",
-      "description": "Al pedir «Explicar este cambio» o «Explicar esta alerta», ARGUS envía a {provider} solo los fragmentos de origen. La detección y el análisis siguen siendo locales.",
+      "description": "Al abrir «Ver detalle» en un cambio o en una alerta, ARGUS envía a {provider} solo los fragmentos de origen. La detección y el análisis siguen siendo locales.",
       "model": "Proveedor: {provider} · modelo {model}",
       "keyLabel": "Clave de la API de {provider}",
       "saveKey": "Guardar clave",
       "removeKey": "Quitar clave",
       "keyStored": "Clave guardada en el llavero del sistema.",
-      "keyMissing": "Sin clave, «Explicar este cambio» y «Explicar esta alerta» usan la explicación local.",
+      "keyMissing": "Sin clave, «Ver detalle» usa la explicación local.",
+      "section": "IA",
       "loading": "Cargando los ajustes de IA…",
       "failed": "No se pudieron cargar los ajustes de IA: el motor de análisis no respondió.",
       "keychain": {
@@ -665,6 +775,7 @@
       "onboarding": "Ver primeros pasos"
     },
     "ocr": {
+      "section": "OCR",
       "loading": "Cargando los ajustes de OCR…",
       "failed": "No se pudieron cargar los ajustes de OCR: el motor de análisis no respondió.",
       "localAvailable": "El OCR local (Tesseract) está listo en este equipo. «Activar OCR» lo usa por defecto.",
@@ -741,6 +852,80 @@
   },
   "comparison": {
     "title": "Comparar documentos",
+    "fromSession": {
+      "title": "Documentos del expediente",
+      "description": "Ya están cargados: elija cuáles comparar sin volver a subirlos.",
+      "compare": {
+        "one": "Comparar {count} elegido",
+        "other": "Comparar los {count} elegidos"
+      }
+    },
+    "scope": {
+      "label": "Qué comparar",
+      "base": "Documento base",
+      "against": "Contra",
+      "allOthers": {
+        "one": "El otro documento",
+        "other": "Todos los demás documentos"
+      },
+      "allHeading": "{base} frente a todos los demás",
+      "baseBadge": "Base",
+      "versus": "contra {document}",
+      "filterLabel": "Filtrar por documento",
+      "allDocuments": "Todos los documentos",
+      "breakdown": "Cambios por documento",
+      "noChanges": "sin cambios"
+    },
+    "report": {
+      "action": "Exportar informe",
+      "formatLabel": "Formato del informe",
+      "pdf": "PDF",
+      "docx": "Word",
+      "exporting": "Preparando el informe…",
+      "title": "Informe de comparación",
+      "comparedOn": "Comparado el {date}",
+      "heading": "{number}. {title}",
+      "parts": {
+        "summary": "Resumen",
+        "changes": "Cambios",
+        "inconsistencies": "Inconsistencias entre documentos"
+      },
+      "summary": {
+        "one": "Se comparó {count} documento el {date}.",
+        "other": "Se compararon {count} documentos el {date}."
+      },
+      "metrics": {
+        "changes": {
+          "one": "cambio",
+          "other": "cambios"
+        },
+        "high": {
+          "one": "de riesgo alto",
+          "other": "de riesgo alto"
+        },
+        "inconsistencies": {
+          "one": "inconsistencia",
+          "other": "inconsistencias"
+        },
+        "decided": {
+          "one": "decidido",
+          "other": "decididos"
+        }
+      },
+      "columns": {
+        "change": "Cambio",
+        "before": "Antes · origen",
+        "after": "Después · origen",
+        "decision": "Decisión",
+        "data": "Dato"
+      }
+    },
+    "close": {
+      "action": "Cerrar comparación",
+      "hint": "Esc"
+    },
+    "matrixHeader": "Columna: comparar {document} contra todos los demás",
+    "matrixRowHeader": "Fila: comparar {document} contra todos los demás",
     "modes": {
       "label": "Modo de comparación",
       "versions": "Comparar versiones",
@@ -772,6 +957,14 @@
         "other": "movidas"
       }
     },
+    "options": {
+      "label": "Opciones",
+      "ignoring": "Ignorando: {names}",
+      "showing": "Mostrando: {type}",
+      "typeLabel": "Mostrar",
+      "legendLabel": "Cómo leer las marcas",
+      "minimap": "Mostrar el minimapa"
+    },
     "ignore": {
       "label": "Ignorar",
       "case": "mayúsculas",
@@ -799,20 +992,39 @@
     },
     "list": {
       "title": "Cambios",
-      "count": "{visible} de {total}",
       "navigate": "J K para navegar",
-      "importantOnly": "Solo cambios importantes: números, fechas, nombres y negaciones",
-      "empty": "Ningún cambio con estos filtros."
+      "decided": "{done} de {total} decididos",
+      "completeNote": "Revisión completa. {summary}. Ya puede exportar el informe.",
+      "totals": {
+        "error": {
+          "one": "{count} error",
+          "other": "{count} errores"
+        },
+        "correct": {
+          "one": "{count} correcto",
+          "other": "{count} correctos"
+        },
+        "ignored": {
+          "one": "{count} ignorado",
+          "other": "{count} ignorados"
+        }
+      },
+      "empty": "Ningún cambio con estos filtros.",
+      "emptyHint": "Cámbielos en «Opciones».",
+      "noDifferences": "No hay diferencias entre estos documentos.",
+      "all": "Todos",
+      "important": "Solo importantes",
+      "filterLabel": "Qué cambios ver"
     },
     "detail": {
       "empty": "—",
+      "aboutChange": "Sobre este cambio",
+      "aboutData": "Sobre este dato",
       "saved": "Se guardó: {decision}",
       "removedTitle": "Este texto falta en B",
       "addedTitle": "Este texto se agregó en B",
       "modifiedTitle": "El texto cambió entre A y B",
-      "movedTitle": "Este texto cambió de lugar",
-      "inA": "En A",
-      "inB": "En B"
+      "movedTitle": "Este texto cambió de lugar"
     },
     "decided": "Cambio {number} marcado como «{decision}».",
     "unrelated": {
@@ -822,28 +1034,57 @@
       "action": "Cambiar de modo"
     },
     "inconsistencies": {
-      "intro": "{data} datos que no coinciden, buscados en {documents} documentos. Todavía no hay datos confirmados del expediente.",
+      "intro": "{found} en {documents}.",
+      "noFacts": "Todavía no hay datos confirmados del expediente.",
+      "confirmed": "Confirmado: {value}",
+      "found": {
+        "one": "{count} dato no coincide",
+        "other": "{count} datos no coinciden"
+      },
+      "documents": {
+        "one": "{count} documento",
+        "other": "{count} documentos"
+      },
       "data": "Dato",
       "noConfirmed": "Sin dato confirmado",
       "notFound": "No aparece",
       "odd": "No coincide",
       "legend": "≠ marca el valor que no coincide con la mayoría de los documentos.",
+      "legendConfirmed": "≠ marca el valor que no coincide con el dato confirmado del expediente.",
       "emptyTitle": "No se encontraron inconsistencias",
       "emptyDescription": "Los documentos coinciden en identificadores, montos, fechas, nombres y periodos."
     },
     "matrix": {
       "label": "Matriz de diferencias",
-      "intro": "{documents} documentos · {pairs} pares · {different} pares con diferencias. Seleccione una celda para ver el par.",
-      "axis": "Filas × columnas",
-      "same": "mismo documento",
-      "noDifferences": "sin diferencias",
-      "changes": {
-        "one": "cambio",
-        "other": "cambios"
+      "intro": "{documents} · {pairs} · {different}. Seleccione una celda para ver el par.",
+      "documents": {
+        "one": "{count} documento",
+        "other": "{count} documentos"
       },
+      "pairs": {
+        "one": "{count} par",
+        "other": "{count} pares"
+      },
+      "different": {
+        "one": "{count} par con diferencias",
+        "other": "{count} pares con diferencias"
+      },
+      "axis": "Filas × columnas",
       "selectedPair": "Par seleccionado",
+      "more": {
+        "one": "y {count} diferencia más",
+        "other": "y {count} diferencias más"
+      },
       "versus": "frente a",
-      "open": "Abrir el par"
+      "open": "Abrir el par",
+      "cellChanges": {
+        "one": "{count} cambio",
+        "other": "{count} cambios"
+      },
+      "cellHigh": {
+        "one": "Riesgo alto, {count} cambio",
+        "other": "Riesgo alto, {count} cambios"
+      }
     },
     "start": {
       "title": "Elija dos o más documentos",
@@ -858,9 +1099,22 @@
       "failedTodo": "Vuelva a elegir los documentos para intentarlo de nuevo."
     },
     "meaning": {
-      "label": "IA: {meaning}",
-      "reworded": "Reformulado",
-      "meaning_change": "Cambio de sentido"
+      "reworded": "Reformulado, mismo significado",
+      "meaning_change": "Posible cambio de significado"
+    },
+    "unified": {
+      "label": "Texto con los cambios",
+      "movedTo": "Movido a {location}"
+    },
+    "summary": {
+      "changes": {
+        "one": "{count} cambio",
+        "other": "{count} cambios"
+      },
+      "important": {
+        "one": "{count} importante",
+        "other": "{count} importantes"
+      }
     }
   },
   "facts": {
@@ -990,6 +1244,7 @@
       "to": "Para",
       "cc": "CC",
       "subject": "Asunto",
+      "markLabel": " (problema {number})",
       "noCopy": "(sin copia)",
       "attachments": "Adjuntos ({count})",
       "attachmentsLabel": "Adjuntos",
@@ -1005,6 +1260,11 @@
         "other": "{count} problemas en el borrador"
       },
       "review": "Revise cada uno antes de enviar. ARGUS no envía el correo.",
+      "unfixed": {
+        "one": "{count} problema marcado como error sin corregir",
+        "other": "{count} problemas marcados como error sin corregir"
+      },
+      "unfixedReview": "ARGUS no cambia el texto del correo: corríjalo usted antes de enviarlo.",
       "ready": "El borrador está listo",
       "readyCaseFile": "Adjuntos, periodo y destinatarios coinciden con el expediente.",
       "readyAlone": "El periodo y los adjuntos coinciden con lo que dice el correo."
@@ -1018,6 +1278,10 @@
         "one": "Queda {count} problema sin resolver.",
         "other": "Quedan {count} problemas sin resolver."
       },
+      "unfixed": {
+        "one": "Marcó {count} problema que ARGUS no puede corregir por usted.",
+        "other": "Marcó {count} problemas que ARGUS no puede corregir por usted."
+      },
       "none": "Sin problemas pendientes."
     },
     "issue": {
@@ -1026,6 +1290,16 @@
         "kind": "Periodo",
         "title": "Menciona «{mentioned}» y el adjunto es de otro periodo",
         "body": "El texto dice «{marked}». El adjunto {attached} corresponde a otro periodo."
+      },
+      "amount_mismatch": {
+        "kind": "Monto",
+        "title": "Cita {mentioned} y el adjunto dice {attached}",
+        "body": "El correo menciona «{marked}»; en {document} el monto es {attached}. Revise cuál es el correcto: ARGUS no cambia el texto del correo."
+      },
+      "identifier_mismatch": {
+        "kind": "Número",
+        "title": "Cita el número {mentioned} y el adjunto dice {attached}",
+        "body": "El correo menciona «{marked}»; en {document} el número es {attached}. Revise cuál es el correcto: ARGUS no cambia el texto del correo."
       },
       "missing_attachment": {
         "kind": "Adjunto",
@@ -1060,6 +1334,7 @@
     },
     "decided": {
       "error": "Problema {number}: se aplicará en la copia del borrador.",
+      "errorMarked": "Problema {number} marcado como error. ARGUS no cambia el texto del correo.",
       "correct": "Problema {number} marcado como «Es correcto».",
       "ignored": "Problema {number} ignorado."
     }
@@ -1206,14 +1481,14 @@
       "load": {
         "say": "Soy un asistente de IA. Leo sus documentos en este equipo.",
         "title": "1. Cargue los documentos de un expediente",
-        "body": "Arrastre el contrato, sus anexos, la hoja de tarifas o el correo que va a enviar. ARGUS lee PDF, DOCX, XLSX, EML y texto pegado.",
+        "body": "Arrastre el contrato, sus anexos, la hoja de tarifas o el correo que va a enviar. ARGUS lee PDF, DOCX, XLSX, EML y TXT.",
         "local": "Los archivos no salen de este equipo.",
         "addMore": "Puede agregar más documentos en cualquier momento."
       },
       "confirm": {
         "say": "Si no estoy seguro de un dato, se lo pregunto.",
-        "title": "2. Confirme lo que se leyó",
-        "body": "Antes de comparar, revise el número de contrato, las partes, los montos y las fechas que se encontraron. Lo que usted confirme queda en el expediente como fuente de verdad.",
+        "title": "2. Compruebe lo que se leyó",
+        "body": "Antes de comparar, vea qué archivos se leyeron y cuáles no: los que no se puedan leer no se incluyen. Los datos que usted confirme después, en la pestaña «Datos confirmados», quedan en el expediente como fuente de verdad.",
         "reused": "Los datos confirmados se usan en todas las revisiones del expediente.",
         "editable": "Puede editarlos o retirarlos después."
       },
@@ -1243,16 +1518,117 @@
       "cancel": "Cancelar"
     }
   },
-  "explain": {
-    "toggle": {
-      "change": "Explicar este cambio",
-      "alert": "Explicar esta alerta"
+  "explainPanel": {
+    "label": "Explicación del cambio",
+    "labelAlert": "Explicación de la alerta",
+    "sideA": "Documento A dice",
+    "sideB": "Documento B dice",
+    "valuesToggle": "Ver qué dice cada documento",
+    "absent": "No aparece en este documento",
+    "changed": "Qué cambió",
+    "why": "Por qué importa",
+    "todo": "Qué puede hacer",
+    "detail": "Ver detalle",
+    "aiNote": "Sugerencia de IA, usted decide",
+    "summary": {
+      "removed": "En el documento B falta «{text}».",
+      "added": "En el documento B se agregó «{text}».",
+      "modified": "En el documento B, «{before}» pasa a ser «{after}».",
+      "moved": "En el documento B, «{text}» está en otro lugar."
     },
+    "topics": {
+      "negation": {
+        "changed": "Aparece o desaparece una negación («no», «ni», «sin»).",
+        "why": "Lo que el texto permite puede pasar a estar prohibido, o al revés.",
+        "todo": "Lea la frase completa en los dos documentos y confirme que el cambio sea intencional."
+      },
+      "amount": {
+        "changed": "Cambia un monto.",
+        "why": "Un valor distinto cambia lo que se paga o se cobra.",
+        "todo": "Compare con el valor acordado y corrija el documento que se equivoque."
+      },
+      "date": {
+        "changed": "Cambia una fecha.",
+        "why": "Puede mover plazos, vigencias o vencimientos.",
+        "todo": "Verifique la fecha correcta contra el acuerdo."
+      },
+      "number": {
+        "changed": "Cambia un número o identificador.",
+        "why": "Puede referirse a otro contrato, a otro documento o a otra cantidad.",
+        "todo": "Confirme el número correcto y corrija el documento que lo escribió mal."
+      },
+      "party": {
+        "changed": "Cambia el nombre o la identificación de una parte.",
+        "why": "El documento podría obligar o favorecer a otra persona o empresa.",
+        "todo": "Revise el nombre o el NIT con un documento oficial."
+      },
+      "case": {
+        "changed": "Solo cambian las mayúsculas.",
+        "why": "El sentido es el mismo.",
+        "todo": "Puede marcarlo como correcto o ignorarlo."
+      },
+      "punctuation": {
+        "changed": "Solo cambia la puntuación.",
+        "why": "Casi siempre el sentido es el mismo, pero una coma puede mover una condición.",
+        "todo": "Léalo una vez y, si está bien, márquelo como correcto o ignórelo."
+      },
+      "format": {
+        "changed": "Solo cambian los espacios o el formato.",
+        "why": "El contenido es el mismo.",
+        "todo": "Puede ignorarlo."
+      },
+      "added": {
+        "changed": "Se agregó texto que el otro documento no tiene.",
+        "why": "Puede crear una obligación o un derecho que antes no existía.",
+        "todo": "Lea el texto nuevo y confirme que se acordó."
+      },
+      "removed": {
+        "changed": "Se quitó texto que estaba en el otro documento.",
+        "why": "Puede eliminar una obligación, un derecho o una condición.",
+        "todo": "Pregunte si la omisión fue intencional; si no, recupere el texto."
+      },
+      "moved": {
+        "changed": "El texto es el mismo, pero está en otro lugar.",
+        "why": "Cambiar el orden puede cambiar a qué cláusula se aplica.",
+        "todo": "Verifique que siga bajo la cláusula correcta."
+      },
+      "reworded": {
+        "changed": "Se escribió de otra manera.",
+        "why": "El significado parece ser el mismo.",
+        "todo": "Compárelo rápido y márquelo como correcto si coincide."
+      },
+      "meaning_change": {
+        "changed": "Cambia la redacción y también lo que el texto dice.",
+        "why": "Dos versiones que dicen cosas distintas pueden llevar a decisiones distintas.",
+        "todo": "Lea los dos textos y decida cuál es el correcto."
+      },
+      "wording": {
+        "changed": "Cambia la redacción.",
+        "why": "No está claro si el sentido es el mismo.",
+        "todo": "Compare los dos textos para confirmar."
+      }
+    },
+    "alert": {
+      "why": {
+        "contract_id": "Un número de contrato distinto puede referirse a otro acuerdo.",
+        "tax_id": "Un NIT o una cédula distinta puede identificar a otra persona o empresa.",
+        "money": "Un monto distinto cambia lo que se paga o se cobra.",
+        "date": "Una fecha distinta puede mover plazos y vencimientos.",
+        "person_name": "Un nombre distinto puede señalar a otra persona.",
+        "organization_name": "Una razón social distinta puede señalar a otra empresa.",
+        "period": "Un periodo distinto puede enviar o cobrar lo de otro mes."
+      },
+      "todo": {
+        "pair": "Revise cuál de los dos valores es el correcto y corrija el documento que se equivoca.",
+        "single": "Revise el dato en el documento y corríjalo si está mal."
+      }
+    }
+  },
+  "explain": {
     "loading": "Preparando la explicación…",
     "failed": "No se pudo obtener la explicación: el motor de análisis no respondió. Ciérrela y ábrala de nuevo.",
     "aiLabel": "Sugerencia de IA",
     "templateLabel": "Explicación de ARGUS",
-    "aiNote": "Es una sugerencia: la decisión sigue siendo suya.",
     "retry": "Reintentar",
     "fallback": {
       "no_key": {

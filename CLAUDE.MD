@@ -141,6 +141,7 @@ Rutas con `pathlib`, nunca con separadores a mano. Sin dependencias exclusivas d
 - Puertos listos, sin implementar todavía, para un embedder Nemotron local y un clasificador NLI.
 
 ## 16. Reglas añadidas
+- **Una sola fuente de verdad para el estado de la sesión.** Lo que la interfaz muestra de la sesión activa (documentos, alertas pendientes por riesgo, comparaciones) sale de `SessionSnapshot`, derivado de lo que entrega el motor. Barra lateral, Inicio, barra superior y el selector de sesión leen de ahí; ninguna pantalla cuenta por su cuenta ni guarda una copia propia. Una cifra nueva se agrega al snapshot y se muestra desde él.
 - La detección exacta nunca depende de IA, de internet ni de claves. La IA solo alinea, clasifica y explica.
 - El catálogo de componentes y los datos de ejemplo son solo para desarrollo; la interfaz de producción solo muestra datos reales del motor.
 - Ningún texto de producto menciona «átomos», «moléculas» ni «organismos».

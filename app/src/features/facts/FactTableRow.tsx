@@ -91,8 +91,17 @@ export function FactTableRow({ row, view, changes, readOnly }: FactTableRowProps
         isSelected && styles.rowSelected,
         shown.isRetired && styles.rowRetired,
       )}
+      // La fila se elige con Enter o Espacio, no solo con el ratón: de ella depende el panel lateral.
+      tabIndex={0}
       onClick={() => {
         view.select(row.key);
+      }}
+      onKeyDown={(event) => {
+        const isOnRow = event.target === event.currentTarget;
+        if (isOnRow && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          view.select(row.key);
+        }
       }}
     >
       <span role="cell" className={styles.dataCell}>

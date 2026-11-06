@@ -1,10 +1,15 @@
-from collections.abc import Iterable, Sequence
+from collections.abc import Iterable, Iterator, Sequence
+from itertools import accumulate, groupby
 
 from argus.application.excerpt import excerpt_around
 from argus.application.ports.entity_extractor import EntityExtractor, EntityMatch
 from argus.domain.document import Document, NamedFragment, TextFragment
 from argus.domain.entity import Entity, Occurrence
 from argus.domain.entity_index import EntityIndex
+from argus.domain.text_comparison.segmenter import row_key
+
+# Las celdas de una fila se leen como una frase: «Contrato No.» y «4857» son «Contrato No. 4857».
+ROW_SEPARATOR = " "
 
 
 class EntityExtractionPipeline:
@@ -27,7 +32,25 @@ class EntityExtractionPipeline:
         nested = (
             entity for attachment in document.attachments for entity in self.extract(attachment)
         )
-        return (*own, *nested)
+        return (*own, *self._across_cells(document), *nested)
+
+    def _across_cells(self, document: Document) -> Iterator[Entity]:
+        """Valores escritos a caballo entre celdas de una fila de tabla u hoja, con la etiqueta en una
+        celda y el valor en la siguiente. Se ubican en la celda donde termina el valor."""
+        for key, group in groupby(document.fragments, key=lambda item: row_key(item.location)):
+            cells = tuple(group)
+            if key is not None and len(cells) > 1:
+                yield from self._spanning(document.name, cells)
+
+    def _spanning(self, document_name: str, cells: tuple[TextFragment, ...]) -> Iterator[Entity]:
+        text = ROW_SEPARATOR.join(cell.text for cell in cells)
+        ends = list(accumulate(len(cell.text) + len(ROW_SEPARATOR) for cell in cells))
+        for match in self.matches(text):
+            first = next(i for i, end in enumerate(ends) if match.start < end)
+            last = next(i for i, end in enumerate(ends) if match.end <= end)
+            if first != last:
+                row = TextFragment(text, cells[last].location)
+                yield to_entity(document_name, row, match)
 
     def build_index(self, documents: Iterable[Document]) -> EntityIndex:
         return EntityIndex(entity for document in documents for entity in self.extract(document))

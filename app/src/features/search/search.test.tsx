@@ -83,6 +83,10 @@ describe("Búsqueda global (Ctrl K)", () => {
 
     expect(screen.getByText("Escriba al menos 2 letras.")).toBeInTheDocument();
     await userEvent.type(screen.getByRole("combobox"), "zzz");
-    expect(await screen.findByText("Sin resultados para «zzz».")).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "Sin resultados para «zzz». Pruebe con otra palabra o con menos letras.",
+      ),
+    ).toBeInTheDocument();
   });
 });

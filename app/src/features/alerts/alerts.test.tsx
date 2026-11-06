@@ -103,6 +103,7 @@ describe("Resultados: filtros, búsqueda y acciones por fila", () => {
             decidedCount: 1,
           },
         ],
+        comparisons: [],
       }),
     );
     const openReview = vi.fn(() => Promise.resolve(CLOSED_REVIEW));

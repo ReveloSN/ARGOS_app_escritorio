@@ -197,3 +197,13 @@ def test_each_change_brings_its_meaning_suggestion(
 
     cession = next(change for change in changes if "negation" in change["materialities"])
     assert cession["meaning"] == {"meaning": "meaning_change", "confidence": 0.9}
+
+
+def test_each_change_names_its_explanation_topic(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    changes = compare_versions(client, auth_headers)["pairs"][0]["changes"]
+
+    cession = next(change for change in changes if "negation" in change["materialities"])
+    assert cession["topic"] == "negation"
+    assert all(change["topic"] for change in changes)

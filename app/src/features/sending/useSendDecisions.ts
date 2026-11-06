@@ -16,7 +16,13 @@ function useSendDecisionTarget(): DecisionTarget {
     send: (input) => sending.decide(reviewId, input),
     sendUndo: () => sending.undoDecision(reviewId),
     apply: updateDecisions,
-    decidedMessage: (input) => t(`sending.decided.${input.kind}`, { number: input.alertNumber }),
+    decidedMessage: (input) => {
+      const hasFix = review?.issues.some(
+        (issue) => issue.number === input.alertNumber && issue.fix,
+      );
+      const key = input.kind === "error" && !hasFix ? "errorMarked" : input.kind;
+      return t(`sending.decided.${key}`, { number: input.alertNumber });
+    },
   };
 }
 

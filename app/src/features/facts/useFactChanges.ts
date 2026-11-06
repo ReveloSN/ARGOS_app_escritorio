@@ -24,7 +24,8 @@ export interface FactFailure {
 }
 
 export interface FactChanges {
-  readonly add: (input: FactInput) => void;
+  /** `onSaved` solo corre si se guardó: así un formulario no se cierra sobre un error. */
+  readonly add: (input: FactInput, onSaved?: () => void) => void;
   readonly edit: (fact: FactResult, value: string) => void;
   readonly retire: (fact: FactResult) => void;
   readonly restore: (fact: FactResult) => void;
@@ -39,6 +40,7 @@ interface FactChange {
   readonly label: string;
   readonly message: string;
   readonly value?: string;
+  readonly onSaved?: () => void;
 }
 
 function unrecognizedValue(error: unknown, change: FactChange): string | null {
@@ -51,13 +53,18 @@ function failureOf(error: unknown, change: FactChange, retry: () => void): FactF
   return { label: change.label, unrecognizedValue: unrecognizedValue(error, change), retry };
 }
 
+function announceSaved(change: FactChange, notice: TimedNotice): void {
+  notice.show(change.message, true);
+  change.onSaved?.();
+}
+
 function useFactRunner(onSaved: (result: FactsResult) => void, notice: TimedNotice) {
   const [failure, setFailure] = useState<FactFailure | null>(null);
   const run = (change: FactChange) => {
     setFailure(null);
     const saved = (result: FactsResult) => {
       onSaved(result);
-      notice.show(change.message, true);
+      announceSaved(change, notice);
     };
     const retry = () => {
       run(change);
@@ -82,13 +89,14 @@ interface ActionContext {
 function valueActions({ sessionId, gateway, run, t }: ActionContext) {
   const message = (label: string, value: string) => t("facts.notice.saved", { label, value });
   return {
-    add: (input: FactInput) => {
+    add: (input: FactInput, onSaved?: () => void) => {
       const send = () => gateway.addFact(sessionId, input);
       run({
         send,
         label: input.label,
         message: message(input.label, input.value),
         value: input.value,
+        ...(onSaved ? { onSaved } : {}),
       });
     },
     edit: (fact: FactResult, value: string) => {

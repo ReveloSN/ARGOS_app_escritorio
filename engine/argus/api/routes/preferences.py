@@ -35,6 +35,8 @@ def build_preferences_router(services: EngineServices) -> APIRouter:
                 body.has_retention_limit,
             )
         )
+        # Activar el límite aplica de inmediato: lo vencido no espera al próximo arranque.
+        services.purge_history()
         return _preferences_response(services)
 
     @router.post("/preferences/history-folder")

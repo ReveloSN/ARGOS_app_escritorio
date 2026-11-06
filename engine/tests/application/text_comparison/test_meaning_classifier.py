@@ -70,14 +70,17 @@ def test_without_the_model_only_wording_has_no_suggestion() -> None:
     assert classify(None, ChangeKind.MODIFIED, WORDING) is None
 
 
-def test_whole_text_added_or_removed_changes_the_meaning_and_moved_has_no_suggestion() -> None:
-    added = RuleAndSimilarityMeaningClassifier(None).classify(ChangeKind.ADDED, WORDING, [PAGO])
-    moved = RuleAndSimilarityMeaningClassifier(None).classify(
-        ChangeKind.MOVED, frozenset(), [PAGO, PAGO]
-    )
+@pytest.mark.parametrize("kind", [ChangeKind.ADDED, ChangeKind.REMOVED, ChangeKind.MOVED])
+@pytest.mark.parametrize(
+    "materialities", [WORDING, frozenset({Materiality.AMOUNT}), frozenset({Materiality.CASE})]
+)
+def test_only_a_changed_pair_has_a_meaning_suggestion(
+    kind: ChangeKind, materialities: frozenset[Materiality]
+) -> None:
+    # Regresión: una eliminación pura se etiquetaba «Cambio de sentido» sin tener dos textos.
+    sides = [PAGO] if kind is not ChangeKind.MOVED else [PAGO, PAGO]
 
-    assert added == MeaningSuggestion(ChangeMeaning.MEANING_CHANGE, 0.7)
-    assert moved is None
+    assert RuleAndSimilarityMeaningClassifier(None).classify(kind, materialities, sides) is None
 
 
 def test_may_becoming_must_changes_the_meaning_even_if_it_reads_the_same() -> None:

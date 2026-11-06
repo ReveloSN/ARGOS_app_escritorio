@@ -14,7 +14,7 @@ export type ReportTexts = Pick<I18n, "t" | "tPlural" | "format" | "locale">;
 
 const EMPTY_SECTION = { paragraphs: [], metrics: [], table: null } as const;
 
-function sideCell(side: AlertSideResult | null, { t }: ReportTexts): ReportCellData {
+export function sideCell(side: AlertSideResult | null, { t }: ReportTexts): ReportCellData {
   const first = side?.occurrences[0];
   if (!side || !first) return { text: NO_SECOND_VALUE };
   return { text: side.value, detail: `${first.document} · ${describeLocation(first.location, t)}` };

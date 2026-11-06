@@ -29,6 +29,7 @@ export function createEngineServices(): EngineServices {
     facts: new FactClient(http),
     sending: new SendClient(http),
     reports: new ReportClient(http),
+    comparisonReports: new ReportClient(http, "/comparisons"),
     ai: new AiClient(http),
     ocr: new OcrClient(http),
     history: new HistoryClient(http),

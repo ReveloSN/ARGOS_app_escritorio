@@ -32,3 +32,27 @@ def test_text_without_content_is_reported() -> None:
         PlainTextReader().read(DocumentSource("vacio.txt", b"  \n\n "))
 
     assert raised.value.reason is UnreadableReason.NO_TEXT
+
+
+@pytest.mark.parametrize("encoding", ["utf-16", "utf-16-be-with-bom", "utf-32"])
+def test_unicode_text_saved_by_notepad_is_decoded(encoding: str) -> None:
+    text = "Contrato No. 4857\nPago de $ 18.450.000"
+    content = {
+        "utf-16": text.encode("utf-16"),
+        "utf-16-be-with-bom": b"\xfe\xff" + text.encode("utf-16-be"),
+        "utf-32": text.encode("utf-32"),
+    }[encoding]
+
+    document = PlainTextReader().read(DocumentSource("notas.txt", content))
+
+    assert [fragment.text for fragment in document.fragments] == [
+        "Contrato No. 4857",
+        "Pago de $ 18.450.000",
+    ]
+
+
+def test_a_binary_file_is_not_accepted_as_text() -> None:
+    with pytest.raises(UnreadableDocumentError) as raised:
+        PlainTextReader().read(DocumentSource("falso.txt", b"\x00\x01\x02\xff\xfe\x00data"))
+
+    assert raised.value.reason is UnreadableReason.CORRUPTED

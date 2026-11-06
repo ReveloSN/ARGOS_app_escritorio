@@ -5,6 +5,7 @@ import type { OcrSettingsResult } from "../../services/engine/ocrTypes";
 import { CloudCredentials } from "./CloudCredentials";
 import { CloudProcessorForm } from "./CloudProcessorForm";
 import styles from "./Settings.module.css";
+import { SettingsLoadState } from "./SettingsLoadState";
 import { useOcrSettings, type OcrSettingsControl } from "./useOcrSettings";
 
 function LocalStatus({
@@ -60,11 +61,13 @@ export function OcrSection({ onSaved }: { onSaved: () => void }) {
   const { t } = useI18n();
   const control = useOcrSettings(onSaved);
   if (control.state.status !== "ready") {
-    const failed = control.state.status === "failed";
     return (
-      <p className={styles.description}>
-        {t(failed ? "settings.ocr.failed" : "settings.ocr.loading")}
-      </p>
+      <SettingsLoadState
+        isFailed={control.state.status === "failed"}
+        loading="settings.ocr.loading"
+        section={t("settings.ocr.section")}
+        onRetry={control.reload}
+      />
     );
   }
   const settings = control.state.data;

@@ -1,4 +1,6 @@
 import type { AiGateway, ChangeExplanationResult } from "../../services/engine/aiTypes";
+import type { ExplanationBlocks } from "./explanationBlocks";
+import type { SideBySide } from "./sideValues";
 
 /** Un fragmento de origen que se cita junto a la explicación: archivo y página incluidos. */
 export interface ExplainQuote {
@@ -11,7 +13,15 @@ export type ExplainSubject =
   | { readonly subject: "change"; readonly comparisonId: string; readonly number: number }
   | { readonly subject: "alert"; readonly sessionId: string; readonly number: number };
 
-export type ExplainTarget = ExplainSubject & { readonly quotes: readonly ExplainQuote[] };
+export type ExplainTarget = ExplainSubject & {
+  readonly quotes: readonly ExplainQuote[];
+  /** La explicación local, lista al instante: plantilla de respaldo, sin clave ni conexión. */
+  readonly blocks: ExplanationBlocks;
+  /** La sugerencia de significado de la IA local, ya en lenguaje claro. */
+  readonly meaning?: string | undefined;
+  /** Los dos valores lado a lado; las alertas ya los muestran arriba y no lo repiten. */
+  readonly values?: SideBySide | undefined;
+};
 
 function idOf(target: ExplainSubject): string {
   return target.subject === "change" ? target.comparisonId : target.sessionId;

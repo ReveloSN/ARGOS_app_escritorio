@@ -5,6 +5,7 @@ from argus.application.ports.clock import Clock
 from argus.application.ports.document_archive import DocumentArchive
 from argus.application.ports.repositories import (
     AlertRepository,
+    ComparisonRepository,
     DecisionRepository,
     SessionRepository,
 )
@@ -12,6 +13,7 @@ from argus.domain.alert import NumberedAlert
 from argus.domain.decision import Decision
 from argus.domain.errors import SessionNotFoundError
 from argus.domain.review_session import ReviewSession
+from argus.domain.text_comparison.report import ComparisonReport
 from argus.domain.usage_metrics import UsageMetrics, compute_usage_metrics
 
 
@@ -24,9 +26,22 @@ class HistoryEntry:
 
 
 @dataclass(frozen=True)
+class ComparisonHistoryEntry:
+    """Una comparación del historial y cuántos de sus elementos ya tienen decisión."""
+
+    report: ComparisonReport
+    decided_count: int
+
+    @property
+    def item_count(self) -> int:
+        return len(self.report.numbered_changes) + len(self.report.content.inconsistencies)
+
+
+@dataclass(frozen=True)
 class HistoryOverview:
     entries: tuple[HistoryEntry, ...]
     metrics: UsageMetrics
+    comparisons: tuple[ComparisonHistoryEntry, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -43,6 +58,8 @@ class HistoryRepositories:
     sessions: SessionRepository
     alerts: AlertRepository
     decisions: DecisionRepository
+    comparisons: ComparisonRepository
+    comparison_decisions: DecisionRepository
 
 
 class ReviewHistory:
@@ -55,7 +72,22 @@ class ReviewHistory:
         sessions = self._repositories.sessions.list_created_since(since)
         decisions = {s.id: self._repositories.decisions.list_for(s.id) for s in sessions}
         entries = tuple(HistoryEntry(s, len(decisions[s.id])) for s in sessions)
-        return HistoryOverview(entries, compute_usage_metrics(sessions, decisions))
+        comparisons = self._comparison_entries(since)
+        compared = [d for entry in comparisons for d in self._comparison_decisions(entry)]
+        metrics = compute_usage_metrics(sessions, decisions, compared)
+        return HistoryOverview(entries, metrics, comparisons)
+
+    def _comparison_entries(self, since: datetime) -> tuple[ComparisonHistoryEntry, ...]:
+        reports = self._repositories.comparisons.list_created_since(since)
+        return tuple(
+            ComparisonHistoryEntry(
+                report, len(self._repositories.comparison_decisions.list_for(report.id))
+            )
+            for report in reports
+        )
+
+    def _comparison_decisions(self, entry: ComparisonHistoryEntry) -> tuple[Decision, ...]:
+        return self._repositories.comparison_decisions.list_for(entry.report.id)
 
     def records(self, since: datetime) -> tuple[HistoryRecord, ...]:
         return tuple(
@@ -72,20 +104,31 @@ class ReviewHistory:
         )
 
 
-class PurgeExpiredHistory:
-    """Borra las revisiones más antiguas que el periodo de retención, con la copia de sus archivos."""
+@dataclass(frozen=True)
+class ExpirableHistory:
+    """Todo lo que el historial guarda y vence con el periodo de retención."""
 
-    def __init__(self, sessions: SessionRepository, archive: DocumentArchive, clock: Clock) -> None:
-        self._sessions = sessions
-        self._archive = archive
+    sessions: SessionRepository
+    comparisons: ComparisonRepository
+    archive: DocumentArchive
+
+
+class PurgeExpiredHistory:
+    """Borra lo más antiguo que el periodo de retención: revisiones con la copia de sus archivos y
+    comparaciones, que guardan el texto completo de los documentos."""
+
+    def __init__(self, history: ExpirableHistory, clock: Clock) -> None:
+        self._history = history
         self._clock = clock
 
     def execute(self, retention: timedelta) -> int:
-        expired = self._sessions.list_created_before(self._clock.now() - retention)
+        """Cuántas revisiones y comparaciones se borraron en total."""
+        cutoff = self._clock.now() - retention
+        expired = self._history.sessions.list_created_before(cutoff)
         for session in expired:
-            self._sessions.delete(session.id)
-            self._archive.delete_session(session.id)
-        return len(expired)
+            self._history.sessions.delete(session.id)
+            self._history.archive.delete_session(session.id)
+        return len(expired) + self._history.comparisons.delete_created_before(cutoff)
 
 
 class DiscardUnreviewedSession:

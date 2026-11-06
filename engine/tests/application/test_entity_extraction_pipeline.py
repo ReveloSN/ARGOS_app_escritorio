@@ -6,7 +6,8 @@ from argus.application.excerpt import CONTEXT_CHARS, ELLIPSIS, excerpt_around
 from argus.application.ports.entity_extractor import EntityMatch
 from argus.domain.document import Document, DocumentFormat, TextFragment
 from argus.domain.entity import EntityType
-from argus.domain.locations import LineLocation, PageLocation
+from argus.domain.locations import LineLocation, PageLocation, SheetCellLocation
+from argus.infrastructure.extraction.contract_id_extractor import ContractIdExtractor
 
 
 class PatternExtractor:
@@ -105,3 +106,35 @@ def test_long_text_is_trimmed_around_the_value_with_ellipsis() -> None:
 
     expected = f"{'a' * CONTEXT_CHARS}4857{'b' * CONTEXT_CHARS}"
     assert excerpt == f"{ELLIPSIS}{expected}{ELLIPSIS}"
+
+
+def sheet_document(*cells: tuple[str, str]) -> Document:
+    fragments = tuple(
+        TextFragment(text, SheetCellLocation("Tarifas", cell)) for cell, text in cells
+    )
+    return Document("Tarifas.xlsx", DocumentFormat.XLSX, fragments)
+
+
+def test_a_label_in_one_cell_and_its_value_in_the_next_are_read_together() -> None:
+    pipeline = EntityExtractionPipeline([ContractIdExtractor()])
+
+    (entity,) = pipeline.extract(sheet_document(("A4", "Contrato No."), ("B4", "4857")))
+
+    assert entity.normalized_value == "4857"
+    assert entity.occurrence.location == SheetCellLocation("Tarifas", "B4")
+
+
+def test_a_value_inside_a_single_cell_is_not_counted_twice() -> None:
+    pipeline = EntityExtractionPipeline([ContractIdExtractor()])
+
+    entities = pipeline.extract(
+        sheet_document(("A1", "Contrato No. 4857"), ("B1", "vigente desde enero"))
+    )
+
+    assert [entity.normalized_value for entity in entities] == ["4857"]
+
+
+def test_cells_of_different_rows_are_not_joined() -> None:
+    pipeline = EntityExtractionPipeline([ContractIdExtractor()])
+
+    assert pipeline.extract(sheet_document(("A4", "Contrato No."), ("A5", "4857"))) == ()

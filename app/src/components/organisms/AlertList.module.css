@@ -73,16 +73,21 @@
   min-width: 0;
 }
 
-.title,
-.subtitle,
-.value {
+.subtitle {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+/* Los valores son el dato que se decide: se ajustan en líneas, nunca se recortan. */
+.value {
+  overflow-wrap: anywhere;
+}
+
+/* El título se ajusta en líneas: es lo que el usuario necesita leer completo para decidir. */
 .title {
   font-weight: var(--font-weight-medium);
+  overflow-wrap: anywhere;
 }
 
 .selected .title {

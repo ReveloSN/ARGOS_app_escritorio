@@ -10,7 +10,10 @@ from argus.api.routes.ai import (
     build_alert_explanation_router,
     build_change_explanation_router,
 )
-from argus.api.routes.comparisons import build_comparisons_router
+from argus.api.routes.comparisons import (
+    build_comparisons_router,
+    build_session_comparisons_router,
+)
 from argus.api.routes.documents import build_documents_router
 from argus.api.routes.facts import build_fact_changes_router, build_facts_router
 from argus.api.routes.health import build_health_router
@@ -20,8 +23,12 @@ from argus.api.routes.preferences import (
     build_preferences_router,
     build_suppression_rules_router,
 )
-from argus.api.routes.reports import build_reports_router
-from argus.api.routes.reviews import build_decisions_router, build_reviews_router
+from argus.api.routes.reports import build_comparison_reports_router, build_reports_router
+from argus.api.routes.reviews import (
+    build_decisions_router,
+    build_reviews_router,
+    build_session_management_router,
+)
 from argus.api.routes.send_reviews import (
     build_send_decisions_router,
     build_send_reviews_router,
@@ -31,7 +38,7 @@ from argus.application.ports.document_archive import FileOpener
 from argus.infrastructure.system_file_opener import SystemFileOpener
 
 API_TITLE = "ARGUS engine"
-ALLOWED_METHODS = ["GET", "POST", "PUT", "DELETE"]
+ALLOWED_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 ALLOWED_HEADERS = [AUTHORIZATION_HEADER, "content-type"]
 
 
@@ -49,16 +56,19 @@ def create_app(
     routers = (
         build_reviews_router,
         build_decisions_router,
+        build_session_management_router,
         build_documents_router,
         build_history_router,
         build_preferences_router,
         build_suppression_rules_router,
         build_comparisons_router,
+        build_session_comparisons_router,
         build_facts_router,
         build_fact_changes_router,
         build_send_reviews_router,
         build_send_decisions_router,
         build_reports_router,
+        build_comparison_reports_router,
         build_change_explanation_router,
         build_alert_explanation_router,
         build_ai_settings_router,

@@ -1,0 +1,73 @@
+.review {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.name {
+  margin: 0;
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-value);
+  font-weight: var(--font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.figure {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-heading);
+}
+
+.comparisons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  align-self: stretch;
+  text-align: start;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comparison {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: var(--border-width) solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.comparison:hover {
+  background: var(--color-background-subtle);
+}
+
+.comparisonName {
+  font-weight: var(--font-weight-medium);
+}
+
+.comparisonMeta {
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+}

@@ -8,6 +8,13 @@ from argus.api.schemas.review import CamelModel, ExplanationPartResponse
 from argus.application.ai.ai_settings import AiProvider
 
 
+class ExplanationStructureResponse(CamelModel):
+    summary: str
+    what_changed: str
+    why_it_matters: str
+    what_to_do: str
+
+
 class ChangeExplanationResponse(CamelModel):
     # «ai»: redactada por el modelo («Sugerencia de IA»); «template»: plantilla local.
     source: str
@@ -15,6 +22,8 @@ class ChangeExplanationResponse(CamelModel):
     text: str
     # Por qué se usó la plantilla con la IA activada; None si no hubo problema.
     fallback_reason: str | None
+    # Los cuatro bloques cortos si la IA los entregó; None con la plantilla o con texto libre.
+    structure: ExplanationStructureResponse | None
 
 
 class AiProviderResponse(CamelModel):

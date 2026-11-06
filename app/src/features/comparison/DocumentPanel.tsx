@@ -3,7 +3,7 @@ import type { Ref, UIEvent } from "react";
 import { DiffMark } from "../../components/atoms/DiffMark";
 import { Icon } from "../../components/atoms/Icon";
 import { useI18n } from "../../i18n/i18nContext";
-import { describeLocation } from "../alerts/alertPresentation";
+import { describeSegmentLocation } from "../alerts/alertPresentation";
 import type { TranslationKey } from "../../i18n/translate";
 import styles from "./Compare.module.css";
 import type { PanelSegment, PanelSide, TextRun } from "./segmentRuns";
@@ -11,10 +11,6 @@ import type { PanelSegment, PanelSide, TextRun } from "./segmentRuns";
 const SIDE_LABELS: Readonly<Record<PanelSide, TranslationKey>> = {
   first: "comparison.sideA",
   second: "comparison.sideB",
-};
-const LEGENDS: Readonly<Record<PanelSide, TranslationKey>> = {
-  first: "comparison.panel.legendFirst",
-  second: "comparison.panel.legendSecond",
 };
 // El otro lado del cambio movido: en A se dice dónde quedó en B, y al revés.
 const OTHER_SIDE: Readonly<Record<PanelSide, PanelSide>> = { first: "second", second: "first" };
@@ -77,7 +73,7 @@ function MovedNote({
       <Icon name="swap_vert" size="xs" />
       {t("comparison.panel.moved", {
         side: t(SIDE_LABELS[OTHER_SIDE[side]]),
-        location: other ? describeLocation(other.location, t) : "",
+        location: other ? describeSegmentLocation(other, t) : "",
       })}
     </button>
   );
@@ -91,7 +87,6 @@ export function DocumentPanel(props: DocumentPanelProps) {
       <div className={styles.panelHeader}>
         <span className={styles.sideBadge}>{t(SIDE_LABELS[props.side])}</span>
         <span className={styles.documentName}>{props.document}</span>
-        <span className={styles.legend}>{t(LEGENDS[props.side])}</span>
       </div>
       <div ref={props.scrollRef} className={styles.panelBody} onScroll={props.onScroll}>
         {props.segments.map((item) => (

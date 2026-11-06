@@ -137,7 +137,14 @@
   --size-column-date: 144px;
   --size-column-count: 72px;
   --size-column-decided: 96px;
+  --size-column-session-min: 200px;
   --size-menu: 236px;
+  --size-menu-session: 320px;
+  --size-chip-text: 160px;
+  --size-value-card: 180px;
+  --size-block-title: 112px;
+  --size-value-text-max: 160px;
+  --size-dialog: 440px;
   --size-history-aside: 340px;
   --size-settings-nav: 200px;
   --size-readable-wide: 760px;
@@ -146,6 +153,7 @@
   --size-dialog: 560px;
   --size-compare-aside: 320px;
   --size-minimap: 16px;
+  --size-risk-dot: 8px;
   --size-minimap-mark: 4px;
   --size-minimap-mark-moved: 12px;
   /* Expediente: columnas de la tabla de datos y panel lateral (mockup «ARGUS Expediente»). */
@@ -153,6 +161,7 @@
   --size-facts-column-confirmed: 140px;
   --size-facts-column-status: 150px;
   --size-facts-column-actions: 160px;
+  --size-facts-columns-min: 320px;
   /* Revisar antes de enviar (mockup «ARGUS Enviar»): panel de problemas y ancho del borrador. */
   --size-send-panel: 380px;
   --size-send-draft: 680px;

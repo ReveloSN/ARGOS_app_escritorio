@@ -1,7 +1,9 @@
 """Comparación de documentos tal como la consume la interfaz (pantalla Comparar documentos)."""
 
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Literal
+
+from pydantic import Field
 
 from argus.api.schemas.review import (
     AlertResponse,
@@ -9,6 +11,7 @@ from argus.api.schemas.review import (
     DecisionsResponse,
     DocumentResponse,
 )
+from argus.domain.text_comparison.modes import ComparisonModeName
 
 
 class TextSpanResponse(CamelModel):
@@ -56,10 +59,21 @@ class ChangeResponse(CamelModel):
     risk: str
     materialities: list[str]
     is_moved: bool
+    # De qué trata el cambio («negation», «amount», «added»…): la interfaz elige su explicación.
+    topic: str
     first: SegmentResponse | None
     second: SegmentResponse | None
     edits: list[WordEditResponse]
     meaning: MeaningResponse | None
+
+
+class SessionComparisonBody(CamelModel):
+    """Comparar archivos de una revisión guardada, sin volver a cargarlos."""
+
+    session_id: str
+    name: Annotated[str, Field(min_length=1)]
+    mode: ComparisonModeName
+    documents: list[str]
 
 
 class ChangeSummaryResponse(CamelModel):

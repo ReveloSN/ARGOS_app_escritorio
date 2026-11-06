@@ -46,6 +46,8 @@ const EYES: Readonly<Record<AssistantCondition, EyeState>> = {
   clear: "success",
 };
 
+const MIN_DOCUMENTS_TO_COMPARE = 2;
+
 function statusOf(condition: AssistantCondition, count = 0, total = 0): AssistantStatus {
   return { condition, eye: EYES[condition], count, total };
 }
@@ -63,13 +65,19 @@ function pendingHighRisk(review: ReviewResult): number {
     .length;
 }
 
+/** Sin alertas solo es «sin inconsistencias» si se compararon al menos dos archivos leídos. */
+function isCompared(review: ReviewResult): boolean {
+  const read = review.documents.filter((document) => document.status === "read").length;
+  return review.alerts.length === 0 && read >= MIN_DOCUMENTS_TO_COMPARE;
+}
+
 function reviewStatus(review: ReviewResult, unconfirmed: number): AssistantStatus {
   const unreadable = review.documents.filter((document) => document.status === "unreadable");
   if (unreadable.length > 0) return statusOf("unreadable", unreadable.length);
   const highRisk = pendingHighRisk(review);
   if (highRisk > 0) return statusOf("highRisk", highRisk);
   if (unconfirmed > 0) return statusOf("needsConfirmation", unconfirmed);
-  return statusOf(review.alerts.length === 0 ? "clear" : "ready");
+  return statusOf(isCompared(review) ? "clear" : "ready");
 }
 
 /** El estado del asistente: ojo de la barra lateral, de la barra superior y su etiqueta. */

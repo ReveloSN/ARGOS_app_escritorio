@@ -24,11 +24,14 @@ class UsageMetrics:
 
 
 def compute_usage_metrics(
-    sessions: Sequence[ReviewSession], decisions_by_session: Mapping[str, Sequence[Decision]]
+    sessions: Sequence[ReviewSession],
+    decisions_by_session: Mapping[str, Sequence[Decision]],
+    comparison_decisions: Sequence[Decision] = (),
 ) -> UsageMetrics:
+    """Las decisiones sobre comparaciones cuentan como resueltas igual que las de las revisiones."""
     decisions = [
         decision for session in sessions for decision in decisions_by_session.get(session.id, ())
-    ]
+    ] + list(comparison_decisions)
     durations = [s.review_duration for s in sessions if s.review_duration is not None]
     mean_duration = sum(durations, timedelta()) / len(durations) if durations else None
     return UsageMetrics(

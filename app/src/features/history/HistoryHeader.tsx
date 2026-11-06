@@ -52,10 +52,15 @@ export function HistoryHeader({ days, state, onDaysChange }: HistoryHeaderProps)
           primaryAction={{ label: t("history.retry"), onClick: exporter.exportCsv }}
         />
       )}
+      {exporter.savedName !== null && (
+        <p role="status" className={styles.exported}>
+          {t("history.exported", { name: exporter.savedName })}
+        </p>
+      )}
       {state.status === "ready" && (
         <MetricsStrip
           label={t("history.metrics.label")}
-          metrics={toMetricViews(state.data.metrics, i18n)}
+          metrics={toMetricViews(state.data.metrics, state.data.comparisons.length, i18n)}
         />
       )}
     </div>

@@ -79,5 +79,10 @@ def majority_first(first: AlertSide, second: AlertSide) -> tuple[AlertSide, Aler
 
 
 def spans_several_documents(candidate: AlertCandidate) -> bool:
-    documents = candidate.first.document_names | candidate.second.document_names
-    return len(documents) >= MIN_DOCUMENTS_TO_CROSS_CHECK
+    """Hay conflicto entre documentos: los valores abarcan varios y no están todos en los mismos.
+
+    Si los dos valores aparecen exactamente en los mismos documentos (la fecha de inicio y la de
+    cada cuota, en cada versión), son dos datos distintos y no una contradicción.
+    """
+    first, second = candidate.first.document_names, candidate.second.document_names
+    return len(first | second) >= MIN_DOCUMENTS_TO_CROSS_CHECK and first != second

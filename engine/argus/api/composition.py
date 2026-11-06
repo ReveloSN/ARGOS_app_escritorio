@@ -1,5 +1,6 @@
 """Construcción de las dependencias del motor: el único lugar que conoce los adaptadores."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -59,13 +60,20 @@ from argus.application.review_analyzers import (
 from argus.application.review_decisions import DecisionRepositories, ReviewDecisions
 from argus.application.review_history import (
     DiscardUnreviewedSession,
+    ExpirableHistory,
     HistoryRepositories,
     PurgeExpiredHistory,
     ReviewHistory,
 )
 from argus.application.review_recording import StoredReviewRecorder
-from argus.application.review_session_use_cases import CloseReviewSession, StartReviewSession
+from argus.application.review_session_use_cases import (
+    CloseReviewSession,
+    DeleteReviewSession,
+    RenameReviewSession,
+    StartReviewSession,
+)
 from argus.application.run_review import ReviewRunner, RunReview
+from argus.application.session_sources import ArchivedDocumentContent, SessionSources
 from argus.application.suppress_similar_alerts import SuppressSimilarAlerts
 from argus.domain.comparison.comparators_by_type import comparators_for
 from argus.domain.document import DocumentFormat
@@ -154,6 +162,8 @@ class EngineServices:
     run_review: ReviewRunner
     open_review: OpenReview
     close_review: CloseReviewSession
+    rename_review: RenameReviewSession
+    delete_review: DeleteReviewSession
     decisions: ReviewDecisions
     history: ReviewHistory
     search_documents: SearchDocuments
@@ -162,6 +172,7 @@ class EngineServices:
     explainer: AlertExplainer
     change_history_folder: ChangeHistoryFolder
     comparisons: ComparisonServices
+    session_sources: SessionSources
     facts: ConfirmedFacts
     check_facts: CheckConfirmedFacts
     sending: SendServices
@@ -171,6 +182,8 @@ class EngineServices:
     ocr_settings: ManageOcrSettings
     storage: ReviewStorage
     data_directory: Path
+    # Borra lo vencido si el historial tiene límite; corre al iniciar y al activar el límite.
+    purge_history: Callable[[], int]
 
 
 def build_review_storage(database_path: Path) -> ReviewStorage:
@@ -227,9 +240,17 @@ def build_engine_services(
             StoredReviewRepositories(storage.sessions, storage.alerts, storage.documents)
         ),
         close_review=CloseReviewSession(storage.sessions, clock),
+        rename_review=RenameReviewSession(storage.sessions),
+        delete_review=DeleteReviewSession(storage.sessions, archive),
         decisions=ReviewDecisions(DecisionRepositories(storage.sessions, storage.decisions), clock),
         history=ReviewHistory(
-            HistoryRepositories(storage.sessions, storage.alerts, storage.decisions)
+            HistoryRepositories(
+                storage.sessions,
+                storage.alerts,
+                storage.decisions,
+                storage.comparisons,
+                storage.comparison_decisions,
+            )
         ),
         search_documents=SearchDocuments(storage.sessions, storage.documents),
         open_document=OpenDocument(storage.documents, archive, opener),
@@ -246,6 +267,9 @@ def build_engine_services(
             ComparisonRepositories(storage.comparisons, storage.comparison_decisions),
             clock,
         ),
+        session_sources=SessionSources(
+            storage.sessions, storage.documents, ArchivedDocumentContent(storage.documents, archive)
+        ),
         facts=ConfirmedFacts(
             FactRepositories(storage.sessions, storage.facts), FactValueReader(values), clock
         ),
@@ -261,13 +285,16 @@ def build_engine_services(
             SendDependencies(build_attachment_readers(), values, clock, opener, data_directory),
         ),
         reports=build_report_services(
-            ReportDependencies(storage.sessions, clock, opener, settings.version),
+            ReportDependencies(
+                storage.sessions, storage.comparisons, clock, opener, settings.version
+            ),
             settings.reports_directory,
         ),
         ai_settings=build_ai_settings(storage.ai_settings, ai),
         ocr_settings=build_ocr_settings(storage.ocr_settings, external.ocr),
         storage=storage,
         data_directory=data_directory,
+        purge_history=lambda: apply_history_retention(storage, archive),
     )
 
 
@@ -275,7 +302,8 @@ def apply_history_retention(storage: ReviewStorage, archive: DocumentArchive) ->
     """Al iniciar, borra las revisiones vencidas si el usuario limitó el historial a 90 días."""
     if not storage.preferences.get().has_retention_limit:
         return 0
-    return PurgeExpiredHistory(storage.sessions, archive, SystemClock()).execute(HISTORY_RETENTION)
+    history = ExpirableHistory(storage.sessions, storage.comparisons, archive)
+    return PurgeExpiredHistory(history, SystemClock()).execute(HISTORY_RETENTION)
 
 
 def build_attachment_readers() -> DocumentReaderFactory:

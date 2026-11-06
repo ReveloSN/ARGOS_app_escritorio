@@ -1,18 +1,16 @@
-import { RiskTag } from "../../components/atoms/RiskTag";
+import { useEffect } from "react";
+
 import { EmptyState } from "../../components/molecules/EmptyState";
-import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ComparisonResult } from "../../services/engine/comparisonTypes";
-import { describeLocation, entityTypeLabel } from "../alerts/alertPresentation";
 import type { AlertDecisions } from "../alerts/useAlertDecisions";
-import { DECISION_LABELS } from "../alerts/useAlertDecisions";
 import styles from "./Compare.module.css";
-import {
-  inconsistencyColumns,
-  inconsistencyRows,
-  type InconsistencyCell,
-} from "./inconsistencyRows";
+import { confirmedFactFor } from "./confirmedFacts";
+import { InconsistenciesIntro, InconsistenciesLegend } from "./InconsistenciesNotes";
+import { inconsistencyColumns, inconsistencyRows } from "./inconsistencyRows";
+import { InconsistencyRow } from "./InconsistencyRow";
 import { ItemDetail } from "./ItemDetail";
+import { useConfirmedFacts } from "./useConfirmedFacts";
 import { inconsistencyDetail } from "./itemDetails";
 import type { ComparisonView } from "./useComparisonView";
 
@@ -22,29 +20,23 @@ interface InconsistenciesViewProps {
   readonly decisions: AlertDecisions;
 }
 
-function Cell({ cell }: { cell: InconsistencyCell | undefined }) {
-  const { t } = useI18n();
-  if (!cell)
-    return <div className={styles.cellMissing}>{t("comparison.inconsistencies.notFound")}</div>;
-  return (
-    <div className={joinClassNames(styles.cell, cell.isOdd && styles.cellOdd)}>
-      <span className={styles.cellValue}>
-        {cell.isOdd && <span aria-label={t("comparison.inconsistencies.odd")}>≠ </span>}
-        {cell.value}
-      </span>
-      <span className={styles.cellSource}>{describeLocation(cell.occurrence.location, t)}</span>
-    </div>
-  );
-}
-
 /** «Buscar inconsistencias»: cada dato encontrado y qué dice de él cada documento. */
 export function InconsistenciesView({ comparison, view, decisions }: InconsistenciesViewProps) {
   const { t } = useI18n();
+  const facts = useConfirmedFacts();
   const documents = comparison.documents
     .filter((doc) => doc.status === "read")
     .map((doc) => doc.name);
   const columns = inconsistencyColumns(documents, comparison.inconsistencies);
-  const rows = inconsistencyRows(comparison.inconsistencies, columns);
+  const rows = inconsistencyRows(comparison.inconsistencies, columns, (alert) =>
+    confirmedFactFor(alert, facts),
+  );
+  const selected = comparison.inconsistencies.find((alert) => alert.number === view.selected);
+  const firstNumber = rows[0]?.alert.number;
+  // Al llegar desde «Versiones» la selección es de un cambio: se pasa a la primera inconsistencia.
+  useEffect(() => {
+    if (!selected && firstNumber !== undefined) view.select(firstNumber);
+  }, [selected, firstNumber, view]);
   if (!rows.length) {
     return (
       <EmptyState
@@ -55,15 +47,16 @@ export function InconsistenciesView({ comparison, view, decisions }: Inconsisten
       />
     );
   }
-  const selected = comparison.inconsistencies.find((alert) => alert.number === view.selected);
   const decisionOf = (number: number) =>
     comparison.decisions.decisions.find((item) => item.alertNumber === number);
   return (
     <div className={styles.versions}>
       <div className={styles.tableWrap}>
-        <p className={styles.intro}>
-          {t("comparison.inconsistencies.intro", { data: rows.length, documents: columns.length })}
-        </p>
+        <InconsistenciesIntro
+          dataCount={rows.length}
+          documentCount={columns.length}
+          hasConfirmedFacts={facts.length > 0}
+        />
         <div
           role="table"
           className={styles.table}
@@ -81,44 +74,18 @@ export function InconsistenciesView({ comparison, view, decisions }: Inconsisten
               </span>
             ))}
           </div>
-          {rows.map((row) => {
-            const decision = decisionOf(row.alert.number);
-            return (
-              <div
-                key={row.alert.number}
-                role="row"
-                aria-selected={view.selected === row.alert.number}
-                className={joinClassNames(
-                  styles.tableRow,
-                  styles.tableBodyRow,
-                  view.selected === row.alert.number && styles.rowSelected,
-                )}
-                onClick={() => {
-                  view.select(row.alert.number);
-                }}
-              >
-                <div role="cell" className={styles.dataCell}>
-                  <RiskTag level={row.alert.risk} />
-                  <span className={styles.dataName}>
-                    {entityTypeLabel(row.alert.entityType, t)}
-                  </span>
-                  <span className={styles.cellSource}>
-                    {t("comparison.inconsistencies.noConfirmed")}
-                  </span>
-                  {decision && (
-                    <span className={styles.itemStatus}>{t(DECISION_LABELS[decision.kind])}</span>
-                  )}
-                </div>
-                {row.cells.map((cell, index) => (
-                  <div key={columns[index]} role="cell">
-                    <Cell cell={cell} />
-                  </div>
-                ))}
-              </div>
-            );
-          })}
+          {rows.map((row) => (
+            <InconsistencyRow
+              key={row.alert.number}
+              row={row}
+              columns={columns}
+              decision={decisionOf(row.alert.number)}
+              isSelected={view.selected === row.alert.number}
+              onSelect={view.select}
+            />
+          ))}
         </div>
-        <p className={styles.legendNote}>{t("comparison.inconsistencies.legend")}</p>
+        <InconsistenciesLegend isConfirmedReference={rows.some((row) => row.confirmed)} />
       </div>
       <aside className={styles.aside}>
         {selected && (

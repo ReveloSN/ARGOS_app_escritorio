@@ -1,0 +1,16 @@
+.notice {
+  position: fixed;
+  inset-inline-start: 50%;
+  inset-block-end: var(--spacing-5);
+  z-index: var(--layer-toast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.notice > * {
+  pointer-events: auto;
+}

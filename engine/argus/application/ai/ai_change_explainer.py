@@ -9,6 +9,9 @@ from argus.application.text_comparison.change_explanation import (
     FallbackReason,
     TemplateChangeExplainer,
 )
+from argus.application.text_comparison.structured_explanation import (
+    parse_structured_explanation,
+)
 from argus.domain.errors import ExplanationProviderError, KeychainUnavailableError
 
 __all__ = [
@@ -62,7 +65,9 @@ class AiChangeExplainer:
             text = access.provider.explain(key, prompt)
         except ExplanationProviderError as error:
             return self._template(request, _fallback_reason(error))
-        return ChangeExplanation(ExplanationSource.AI, text=text)
+        structure = parse_structured_explanation(text)
+        long_text = structure.detail if structure else text
+        return ChangeExplanation(ExplanationSource.AI, text=long_text, structure=structure)
 
     def _template(self, request: ExplanationRequest, reason: FallbackReason) -> ChangeExplanation:
         template = self._fallback.explain(request)

@@ -5,12 +5,17 @@ from fastapi import APIRouter, Query
 
 from argus.api.composition import EngineServices
 from argus.api.schemas.history import (
+    HistoryComparisonResponse,
     HistoryRecordResponse,
     HistoryResponse,
     HistorySessionResponse,
     MetricsResponse,
 )
-from argus.application.review_history import HistoryEntry, HistoryRecord
+from argus.application.review_history import (
+    ComparisonHistoryEntry,
+    HistoryEntry,
+    HistoryRecord,
+)
 from argus.domain.usage_metrics import UsageMetrics
 
 DEFAULT_PERIOD_DAYS = 30
@@ -28,6 +33,7 @@ def build_history_router(services: EngineServices) -> APIRouter:
         return HistoryResponse(
             metrics=_metrics(overview.metrics),
             sessions=[_session(entry) for entry in overview.entries],
+            comparisons=[_comparison(entry) for entry in overview.comparisons],
         )
 
     @router.get("/records")
@@ -62,6 +68,19 @@ def _session(entry: HistoryEntry) -> HistorySessionResponse:
         status=session.status,
         document_count=len(session.document_names),
         alert_count=session.alert_count,
+        decided_count=entry.decided_count,
+    )
+
+
+def _comparison(entry: ComparisonHistoryEntry) -> HistoryComparisonResponse:
+    report = entry.report
+    return HistoryComparisonResponse(
+        id=report.id,
+        name=report.content.name,
+        mode=report.content.mode.value,
+        created_at=report.created_at,
+        document_count=len(report.content.documents),
+        item_count=entry.item_count,
         decided_count=entry.decided_count,
     )
 

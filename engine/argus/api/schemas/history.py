@@ -25,9 +25,21 @@ class HistorySessionResponse(CamelModel):
     decided_count: int
 
 
+class HistoryComparisonResponse(CamelModel):
+    id: str
+    name: str
+    mode: str
+    created_at: datetime
+    document_count: int
+    # Cambios más inconsistencias: lo que hay que decidir en la comparación.
+    item_count: int
+    decided_count: int
+
+
 class HistoryResponse(CamelModel):
     metrics: MetricsResponse
     sessions: list[HistorySessionResponse]
+    comparisons: list[HistoryComparisonResponse]
 
 
 class HistoryRecordResponse(CamelModel):
