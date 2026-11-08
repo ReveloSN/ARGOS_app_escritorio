@@ -115,7 +115,7 @@ Eficacia (tasa de éxito de la tarea), eficiencia (tiempo en tarea y tasa de err
 - Nada se da por terminado si no pasan lint, tipos y pruebas.
 
 ## 12. Multiplataforma
-Rutas con `pathlib`, nunca con separadores a mano. Sin dependencias exclusivas de un sistema operativo. CI con matriz `ubuntu-latest` y `windows-latest`. Instaladores: `.msi` (Windows), `.deb` y `.AppImage` (Linux).
+Rutas con `pathlib`, nunca con separadores a mano. Sin dependencias exclusivas de un sistema operativo. CI de pruebas con matriz `ubuntu-latest` y `windows-latest`; el workflow de instaladores añade Linux ARM64 y macOS. Instaladores: `.msi`, `-setup.exe` y zip portable (Windows); `.deb`, `.rpm` y `.AppImage` (Linux x64 y ARM64); `.dmg` (macOS, Apple silicon). Ver ADR 029.
 
 ## 13. Forma de trabajar
 - Cambios pequeños, un commit por unidad lógica, mensajes en formato Conventional Commits.

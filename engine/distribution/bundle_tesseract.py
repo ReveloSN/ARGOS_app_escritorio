@@ -2,7 +2,8 @@
 
 Deja en `engine/dist/tesseract/` lo que Tauri incluye como recurso:
 - `tesseract(.exe)` y, en Windows, sus DLL; en Linux, sus bibliotecas en `lib/` (sin la glibc,
-  que pone el sistema);
+  que pone el sistema); en macOS, sus `.dylib` en `lib/` con las rutas reescritas a
+  `@loader_path` y firmadas ad hoc (sin las de `/usr/lib` y `/System`, que pone el sistema);
 - `tessdata/` con español e inglés (tessdata_fast 4.1.0, verificados por SHA-256);
 - `LICENSE` de Tesseract (Apache 2.0), que exige acompañar cada copia redistribuida.
 
@@ -45,6 +46,11 @@ SYSTEM_LIBRARIES = re.compile(
     r"^(linux-vdso|ld-linux|libc|libm|libpthread|libdl|librt|libresolv)\.so"
 )
 LDD_LINE = re.compile(r"=>\s+(/\S+)")
+# macOS: las bibliotecas del sistema no se copian; las demás (Homebrew) viajan en lib/.
+MACOS_SYSTEM_PREFIXES = ("/usr/lib/", "/System/")
+MACOS_RELATIVE_PREFIXES = ("@rpath/", "@loader_path/", "@executable_path/")
+MACOS_SEARCH_FOLDERS = (Path("/opt/homebrew/lib"), Path("/usr/local/lib"))
+OTOOL_LINE = re.compile(r"^\s+(\S+) \(compatibility")
 
 
 def find_tesseract(argument: str | None) -> Path:
@@ -78,12 +84,84 @@ def copy_linux(executable: Path) -> None:
         shutil.copy2(library.resolve(), library_folder / library.name)
 
 
+def macos_dependencies(binary: Path) -> list[str]:
+    output = subprocess.run(
+        ["otool", "-L", str(binary)], capture_output=True, text=True, check=True
+    ).stdout
+    found = (OTOOL_LINE.match(line) for line in output.splitlines()[1:])
+    names = [match.group(1) for match in found if match]
+    return [name for name in names if not name.startswith(MACOS_SYSTEM_PREFIXES)]
+
+
+def resolve_macos_library(reference: str, owner: Path) -> Path:
+    if not reference.startswith(MACOS_RELATIVE_PREFIXES):
+        return Path(reference).resolve()
+    name = reference.split("/", 1)[1]
+    for folder in (owner.parent, *MACOS_SEARCH_FOLDERS):
+        if (folder / name).is_file():
+            return (folder / name).resolve()
+    sys.exit(f"No se encontró la biblioteca {reference} que necesita {owner.name}.")
+
+
+def new_macos_libraries(owner: Path, known: dict[str, Path]) -> dict[str, Path]:
+    references = macos_dependencies(owner)
+    return {
+        Path(reference).name: resolve_macos_library(reference, owner)
+        for reference in references
+        if Path(reference).name not in known
+    }
+
+
+def collect_macos_libraries(executable: Path) -> dict[str, Path]:
+    """Cada biblioteca de Homebrew que Tesseract necesita, directa o indirectamente, por el
+    nombre con que se la referencia (un enlace como liblept.5.dylib) y su archivo real."""
+    found: dict[str, Path] = {}
+    pending = [executable]
+    while pending:
+        added = new_macos_libraries(pending.pop(), found)
+        found.update(added)
+        pending.extend(added.values())
+    return found
+
+
+def relink_macos(binary: Path, anchor: str) -> None:
+    for reference in macos_dependencies(binary):
+        name = Path(reference).name
+        if name == binary.name:
+            continue
+        subprocess.run(
+            ["install_name_tool", "-change", reference, f"{anchor}/{name}", str(binary)],
+            check=True,
+            capture_output=True,
+        )
+
+
+def copy_macos(executable: Path) -> None:
+    library_folder = TARGET / "lib"
+    library_folder.mkdir()
+    copies = []
+    for name, original in collect_macos_libraries(executable).items():
+        copy = library_folder / name
+        shutil.copy2(original, copy)
+        copy.chmod(0o755)
+        copies.append(copy)
+    shutil.copy2(executable, TARGET / "tesseract")
+    for copy in copies:
+        relink_macos(copy, "@loader_path")
+    relink_macos(TARGET / "tesseract", "@executable_path/lib")
+    # install_name_tool invalida la firma; en Apple silicon un binario sin firma no arranca.
+    for binary in (*copies, TARGET / "tesseract"):
+        subprocess.run(["codesign", "--force", "--sign", "-", str(binary)], check=True)
+
+
 def main() -> None:
     executable = find_tesseract(sys.argv[1] if len(sys.argv) > 1 else None)
     shutil.rmtree(TARGET, ignore_errors=True)
     TARGET.mkdir(parents=True)
     if os.name == "nt":
         copy_windows(executable)
+    elif sys.platform == "darwin":
+        copy_macos(executable)
     else:
         copy_linux(executable)
     download_model(TARGET / "tessdata", LANGUAGES)
