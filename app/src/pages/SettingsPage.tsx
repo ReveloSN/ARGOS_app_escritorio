@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Icon } from "../components/atoms/Icon";
+import { ErrorMessage } from "../components/molecules/ErrorMessage";
 import { AiSection } from "../features/settings/AiSection";
 import { AssistantSection } from "../features/settings/AssistantSection";
 import { DetectionSection } from "../features/settings/DetectionSection";
@@ -13,7 +14,7 @@ import { SettingsSection } from "../features/settings/SettingsSection";
 import { scrollToSettingsSection, SETTINGS_SECTIONS } from "../features/settings/settingsSections";
 import { ShortcutsSection } from "../features/settings/ShortcutsSection";
 import { AppearanceSwitch } from "../features/settings/theme/AppearanceSwitch";
-import { useEnginePreferences } from "../features/settings/useEnginePreferences";
+import { useSettingsLoad } from "../features/settings/useSettingsLoad";
 import { useI18n } from "../i18n/i18nContext";
 
 const SECTIONS = SETTINGS_SECTIONS;
@@ -26,7 +27,8 @@ export function SettingsPage() {
   const markSaved = () => {
     setSavedAt(new Date());
   };
-  const engine = useEnginePreferences(markSaved);
+  const { engine, ai, ocr, hasLoadFailed, reload } = useSettingsLoad(markSaved);
+  const problem = hasLoadFailed ? "settings.unavailable" : "settings.saveFailed";
   const title = (id: string) =>
     t(SECTIONS.find((section) => section.id === id)?.title ?? "settings.title");
 
@@ -59,6 +61,15 @@ export function SettingsPage() {
               </span>
             )}
           </div>
+          {(hasLoadFailed || engine.hasSaveFailed) && (
+            <ErrorMessage
+              tone="neutral"
+              what={t(`${problem}.what`)}
+              why={t(`${problem}.why`)}
+              todo={t(`${problem}.todo`)}
+              primaryAction={{ label: t("settings.unavailable.retry"), onClick: reload }}
+            />
+          )}
           <SettingsSection id="detection" title={title("detection")}>
             <EngineSettings engine={engine}>
               {(preferences) => <DetectionSection preferences={preferences} engine={engine} />}
@@ -76,10 +87,10 @@ export function SettingsPage() {
             </EngineSettings>
           </SettingsSection>
           <SettingsSection id="ai" title={title("ai")}>
-            <AiSection onSaved={markSaved} />
+            <AiSection control={ai} />
           </SettingsSection>
           <SettingsSection id="ocr" title={title("ocr")}>
-            <OcrSection onSaved={markSaved} />
+            <OcrSection control={ocr} />
           </SettingsSection>
           <SettingsSection id="assistant" title={title("assistant")}>
             <AssistantSection onSaved={markSaved} />

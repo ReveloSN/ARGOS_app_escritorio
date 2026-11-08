@@ -88,7 +88,7 @@ function ExpandedFooter({ assistant, onNewReview, onToggleCollapsed }: SidebarPr
   return (
     <div className={styles.footer}>
       <AssistantStatusCard assistant={assistant} isCompact={false} />
-      <Button variant="primary" icon="add" shortcut={NEW_REVIEW_SHORTCUT} onClick={onNewReview}>
+      <Button variant="secondary" icon="add" shortcut={NEW_REVIEW_SHORTCUT} onClick={onNewReview}>
         {t("navigation.newReview")}
       </Button>
       <button type="button" className={styles.collapseToggle} onClick={onToggleCollapsed}>

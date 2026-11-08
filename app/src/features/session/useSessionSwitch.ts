@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { useEngineServices } from "../engine/EngineServicesContext";
 import { useReview } from "../review/reviewContext";
@@ -9,13 +9,21 @@ export interface SessionSwitch {
   readonly dismissFailure: () => void;
 }
 
-/** Abre una sesión guardada; Comparar se reinicia solo al cambiar la sesión activa. */
+/**
+ * Abre una sesión guardada; Comparar se reinicia solo al cambiar la sesión activa. Si se piden
+ * varias seguidas, gana la última pedida aunque el motor responda en otro orden.
+ */
 function useShowSession(): (sessionId: string) => Promise<void> {
   const { reviews } = useEngineServices();
   const { showReview } = useReview();
+  const latest = useRef(0);
   return async (sessionId) => {
-    const opened = await reviews.openReview(sessionId);
-    showReview(opened);
+    const request = ++latest.current;
+    const opened = await reviews.openReview(sessionId).catch((error: unknown) => {
+      if (request === latest.current) throw error;
+      return null;
+    });
+    if (opened && request === latest.current) showReview(opened);
   };
 }
 

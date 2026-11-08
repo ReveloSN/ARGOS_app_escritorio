@@ -11,7 +11,8 @@ export interface ComparisonState {
   readonly showComparison: (comparison: ComparisonResult) => void;
   /** «Cerrar comparación»: vuelve a elegir qué comparar sin perder las decisiones tomadas. */
   readonly closeComparison: () => void;
-  readonly updateDecisions: (decisions: DecisionsResult) => void;
+  /** Solo se aplican si `comparisonId` sigue siendo la comparación abierta. */
+  readonly updateDecisions: (decisions: DecisionsResult, comparisonId: string) => void;
 }
 
 export const ComparisonContext = createContext<ComparisonState | null>(null);

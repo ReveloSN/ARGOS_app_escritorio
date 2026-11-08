@@ -17,7 +17,8 @@ export interface ReviewState {
   readonly review: ReviewResult | null;
   readonly showReview: (review: ReviewResult) => void;
   readonly discardReview: () => void;
-  readonly updateDecisions: (decisions: DecisionsResult) => void;
+  /** Solo se aplican si `sessionId` sigue siendo la sesión activa. */
+  readonly updateDecisions: (decisions: DecisionsResult, sessionId: string) => void;
   readonly updateSession: (session: SessionResult) => void;
   readonly readingProgress: ReadingProgress | null;
   readonly setReadingProgress: (progress: ReadingProgress | null) => void;

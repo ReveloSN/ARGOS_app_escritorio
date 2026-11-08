@@ -86,7 +86,9 @@ export function DocumentPanel(props: DocumentPanelProps) {
     <section aria-label={props.document} className={styles.panel}>
       <div className={styles.panelHeader}>
         <span className={styles.sideBadge}>{t(SIDE_LABELS[props.side])}</span>
-        <span className={styles.documentName}>{props.document}</span>
+        <span className={styles.documentName} title={props.document}>
+          {props.document}
+        </span>
       </div>
       <div ref={props.scrollRef} className={styles.panelBody} onScroll={props.onScroll}>
         {props.segments.map((item) => (

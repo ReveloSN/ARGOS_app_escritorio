@@ -15,17 +15,28 @@ interface InconsistencyRowProps {
   readonly onSelect: (number: number) => void;
 }
 
+function CellValue({ cell }: { cell: InconsistencyCell }) {
+  const { t } = useI18n();
+  return (
+    <>
+      <span className={styles.cellValue}>
+        {cell.isOdd && <span aria-label={t("comparison.inconsistencies.odd")}>≠ </span>}
+        {cell.value}
+      </span>
+      <span className={styles.cellSource}>{describeLocation(cell.occurrence.location, t)}</span>
+    </>
+  );
+}
+
+/** El valor de un documento; si el documento contiene los dos lados, los dos con su lugar. */
 function Cell({ cell }: { cell: InconsistencyCell | undefined }) {
   const { t } = useI18n();
   if (!cell)
     return <div className={styles.cellMissing}>{t("comparison.inconsistencies.notFound")}</div>;
   return (
     <div className={joinClassNames(styles.cell, cell.isOdd && styles.cellOdd)}>
-      <span className={styles.cellValue}>
-        {cell.isOdd && <span aria-label={t("comparison.inconsistencies.odd")}>≠ </span>}
-        {cell.value}
-      </span>
-      <span className={styles.cellSource}>{describeLocation(cell.occurrence.location, t)}</span>
+      <CellValue cell={cell} />
+      {cell.also && <CellValue cell={cell.also} />}
     </div>
   );
 }

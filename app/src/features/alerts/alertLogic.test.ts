@@ -146,4 +146,12 @@ describe("tarjetas de decisión", () => {
       note: "Valor correcto: 1234",
     });
   });
+
+  // CLAUDE.md §7: nunca un valor sin su origen, tampoco en el resumen de decisiones.
+  it("cada valor lleva el archivo y el lugar donde aparece", () => {
+    const [card] = decisionCardsOf(CLOSED_REVIEW, i18n);
+
+    expect(card?.sourceA).toEqual({ fileName: "contrato.txt", location: "Línea 1" });
+    expect(card?.sourceB).toEqual({ fileName: "anexo.pdf", location: "Página 3" });
+  });
 });

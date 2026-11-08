@@ -13,7 +13,9 @@ function useComparisonDecisionTarget(): DecisionTarget {
   return {
     send: (input) => comparisons.decide(comparisonId, input),
     sendUndo: () => comparisons.undoDecision(comparisonId),
-    apply: updateDecisions,
+    apply: (result) => {
+      updateDecisions(result, comparisonId);
+    },
     decidedMessage: (input) =>
       t("comparison.decided", {
         number: input.alertNumber,

@@ -19,7 +19,12 @@ export interface ItemDetailContent {
   /** Solo los cambios: el nivel completo de riesgo vive aquí y en ningún otro lugar. */
   readonly risk?: "high" | "medium" | "low" | undefined;
   /** Los valores de una inconsistencia; un cambio los muestra en su explicación. */
-  readonly values: readonly { readonly label: string; readonly value: string }[];
+  /** Cada valor con su archivo (`label`) y, si se conoce, su lugar en él (CLAUDE.md §7). */
+  readonly values: readonly {
+    readonly label: string;
+    readonly value: string;
+    readonly location?: string;
+  }[];
   /** Solo los cambios tienen la explicación estructurada. */
   readonly explain?: ExplainTarget | undefined;
 }
@@ -66,10 +71,14 @@ function InconsistencyValues({ content }: { content: ItemDetailContent }) {
     <>
       <h2 className={styles.detailTitle}>{content.title}</h2>
       <dl className={styles.detailValues}>
-        {content.values.map((item) => (
-          <div key={item.label} className={styles.detailValue}>
+        {content.values.map((item, index) => (
+          // Los dos lados pueden citar el mismo archivo: la posición desempata la clave.
+          <div key={`${String(index)}:${item.label}`} className={styles.detailValue}>
             <dt>{item.label}</dt>
-            <dd>{item.value || t("comparison.detail.empty")}</dd>
+            <dd>
+              {item.value || t("comparison.detail.empty")}
+              {item.location && <span className={styles.detailValueLocation}>{item.location}</span>}
+            </dd>
           </div>
         ))}
       </dl>

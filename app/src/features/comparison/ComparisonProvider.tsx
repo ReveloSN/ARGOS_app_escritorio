@@ -55,8 +55,11 @@ export function ComparisonProvider({ children }: { readonly children: ReactNode 
         setRecent((list) => [comparison, ...without(list, comparison.id)].slice(0, RECENT_LIMIT));
         setComparison(null);
       },
-      updateDecisions: (decisions) => {
-        setComparison((current) => current && { ...current, decisions });
+      // Una respuesta tardía es de la comparación que la pidió: si ya se abrió otra, se ignora.
+      updateDecisions: (decisions, comparisonId) => {
+        setComparison((current) =>
+          current?.id === comparisonId ? { ...current, decisions } : current,
+        );
       },
     }),
     [comparison, recent],

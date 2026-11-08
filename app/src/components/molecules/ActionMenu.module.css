@@ -29,9 +29,15 @@
   cursor: pointer;
 }
 
-.item:hover,
+.item:hover {
+  background: var(--color-background-raised);
+}
+
+/* Fondo y anillo: el fondo solo da 1,22:1 contra la superficie del menú (WCAG 2.4.7). */
 .item:focus-visible {
   background: var(--color-background-raised);
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: calc(-1 * var(--focus-ring-width));
 }
 
 .groupStart {

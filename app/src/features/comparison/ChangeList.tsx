@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 
 import { SegmentedControl } from "../../components/molecules/SegmentedControl";
 import { useI18n } from "../../i18n/i18nContext";
@@ -22,7 +22,7 @@ interface ChangeListProps {
   /** Número de cambio → documento contra el que ocurre; solo en «contra todos». */
   readonly againstByChange?: ReadonlyMap<number, string> | undefined;
   readonly onSelect: (number: number) => void;
-  /** Lo que se abre bajo la fila del cambio elegido. */
+  /** Detalle del cambio elegido, en una zona independiente de la lista. */
   readonly renderDetail: (change: ChangeResult) => ReactNode;
 }
 
@@ -76,7 +76,7 @@ function ListHeader({ hasHighRisk, done, total }: ListHeaderProps) {
   const { t } = useI18n();
   return (
     <div className={styles.listHeader}>
-      <span className={styles.listTitle}>{t("comparison.list.title")}</span>
+      <h2 className={styles.listTitle}>{t("comparison.list.title")}</h2>
       {hasHighRisk && (
         <span className={styles.riskLegend}>
           <span aria-hidden="true" className={styles.riskDot} />
@@ -94,6 +94,8 @@ function ListHeader({ hasHighRisk, done, total }: ListHeaderProps) {
 /** Lista de cambios, uno por línea (J / K para navegar); los de riesgo alto van primero. */
 export function ChangeList(props: ChangeListProps) {
   const { t } = useI18n();
+  const detailId = useId();
+  const selected = props.visible.find((change) => change.number === props.selected);
   const firstOther = props.visible.findIndex((change) => change.risk !== "high");
   const isDecided = (change: ChangeResult) =>
     props.decisions.some((decision) => decision.alertNumber === change.number);
@@ -118,10 +120,15 @@ export function ChangeList(props: ChangeListProps) {
             startsOthers={index > 0 && index === firstOther}
             against={props.againstByChange?.get(change.number)}
             onSelect={props.onSelect}
-            detail={props.selected === change.number ? props.renderDetail(change) : undefined}
+            detailId={props.selected === change.number ? detailId : undefined}
           />
         ))}
       </ul>
+      {selected && (
+        <div id={detailId} className={styles.selectedDetail}>
+          {props.renderDetail(selected)}
+        </div>
+      )}
       {!props.visible.length && <EmptyChanges hasHiddenChanges={props.shown.length > 0} />}
     </div>
   );

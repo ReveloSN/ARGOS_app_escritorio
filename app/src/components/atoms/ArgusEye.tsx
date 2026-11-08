@@ -14,6 +14,11 @@ export type EyeSize = "sm" | "md" | "lg";
 interface ArgusEyeProps {
   readonly state: EyeState;
   readonly size?: EyeSize;
+  /**
+   * Ocupa el ancho de su contenedor y hereda de él el grosor de trazo en píxeles de pantalla.
+   * Lo usa quien dibuja el ojo dentro de otra figura (la mascota); ignora `size`.
+   */
+  readonly isFluid?: boolean;
   /** Texto accesible; sin él es decorativo (por ejemplo, junto al nombre «ARGUS» visible). */
   readonly label?: string | undefined;
 }
@@ -41,7 +46,7 @@ function EyeParts({ shape }: { readonly shape: EyeShape }) {
 }
 
 /** El ojo de ARGUS: logo de la app y figura del asistente de IA. */
-export function ArgusEye({ state, size = "sm", label }: ArgusEyeProps) {
+export function ArgusEye({ state, size = "sm", isFluid = false, label }: ArgusEyeProps) {
   const shape = EYE_SHAPES[state];
   const accessibility = label
     ? { role: "img", "aria-label": label }
@@ -52,9 +57,10 @@ export function ArgusEye({ state, size = "sm", label }: ArgusEyeProps) {
       key={state}
       viewBox={EYE_VIEWBOX}
       data-state={state}
+      data-fluid={isFluid || undefined}
       className={joinClassNames(
         styles.eye,
-        styles[size],
+        isFluid ? styles.fluid : styles[size],
         styles[shape.tone],
         state !== "logo" && styles.blink,
       )}

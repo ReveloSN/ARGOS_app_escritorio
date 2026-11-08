@@ -13,8 +13,9 @@ export function SendProvider({ children }: { readonly children: ReactNode }) {
       discardReview: () => {
         setReview(null);
       },
-      updateDecisions: (decisions) => {
-        setReview((current) => current && { ...current, decisions });
+      // Una respuesta tardía es del borrador que la pidió: si ya se cambió de borrador, se ignora.
+      updateDecisions: (decisions, reviewId) => {
+        setReview((current) => (current?.id === reviewId ? { ...current, decisions } : current));
       },
     }),
     [review],

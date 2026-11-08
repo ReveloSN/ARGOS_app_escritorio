@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -32,11 +33,19 @@ def session_id(client: TestClient, headers: dict[str, str]) -> str:
     return str(post_review(client, headers, "Contrato_4857_v3.pdf")["session"]["id"])
 
 
-def export(client: TestClient, headers: dict[str, str], report_format: str) -> dict[str, str]:
+@dataclass(frozen=True)
+class Export:
+    """Qué exportar: el formato y, si se indica, la sesión (si no, una revisión nueva)."""
+
+    report_format: str
+    review: str | None = None
+
+
+def export(client: TestClient, headers: dict[str, str], request: Export) -> dict[str, str]:
     """Pide dónde se guardará el informe, lo exporta y devuelve ambas respuestas."""
-    url = f"/reviews/{session_id(client, headers)}/report"
+    url = f"/reviews/{request.review or session_id(client, headers)}/report"
     location = client.get(url, headers=headers).json()
-    body = {"format": report_format, "document": DOCUMENT}
+    body = {"format": request.report_format, "document": DOCUMENT}
     saved = client.post(url, headers=headers, json=body).json()["fileName"]
     return {**location, "url": url, "saved": saved}
 
@@ -44,10 +53,11 @@ def export(client: TestClient, headers: dict[str, str], report_format: str) -> d
 def test_exports_the_report_into_the_case_file_folder(
     client: TestClient, auth_headers: dict[str, str], settings: EngineSettings
 ) -> None:
-    pdf = export(client, auth_headers, "pdf")
-    docx = export(client, auth_headers, "docx")
+    review = session_id(client, auth_headers)
+    pdf = export(client, auth_headers, Export("pdf", review))
+    docx = export(client, auth_headers, Export("docx", review))
 
-    folder = settings.reports_directory / "Revisión_de_prueba"
+    folder = settings.reports_directory / f"Revisión_de_prueba_{review[:8]}"
     assert pdf["folder"] == str(folder)
     assert pdf["version"] == "9.9.9"
     assert pdf["saved"] == f"{pdf['fileName']}.pdf"
@@ -55,10 +65,22 @@ def test_exports_the_report_into_the_case_file_folder(
     assert (folder / docx["saved"]).is_file()
 
 
+def test_two_sessions_with_the_same_name_keep_separate_reports(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    """(Regresión) Dos «Revisión de prueba» del mismo día no se pisan el informe ni se abren cruzados."""
+    first = export(client, auth_headers, Export("pdf"))
+    second = export(client, auth_headers, Export("pdf"))
+
+    assert first["folder"] != second["folder"]
+    assert (Path(first["folder"]) / first["saved"]).is_file()
+    assert (Path(second["folder"]) / second["saved"]).is_file()
+
+
 def test_opens_the_exported_report(
     client: TestClient, auth_headers: dict[str, str], opener: RecordingFileOpener
 ) -> None:
-    pdf = export(client, auth_headers, "pdf")
+    pdf = export(client, auth_headers, Export("pdf"))
 
     opened = client.post(
         f"{pdf['url']}/open", headers=auth_headers, json={"fileName": pdf["saved"]}

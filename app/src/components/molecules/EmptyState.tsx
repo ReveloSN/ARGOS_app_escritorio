@@ -10,8 +10,10 @@ interface EmptyStateProps {
   readonly description: ReactNode;
   readonly actions?: ReactNode;
   readonly note?: string;
-  /** Resultado positivo («No se encontraron inconsistencias»): icono en círculo de acento. */
+  /** Resultado positivo («No se encontraron inconsistencias»): icono en el color de acento. */
   readonly isReassuring?: boolean;
+  /** Ocupa toda la pantalla (Comparar o Enviar sin datos): título del tamaño del de Inicio. */
+  readonly isPageLevel?: boolean;
 }
 
 export function EmptyState({
@@ -21,9 +23,10 @@ export function EmptyState({
   actions,
   note,
   isReassuring = false,
+  isPageLevel = false,
 }: EmptyStateProps) {
   return (
-    <div className={styles.container}>
+    <div className={joinClassNames(styles.container, isPageLevel && styles.page)}>
       <div className={styles.content}>
         <span className={joinClassNames(styles.icon, isReassuring && styles.reassuring)}>
           <Icon name={icon} size={isReassuring ? "lg" : "xl"} />

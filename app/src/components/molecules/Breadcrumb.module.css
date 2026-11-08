@@ -34,6 +34,8 @@
   text-decoration-color: var(--color-border-strong);
   text-underline-offset: var(--spacing-0-5);
   cursor: pointer;
+  text-align: start;
+  overflow-wrap: anywhere;
 }
 
 .current {
