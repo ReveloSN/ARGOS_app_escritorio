@@ -6,6 +6,16 @@ export interface ServerSentEvent {
 const EVENT_SEPARATOR = "\n\n";
 const FIELD_SEPARATOR = ": ";
 const DEFAULT_EVENT_NAME = "message";
+const CRLF = /\r\n/g;
+// Un \r suelto es fin de línea, salvo al final: puede ser la mitad de un \r\n partido en dos trozos.
+const LONE_CR_NOT_LAST = /\r(?!$)/g;
+const ANY_CR = /\r/g;
+
+/** El estándar admite LF, CRLF y CR como fin de línea; se trabaja siempre con LF. */
+function toLineFeeds(text: string, isFinal: boolean): string {
+  const unified = text.replace(CRLF, "\n");
+  return isFinal ? unified.replace(ANY_CR, "\n") : unified.replace(LONE_CR_NOT_LAST, "\n");
+}
 
 /** Lee un flujo `text/event-stream` y avisa cada evento apenas llega completo (ADR 004). */
 export async function readServerSentEvents(
@@ -19,9 +29,10 @@ export async function readServerSentEvents(
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
-    pending = emitCompleteEvents(pending + decoder.decode(value, { stream: true }), onEvent);
+    const text = toLineFeeds(pending + decoder.decode(value, { stream: true }), false);
+    pending = emitCompleteEvents(text, onEvent);
   }
-  emitCompleteEvents(pending + decoder.decode() + EVENT_SEPARATOR, onEvent);
+  emitCompleteEvents(toLineFeeds(pending + decoder.decode(), true) + EVENT_SEPARATOR, onEvent);
 }
 
 /** Avisa los eventos completos y devuelve lo que falta por llegar del último. */
