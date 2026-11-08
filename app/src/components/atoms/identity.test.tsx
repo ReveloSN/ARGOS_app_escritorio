@@ -22,6 +22,19 @@ describe("ArgusEye", () => {
     expect(container.firstElementChild).toHaveAttribute("aria-hidden", "true");
   });
 
+  it("en modo fluido sigue siendo decorativo sin etiqueta y se marca como fluido", () => {
+    const { container } = renderWithProviders(<ArgusEye state="reading" isFluid />);
+
+    expect(container.firstElementChild).toHaveAttribute("aria-hidden", "true");
+    expect(container.firstElementChild).toHaveAttribute("data-fluid", "true");
+  });
+
+  it("con tamaño fijo no se marca como fluido", () => {
+    const { container } = renderWithProviders(<ArgusEye state="logo" size="lg" />);
+
+    expect(container.firstElementChild).not.toHaveAttribute("data-fluid");
+  });
+
   it("cada estado tiene una forma distinta, no solo otro color", () => {
     const shapes = STATES.map((state) => {
       const { container, unmount } = renderWithProviders(<ArgusEye state={state} />);

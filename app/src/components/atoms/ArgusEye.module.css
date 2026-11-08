@@ -22,6 +22,16 @@
   stroke-width: var(--stroke-width-eye-lg);
 }
 
+/* Sin tamaño ni grosor propios: el contenedor fija el ancho y el stroke-width, en píxeles. */
+.fluid {
+  width: 100%;
+  height: auto;
+}
+
+.fluid .stroke {
+  vector-effect: non-scaling-stroke;
+}
+
 .accent {
   color: var(--eye-accent);
 }
