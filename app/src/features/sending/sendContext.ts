@@ -8,7 +8,8 @@ export interface SendState {
   readonly review: SendReviewResult | null;
   readonly showReview: (review: SendReviewResult) => void;
   readonly discardReview: () => void;
-  readonly updateDecisions: (decisions: DecisionsResult) => void;
+  /** Solo se aplican si `reviewId` sigue siendo el borrador abierto. */
+  readonly updateDecisions: (decisions: DecisionsResult, reviewId: string) => void;
 }
 
 export const SendContext = createContext<SendState | null>(null);

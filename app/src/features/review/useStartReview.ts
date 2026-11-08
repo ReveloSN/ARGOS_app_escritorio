@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type {
   DocumentReadResult,
@@ -28,18 +28,71 @@ export function useStartReview(): ReviewStart {
   const { reviews } = useEngineServices();
   const reading = useReadingState();
   const outcome = useReviewOutcome();
+  const begin = useCurrentRequest();
   const start = (name: string, files: readonly File[], options: ReviewStartOptions = {}) => {
+    const isCurrent = begin();
+    // Fuera de la pantalla (p. ej., llega tarde la configuración de OCR) no se empieza nada.
+    if (!isCurrent) return;
     outcome.clearFailure();
     // Al releer con OCR se vuelve al avance de lectura hasta tener el resultado nuevo.
     outcome.reset();
     reading.begin(files.map((file) => file.name));
+    const answer = onlyIfCurrent(isCurrent, outcome);
     reviews
-      .startReview({ name, files, onProgress: reading.advance, ...options })
-      .then(outcome.show, outcome.fail)
-      .finally(reading.end);
+      .startReview({ name, files, onProgress: onlyWhile(isCurrent, reading.advance), ...options })
+      .then(answer.show, answer.fail)
+      .finally(onlyWhile(isCurrent, reading.end));
   };
   const { hasFailed, documents, reset } = outcome;
   return { start, reading: reading.state, hasFailed, documents, reset };
+}
+
+/**
+ * Turno de la lectura en curso. Se pierde al salir de la pantalla (Cancelar, ir a otra
+ * sección) o al empezar otra: lo que el motor devuelva después ya no abre la sesión.
+ */
+function useCurrentRequest(): () => (() => boolean) | null {
+  const latest = useRef(0);
+  const isMounted = useRef(false);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+      latest.current += 1;
+    };
+  }, []);
+  return () => {
+    if (!isMounted.current) return null;
+    const request = ++latest.current;
+    return () => request === latest.current;
+  };
+}
+
+/** El avance y el fin de una lectura reemplazada no tocan los de la lectura vigente. */
+function onlyWhile<T extends unknown[]>(
+  isCurrent: () => boolean,
+  action: (...args: T) => void,
+): (...args: T) => void {
+  return (...args) => {
+    if (isCurrent()) action(...args);
+  };
+}
+
+interface Answer {
+  readonly show: (review: ReviewResult) => void;
+  readonly fail: () => void;
+}
+
+/** Solo cuenta la respuesta de la lectura vigente (ver useCurrentRequest). */
+function onlyIfCurrent(isCurrent: () => boolean, answer: Answer): Answer {
+  return {
+    show: (review) => {
+      if (isCurrent()) answer.show(review);
+    },
+    fail: () => {
+      if (isCurrent()) answer.fail();
+    },
+  };
 }
 
 /** Lo que devolvió el motor: la revisión leída o el aviso de que no se pudo completar. */
@@ -68,13 +121,24 @@ function useFailureFlag() {
   return { hasFailed, fail, clearFailure };
 }
 
-function useReadingState() {
+/** La barra superior muestra el mismo avance: «Analizando · 3 de 5 archivos». */
+function useSharedReadingProgress(state: ReadingState | null) {
   const { setReadingProgress } = useReview();
-  const [state, setState] = useState<ReadingState | null>(null);
-  // La barra superior muestra el mismo avance: «Analizando · 3 de 5 archivos».
   useEffect(() => {
     setReadingProgress(state && { done: finishedCount(state), total: state.files.length });
   }, [state, setReadingProgress]);
+  // Al salir de la pantalla a mitad de lectura, la barra superior no se queda en «Leyendo…».
+  useEffect(
+    () => () => {
+      setReadingProgress(null);
+    },
+    [setReadingProgress],
+  );
+}
+
+function useReadingState() {
+  const [state, setState] = useState<ReadingState | null>(null);
+  useSharedReadingProgress(state);
   return {
     state,
     begin: (names: readonly string[]) => {

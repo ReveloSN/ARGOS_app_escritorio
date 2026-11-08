@@ -16,11 +16,16 @@ export function ReviewProvider({ children }: { readonly children: ReactNode }) {
       discardReview: () => {
         setReview(null);
       },
-      updateDecisions: (decisions) => {
-        setReview((current) => current && { ...current, decisions });
+      // Una respuesta tardía es de la sesión que la pidió: si ya se cambió de sesión, se ignora.
+      updateDecisions: (decisions, sessionId) => {
+        setReview((current) =>
+          current?.session.id === sessionId ? { ...current, decisions } : current,
+        );
       },
       updateSession: (session) => {
-        setReview((current) => current && { ...current, session });
+        setReview((current) =>
+          current?.session.id === session.id ? { ...current, session } : current,
+        );
       },
       readingProgress,
       setReadingProgress,
