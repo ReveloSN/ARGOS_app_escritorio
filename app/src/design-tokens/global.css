@@ -11,6 +11,7 @@
   --color-neutral-300: #cfcbc2;
   --color-neutral-400: #9c978d;
   --color-neutral-500: #6b665d;
+  --color-neutral-550: #837c70;
   --color-neutral-700: #4f4b44;
   --color-neutral-750: #4a463f;
   --color-neutral-800: #34312c;
@@ -78,7 +79,7 @@
   --font-weight-semibold: 600;
   --font-size-micro: 11px;
   --font-size-caption: 12px;
-  --font-size-body: 13px;
+  --font-size-body: 14px;
   --font-size-emphasis: 14px;
   --font-size-heading: 15px;
   --font-size-section: 16px;
@@ -104,9 +105,9 @@
 
   --size-control-xs: 22px;
   --size-control-sm: 26px;
-  --size-control-md: 30px;
-  --size-control-lg: 32px;
-  --size-control-xl: 36px;
+  --size-control-md: 34px;
+  --size-control-lg: 36px;
+  --size-control-xl: 40px;
   --size-topbar: 48px;
   --size-sidebar-expanded: 216px;
   --size-sidebar-collapsed: 56px;
@@ -119,6 +120,9 @@
   --size-eye-sm: 24px;
   --size-eye-md: 48px;
   --size-eye-lg: 128px;
+  --size-mascot-sm: 36px;
+  --size-mascot-md: 48px;
+  --size-mascot-lg: 128px;
   --size-reticle-sm: 200px;
   --size-reticle-lg: 720px;
   --size-step-marker: 20px;
@@ -130,6 +134,7 @@
   --size-readable-narrow: 440px;
   --size-progress-inline: 56px;
   --size-column-risk: 90px;
+  --size-alert-table: 900px;
   --size-column-number: 44px;
   --size-column-value: 160px;
   --size-column-state: 130px;
@@ -185,6 +190,9 @@
   --stroke-width-eye-sm: 3;
   --stroke-width-eye-md: 2.25;
   --stroke-width-eye-lg: 1.6;
+  --stroke-width-mascot-sm: 1.5px;
+  --stroke-width-mascot-md: 2px;
+  --stroke-width-mascot-lg: 3px;
   --stroke-dash-eye-error: 4 3;
   --stroke-dash-reticle-near: 2 6;
   --stroke-dash-reticle-far: 2 10;

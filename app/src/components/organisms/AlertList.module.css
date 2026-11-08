@@ -1,5 +1,6 @@
 .table {
   width: 100%;
+  min-width: var(--size-alert-table);
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -28,7 +29,7 @@
 .header th {
   padding: var(--spacing-2-5) var(--spacing-3) var(--spacing-2);
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-micro);
+  font-size: var(--font-size-caption);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-label);
   text-align: start;

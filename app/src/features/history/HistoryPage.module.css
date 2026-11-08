@@ -25,9 +25,9 @@
 .title {
   flex: 1;
   margin: 0;
-  font-size: var(--font-size-title);
+  font-size: var(--font-size-display);
   font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-title);
+  line-height: var(--line-height-value);
 }
 
 .sessions {
@@ -56,7 +56,7 @@
 
 .asideLabel {
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-micro);
+  font-size: var(--font-size-caption);
   letter-spacing: var(--letter-spacing-label);
   text-transform: uppercase;
 }
@@ -146,9 +146,9 @@
 }
 
 /* Sin ancho para la tabla y el panel lado a lado, el panel de decisiones pasa debajo. */
-@container (max-width: 150ch) {
+@container (max-width: 1120px) {
   .layout {
-    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -160,4 +160,25 @@
     border-top: var(--border-width) solid var(--color-border-default);
     border-inline-start: 0;
   }
+}
+
+.asideLabel,
+.asideName {
+  margin: 0;
+  font-size: var(--font-size-caption);
+  overflow-wrap: anywhere;
+}
+
+@container (max-width: 1120px) {
+  .aside {
+    max-height: var(--size-side-panel);
+  }
+}
+
+.noSelection {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.noSelection .header {
+  grid-column: 1;
 }

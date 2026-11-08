@@ -13,7 +13,7 @@
 .input {
   height: var(--size-control-lg);
   padding: 0 var(--spacing-2-5);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-control);
   background: var(--color-background-surface);
 }
@@ -24,8 +24,8 @@
 
 .input:focus-visible {
   border-color: var(--focus-ring-color);
-  outline: var(--focus-ring-width) solid var(--color-action-subtle);
-  outline-offset: 0;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .input[aria-invalid="true"] {

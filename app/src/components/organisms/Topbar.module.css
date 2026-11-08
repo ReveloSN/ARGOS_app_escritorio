@@ -17,7 +17,7 @@
   max-width: var(--size-topbar-search-max);
   height: var(--size-control-lg);
   padding: 0 var(--spacing-1-5) 0 var(--spacing-2-5);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-control);
   background: var(--color-background-primary);
   color: var(--color-text-tertiary);

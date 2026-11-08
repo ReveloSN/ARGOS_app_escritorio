@@ -42,7 +42,7 @@
   gap: var(--spacing-1-5);
   min-height: var(--size-control-sm);
   padding: 0 var(--spacing-2-5);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background: var(--color-background-surface);
   color: var(--color-text-primary);
@@ -67,11 +67,12 @@
 }
 
 .count {
-  font-size: var(--font-size-micro);
+  font-size: var(--font-size-caption);
 }
 
 .table {
   display: grid;
+  flex: none;
   /* Dato y Valor confirmado no pueden quedar sin ancho: si no caben, el contenedor se desplaza. */
   min-width: calc(
     var(--size-facts-columns-min) + var(--size-facts-column-confirmed) +
@@ -197,9 +198,9 @@
 
 .action,
 .actionPrimary {
-  min-height: var(--size-control-xs);
+  min-height: var(--size-control-sm);
   padding: 0 var(--spacing-2);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background: var(--color-background-surface);
   color: var(--color-text-primary);
@@ -242,7 +243,7 @@
 
 .textInput,
 .typeSelect {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-control);
   font-family: inherit;
 }
 
@@ -265,7 +266,7 @@
 
 .asideTitle {
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-micro);
+  font-size: var(--font-size-caption);
   text-transform: uppercase;
 }
 
@@ -386,14 +387,27 @@
 }
 
 /* Sin ancho para la tabla y el panel lado a lado, el panel pasa debajo y cada uno se desplaza solo. */
-@container (max-width: 160ch) {
+@container (max-width: 1180px) {
   .workspace {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
   }
 
   .aside {
     border-top: var(--border-width) solid var(--color-border-strong);
     border-left: 0;
+  }
+}
+
+.asideTitle,
+.asideName {
+  margin: 0;
+  font-size: var(--font-size-caption);
+  overflow-wrap: anywhere;
+}
+
+@container (max-width: 1180px) {
+  .aside {
+    max-height: var(--size-side-panel);
   }
 }

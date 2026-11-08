@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ChangeResult } from "../../services/engine/comparisonTypes";
@@ -19,8 +17,7 @@ interface ChangeItemProps {
   /** «Contra todos»: el documento contra el que ocurre el cambio. */
   readonly against?: string | undefined;
   readonly onSelect: (number: number) => void;
-  /** El detalle del cambio elegido se abre aquí mismo, bajo su fila. */
-  readonly detail?: ReactNode;
+  readonly detailId?: string | undefined;
 }
 
 /** «+ » si solo se agrega una palabra y «− » si solo se quita; nada en un reemplazo. */
@@ -58,6 +55,7 @@ export function ChangeItem(props: ChangeItemProps) {
         type="button"
         data-change-row=""
         aria-current={isSelected}
+        aria-controls={props.detailId}
         title={fullText(change)}
         className={joinClassNames(styles.item, isSelected && styles.itemSelected)}
         onClick={() => {
@@ -74,7 +72,6 @@ export function ChangeItem(props: ChangeItemProps) {
         )}
         {decision && <span className={styles.itemStatus}>{t(DECISION_LABELS[decision.kind])}</span>}
       </button>
-      {props.detail}
     </li>
   );
 }

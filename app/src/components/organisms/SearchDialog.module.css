@@ -44,6 +44,11 @@
   outline: none;
 }
 
+.field:focus-within {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: calc(-1 * var(--focus-ring-width));
+}
+
 .escape {
   font-family: var(--font-family-mono);
   font-size: var(--font-size-micro);

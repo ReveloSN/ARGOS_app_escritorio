@@ -18,9 +18,9 @@
 
 .title {
   margin: 0;
-  font-size: var(--font-size-title);
+  font-size: var(--font-size-display);
   font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-title);
+  line-height: var(--line-height-value);
 }
 
 .workspace {
@@ -30,6 +30,7 @@
 }
 
 .previewColumn {
+  min-width: 0;
   min-height: 0;
   padding: var(--spacing-5) var(--spacing-6);
   overflow: auto;
@@ -41,6 +42,7 @@
   flex-direction: column;
   gap: var(--spacing-5);
   max-width: var(--size-report-sheet);
+  min-width: 0;
   margin: 0 auto;
   padding: var(--spacing-8) var(--spacing-7);
   border: var(--border-width) solid var(--color-border-strong);
@@ -58,6 +60,8 @@
 .titles {
   display: flex;
   flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
   flex-direction: column;
   gap: var(--spacing-0-5);
 }
@@ -125,6 +129,7 @@
 
 .table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: var(--font-size-caption);
 }
@@ -135,6 +140,7 @@
   border-bottom: var(--border-width) solid var(--color-border-default);
   text-align: start;
   vertical-align: top;
+  overflow-wrap: anywhere;
 }
 
 .table th {
@@ -180,14 +186,14 @@
 
 .optionsTitle {
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-micro);
+  font-size: var(--font-size-caption);
   text-transform: uppercase;
 }
 
 .formats {
   display: flex;
   overflow: hidden;
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-sm);
 }
 
@@ -202,7 +208,7 @@
 }
 
 .format + .format {
-  border-left: var(--border-width) solid var(--color-border-strong);
+  border-left: var(--border-width) solid var(--color-border-control);
 }
 
 .formatOn {
@@ -233,4 +239,25 @@
 .openFailed {
   color: var(--color-risk-high);
   font-size: var(--font-size-caption);
+}
+
+@container (max-width: 900px) {
+  .workspace {
+    display: block;
+    overflow: auto;
+  }
+  .previewColumn {
+    overflow: visible;
+  }
+  .side {
+    overflow: visible;
+    border-left: 0;
+    border-top: var(--border-width) solid var(--color-border-default);
+  }
+  .sheet {
+    padding: var(--spacing-5);
+  }
+  .sheetHeader {
+    flex-wrap: wrap;
+  }
 }

@@ -3,7 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { onlyRows } from "../../test/changeRows";
-import { ALL_DECIDED, DECIDED_FIRST, openChanges } from "../../test/changeListHarness";
+import {
+  ALL_DECIDED,
+  DECIDED_FIRST,
+  openChanges,
+  selectedChangeDetail,
+} from "../../test/changeListHarness";
 import { stubBrowser } from "../../test/renderApp";
 import { required } from "../../test/threeDocuments";
 
@@ -17,7 +22,7 @@ describe("Decisiones en la lista de cambios", () => {
     const list = await openChanges();
     await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
 
-    const group = within(list.getByRole("group", { name: /./ }));
+    const group = within(selectedChangeDetail().getByRole("group", { name: /./ }));
     const names = group.getAllByRole("button").map((button) => button.textContent ?? "");
     expect(names.map((name) => name.replace(/s.$/, ""))).toEqual([
       expect.stringMatching(/Es correcto/),
@@ -36,7 +41,7 @@ describe("Decisiones en la lista de cambios", () => {
     expect(screen.getByText("0 de 4 decididos")).toBeVisible();
 
     await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
-    await userEvent.click(list.getByRole("button", { name: /Es correcto/ }));
+    await userEvent.click(selectedChangeDetail().getByRole("button", { name: /Es correcto/ }));
 
     expect(await screen.findByText("1 de 4 decididos")).toBeVisible();
   });
@@ -45,7 +50,7 @@ describe("Decisiones en la lista de cambios", () => {
     const list = await openChanges(ALL_DECIDED as typeof DECIDED_FIRST);
 
     await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
-    await userEvent.click(list.getByRole("button", { name: /Es correcto/ }));
+    await userEvent.click(selectedChangeDetail().getByRole("button", { name: /Es correcto/ }));
 
     expect(
       await screen.findByText("Revisión completa. 4 correctos. Ya puede exportar el informe."),
@@ -56,11 +61,11 @@ describe("Decisiones en la lista de cambios", () => {
     const list = await openChanges();
     const firstRow = () => required(onlyRows(list.getAllByRole("button"))[0]);
     await userEvent.click(firstRow());
-    await userEvent.click(list.getByRole("button", { name: /Es correcto/ }));
+    await userEvent.click(selectedChangeDetail().getByRole("button", { name: /Es correcto/ }));
     await userEvent.click(firstRow());
 
     const saved = await screen.findByText(/Se guardó: Es correcto/);
-    const group = list.getByRole("group", { name: "Sobre este cambio" });
+    const group = selectedChangeDetail().getByRole("group", { name: "Sobre este cambio" });
     expect(group.compareDocumentPosition(saved) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });

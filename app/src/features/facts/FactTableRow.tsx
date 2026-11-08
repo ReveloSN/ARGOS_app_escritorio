@@ -106,7 +106,7 @@ export function FactTableRow({ row, view, changes, readOnly }: FactTableRowProps
     >
       <span role="cell" className={styles.dataCell}>
         <span className={styles.dataName}>{shown.name}</span>
-        <span className={styles.dataType}>{shown.type}</span>
+        {shown.type !== shown.name && <span className={styles.dataType}>{shown.type}</span>}
       </span>
       <span role="cell" className={styles.cell}>
         <ValueCell row={row} view={view} shown={shown} onCommit={commit} />

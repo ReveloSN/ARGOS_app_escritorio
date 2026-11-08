@@ -74,6 +74,11 @@ const TEXT_ON_BACKGROUND: readonly (readonly [string, string])[] = [
 // WCAG 1.4.11: trazos que comunican algo (marcas de diferencia, el ojo) piden 3:1.
 const MIN_GRAPHIC_CONTRAST = 3;
 const GRAPHIC_ON_BACKGROUND: readonly (readonly [string, string])[] = [
+  ["--color-border-control", "--color-background-surface"],
+  ["--color-border-control", "--color-background-primary"],
+  ["--color-border-control", "--color-background-subtle"],
+  ["--focus-ring-color", "--color-background-surface"],
+  ["--focus-ring-color", "--color-background-raised"],
   ["--diff-removed-line", "--diff-removed-bg"],
   ["--diff-added-line", "--diff-added-bg"],
   ["--diff-changed-outline", "--diff-changed-bg"],

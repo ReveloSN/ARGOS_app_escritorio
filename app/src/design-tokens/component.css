@@ -5,7 +5,7 @@
   --button-primary-fg: var(--color-action-primary-fg);
   --button-secondary-bg: var(--color-background-surface);
   --button-secondary-bg-hover: var(--color-background-subtle);
-  --button-secondary-border: var(--color-border-strong);
+  --button-secondary-border: var(--color-border-control);
   --button-tertiary-fg: var(--color-text-secondary);
   --button-tertiary-bg-hover: var(--color-background-raised);
   --button-disabled-bg: var(--color-background-raised);
@@ -56,6 +56,11 @@
   --eye-alert: var(--color-risk-high);
   --eye-muted: var(--color-text-tertiary);
   --reticle-stroke: var(--color-border-strong);
+  /* Mascota: cuánto se desplaza el ojo hacia el puntero y cuánto sube los brazos al saludar,
+     en % del propio elemento para que valga en cualquier tamaño. */
+  --mascot-gaze-range: 10%;
+  --mascot-wave-lift: -8%;
+  --mascot-poke-hop: -6%;
   /* Fila o cambio elegido en Comparar: borde de acento a la izquierda. */
   --compare-selected-row-shadow: inset var(--border-width-strong) 0 0 var(--color-action-primary);
 
