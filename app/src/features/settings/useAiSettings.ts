@@ -3,31 +3,42 @@ import { useState } from "react";
 import type { AiGateway, AiProviderValue, AiSettingsResult } from "../../services/engine/aiTypes";
 import { useEngineServices } from "../engine/EngineServicesContext";
 import { useEngineQuery } from "../engine/useEngineQuery";
+import { useLatestChange } from "./useLatestChange";
+
+type AiRun = (kind: string, change: () => Promise<AiSettingsResult>) => void;
 
 function useAiChange(onDone: (result: AiSettingsResult) => void) {
   const [hasFailed, setHasFailed] = useState(false);
-  const run = (change: () => Promise<AiSettingsResult>) => {
+  const begin = useLatestChange();
+  const run: AiRun = (kind, change) => {
     setHasFailed(false);
-    change().then(onDone, () => {
-      setHasFailed(true);
-    });
+    const turn = begin(kind);
+    change().then(
+      (result) => {
+        if (turn.claim()) onDone(result);
+      },
+      // Se dice, salvo que un cambio más nuevo del mismo ajuste ya se haya guardado.
+      () => {
+        if (!turn.isFailureStale()) setHasFailed(true);
+      },
+    );
   };
   return { run, hasFailed };
 }
 
-function aiActions(ai: AiGateway, run: (change: () => Promise<AiSettingsResult>) => void) {
+function aiActions(ai: AiGateway, run: AiRun) {
   return {
     setExplainsChanges: (enabled: boolean) => {
-      run(() => ai.setExplainsChanges(enabled));
+      run("explainsChanges", () => ai.setExplainsChanges(enabled));
     },
     setProvider: (provider: AiProviderValue) => {
-      run(() => ai.setProvider(provider));
+      run("provider", () => ai.setProvider(provider));
     },
     storeKey: (key: string) => {
-      run(() => ai.storeKey(key));
+      run("key", () => ai.storeKey(key));
     },
     removeKey: () => {
-      run(() => ai.removeKey());
+      run("key", () => ai.removeKey());
     },
   };
 }

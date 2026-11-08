@@ -107,7 +107,7 @@ describe("Ajustes", () => {
     renderApp(fakeEngineServices());
     await openSettings();
 
-    expect(await screen.findAllByText("No pudimos cargar estos ajustes.")).toHaveLength(2);
+    expect(await screen.findByText("No pudimos cargar los ajustes.")).toBeVisible();
     await userEvent.selectOptions(
       screen.getByRole("combobox", { name: "Formato regional" }),
       "en-US",

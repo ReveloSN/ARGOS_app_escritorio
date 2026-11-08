@@ -6,7 +6,7 @@ import { CloudCredentials } from "./CloudCredentials";
 import { CloudProcessorForm } from "./CloudProcessorForm";
 import styles from "./Settings.module.css";
 import { SettingsLoadState } from "./SettingsLoadState";
-import { useOcrSettings, type OcrSettingsControl } from "./useOcrSettings";
+import type { OcrSettingsControl } from "./useOcrSettings";
 
 function LocalStatus({
   settings,
@@ -57,18 +57,10 @@ function CloudSettings({
 }
 
 /** Ajustes › OCR: local por defecto; Document AI apagado hasta que el usuario lo configure. */
-export function OcrSection({ onSaved }: { onSaved: () => void }) {
+export function OcrSection({ control }: { readonly control: OcrSettingsControl }) {
   const { t } = useI18n();
-  const control = useOcrSettings(onSaved);
   if (control.state.status !== "ready") {
-    return (
-      <SettingsLoadState
-        isFailed={control.state.status === "failed"}
-        loading="settings.ocr.loading"
-        section={t("settings.ocr.section")}
-        onRetry={control.reload}
-      />
-    );
+    return <SettingsLoadState isFailed={control.state.status === "failed"} />;
   }
   const settings = control.state.data;
   return (
