@@ -21,7 +21,7 @@ const TITLE_ID = "cloud-ocr-title";
 export function CloudOcrConsent(props: CloudOcrConsentProps) {
   const { t, tPlural } = useI18n();
   const pages = props.document.pageCount ?? 0;
-  useShortcuts([{ key: "Escape", isActiveWhileTyping: true, run: props.onCancel }]);
+  useShortcuts([{ key: "Escape", isActiveWhileTyping: true, run: props.onCancel }], true, "dialog");
   return (
     <div className={styles.backdrop}>
       <div role="dialog" aria-modal="true" aria-labelledby={TITLE_ID} className={styles.dialog}>

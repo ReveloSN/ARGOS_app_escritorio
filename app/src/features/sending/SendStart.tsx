@@ -41,6 +41,8 @@ export function SendStart({ status, hasCaseFile, onFile }: SendStartProps) {
   };
   return (
     <div className={styles.start}>
+      {/* Sin borrador aún no hay SendWorkspace: la pantalla se anuncia con su nombre del menú. */}
+      <h1 className="visually-hidden">{t("navigation.send")}</h1>
       <input
         ref={input}
         type="file"
@@ -57,6 +59,7 @@ export function SendStart({ status, hasCaseFile, onFile }: SendStartProps) {
       {status.kind === "failed" && <Failure isNotADraft={status.isNotADraft} onChoose={choose} />}
       {status.kind === "idle" && (
         <EmptyState
+          isPageLevel
           icon="outgoing_mail"
           title={t("sending.start.title")}
           description={t("sending.start.description")}
