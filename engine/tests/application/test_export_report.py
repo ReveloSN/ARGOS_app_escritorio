@@ -66,7 +66,8 @@ def test_names_the_report_after_the_case_file_and_the_date() -> None:
     export, session = exporter(InMemoryReportFolder())
 
     assert export.folder(session.id) == SavedReport(
-        "Documentos/ARGUS/Expediente_2026-118", "Informe_Expediente_2026-118_131026"
+        f"Documentos/ARGUS/Expediente_2026-118_{session.id[:8]}",
+        "Informe_Expediente_2026-118_131026",
     )
 
 
@@ -77,7 +78,7 @@ def test_exports_in_the_chosen_format_into_the_case_file_folder() -> None:
     saved = export.execute(ExportRequest(session.id, ReportFormat.DOCX, report_document()))
 
     assert saved.file_name == "Informe_Expediente_2026-118_131026.docx"
-    assert folder.files[("Expediente_2026-118", saved.file_name)] == (
+    assert folder.files[(f"Expediente_2026-118_{session.id[:8]}", saved.file_name)] == (
         b"docx:Informe de revisi\xc3\xb3n documental"
     )
 
@@ -99,7 +100,7 @@ def test_opens_only_a_report_that_is_still_there() -> None:
 
     report.execute(session.id, saved.file_name)
 
-    assert opener.opened == [Path("Expediente_2026-118", saved.file_name)]
+    assert opener.opened == [Path(f"Expediente_2026-118_{session.id[:8]}", saved.file_name)]
     with pytest.raises(ReportNotFoundError):
         report.execute(session.id, "otro.pdf")
 
