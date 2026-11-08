@@ -82,7 +82,11 @@ function OnboardingDialog() {
   const [current, setCurrent] = useState(0);
   const step = ONBOARDING_STEPS[current] ?? ONBOARDING_STEPS[0];
   const isLast = current === ONBOARDING_STEPS.length - 1;
-  useShortcuts([{ key: "Escape", isActiveWhileTyping: true, run: closeOnboarding }]);
+  useShortcuts(
+    [{ key: "Escape", isActiveWhileTyping: true, run: closeOnboarding }],
+    true,
+    "dialog",
+  );
   if (!step) return null;
   const next = () => {
     if (isLast) closeOnboarding();

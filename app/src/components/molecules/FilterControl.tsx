@@ -26,7 +26,10 @@ export function FilterControl(props: FilterControlProps) {
   const [isOpen, setIsOpen] = useState(false);
   const container = useRef<HTMLDivElement>(null);
   const close = useCallback(() => {
+    // Si el foco estaba en las opciones (Escape), vuelve al chip; un clic fuera no se lo quita.
+    const hadFocus = container.current?.contains(document.activeElement) ?? false;
     setIsOpen(false);
+    if (hadFocus) container.current?.querySelector("button")?.focus();
   }, []);
   return (
     <div ref={container} className={styles.control}>

@@ -34,7 +34,8 @@ export function useAssistantChrome(): AssistantChrome {
     sidebar: { eye: status.eye, text, isHighRisk, isEyeShown },
     topbar: {
       text: topbarText,
-      isHighRisk: isHighRisk || isPaused,
+      // El rojo es solo para riesgo ALTO; la pausa ya tiene su texto y «Reintentar».
+      isHighRisk,
       progress:
         status.condition === "reading" ? { done: status.count, total: status.total } : undefined,
       retry: isPaused ? { label: t("assistant.retry"), onClick: retry } : undefined,
