@@ -14,6 +14,8 @@ from argus.domain.locations import SheetCellLocation, SourceLocation
 from argus.infrastructure.readers.fragments import build_fragments, require_text_found
 
 MIDNIGHT = time()
+# SyntaxError cubre el ParseError de ElementTree y el XMLSyntaxError de lxml.
+CORRUPTED_SHEET_ERRORS = (SyntaxError, KeyError, ValueError)
 
 
 class XlsxDocumentReader:
@@ -23,6 +25,10 @@ class XlsxDocumentReader:
         workbook = _open_workbook(source)
         try:
             fragments = build_fragments(_cell_texts(workbook))
+        except CORRUPTED_SHEET_ERRORS:
+            # En modo de solo lectura las hojas se leen al recorrerlas: una hoja con el XML roto
+            # falla aquí, no al abrir el libro.
+            raise UnreadableDocumentError(source.name, UnreadableReason.CORRUPTED) from None
         finally:
             workbook.close()
         return Document(

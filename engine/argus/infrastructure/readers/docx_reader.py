@@ -33,7 +33,8 @@ class DocxDocumentReader:
 def _open_word_document(source: DocumentSource) -> WordDocument:
     try:
         return docx.Document(BytesIO(source.content))
-    except (PackageNotFoundError, BadZipFile, KeyError, ValueError):
+    # SyntaxError cubre el XMLSyntaxError de lxml: el ZIP está bien pero el XML de dentro está roto.
+    except (PackageNotFoundError, BadZipFile, KeyError, ValueError, SyntaxError):
         raise UnreadableDocumentError(source.name, UnreadableReason.CORRUPTED) from None
 
 
