@@ -31,7 +31,9 @@ function useReviewDecisionTarget(): DecisionTarget {
   return {
     send: (input) => reviews.decide(sessionId, input),
     sendUndo: () => reviews.undoDecision(sessionId),
-    apply: updateDecisions,
+    apply: (result) => {
+      updateDecisions(result, sessionId);
+    },
     decidedMessage: (input) =>
       t("decisionNotice.decided", {
         number: input.alertNumber,

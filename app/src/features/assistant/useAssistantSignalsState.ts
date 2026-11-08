@@ -4,10 +4,8 @@ import { useEngineServices } from "../engine/EngineServicesContext";
 import { useReview } from "../review/reviewContext";
 import type { AssistantSignalsState } from "./assistantContext";
 
-interface UnconfirmedCount {
-  readonly sessionId: string;
-  readonly count: number;
-}
+/** Una cifra por sesión: una respuesta tardía de otra sesión no borra la de la abierta. */
+type UnconfirmedBySession = Readonly<Record<string, number>>;
 
 /** Al abrir un expediente se pregunta al motor cuántos datos quedan «Sin confirmar». */
 function useUnconfirmedOnOpen(report: (sessionId: string, count: number) => void) {
@@ -27,9 +25,9 @@ function useUnconfirmedOnOpen(report: (sessionId: string, count: number) => void
 
 export function useAssistantSignalsState(): AssistantSignalsState {
   const [isExplaining, setExplaining] = useState(false);
-  const [unconfirmed, setUnconfirmed] = useState<UnconfirmedCount | null>(null);
+  const [unconfirmed, setUnconfirmed] = useState<UnconfirmedBySession>({});
   const reportUnconfirmed = useCallback((sessionId: string, count: number) => {
-    setUnconfirmed({ sessionId, count });
+    setUnconfirmed((current) => ({ ...current, [sessionId]: count }));
   }, []);
   useUnconfirmedOnOpen(reportUnconfirmed);
   return useMemo(
@@ -37,8 +35,7 @@ export function useAssistantSignalsState(): AssistantSignalsState {
       isExplaining,
       setExplaining,
       reportUnconfirmed,
-      unconfirmedFor: (sessionId) =>
-        unconfirmed?.sessionId === sessionId ? unconfirmed.count : null,
+      unconfirmedFor: (sessionId) => unconfirmed[sessionId] ?? null,
     }),
     [isExplaining, unconfirmed, reportUnconfirmed],
   );
