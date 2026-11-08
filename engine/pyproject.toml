@@ -1,6 +1,6 @@
 [project]
 name = "argus-engine"
-version = "0.1.0"
+version = "0.1.1"
 description = "Motor local de análisis de ARGUS: lee documentos, extrae entidades y detecta inconsistencias."
 requires-python = ">=3.12,<3.13"
 dependencies = [
