@@ -1,6 +1,6 @@
 [package]
 name = "argus"
-version = "0.1.0"
+version = "0.1.1"
 description = "ARGUS: detecta inconsistencias entre documentos antes de enviarlos o firmarlos."
 authors = ["nicolas Revelo"]
 repository = "https://github.com/ReveloSN/ARGOS_app_escritorio"
