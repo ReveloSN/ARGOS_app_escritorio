@@ -124,7 +124,7 @@
   min-width: var(--size-column-value);
   height: var(--size-control-md);
   padding: 0 var(--spacing-2-5);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-control);
   background: var(--color-background-surface);
   color: var(--color-text-primary);

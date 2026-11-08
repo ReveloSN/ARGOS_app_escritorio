@@ -1,7 +1,7 @@
 .review {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-3);
 }
 
@@ -22,7 +22,9 @@
 .comparisons {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
+  padding-block-start: var(--spacing-5);
+  border-block-start: var(--border-width) solid var(--color-border-default);
   align-self: stretch;
   text-align: start;
 }
@@ -56,6 +58,7 @@
   color: var(--color-text-primary);
   font: inherit;
   cursor: pointer;
+  text-align: start;
 }
 
 .comparison:hover {
@@ -63,7 +66,10 @@
 }
 
 .comparisonName {
+  flex: 1 1 100%;
+  min-width: 0;
   font-weight: var(--font-weight-medium);
+  overflow-wrap: anywhere;
 }
 
 .comparisonMeta {

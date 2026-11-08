@@ -46,7 +46,7 @@ export class EngineHttp {
 
   async json<Body>(request: EngineRequest): Promise<Body> {
     const response = await this.respond(request);
-    return (await response.json()) as Body;
+    return readingBodyOf(request.path, () => response.json() as Promise<Body>);
   }
 
   async empty(request: EngineRequest): Promise<void> {
@@ -54,7 +54,8 @@ export class EngineHttp {
   }
 
   async stream(request: EngineRequest, onEvent: (event: ServerSentEvent) => void): Promise<void> {
-    await readServerSentEvents(await this.respond(request), onEvent);
+    const response = await this.respond(request);
+    await readingBodyOf(request.path, () => readServerSentEvents(response, onEvent));
   }
 
   private async respond(request: EngineRequest): Promise<Response> {
@@ -94,6 +95,20 @@ function headersFor(connection: EngineConnection, body: EngineRequest["body"]): 
 function bodyOf(body: EngineRequest["body"]): Pick<RequestInit, "body"> {
   if (!body) return {};
   return { body: body instanceof FormData ? body : JSON.stringify(body) };
+}
+
+/**
+ * Un cuerpo que no se puede leer (no es JSON, o el flujo se corta o vence a mitad) es «el motor
+ * no respondió», no un SyntaxError o un TypeError sin traducir. Los errores del motor pasan tal cual.
+ */
+async function readingBodyOf<Result>(path: string, read: () => Promise<Result>): Promise<Result> {
+  try {
+    return await read();
+  } catch (cause) {
+    if (cause instanceof EngineUnavailableError || cause instanceof EngineNotReadyError)
+      throw cause;
+    throw new EngineUnavailableError(path, { cause });
+  }
 }
 
 async function rejectionOf(path: string, response: Response): Promise<EngineUnavailableError> {

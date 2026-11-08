@@ -72,21 +72,26 @@ describe("Lista de cambios de Comparar", () => {
     expect(onlyRows(list.getAllByRole("button"))).toHaveLength(4);
   });
 
-  it("el detalle se abre bajo la fila elegida y es el único lugar con el nivel completo de riesgo", async () => {
+  it("el detalle se abre fuera de la lista y conserva todos los cambios accesibles", async () => {
     const list = await openChanges();
     const rows = onlyRows(list.getAllByRole("button"));
 
     await userEvent.click(required(rows[0]));
 
-    const item = required(list.getAllByRole("listitem")[0]);
-    const detail = within(item).getByRole("region", { name: /Explicación del cambio/ });
-    expect(within(item).getByText(/Riesgo alto/)).toBeVisible();
+    const first = required(rows[0]);
+    const target = required(
+      document.getElementById(first.getAttribute("aria-controls") ?? "") ?? undefined,
+    );
+    const detail = within(target).getByRole("region", { name: /Explicación del cambio/ });
+    expect(within(target).getByText(/Riesgo alto/)).toBeVisible();
+    expect(list.queryByRole("region")).not.toBeInTheDocument();
+    expect(onlyRows(list.getAllByRole("button"))).toHaveLength(4);
     expect(within(detail).getByText("Documento A dice")).not.toBeVisible();
     await userEvent.click(within(detail).getByText("Ver qué dice cada documento"));
     expect(within(detail).getByText("Documento A dice")).toBeVisible();
     expect(within(detail).getByText("Documento B dice")).toBeVisible();
     expect(screen.queryByText(/^(Antes|Ahora)$/)).not.toBeInTheDocument();
-    expect(list.getAllByText(/Riesgo alto/)).toHaveLength(1);
+    expect(within(target).getAllByText(/Riesgo alto/)).toHaveLength(1);
     expect(within(detail).getByRole("button", { name: /Es correcto/ })).toBeVisible();
     expect(within(detail).getByRole("button", { name: /Ver detalle/ })).toBeVisible();
   });
@@ -94,9 +99,9 @@ describe("Lista de cambios de Comparar", () => {
   it("cada valor del detalle dice de qué archivo y de qué página o sección sale", async () => {
     const list = await openChanges();
     await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
-    await userEvent.click(list.getByText("Ver qué dice cada documento"));
+    await userEvent.click(screen.getByText("Ver qué dice cada documento"));
 
-    const cards = list.getAllByRole("region", { name: /Documento [AB] dice: / });
+    const cards = screen.getAllByRole("region", { name: /Documento [AB] dice: / });
     expect(cards).toHaveLength(2);
     cards.forEach((card) => {
       expect(within(card).getByText(/\.docx$/)).toBeVisible();

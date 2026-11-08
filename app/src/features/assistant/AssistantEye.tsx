@@ -1,4 +1,5 @@
-import { ArgusEye, type EyeSize } from "../../components/atoms/ArgusEye";
+import type { EyeSize } from "../../components/atoms/ArgusEye";
+import { ArgusMascot } from "../../components/atoms/ArgusMascot";
 import type { EyeState } from "../../components/atoms/eyeShapes";
 import { useAssistantPreferences } from "./assistantContext";
 
@@ -11,5 +12,5 @@ interface AssistantEyeProps {
 /** El ojo como asistente de IA: Ajustes › Mostrar asistente lo oculta (el logo no). */
 export function AssistantEye(props: AssistantEyeProps) {
   const { isAssistantShown } = useAssistantPreferences();
-  return isAssistantShown ? <ArgusEye {...props} /> : null;
+  return isAssistantShown ? <ArgusMascot {...props} /> : null;
 }

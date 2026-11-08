@@ -8,6 +8,7 @@ import type {
 } from "../../services/engine/ocrTypes";
 import { useEngineServices } from "../engine/EngineServicesContext";
 import { useEngineQuery } from "../engine/useEngineQuery";
+import { useLatestChange } from "./useLatestChange";
 
 const INVALID_CREDENTIALS = "invalid_credentials";
 
@@ -19,30 +20,40 @@ function problemOf(error: unknown): OcrChangeProblem {
   return isInvalid ? INVALID_CREDENTIALS : "failed";
 }
 
+type OcrRun = (kind: string, change: () => Promise<OcrSettingsResult>) => void;
+
 function useOcrChange(onDone: (result: OcrSettingsResult) => void) {
   const [problem, setProblem] = useState<OcrChangeProblem>(null);
-  const run = (change: () => Promise<OcrSettingsResult>) => {
+  const begin = useLatestChange();
+  const run: OcrRun = (kind, change) => {
     setProblem(null);
-    change().then(onDone, (error: unknown) => {
-      setProblem(problemOf(error));
-    });
+    const turn = begin(kind);
+    change().then(
+      (result) => {
+        if (turn.claim()) onDone(result);
+      },
+      // Se dice, salvo que un cambio más nuevo del mismo ajuste ya se haya guardado.
+      (error: unknown) => {
+        if (!turn.isFailureStale()) setProblem(problemOf(error));
+      },
+    );
   };
   return { run, problem };
 }
 
-function ocrActions(ocr: OcrGateway, run: (change: () => Promise<OcrSettingsResult>) => void) {
+function ocrActions(ocr: OcrGateway, run: OcrRun) {
   return {
     setUsesCloud: (enabled: boolean) => {
-      run(() => ocr.setUsesCloud(enabled));
+      run("usesCloud", () => ocr.setUsesCloud(enabled));
     },
     setProcessor: (processor: OcrProcessorInput) => {
-      run(() => ocr.setProcessor(processor));
+      run("processor", () => ocr.setProcessor(processor));
     },
     storeCredentials: (credentials: string) => {
-      run(() => ocr.storeCredentials(credentials));
+      run("credentials", () => ocr.storeCredentials(credentials));
     },
     removeCredentials: () => {
-      run(() => ocr.removeCredentials());
+      run("credentials", () => ocr.removeCredentials());
     },
   };
 }

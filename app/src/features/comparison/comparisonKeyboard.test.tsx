@@ -43,7 +43,7 @@ describe("Comparar con teclado", () => {
     expect(within(panel).getByText(V3)).toBeVisible();
   });
 
-  it("(regresión) una fila de la lista es un botón: Enter la elige y abre su detalle bajo ella", async () => {
+  it("(regresión) una fila de la lista es un botón: Enter la elige y conecta con su panel de detalle", async () => {
     await open(comparison({ pairs: [pair(V2, V3, VERSION_CHANGES)] }), 2);
     const list = within(await screen.findByRole("list", { name: "Cambios" }));
     const row = required(onlyRows(list.getAllByRole("button"))[1]);
@@ -53,7 +53,9 @@ describe("Comparar con teclado", () => {
 
     expect(row).toHaveAttribute("aria-current", "true");
     expect(
-      within(required(row.closest("li") ?? undefined)).getAllByRole("region"),
+      within(
+        required(document.getElementById(row.getAttribute("aria-controls") ?? "") ?? undefined),
+      ).getAllByRole("region"),
     ).not.toHaveLength(0);
   });
 });

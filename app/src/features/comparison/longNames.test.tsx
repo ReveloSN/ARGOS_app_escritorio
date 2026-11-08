@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { onlyRows } from "../../test/changeRows";
+import { selectedChangeDetail } from "../../test/changeListHarness";
 import { comparison, pair, VERSION_CHANGES } from "../../test/comparisonFakes";
 import { fakeEngineServices } from "../../test/engineFakes";
 import { renderApp, stubBrowser } from "../../test/renderApp";
@@ -36,6 +37,6 @@ describe("Nombres de archivo largos en Comparar", () => {
       ),
     ).toBeVisible();
     await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
-    expect(list.getAllByTitle(FIRST).length).toBeGreaterThan(0);
+    expect(selectedChangeDetail().getAllByTitle(FIRST).length).toBeGreaterThan(0);
   });
 });

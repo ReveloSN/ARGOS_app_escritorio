@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { useI18n } from "../../i18n/i18nContext";
-import { EngineRejectedError } from "../../services/engine/engineHttp";
 import type {
   FactGateway,
   FactInput,
@@ -11,17 +10,10 @@ import type {
 import type { Translate } from "../alerts/alertPresentation";
 import { useTimedNotice, type TimedNotice } from "../alerts/useTimedNotice";
 import { useEngineServices } from "../engine/EngineServicesContext";
+import { failureOf, type FactChange, type FactFailure } from "./factFailure";
+import { settleIn, useFactTurns, type FactTurn } from "./factTurns";
 
-// El motor responde así cuando el texto no contiene un valor del tipo elegido.
-const UNRECOGNIZED_VALUE = "unrecognized_fact_value";
-
-/** Un cambio que no se guardó, con lo necesario para explicarlo y reintentarlo. */
-export interface FactFailure {
-  readonly label: string;
-  /** El valor escrito, si el motor no lo reconoció; null si el motor no respondió. */
-  readonly unrecognizedValue: string | null;
-  readonly retry: () => void;
-}
+export type { FactFailure } from "./factFailure";
 
 export interface FactChanges {
   /** `onSaved` solo corre si se guardó: así un formulario no se cierra sobre un error. */
@@ -35,43 +27,52 @@ export interface FactChanges {
   readonly notice: TimedNotice;
 }
 
-interface FactChange {
-  readonly send: () => Promise<FactsResult>;
-  readonly label: string;
-  readonly message: string;
-  readonly value?: string;
-  readonly onSaved?: () => void;
+function savedWith(onSaved: (result: FactsResult) => void, notice: TimedNotice) {
+  return (result: FactsResult, change: FactChange) => {
+    onSaved(result);
+    notice.show(change.message, true);
+  };
 }
 
-function unrecognizedValue(error: unknown, change: FactChange): string | null {
-  const isUnrecognized =
-    error instanceof EngineRejectedError && error.detail === UNRECOGNIZED_VALUE;
-  return isUnrecognized ? (change.value ?? null) : null;
+function undoneWith(onSaved: (result: FactsResult) => void, notice: TimedNotice, t: Translate) {
+  return (result: FactsResult) => {
+    onSaved(result);
+    notice.show(t("facts.notice.undone"));
+  };
 }
 
-function failureOf(error: unknown, change: FactChange, retry: () => void): FactFailure {
-  return { label: change.label, unrecognizedValue: unrecognizedValue(error, change), retry };
+interface RunnerDeps {
+  readonly onSaved: (result: FactsResult) => void;
+  readonly notice: TimedNotice;
+  readonly setFailure: (failure: FactFailure | null) => void;
+  readonly rerun: (change: FactChange) => void;
 }
 
-function announceSaved(change: FactChange, notice: TimedNotice): void {
-  notice.show(change.message, true);
-  change.onSaved?.();
+/** Envía un cambio; si no se guardó, deja el fallo con «Reintentar» (que lo vuelve a enviar). */
+function sendChange(change: FactChange, turn: FactTurn, deps: RunnerDeps) {
+  const retry = () => {
+    deps.rerun(change);
+  };
+  settleIn(change.send(), turn, {
+    onSucceeded: change.onSaved,
+    onResult: (result) => {
+      savedWith(deps.onSaved, deps.notice)(result, change);
+    },
+    onError: (error) => {
+      deps.setFailure(failureOf(error, change, retry));
+    },
+  });
 }
 
-function useFactRunner(onSaved: (result: FactsResult) => void, notice: TimedNotice) {
+function useFactRunner(
+  onSaved: (result: FactsResult) => void,
+  notice: TimedNotice,
+  begin: () => FactTurn,
+) {
   const [failure, setFailure] = useState<FactFailure | null>(null);
   const run = (change: FactChange) => {
     setFailure(null);
-    const saved = (result: FactsResult) => {
-      onSaved(result);
-      announceSaved(change, notice);
-    };
-    const retry = () => {
-      run(change);
-    };
-    change.send().then(saved, (error: unknown) => {
-      setFailure(failureOf(error, change, retry));
-    });
+    sendChange(change, begin(), { onSaved, notice, setFailure, rerun: run });
   };
   const dismiss = () => {
     setFailure(null);
@@ -127,15 +128,15 @@ export function useFactChanges(
   const { t } = useI18n();
   const { facts: gateway } = useEngineServices();
   const notice = useTimedNotice();
-  const { run, failure, dismiss } = useFactRunner(onSaved, notice);
+  const begin = useFactTurns(sessionId);
+  const { run, failure, dismiss } = useFactRunner(onSaved, notice, begin);
   const context = { sessionId, gateway, run, t };
   const undo = () => {
-    const undone = (result: FactsResult) => {
-      onSaved(result);
-      notice.show(t("facts.notice.undone"));
-    };
-    gateway.undoFact(sessionId).then(undone, () => {
-      notice.show(t("decisionNotice.undoFailed"));
+    settleIn(gateway.undoFact(sessionId), begin(), {
+      onResult: undoneWith(onSaved, notice, t),
+      onError: () => {
+        notice.show(t("decisionNotice.undoFailed"));
+      },
     });
   };
   return { ...valueActions(context), ...stateActions(context), undo, failure, dismiss, notice };

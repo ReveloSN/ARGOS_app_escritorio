@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 
 import { ArgusEye } from "../components/atoms/ArgusEye";
+import { ArgusMascot } from "../components/atoms/ArgusMascot";
 import { Button } from "../components/atoms/Button";
 import { DecisionTag } from "../components/atoms/DecisionTag";
 import { DiffMark } from "../components/atoms/DiffMark";
@@ -67,6 +68,13 @@ export function DesignSystemCatalog() {
           <DecisionTag state="ignored" />
         </div>
         <ProgressBar value={0.64} label={t("assistant.status.reading", { done: 3, total: 5 })} />
+      </Section>
+      <Section title="Mascota">
+        <div className={styles.row}>
+          {EYE_STATES.filter((state) => state !== "logo").map((state) => (
+            <ArgusMascot key={state} state={state} size="lg" label={state} />
+          ))}
+        </div>
       </Section>
       <Section title="Identidad">
         <div className={styles.row}>

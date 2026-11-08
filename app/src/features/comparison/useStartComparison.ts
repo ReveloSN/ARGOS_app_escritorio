@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type {
   ComparisonGateway,
@@ -7,6 +7,7 @@ import type {
   ComparisonResult,
 } from "../../services/engine/comparisonTypes";
 import { useEngineServices } from "../engine/EngineServicesContext";
+import { useReview } from "../review/reviewContext";
 import { useComparison } from "./comparisonContext";
 
 const VERSION_FILE_COUNT = 2;
@@ -85,17 +86,51 @@ function fromSession(gateway: ComparisonGateway, sessionId: string, documents: r
     gateway.startSessionComparison({ sessionId, name, mode, documents, onProgress });
 }
 
+/** Solo actúa mientras siga vigente la comparación que lo pidió. */
+function guarded(handlers: StartHandlers, isCurrent: () => boolean): StartHandlers {
+  return {
+    setStatus: (status) => {
+      if (isCurrent()) handlers.setStatus(status);
+    },
+    show: (result) => {
+      if (isCurrent()) handlers.show(result);
+    },
+  };
+}
+
+/**
+ * Lo que se compara es de la sesión activa: al cambiar de sesión o salir de Comparar, lo que el
+ * motor devuelva después se descarta y la pantalla vuelve a pedir documentos.
+ */
+function useComparisonTurn(setStatus: StartHandlers["setStatus"]): () => () => boolean {
+  const { review } = useReview();
+  const sessionId = review?.session.id;
+  const latest = useRef(0);
+  useEffect(
+    () => () => {
+      latest.current += 1;
+      setStatus({ kind: "idle" });
+    },
+    [sessionId, setStatus],
+  );
+  return () => {
+    const request = ++latest.current;
+    return () => request === latest.current;
+  };
+}
+
 /** «Elegir documentos» o «Comparar los elegidos» del expediente, con el avance mientras el motor trabaja. */
 export function useStartComparison() {
   const { comparisons } = useEngineServices();
   const { showComparison } = useComparison();
   const [status, setStatus] = useState<StartStatus>({ kind: "idle" });
-  const handlers = { setStatus, show: showComparison };
+  const begin = useComparisonTurn(setStatus);
+  const handlers = () => guarded({ setStatus, show: showComparison }, begin());
   const start = (files: readonly File[]) => {
-    runComparison(files.length, uploaded(comparisons, files), handlers);
+    runComparison(files.length, uploaded(comparisons, files), handlers());
   };
   const startFromSession = (sessionId: string, documents: readonly string[]) => {
-    runComparison(documents.length, fromSession(comparisons, sessionId, documents), handlers);
+    runComparison(documents.length, fromSession(comparisons, sessionId, documents), handlers());
   };
   return { status, start, startFromSession };
 }

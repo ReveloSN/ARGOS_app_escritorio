@@ -15,12 +15,15 @@ class SqliteSessionRepository:
         self._database = database
 
     def save(self, session: ReviewSession) -> None:
+        # Cerrar no tiene vuelta atrás: una copia leída antes del cierre (p. ej. al renombrar a la
+        # vez) no puede volver a dejar la sesión abierta. Por eso closed_at conserva el guardado.
         closed_at = to_stored_timestamp(session.closed_at) if session.closed_at else None
         with self._database.connect() as connection:
             connection.execute(
                 f"INSERT INTO sessions ({SESSION_COLUMNS}) VALUES (?, ?, ?, ?, ?, ?) "
                 "ON CONFLICT (id) DO UPDATE SET name = excluded.name, "
-                "alert_count = excluded.alert_count, closed_at = excluded.closed_at",
+                "alert_count = excluded.alert_count, "
+                "closed_at = COALESCE(sessions.closed_at, excluded.closed_at)",
                 (
                     session.id,
                     session.name,

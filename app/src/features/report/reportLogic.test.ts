@@ -73,7 +73,8 @@ describe("Informe del expediente", () => {
       [
         { text: "Identificador" },
         { text: "Es un error" },
-        { text: "Valor correcto: 1234" },
+        // §7: el valor correcto también lleva su origen, aunque no se incluya «Evidencia».
+        { text: "Valor correcto: 1234", detail: "contrato.txt · Línea 1" },
         // La hora depende de la zona del equipo que corre las pruebas.
         { text: texts.format.dateTime(new Date("2026-10-15T10:10:00+00:00")) },
       ],

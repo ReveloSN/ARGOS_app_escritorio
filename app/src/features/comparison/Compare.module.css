@@ -34,15 +34,15 @@
 .title {
   flex: 1;
   margin: 0;
-  font-size: var(--font-size-title);
+  font-size: var(--font-size-display);
   font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-title);
+  line-height: var(--line-height-value);
 }
 
 .modes {
   display: flex;
   overflow: hidden;
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-sm);
 }
 
@@ -60,7 +60,7 @@
 }
 
 .mode + .mode {
-  border-left: var(--border-width) solid var(--color-border-strong);
+  border-left: var(--border-width) solid var(--color-border-control);
 }
 
 .modeSelected {
@@ -76,6 +76,7 @@
 }
 
 .toolbar {
+  position: relative;
   display: flex;
   min-width: 0;
   flex-wrap: wrap;
@@ -99,7 +100,7 @@
 
 /* El botón queda en la línea superior y el panel ocupa una fila propia debajo. */
 .options {
-  position: relative;
+  position: static;
   display: flex;
   margin-left: auto;
 }
@@ -132,9 +133,15 @@
   z-index: 1;
   top: 100%;
   right: 0;
+  left: 0;
   display: flex;
-  width: max-content;
-  max-width: calc(var(--size-dialog) * 2);
+  width: auto;
+  max-width: 100%;
+  max-height: min(
+    var(--size-readable-narrow),
+    calc(var(--options-panel-available-height, 100dvh) - var(--spacing-3))
+  );
+  overflow: auto;
   flex-direction: column;
   gap: var(--spacing-2-5);
   padding: var(--spacing-3);
@@ -434,10 +441,33 @@
   padding: var(--spacing-3) var(--spacing-4);
 }
 
+.listPanel {
+  flex: 1;
+  min-height: 0;
+}
+
+.listPanel > .items {
+  flex: 0 1 auto;
+  min-height: var(--size-control-lg);
+  max-height: var(--size-side-panel);
+  overflow: auto;
+}
+
+.selectedDetail {
+  flex: 1;
+  min-height: var(--size-side-panel);
+  overflow: auto;
+  border-top: var(--border-width) solid var(--color-border-default);
+}
+
 .detail {
   margin-bottom: var(--spacing-2);
-  padding-inline: var(--spacing-1);
+  min-width: 0;
   border-bottom: var(--border-width) solid var(--color-border-default);
+}
+
+.selectedDetail > .detail {
+  padding-inline: var(--spacing-1);
 }
 
 .riskLevel {
@@ -462,7 +492,7 @@
 
 .listProgress {
   color: var(--color-text-secondary);
-  font-size: var(--font-size-micro);
+  font-size: var(--font-size-caption);
 }
 
 .listTitle,
@@ -478,7 +508,7 @@
   align-items: center;
   gap: var(--spacing-1);
   color: var(--color-text-secondary);
-  font-size: var(--font-size-micro);
+  font-size: var(--font-size-caption);
 }
 
 .listHint {
@@ -495,7 +525,7 @@
 .chip {
   min-height: var(--size-control-sm);
   padding: 0 var(--spacing-2-5);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background: var(--color-background-surface);
   color: var(--color-text-primary);
@@ -655,6 +685,14 @@
   overflow-wrap: anywhere;
 }
 
+/* Dónde está el valor en su archivo, bajo el valor (CLAUDE.md §7). */
+.detailValueLocation {
+  display: block;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-caption);
+}
+
 .saved {
   display: flex;
   align-items: center;
@@ -690,6 +728,7 @@
 .table,
 .matrix {
   display: grid;
+  flex-shrink: 0;
   overflow: hidden;
   border: var(--border-width) solid var(--color-border-strong);
   border-radius: var(--radius-md);
@@ -831,8 +870,16 @@
   list-style: none;
 }
 
+.tooFew {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
 .start {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: var(--spacing-4);
 }
@@ -854,12 +901,12 @@
   flex-wrap: wrap;
   gap: var(--spacing-2);
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-micro);
+  font-size: var(--font-size-caption);
 }
 
 .scopeSelector {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--size-side-panel)), 1fr));
   align-items: flex-end;
   gap: var(--spacing-3);
 }
@@ -977,7 +1024,10 @@
 @container (max-width: 85ch) {
   .versions {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows:
+      minmax(var(--size-readable-narrow), 1fr)
+      minmax(var(--size-readable-wide), 2fr);
+    overflow: auto;
   }
 
   .unified {
@@ -1003,4 +1053,15 @@
   color: var(--color-action-text);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-medium);
+}
+
+.detailKind {
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+}
+.detailValue dt,
+.pairNames,
+.cellValue {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }

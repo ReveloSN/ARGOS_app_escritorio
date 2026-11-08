@@ -56,13 +56,17 @@ class ReplaceFactCommand:
         self._repository = repository
         self._session_id = session_id
         self._fact = fact
-        self._previous = repository.get(session_id, fact.id)
+        self._previous: ConfirmedFact | None = None
 
     def execute(self) -> None:
+        # Se lee al ejecutar (bajo el candado del historial), no al crear el comando: con dos
+        # ediciones simultáneas, deshacer la segunda vuelve a la primera y no al valor inicial.
+        self._previous = self._repository.get(self._session_id, self._fact.id)
         self._repository.save(self._session_id, self._fact)
 
     def undo(self) -> None:
-        self._repository.save(self._session_id, self._previous)
+        if self._previous is not None:
+            self._repository.save(self._session_id, self._previous)
 
 
 class ConfirmedFacts:

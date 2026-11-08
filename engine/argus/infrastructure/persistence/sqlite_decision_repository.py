@@ -6,6 +6,7 @@ from argus.domain.decision import CorrectSide, Decision, DecisionKind
 from argus.domain.errors import (
     AlertNotFoundError,
     ArgusDomainError,
+    ClosedSessionError,
     ComparisonNotFoundError,
     SendReviewNotFoundError,
 )
@@ -23,9 +24,17 @@ class DecisionTable:
     name: str
     owner_column: str
     missing: Callable[[str, int], ArgusDomainError]
+    # Si el dueño se puede cerrar: la escritura comprueba que sigue abierto en la misma sentencia,
+    # así un cierre simultáneo no deja colar una decisión (SQLite serializa las escrituras).
+    open_owner: str | None = None
 
 
-REVIEW_DECISIONS = DecisionTable("decisions", "session_id", AlertNotFoundError)
+REVIEW_DECISIONS = DecisionTable(
+    "decisions",
+    "session_id",
+    AlertNotFoundError,
+    open_owner="EXISTS (SELECT 1 FROM sessions WHERE id = ? AND closed_at IS NULL)",
+)
 COMPARISON_DECISIONS = DecisionTable(
     "comparison_decisions", "comparison_id", lambda owner, _number: ComparisonNotFoundError(owner)
 )
@@ -61,20 +70,39 @@ class SqliteDecisionRepository:
         )
         try:
             with self._database.connect() as connection:
-                connection.execute(
-                    f"INSERT OR REPLACE INTO {self._table.name} "
-                    f"({self._table.owner_column}, {DECISION_COLUMNS}) VALUES (?, ?, ?, ?, ?)",
-                    values,
-                )
+                self._insert(connection, values)
         except sqlite3.IntegrityError:
             raise self._table.missing(session_id, decision.alert_number) from None
 
+    def _insert(self, connection: sqlite3.Connection, values: tuple[object, ...]) -> None:
+        insert = (
+            f"INSERT OR REPLACE INTO {self._table.name} "
+            f"({self._table.owner_column}, {DECISION_COLUMNS}) SELECT ?, ?, ?, ?, ?"
+        )
+        guard = self._table.open_owner
+        if guard is None:
+            connection.execute(insert, values)
+            return
+        session_id = str(values[0])
+        if not connection.execute(f"{insert} WHERE {guard}", (*values, session_id)).rowcount:
+            raise ClosedSessionError(session_id)
+
     def delete(self, session_id: str, alert_number: int) -> None:
+        guard = self._table.open_owner
+        condition = f"{self._where} AND alert_number = ?"
         with self._database.connect() as connection:
+            if guard is None:
+                connection.execute(
+                    f"DELETE FROM {self._table.name} WHERE {condition}", (session_id, alert_number)
+                )
+                return
             connection.execute(
-                f"DELETE FROM {self._table.name} WHERE {self._where} AND alert_number = ?",
-                (session_id, alert_number),
+                f"DELETE FROM {self._table.name} WHERE {condition} AND {guard}",
+                (session_id, alert_number, session_id),
             )
+            # Misma transacción: si no se borró porque la sesión ya estaba cerrada, se dice.
+            if _is_closed(connection, session_id):
+                raise ClosedSessionError(session_id)
 
     def list_for(self, session_id: str) -> tuple[Decision, ...]:
         with self._database.connect() as connection:
@@ -84,6 +112,13 @@ class SqliteDecisionRepository:
                 (session_id,),
             ).fetchall()
         return tuple(_to_decision(row) for row in rows)
+
+
+def _is_closed(connection: sqlite3.Connection, session_id: str) -> bool:
+    row = connection.execute(
+        "SELECT 1 FROM sessions WHERE id = ? AND closed_at IS NOT NULL", (session_id,)
+    ).fetchone()
+    return row is not None
 
 
 def _to_decision(row: tuple[int, str, str, str | None]) -> Decision:

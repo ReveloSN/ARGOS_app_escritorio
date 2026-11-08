@@ -84,9 +84,17 @@ export function evidenceSection(
   return { ...EMPTY_SECTION, heading, table: { columns, rows } };
 }
 
-function decisionNote(alert: AlertResult, decision: DecisionResult, { t }: ReportTexts): string {
+/** «Valor correcto: 1234» con su origen (§7): la sección de decisiones puede ir sin «Evidencia». */
+function decisionNote(
+  alert: AlertResult,
+  decision: DecisionResult,
+  texts: ReportTexts,
+): ReportCellData {
   const side = decision.correctSide === "first" ? alert.first : alert.second;
-  return decision.correctSide && side ? t("decisionCard.correctValue", { value: side.value }) : "";
+  if (!decision.correctSide || !side) return { text: "" };
+  const { detail } = sideCell(side, texts);
+  const text = texts.t("decisionCard.correctValue", { value: side.value });
+  return detail ? { text, detail } : { text };
 }
 
 function decisionRow(
@@ -98,7 +106,7 @@ function decisionRow(
   return [
     { text: entityTypeLabel(alert.entityType, t) },
     { text: t(`decision.${decision.kind}`) },
-    { text: decisionNote(alert, decision, texts) },
+    decisionNote(alert, decision, texts),
     { text: format.dateTime(new Date(decision.decidedAt)) },
   ];
 }

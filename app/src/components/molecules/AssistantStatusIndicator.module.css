@@ -18,12 +18,19 @@
   width: var(--size-progress-inline);
 }
 
+/* Texto de 12 px, pero con un área de clic de 26 px de alto (WCAG 2.5.8 pide 24 × 24). */
 .retry {
-  padding: 0;
+  min-height: var(--size-control-sm);
+  padding: 0 var(--spacing-1-5);
   border: 0;
+  border-radius: var(--radius-xs);
   background: transparent;
   color: inherit;
   font: inherit;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.retry:hover {
+  background: var(--color-background-subtle);
 }

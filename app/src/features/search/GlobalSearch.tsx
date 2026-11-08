@@ -29,18 +29,22 @@ export function GlobalSearch({ scope, initialQuery, onClose }: GlobalSearchProps
 
   useEffect(() => {
     if (trimmed.length < MIN_QUERY_LENGTH) return undefined;
+    // Al cambiar el texto, la respuesta de la búsqueda anterior ya no cuenta (llegue cuando llegue).
+    let isCurrent = true;
     const timer = setTimeout(() => {
       scope.search(trimmed).then(
         (groups) => {
+          if (!isCurrent) return;
           setFailure(null);
           setResults({ query: trimmed, groups });
         },
         () => {
-          setFailure(t("search.failed"));
+          if (isCurrent) setFailure(t("search.failed"));
         },
       );
     }, SEARCH_DELAY_MS);
     return () => {
+      isCurrent = false;
       clearTimeout(timer);
     };
     // `scope` y `t` se recrean en cada render; la búsqueda depende solo del texto escrito.

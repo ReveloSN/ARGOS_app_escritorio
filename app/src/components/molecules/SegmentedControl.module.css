@@ -1,18 +1,23 @@
 .group {
   display: flex;
   align-self: flex-start;
+  max-width: 100%;
+  /* Recorta el fondo de la opción elegida a las esquinas redondeadas del grupo. */
   overflow: hidden;
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-control);
   background: var(--color-background-surface);
 }
 
 .option {
-  min-width: var(--size-button-min);
+  flex: 1 1 auto;
+  min-width: 0;
   padding: var(--spacing-1-5) var(--spacing-3-5);
   border: 0;
   background: transparent;
   color: var(--color-text-secondary);
+  text-align: center;
+  overflow-wrap: anywhere;
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--easing-standard);
 }
@@ -21,8 +26,34 @@
   border-inline-start: var(--border-width) solid var(--color-border-default);
 }
 
+/*
+ * El grupo recorta lo que sale de él, así que el anillo global (desplazado hacia fuera)
+ * se perdería. Se dibuja hacia dentro con el mismo grosor y separación que el global.
+ */
+.option:focus-visible {
+  outline-offset: calc(-1 * (var(--focus-ring-width) + var(--focus-ring-offset)));
+}
+
 .selected {
   background: var(--color-action-primary);
   color: var(--color-action-primary-fg);
   font-weight: var(--font-weight-medium);
+}
+
+/* Sobre el fondo de acento el anillo de acento no se vería: toma el color del texto. */
+.selected:focus-visible {
+  outline-color: var(--color-action-primary-fg);
+}
+
+/* En alto contraste el sistema quita los fondos; la opción elegida conserva su marca. */
+@media (forced-colors: active) {
+  .selected {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .selected:focus-visible {
+    outline-color: HighlightText;
+  }
 }

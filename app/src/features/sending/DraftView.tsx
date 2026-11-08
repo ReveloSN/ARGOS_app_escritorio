@@ -60,9 +60,9 @@ function Attachments({ review }: DraftViewProps) {
   const attachments = correctedAttachments(review);
   return (
     <div className={styles.attachments}>
-      <span className={styles.attachmentsTitle}>
+      <h2 className={styles.attachmentsTitle}>
         {t("sending.draft.attachments", { count: attachments.length })}
-      </span>
+      </h2>
       <ul className={styles.attachmentList} aria-label={t("sending.draft.attachmentsLabel")}>
         {attachments.map((item) => (
           <li

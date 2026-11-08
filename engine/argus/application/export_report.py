@@ -66,6 +66,16 @@ def safe_name(text: str) -> str:
     return UNSAFE_CHARACTERS.sub("_", text.strip()).strip("_") or FILE_PREFIX
 
 
+# Caracteres del identificador que se añaden a la carpeta: bastan para distinguir sesiones.
+FOLDER_ID_LENGTH = 8
+
+
+def case_file_folder(names: "CaseFileNames", owner_id: str) -> str:
+    """Carpeta del informe: el nombre legible y un trozo del identificador. Dos expedientes con el
+    mismo nombre (o que `safe_name` deja iguales) no se pisan el informe ni se abren cruzados."""
+    return f"{safe_name(names.name_of(owner_id))}_{safe_name(owner_id)[:FOLDER_ID_LENGTH]}"
+
+
 @dataclass(frozen=True)
 class ExportRequest:
     session_id: str
@@ -92,9 +102,10 @@ class ExportReport:
 
     def folder(self, session_id: str) -> SavedReport:
         """Dónde quedará el informe y con qué nombre (sin extensión), antes de exportarlo."""
-        case_file = self._case_file(session_id)
-        stem = f"{FILE_PREFIX}_{case_file}_{self._tools.clock.now().strftime(DATE_FORMAT)}"
-        return SavedReport(self._tools.folder.folder_for(case_file), stem)
+        # El archivo lleva el nombre legible; la carpeta, además, un trozo del identificador.
+        readable = safe_name(self._names.name_of(session_id))
+        stem = f"{FILE_PREFIX}_{readable}_{self._tools.clock.now().strftime(DATE_FORMAT)}"
+        return SavedReport(self._tools.folder.folder_for(self._case_file(session_id)), stem)
 
     def execute(self, request: ExportRequest) -> SavedReport:
         planned = self.folder(request.session_id)
@@ -103,7 +114,7 @@ class ExportReport:
         return self._tools.folder.save(self._case_file(request.session_id), file_name, content)
 
     def _case_file(self, session_id: str) -> str:
-        return safe_name(self._names.name_of(session_id))
+        return case_file_folder(self._names, session_id)
 
 
 class OpenReport:
@@ -115,8 +126,7 @@ class OpenReport:
         self._opener = opener
 
     def execute(self, session_id: str, file_name: str) -> None:
-        case_file = safe_name(self._names.name_of(session_id))
-        path = self._folder.path_of(case_file, file_name)
+        path = self._folder.path_of(case_file_folder(self._names, session_id), file_name)
         if path is None:
             raise ReportNotFoundError(file_name)
         self._opener.open(path)

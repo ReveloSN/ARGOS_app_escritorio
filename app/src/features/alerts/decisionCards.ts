@@ -1,7 +1,12 @@
-import type { DecisionCardData } from "../../components/organisms/DecisionCard";
+import type { DecisionCardData, ValueSource } from "../../components/organisms/DecisionCard";
 import type { I18n } from "../../i18n/i18nContext";
-import type { AlertResult, DecisionResult, ReviewResult } from "../../services/engine/reviewTypes";
-import { alertTitle, entityTypeLabel } from "./alertPresentation";
+import type {
+  AlertResult,
+  AlertSideResult,
+  DecisionResult,
+  ReviewResult,
+} from "../../services/engine/reviewTypes";
+import { alertTitle, describeLocation, entityTypeLabel } from "./alertPresentation";
 import { secondValue } from "./alertSides";
 
 type CardContext = Pick<I18n, "t" | "format">;
@@ -11,6 +16,12 @@ function correctValueNote(alert: AlertResult, decision: DecisionResult, i18n: Ca
   const side = decision.correctSide === "first" ? alert.first : alert.second;
   if (!decision.correctSide || !side) return undefined;
   return i18n.t("decisionCard.correctValue", { value: side.value });
+}
+
+/** Dónde aparece primero un valor; las demás apariciones están en el detalle de la alerta. */
+function sourceOf(side: AlertSideResult | null, i18n: CardContext): ValueSource | undefined {
+  const [first] = side?.occurrences ?? [];
+  return first && { fileName: first.document, location: describeLocation(first.location, i18n.t) };
 }
 
 export function toDecisionCard(
@@ -28,6 +39,8 @@ export function toDecisionCard(
     decision: decision.kind,
     decidedAt: i18n.format.dateTime(new Date(decision.decidedAt)),
     note: correctValueNote(alert, decision, i18n),
+    sourceA: sourceOf(alert.first, i18n),
+    sourceB: sourceOf(alert.second, i18n),
   };
 }
 

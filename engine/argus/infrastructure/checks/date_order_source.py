@@ -32,11 +32,15 @@ DATE_ORDER_CONFIDENCE = 0.9
 
 
 def labeled_date(named: NamedFragment, label: re.Pattern[str]) -> Entity | None:
-    """La primera fecha que sigue a la etiqueta dentro del mismo fragmento."""
+    """La primera fecha que sigue a la etiqueta dentro del mismo fragmento.
+
+    La más cercana, no la primera que encuentra el extractor: este recorre un formato tras otro, y
+    en «Inicio: 1 de agosto de 2026. Terminación: 31/07/2026» daría primero la de barras.
+    """
     text = named.fragment.text
     for found in label.finditer(text):
         window = text[found.end() : found.end() + LABEL_REACH]
-        match = next(iter(DateExtractor().extract(window)), None)
+        match = min(DateExtractor().extract(window), key=lambda date: date.start, default=None)
         if match is not None:
             return _entity(named, match, found.end())
     return None

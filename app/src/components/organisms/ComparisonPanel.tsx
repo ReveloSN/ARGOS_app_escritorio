@@ -36,7 +36,11 @@ interface ComparisonPanelProps {
 export function ComparisonPanel({ first, second }: ComparisonPanelProps) {
   const { t } = useI18n();
   return (
-    <div role="group" aria-label={t("alerts.compare")} className={styles.panel}>
+    <div
+      role="group"
+      aria-label={t("alerts.compare")}
+      className={second ? styles.panel : styles.single}
+    >
       <ValueCard label="alerts.valueA" compared={first} />
       {second && (
         <>

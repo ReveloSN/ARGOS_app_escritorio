@@ -90,9 +90,9 @@ export function FactAside({ row, sessionId, notice }: FactAsideProps) {
   const value = row.kind === "fact" ? row.fact.value : t("facts.aside.unconfirmed");
   return (
     <aside className={styles.aside} aria-label={t("facts.aside.title")}>
-      <span className={styles.asideTitle}>{t("facts.aside.title")}</span>
+      <h2 className={styles.asideTitle}>{t("facts.aside.title")}</h2>
       <div className={styles.asideFact}>
-        <span className={styles.asideName}>{name}</span>
+        <h3 className={styles.asideName}>{name}</h3>
         <span className={styles.asideValue}>{value}</span>
       </div>
       {row.kind === "fact" ? (

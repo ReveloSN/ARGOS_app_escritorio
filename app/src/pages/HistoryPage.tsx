@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { joinClassNames } from "../components/joinClassNames";
 
 import { useComparison } from "../features/comparison/comparisonContext";
 import { useEngineServices } from "../features/engine/EngineServicesContext";
@@ -64,7 +65,7 @@ export function HistoryPage({
   };
 
   return (
-    <div className={styles.layout}>
+    <div className={joinClassNames(styles.layout, !current && styles.noSelection)}>
       <HistoryHeader days={days} state={query.state} onDaysChange={setDays} />
       <HistorySessions
         state={query.state}

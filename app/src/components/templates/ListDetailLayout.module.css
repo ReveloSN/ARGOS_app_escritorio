@@ -19,7 +19,24 @@
 }
 
 .detail {
+  container-type: inline-size;
   min-height: 0;
   overflow: auto;
   padding: var(--spacing-5) var(--spacing-6);
+}
+
+@container (max-width: 760px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) minmax(0, 2fr);
+  }
+
+  .header {
+    grid-column: 1;
+  }
+
+  .list {
+    border-inline-end: 0;
+    border-block-end: var(--border-width) solid var(--color-border-default);
+  }
 }

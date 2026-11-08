@@ -1,0 +1,102 @@
+/*
+ * El trazo se fija en píxeles de pantalla (vector-effect) para que cuerpo y ojo pesen igual
+ * en cada tamaño. El personaje conserva sus proporciones aunque cambien los controles.
+ */
+.mascot {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  color: var(--eye-accent);
+  aspect-ratio: 120 / 128;
+}
+
+.sm {
+  width: var(--size-mascot-sm);
+  stroke-width: var(--stroke-width-mascot-sm);
+}
+
+.md {
+  width: var(--size-mascot-md);
+  stroke-width: var(--stroke-width-mascot-md);
+}
+
+.lg {
+  width: var(--size-mascot-lg);
+  stroke-width: var(--stroke-width-mascot-lg);
+}
+
+.body {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.body > path {
+  vector-effect: non-scaling-stroke;
+}
+
+.shell,
+.feet {
+  fill: var(--color-action-subtle);
+}
+
+.limbs,
+.crest,
+.pageLines,
+.mouth {
+  fill: none;
+}
+
+.page {
+  fill: var(--color-background-surface);
+}
+
+/* A 36 px las líneas de la hoja se funden en una mancha; la hoja sola se reconoce mejor. */
+.sm .pageLines {
+  display: none;
+}
+
+.face {
+  position: absolute;
+  inset: 16% 25% auto;
+  /* --gaze-x/-y (−1…1) los escribe usePointerGaze; sin ellos el ojo mira al frente. */
+  transform: translate(
+    calc(var(--gaze-x, 0) * var(--mascot-gaze-range)),
+    calc(var(--gaze-y, 0) * var(--mascot-gaze-range))
+  );
+  transition: transform var(--duration-fast) var(--easing-standard);
+}
+
+/* Saludo al pasar el puntero: una pose, no un bucle; con movimiento reducido es instantánea. */
+.limbs {
+  transform-box: fill-box;
+  transition: transform var(--duration-base) var(--easing-standard);
+}
+
+.mascot:hover .limbs {
+  transform: translateY(var(--mascot-wave-lift));
+}
+
+/* Al tocarla, un saltito de ida y vuelta; usePokeReaction quita data-poked al terminar. */
+.mascot[data-poked] {
+  animation: mascot-poke var(--duration-base) var(--easing-standard);
+}
+
+@keyframes mascot-poke {
+  50% {
+    transform: translateY(var(--mascot-poke-hop));
+  }
+}
+
+.mascot[data-state="alert"] {
+  color: var(--eye-alert);
+}
+
+.mascot[data-state="idle"],
+.mascot[data-state="error"] {
+  color: var(--eye-muted);
+}
