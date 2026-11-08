@@ -7,7 +7,7 @@ import { useI18n } from "../../i18n/i18nContext";
 import type { AiSettingsResult } from "../../services/engine/aiTypes";
 import styles from "./Settings.module.css";
 import { SettingsLoadState } from "./SettingsLoadState";
-import { useAiSettings, type AiSettingsControl } from "./useAiSettings";
+import type { AiSettingsControl } from "./useAiSettings";
 
 interface SectionProps {
   readonly settings: AiSettingsResult;
@@ -85,7 +85,8 @@ function KeyStatus({ settings, control }: SectionProps) {
   if (!settings.hasKey) {
     return (
       <>
-        <KeyField settings={settings} control={control} />
+        {/* Una clave por proveedor: al cambiar de proveedor el campo empieza vacío (§8). */}
+        <KeyField key={settings.provider} settings={settings} control={control} />
         <p className={styles.description}>{t("settings.ai.keyMissing")}</p>
       </>
     );
@@ -101,18 +102,10 @@ function KeyStatus({ settings, control }: SectionProps) {
 }
 
 /** Ajustes > Inteligencia artificial: apagada por defecto; nada sale del equipo sin activarla. */
-export function AiSection({ onSaved }: { onSaved: () => void }) {
+export function AiSection({ control }: { readonly control: AiSettingsControl }) {
   const { t } = useI18n();
-  const control = useAiSettings(onSaved);
   if (control.state.status !== "ready") {
-    return (
-      <SettingsLoadState
-        isFailed={control.state.status === "failed"}
-        loading="settings.ai.loading"
-        section={t("settings.ai.section")}
-        onRetry={control.reload}
-      />
-    );
+    return <SettingsLoadState isFailed={control.state.status === "failed"} />;
   }
   const settings = control.state.data;
   const provider = t(`settings.ai.providers.${settings.provider}`);

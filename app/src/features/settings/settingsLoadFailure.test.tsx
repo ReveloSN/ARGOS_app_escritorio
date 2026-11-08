@@ -30,11 +30,9 @@ describe("Ajustes cuando el motor no responde", () => {
     await act(() => Promise.resolve());
     await userEvent.click(screen.getByRole("button", { name: /Ajustes/ }));
 
-    expect(await screen.findByText("No pudimos cargar los ajustes de IA.")).toBeVisible();
-    expect(screen.getAllByText(/todavía está arrancando o no está en marcha/)[0]).toBeVisible();
-    const aiError = screen
-      .getByText("No pudimos cargar los ajustes de IA.")
-      .closest('[role="alert"]');
+    expect(await screen.findByText("No pudimos cargar los ajustes.")).toBeVisible();
+    expect(screen.getByText("El motor de análisis no respondió.")).toBeVisible();
+    const aiError = screen.getByText("No pudimos cargar los ajustes.").closest('[role="alert"]');
     await userEvent.click(
       within(aiError as HTMLElement).getByRole("button", { name: "Reintentar" }),
     );

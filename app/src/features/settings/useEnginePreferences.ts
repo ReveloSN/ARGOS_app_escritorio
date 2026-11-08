@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import type { PreferencesResult, PreferencesUpdate } from "../../services/engine/preferencesTypes";
 import { useEngineServices } from "../engine/EngineServicesContext";
@@ -32,6 +32,52 @@ function useSaveFeedback(onConfirmed: (result: PreferencesResult) => void) {
   return { confirm, fail, hasSaveFailed };
 }
 
+/**
+ * Cambios aún sin confirmar: cada guardado los incluye todos, así un segundo cambio enviado antes
+ * de la respuesta no deshace el primero. Solo cuenta la respuesta del último guardado.
+ */
+function usePendingChanges() {
+  const pending = useRef<Partial<PreferencesUpdate>>({});
+  const latest = useRef(0);
+  const add = (change: Partial<PreferencesUpdate>) => {
+    pending.current = { ...pending.current, ...change };
+    const save = ++latest.current;
+    return { merged: pending.current, isLatest: () => save === latest.current };
+  };
+  const settle = () => {
+    pending.current = {};
+  };
+  return { add, settle };
+}
+
+interface SaveDeps {
+  readonly current: QueryState<PreferencesResult>;
+  readonly send: (update: PreferencesUpdate) => Promise<PreferencesResult>;
+  readonly confirm: (result: PreferencesResult) => void;
+  readonly fail: () => void;
+}
+
+/** Guarda un cambio junto con los que aún esperan respuesta; solo cuenta la del último. */
+function useSave({ current, send, confirm, fail }: SaveDeps) {
+  const changes = usePendingChanges();
+  return (change: Partial<PreferencesUpdate>) => {
+    if (current.status !== "ready") return;
+    const { merged, isLatest } = changes.add(change);
+    const settle = () => {
+      changes.settle();
+      return true;
+    };
+    send(updateFrom(current.data, merged)).then(
+      (result) => {
+        if (isLatest() && settle()) confirm(result);
+      },
+      () => {
+        if (isLatest() && settle()) fail();
+      },
+    );
+  };
+}
+
 /** Ajustes del motor: Detección (sensibilidad, tipos, casos excluidos) y Privacidad. */
 export function useEnginePreferences(onSaved: () => void): EnginePreferences {
   const { preferences } = useEngineServices();
@@ -40,10 +86,8 @@ export function useEnginePreferences(onSaved: () => void): EnginePreferences {
     query.replace(result);
     onSaved();
   });
-  const save = (change: Partial<PreferencesUpdate>) => {
-    if (query.state.status !== "ready") return;
-    preferences.savePreferences(updateFrom(query.state.data, change)).then(confirm, fail);
-  };
+  const send = (update: PreferencesUpdate) => preferences.savePreferences(update);
+  const save = useSave({ current: query.state, send, confirm, fail });
   const removeRule = (ruleId: number) => {
     const reloaded = () => preferences.preferences();
     preferences.removeSuppressionRule(ruleId).then(reloaded).then(confirm, fail);

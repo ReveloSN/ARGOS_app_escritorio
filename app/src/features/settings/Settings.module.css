@@ -44,6 +44,7 @@
 
 .titleRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-3);
 }
@@ -51,9 +52,9 @@
 .title {
   flex: 1;
   margin: 0;
-  font-size: var(--font-size-title);
+  font-size: var(--font-size-display);
   font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-title);
+  line-height: var(--line-height-value);
 }
 
 .saved {
@@ -79,7 +80,7 @@
 }
 
 .section + .section {
-  padding-top: var(--spacing-4);
+  padding-top: var(--spacing-6);
   border-top: var(--border-width) solid var(--color-border-default);
 }
 
@@ -256,7 +257,7 @@
 .keyInput {
   min-height: var(--size-control-md);
   padding: 0 var(--spacing-2-5);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background: var(--color-background-surface);
   color: var(--color-text-primary);
@@ -272,7 +273,7 @@
 .credentials {
   min-height: calc(4 * var(--line-height-body));
   padding: var(--spacing-2) var(--spacing-2-5);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background: var(--color-background-surface);
   color: var(--color-text-primary);
@@ -303,4 +304,25 @@
   width: 0;
   height: 0;
   opacity: 0;
+}
+
+/* El índice cambia a filas cuando deja de caber junto al formulario. */
+@container (max-width: 760px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: var(--spacing-3);
+    border-inline-end: 0;
+    border-block-end: var(--border-width) solid var(--color-border-default);
+  }
+  .content {
+    padding: var(--spacing-5) var(--spacing-6);
+  }
+  .keyLabel {
+    min-width: min(100%, var(--size-side-panel));
+  }
 }

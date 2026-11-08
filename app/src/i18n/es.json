@@ -676,12 +676,6 @@
       "moving": "Copiando el historial a la nueva carpeta. El motor de análisis se reiniciará al terminar.",
       "moved": "El historial ya está en la nueva carpeta. La carpeta anterior se conservó; puede borrarla cuando quiera."
     },
-    "loadFailed": {
-      "what": "No pudimos cargar los ajustes de {section}.",
-      "why": "El motor de análisis no respondió: todavía está arrancando o no está en marcha.",
-      "todo": "Reintente en unos segundos. Si sigue igual, cierre ARGUS y ábralo de nuevo.",
-      "retry": "Reintentar"
-    },
     "shortcuts": {
       "newReview": "Nueva revisión",
       "search": "Buscar en la pantalla actual",
@@ -701,10 +695,11 @@
       "compareTabs": "Pestañas de Comparar"
     },
     "unavailable": {
-      "what": "No pudimos cargar estos ajustes.",
-      "why": "Los guarda el motor de análisis, que no respondió.",
-      "todo": "Reintente. El idioma y la apariencia siguen disponibles.",
-      "retry": "Reintentar"
+      "what": "No pudimos cargar los ajustes.",
+      "why": "El motor de análisis no respondió.",
+      "todo": "Reintente en unos segundos. Si sigue igual, cierre ARGUS y ábralo de nuevo. Idioma, Apariencia, Asistente y Atajos siguen disponibles.",
+      "retry": "Reintentar",
+      "section": "Disponible cuando el motor responda."
     },
     "saveFailed": {
       "what": "No se guardó el cambio.",
@@ -748,8 +743,6 @@
       "removeKey": "Quitar clave",
       "keyStored": "Clave guardada en el llavero del sistema.",
       "keyMissing": "Sin clave, «Ver detalle» usa la explicación local.",
-      "section": "IA",
-      "loading": "Cargando los ajustes de IA…",
       "failed": "No se pudieron cargar los ajustes de IA: el motor de análisis no respondió.",
       "keychain": {
         "what": "No se puede usar el llavero del sistema.",
@@ -775,8 +768,6 @@
       "onboarding": "Ver primeros pasos"
     },
     "ocr": {
-      "section": "OCR",
-      "loading": "Cargando los ajustes de OCR…",
       "failed": "No se pudieron cargar los ajustes de OCR: el motor de análisis no respondió.",
       "localAvailable": "El OCR local (Tesseract) está listo en este equipo. «Activar OCR» lo usa por defecto.",
       "localMissing": {
@@ -798,12 +789,14 @@
       "credentialsLabel": "Clave JSON de la cuenta de servicio",
       "credentialsPlaceholder": "Pegue aquí el contenido del archivo .json",
       "chooseFile": "Elegir archivo JSON",
+      "fileChosen": "Archivo elegido: {name}. Su contenido no se muestra; se guardará en el llavero.",
       "saveCredentials": "Guardar clave",
       "credentialsStored": "Clave guardada en el llavero del sistema.",
       "removeCredentials": "Quitar clave",
       "invalidCredentials": "No es la clave de una cuenta de servicio. Descárguela en Google Cloud › IAM › Cuentas de servicio › Claves, en formato JSON.",
       "keychainTodo": "Inicie el llavero de su escritorio y vuelva a intentarlo. Mientras tanto se usa el OCR local."
-    }
+    },
+    "loading": "Cargando los ajustes…"
   },
   "explanation": {
     "lead": {
@@ -1091,6 +1084,7 @@
       "description": "Dos para comparar versiones; tres o más para la matriz.",
       "note": "PDF, DOCX, XLSX, EML o texto. Se analizan en este equipo.",
       "choose": "Elegir documentos",
+      "needTwo": "Eligió un documento. Elija al menos dos para compararlos.",
       "reading": "Leyendo {done} de {total} archivos",
       "aligning": "Alineando {count} versiones…",
       "pairs": "Comparando el par {done} de {total}…",
@@ -1463,7 +1457,7 @@
     },
     "topbar": {
       "starting": "Asistente de IA: iniciando",
-      "paused": "Asistente de IA detenido",
+      "paused": "Asistente de IA: en pausa",
       "ready": "Asistente de IA: listo"
     },
     "onboarding": {
