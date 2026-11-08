@@ -14,7 +14,7 @@
   max-height: var(--size-readable-narrow);
   padding: var(--spacing-2-5) var(--spacing-3);
   overflow: auto;
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-md);
   background: var(--color-background-surface);
   box-shadow: var(--shadow-overlay);

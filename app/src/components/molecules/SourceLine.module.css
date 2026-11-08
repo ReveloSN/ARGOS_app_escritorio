@@ -1,6 +1,7 @@
 .source {
   display: flex;
   flex-wrap: wrap;
+  min-width: 0;
   align-items: center;
   gap: var(--spacing-1-5);
   color: var(--color-text-secondary);
@@ -12,6 +13,8 @@
 }
 
 .file {
+  min-width: 0;
   color: var(--color-text-primary);
   font-family: var(--font-family-mono);
+  overflow-wrap: anywhere;
 }

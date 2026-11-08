@@ -19,6 +19,15 @@ export const ALL_DECIDED = {
   canUndo: true,
 };
 
+/** El botón seleccionado conecta la lista con el detalle mediante aria-controls. */
+export function selectedChangeDetail() {
+  const list = within(screen.getByRole("list", { name: "Cambios" }));
+  const selected = list.getAllByRole("button").find((button) => button.ariaCurrent === "true");
+  const panel = document.getElementById(selected?.getAttribute("aria-controls") ?? "");
+  if (!panel) throw new Error("El cambio seleccionado no está conectado con su detalle.");
+  return within(panel);
+}
+
 export async function openChanges(decided = DECIDED_FIRST) {
   const result = comparison({
     pairs: [pair("Contrato_v2.docx", "Contrato_v3.docx", VERSION_CHANGES)],

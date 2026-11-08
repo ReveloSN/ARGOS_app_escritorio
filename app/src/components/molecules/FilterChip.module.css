@@ -4,7 +4,7 @@
   gap: var(--spacing-1);
   height: var(--size-control-sm);
   padding: 0 var(--spacing-1-5) 0 var(--spacing-2-5);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-control);
   background: var(--color-background-surface);
   color: var(--color-text-secondary);

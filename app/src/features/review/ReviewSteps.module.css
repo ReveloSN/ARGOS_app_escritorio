@@ -1,5 +1,6 @@
 .heading {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: var(--spacing-2);
   margin: 0;
@@ -41,14 +42,13 @@
 }
 
 .fileName {
-  overflow: hidden;
   font-family: var(--font-family-mono);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .status {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-1-5);
   color: var(--color-text-secondary);

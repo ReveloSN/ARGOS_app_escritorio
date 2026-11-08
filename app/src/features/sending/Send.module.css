@@ -26,9 +26,9 @@
 .title {
   flex: 1;
   margin: 0;
-  font-size: var(--font-size-title);
+  font-size: var(--font-size-display);
   font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-title);
+  line-height: var(--line-height-value);
 }
 
 .fileName,
@@ -115,7 +115,7 @@
 
 .markNumber {
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-micro);
+  font-size: var(--font-size-caption);
 }
 
 .attachments {
@@ -223,7 +223,7 @@
 
 .issueNumber {
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-micro);
+  font-size: var(--font-size-caption);
 }
 
 .issueStatus {
@@ -252,7 +252,7 @@
 .secondaryButton {
   min-height: var(--size-control-sm);
   padding: 0 var(--spacing-2-5);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background: var(--color-background-surface);
   color: var(--color-text-primary);
@@ -292,4 +292,51 @@
 .running {
   margin: 0;
   padding: var(--spacing-6);
+}
+
+/* Ocupa el alto libre de la página para que el estado vacío quede centrado, como en Inicio. */
+.start {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.fileName,
+.subject,
+.issueTitle,
+.issueBody {
+  overflow-wrap: anywhere;
+}
+.attachment {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+.attachment .address {
+  min-width: 0;
+}
+.headline,
+.issueTitle,
+.attachmentsTitle {
+  margin: 0;
+  font-size: var(--font-size-emphasis);
+}
+
+/* El borrador conserva su ancho de lectura; los problemas pasan debajo si no caben al lado. */
+@container (max-width: 900px) {
+  .main {
+    display: block;
+    overflow: auto;
+  }
+  .draftColumn {
+    overflow: visible;
+  }
+  .panel {
+    border-left: 0;
+    border-top: var(--border-width) solid var(--color-border-default);
+  }
+  .issues {
+    flex: none;
+    overflow: visible;
+  }
 }

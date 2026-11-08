@@ -1,5 +1,4 @@
 import { Button } from "../components/atoms/Button";
-import { ReticleMotif } from "../components/atoms/ReticleMotif";
 import { NEW_REVIEW_SHORTCUT } from "../components/organisms/sidebarSections";
 import { AssistantEye } from "../features/assistant/AssistantEye";
 import { useAssistantStatus } from "../features/assistant/useAssistantStatus";
@@ -92,33 +91,33 @@ export function HomePage({
         </div>
       )}
       <div className={styles.stage}>
-        <ReticleMotif size="lg" className={styles.reticle} />
         <div className={styles.content}>
-          <AssistantEye
-            state={assistant.status.eye}
-            size="lg"
-            label={t("assistant.label", { status: assistant.text })}
-          />
-          <SessionSummary
-            snapshot={snapshot}
-            savedCount={savedCount}
-            onContinueReview={onContinueReview}
-            onCompare={onCompare}
-          />
-          <div className={styles.actions}>
-            <Button
-              variant={isEmptySnapshot(snapshot) ? "primary" : "secondary"}
-              shortcut={NEW_REVIEW_SHORTCUT}
-              onClick={onNewReview}
-            >
-              {t("navigation.newReview")}
-            </Button>
-            {hasSavedReviewsToOpen && (
-              <Button onClick={onOpenHistory}>{t("home.saved.openHistory")}</Button>
-            )}
-            <Button onClick={onCompare}>{t("home.compareVersions")}</Button>
+          <div className={styles.workspace}>
+            <SessionSummary
+              snapshot={snapshot}
+              savedCount={savedCount}
+              onContinueReview={onContinueReview}
+              onCompare={onCompare}
+            />
+            <div className={styles.actions}>
+              <Button
+                variant={isEmptySnapshot(snapshot) ? "primary" : "secondary"}
+                shortcut={NEW_REVIEW_SHORTCUT}
+                onClick={onNewReview}
+              >
+                {t("navigation.newReview")}
+              </Button>
+              {hasSavedReviewsToOpen && (
+                <Button onClick={onOpenHistory}>{t("home.saved.openHistory")}</Button>
+              )}
+              <Button onClick={onCompare}>{t("home.compareVersions")}</Button>
+            </div>
+            <span className={styles.note}>{t("home.note")}</span>
           </div>
-          <span className={styles.note}>{t("home.note")}</span>
+          <div className={styles.companion}>
+            <AssistantEye state={assistant.status.eye} size="lg" />
+            <p className={styles.assistantText}>{assistant.text}</p>
+          </div>
         </div>
       </div>
     </div>

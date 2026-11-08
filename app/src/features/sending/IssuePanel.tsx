@@ -53,7 +53,7 @@ function IssueCard({ review, issue, decisions }: IssuePanelProps & { issue: Send
         <span className={styles.issueKind}>{texts.t(`sending.issue.${issue.kind}.kind`)}</span>
         {isDecided && <span className={styles.issueStatus}>{shown.status}</span>}
       </div>
-      <span className={styles.issueTitle}>{shown.title}</span>
+      <h3 className={styles.issueTitle}>{shown.title}</h3>
       <span className={styles.issueBody}>{shown.body}</span>
       {!isDecided && !decisions.isReadOnly && (
         <IssueActions issue={issue} label={shown.fixLabel} decisions={decisions} />
@@ -69,9 +69,9 @@ export function IssuePanel({ review, decisions }: IssuePanelProps) {
   return (
     <aside className={styles.panel} aria-label={texts.t("sending.panel.label")}>
       <div className={styles.summary}>
-        <AssistantEye state={summary.eye} size="md" label={summary.headline} />
+        <AssistantEye state={summary.eye} size="md" />
         <div className={styles.summaryText}>
-          <span className={styles.headline}>{summary.headline}</span>
+          <h2 className={styles.headline}>{summary.headline}</h2>
           <span className={styles.subline}>{summary.subline}</span>
         </div>
       </div>

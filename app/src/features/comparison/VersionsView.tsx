@@ -25,6 +25,18 @@ interface VersionsViewProps {
   readonly decisions: AlertDecisions;
 }
 
+/** Solo se desplaza la lista: en modo apilado no debe ocultar la marca del documento. */
+function scrollSelectedRow() {
+  const row = document.querySelector<HTMLElement>('[data-change-row][aria-current="true"]');
+  const list = row?.closest("ul");
+  if (!row || !list) return;
+  const rowBounds = row.getBoundingClientRect();
+  const listBounds = list.getBoundingClientRect();
+  if (rowBounds.top < listBounds.top) list.scrollTop -= listBounds.top - rowBounds.top;
+  else if (rowBounds.bottom > listBounds.bottom)
+    list.scrollTop += rowBounds.bottom - listBounds.bottom;
+}
+
 /** Al elegir un cambio desde la lista o el minimapa, el texto lo trae a la vista. */
 function useScrollToSelected(selected: number | undefined) {
   useEffect(() => {
@@ -32,6 +44,7 @@ function useScrollToSelected(selected: number | undefined) {
     document.querySelectorAll(`[data-change="${String(selected)}"]`).forEach((element) => {
       element.scrollIntoView({ block: "center" });
     });
+    scrollSelectedRow();
   }, [selected]);
 }
 

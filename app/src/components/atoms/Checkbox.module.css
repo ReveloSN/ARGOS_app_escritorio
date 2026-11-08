@@ -19,7 +19,7 @@
   place-items: center;
   width: var(--size-checkbox);
   height: var(--size-checkbox);
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--border-width) solid var(--color-border-control);
   border-radius: var(--radius-xs);
   background: var(--color-background-surface);
   color: var(--color-action-primary-fg);

@@ -7,6 +7,7 @@ import { describeActiveOptions } from "./activeOptions";
 import styles from "./Compare.module.css";
 import { OptionsPanel, type OptionsPanelProps } from "./OptionsPanel";
 import { useShortcuts } from "../keyboard/useShortcuts";
+import { usePanelViewport } from "./usePanelViewport";
 
 const OPTIONS_KEY = "o";
 const FOCUSABLE = "input, select, button";
@@ -51,6 +52,7 @@ export function ComparisonOptions(props: OptionsPanelProps) {
   const { t } = useI18n();
   const panelId = useId();
   const { isOpen, toggle, panel, close, flip } = usePanelFocus();
+  usePanelViewport(isOpen, panel);
   useEscapeToClose(isOpen, close);
   useShortcuts([{ key: OPTIONS_KEY, run: flip }]);
   const label = t("comparison.options.label");
@@ -73,7 +75,13 @@ export function ComparisonOptions(props: OptionsPanelProps) {
         <Kbd keys={[OPTIONS_KEY.toUpperCase()]} />
       </button>
       {isOpen && (
-        <div id={panelId} ref={panel} className={styles.optionsPanel}>
+        <div
+          id={panelId}
+          ref={panel}
+          role="region"
+          aria-label={label}
+          className={styles.optionsPanel}
+        >
           <OptionsPanel {...props} />
         </div>
       )}

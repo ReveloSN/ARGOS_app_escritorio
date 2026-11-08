@@ -51,8 +51,8 @@ export function SessionDecisionsAside({
   return (
     <aside aria-label={t("history.decisionsLabel")} className={styles.aside}>
       <div className={styles.asideHeader}>
-        <span className={styles.asideLabel}>{t("history.decisionsLabel")}</span>
-        <span className={styles.asideName}>{review.session.name}</span>
+        <h2 className={styles.asideLabel}>{t("history.decisionsLabel")}</h2>
+        <h3 className={styles.asideName}>{review.session.name}</h3>
         <span className={styles.asideWhen}>{when}</span>
         <Button
           size="md"
