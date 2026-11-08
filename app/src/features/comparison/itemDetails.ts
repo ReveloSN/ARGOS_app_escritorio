@@ -5,7 +5,12 @@ import type {
   PairComparisonResult,
 } from "../../services/engine/comparisonTypes";
 import type { AlertResult, AlertSideResult } from "../../services/engine/reviewTypes";
-import { alertTitle, describeSegmentLocation, type Translate } from "../alerts/alertPresentation";
+import {
+  alertTitle,
+  describeSegmentLocation,
+  type Translate,
+  describeLocation,
+} from "../alerts/alertPresentation";
 import { changeBlocks } from "../explanation/explanationBlocks";
 import type { ExplainTarget } from "../explanation/explainTarget";
 import { changeSideValues } from "../explanation/sideValues";
@@ -71,18 +76,25 @@ function explainTarget({ change, pair, comparisonId }: ChangeSource, t: Translat
   };
 }
 
-function sideValue(side: AlertSideResult, fallback: string) {
-  return { label: side.occurrences[0]?.document ?? fallback, value: side.value };
+/** El valor con su archivo y su lugar (CLAUDE.md §7); sin aparición, solo «Valor A/B». */
+function sideValue(side: AlertSideResult, fallback: string, t: Translate) {
+  const [first] = side.occurrences;
+  if (!first) return { label: fallback, value: side.value };
+  return {
+    label: first.document,
+    value: side.value,
+    location: describeLocation(first.location, t),
+  };
 }
 
 export function inconsistencyDetail(alert: AlertResult, t: Translate): ItemDetailContent {
-  const first = sideValue(alert.first, t("alerts.valueA"));
+  const first = sideValue(alert.first, t("alerts.valueA"), t);
   return {
     number: alert.number,
     icon: RISK_ICONS[alert.risk],
     kind: t(`risk.${alert.risk}Long`),
     location: first.label,
     title: alertTitle(alert, t),
-    values: alert.second ? [first, sideValue(alert.second, t("alerts.valueB"))] : [first],
+    values: alert.second ? [first, sideValue(alert.second, t("alerts.valueB"), t)] : [first],
   };
 }

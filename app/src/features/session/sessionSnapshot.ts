@@ -1,6 +1,6 @@
 import type { ComparisonResult } from "../../services/engine/comparisonTypes";
 import type { ReviewResult, RiskLevelValue } from "../../services/engine/reviewTypes";
-import { isReadOnly } from "../alerts/alertDecisions";
+import { isDecided, isReadOnly } from "../alerts/alertDecisions";
 
 export type PendingByRisk = Readonly<Record<RiskLevelValue, number>>;
 
@@ -35,10 +35,9 @@ export interface SessionSnapshot {
 const NO_PENDING: PendingByRisk = { high: 0, medium: 0, low: 0 };
 
 function pendingByRisk(review: ReviewResult): PendingByRisk {
-  const decided = new Set(review.decisions.decisions.map((decision) => decision.alertNumber));
   const counts = { ...NO_PENDING };
   for (const alert of review.alerts) {
-    if (!decided.has(alert.number)) counts[alert.risk] += 1;
+    if (!isDecided(review, alert.number)) counts[alert.risk] += 1;
   }
   return counts;
 }
