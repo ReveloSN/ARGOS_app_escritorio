@@ -1,7 +1,14 @@
 import { useI18n } from "../../i18n/i18nContext";
 import { DecisionTag, type DecisionState } from "../atoms/DecisionTag";
 import { RiskTag, type RiskLevel } from "../atoms/RiskTag";
+import { SourceLine } from "../molecules/SourceLine";
 import styles from "./DecisionCard.module.css";
+
+/** Dónde aparece un valor: archivo y lugar ya traducido («Página 2», «Línea 4»). */
+export interface ValueSource {
+  readonly fileName: string;
+  readonly location: string;
+}
 
 export interface DecisionCardData {
   readonly number: number;
@@ -15,6 +22,19 @@ export interface DecisionCardData {
   readonly decidedAt: string;
   /** «Valor correcto: 4857», si se indicó. */
   readonly note?: string | undefined;
+  /** Origen de cada valor (CLAUDE.md §7); el B falta en las verificaciones de un solo dato. */
+  readonly sourceA?: ValueSource | undefined;
+  readonly sourceB?: ValueSource | undefined;
+}
+
+/** El valor y, debajo, dónde aparece. */
+function ValueWithSource({ value, source }: { value: string; source?: ValueSource | undefined }) {
+  return (
+    <dd>
+      <span className={styles.value}>{value}</span>
+      {source && <SourceLine fileName={source.fileName} location={source.location} />}
+    </dd>
+  );
 }
 
 interface DecisionCardProps {
@@ -40,9 +60,9 @@ export function DecisionCard({ data, onOpen }: DecisionCardProps) {
       )}
       <dl className={styles.values}>
         <dt>{t("decisionCard.valueA")}</dt>
-        <dd>{data.valueA}</dd>
+        <ValueWithSource value={data.valueA} source={data.sourceA} />
         <dt>{t("decisionCard.valueB")}</dt>
-        <dd>{data.valueB}</dd>
+        <ValueWithSource value={data.valueB} source={data.sourceB} />
       </dl>
       <div className={styles.decision}>
         <DecisionTag state={data.decision} />

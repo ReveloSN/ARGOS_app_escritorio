@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { CLOSED_REVIEW, REVIEW } from "../../test/reviewFixtures";
 import { comparison } from "../../test/comparisonFakes";
+import { decidedCount, pendingCount } from "../alerts/alertDecisions";
 import { isEmptySnapshot, snapshotOf } from "./sessionSnapshot";
 
 describe("estado de la sesión activa", () => {
@@ -40,5 +41,26 @@ describe("estado de la sesión activa", () => {
     expect(isEmptySnapshot(snapshot)).toBe(false);
     expect(snapshot.review).toBeNull();
     expect(snapshot.comparisons).toHaveLength(1);
+  });
+});
+
+// CLAUDE.md §16: el Expediente y la barra lateral cuentan igual, aunque el motor devuelva una
+// decisión de una alerta que ya no está (p. ej., tras releer los archivos).
+describe("los conteos del Expediente salen de la misma cuenta que el estado de la sesión", () => {
+  const withOrphanDecision = {
+    ...REVIEW,
+    decisions: {
+      decisions: [{ alertNumber: 99, kind: "error" as const, correctSide: null, decidedAt: "" }],
+      canUndo: true,
+    },
+  };
+
+  it("pendientes y decididas coinciden con el snapshot", () => {
+    const digest = snapshotOf(withOrphanDecision, []).review;
+
+    expect(pendingCount(withOrphanDecision)).toBe(digest?.pendingCount);
+    expect(decidedCount(withOrphanDecision)).toBe(
+      (digest?.alertCount ?? 0) - (digest?.pendingCount ?? 0),
+    );
   });
 });

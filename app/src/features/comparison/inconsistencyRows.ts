@@ -12,6 +12,8 @@ export interface InconsistencyCell {
   readonly occurrence: OccurrenceResult;
   /** Es el valor que no coincide con la mayoría de los documentos (se marca con ≠). */
   readonly isOdd: boolean;
+  /** El otro valor, si los dos lados citan este mismo documento (verificaciones internas). */
+  readonly also?: InconsistencyCell;
 }
 
 export interface InconsistencyRow {
@@ -65,11 +67,12 @@ function cellFor(
   confirmed: FactResult | undefined,
 ): InconsistencyCell | undefined {
   const odd = oddSide(alert, confirmed);
-  for (const side of alertSides(alert)) {
+  const [first, second] = alertSides(alert).flatMap((side) => {
     const occurrence = side.occurrences.find((item) => item.document === document);
-    if (occurrence) return { value: side.value, occurrence, isOdd: side === odd };
-  }
-  return undefined;
+    return occurrence ? [{ value: side.value, occurrence, isOdd: side === odd }] : [];
+  });
+  if (!first) return undefined;
+  return second ? { ...first, also: second } : first;
 }
 
 /** Columnas de la tabla: los documentos leídos y, después, los adjuntos que citan las alertas. */

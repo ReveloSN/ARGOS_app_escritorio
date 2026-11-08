@@ -131,4 +131,26 @@ describe("tabla de inconsistencias", () => {
       ["4857", false],
     ]);
   });
+
+  // Las verificaciones internas del motor (fecha de fin antes que la de inicio, dos valores que
+  // deberían coincidir) citan el mismo archivo en los dos lados: la celda muestra ambos (§7).
+  it("si los dos valores salen del mismo documento, la celda muestra los dos", () => {
+    const alert = inconsistency(6);
+    const internal = {
+      ...alert,
+      second: alert.second && {
+        ...alert.second,
+        occurrences: alert.second.occurrences.map((item) => ({
+          ...item,
+          document: alert.first.occurrences[0]?.document ?? item.document,
+        })),
+      },
+    };
+    const [document] = inconsistencyColumns([], [internal]);
+
+    const [row] = inconsistencyRows([internal], document ? [document] : []);
+
+    expect(row?.cells[0]?.value).toBe(internal.first.value);
+    expect(row?.cells[0]?.also?.value).toBe(internal.second?.value);
+  });
 });

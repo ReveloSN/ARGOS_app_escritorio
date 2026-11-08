@@ -10,8 +10,16 @@ export function decisionStateOf(review: ReviewResult, number: number): DecisionS
   return decisionOf(review, number)?.kind ?? "pending";
 }
 
+/**
+ * Alertas que tienen decisión, contadas por alerta (no por decisiones): una decisión de una
+ * alerta que ya no existe no cuenta. Es la misma cuenta que usa el estado de la sesión (§16).
+ */
+export function isDecided(review: ReviewResult, number: number): boolean {
+  return decisionOf(review, number) !== undefined;
+}
+
 export function decidedCount(review: ReviewResult): number {
-  return review.decisions.decisions.length;
+  return review.alerts.filter((alert) => isDecided(review, alert.number)).length;
 }
 
 export function pendingCount(review: ReviewResult): number {
