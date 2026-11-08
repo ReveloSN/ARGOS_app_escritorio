@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/i18nContext";
+import { ArgusMascot } from "../atoms/ArgusMascot";
 import { ArgusEye } from "../atoms/ArgusEye";
 import type { EyeState } from "../atoms/eyeShapes";
 import { joinClassNames } from "../joinClassNames";
@@ -28,7 +29,8 @@ export function AssistantStatusCard({ assistant, isCompact }: AssistantStatusCar
       title={isCompact ? label : undefined}
       className={isCompact ? styles.compact : styles.card}
     >
-      {assistant.isEyeShown && <ArgusEye state={assistant.eye} size="sm" />}
+      {assistant.isEyeShown &&
+        (isCompact ? <ArgusEye state={assistant.eye} /> : <ArgusMascot state={assistant.eye} />)}
       <span className={isCompact ? "visually-hidden" : styles.texts}>
         <span className={styles.name}>{t("assistant.name")}</span>
         <span className={joinClassNames(styles.text, assistant.isHighRisk && styles.high)}>
