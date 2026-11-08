@@ -20,13 +20,19 @@ MILLION = Decimal(1_000_000)
 
 # «1,200.50» (punto decimal, coma de miles) va primero: «1,200» con tres cifras tras la coma son
 # miles, no un decimal; los montos con decimales de es-CO llevan una o dos cifras tras la coma.
+# «1234.50» (punto decimal sin miles) también es en-US: en es-CO el punto separa miles y siempre
+# va seguido de tres cifras. El final impide quedarse con una parte («1234» de «1234.99»).
 AMOUNT = (
-    r"(?:(?P<us_amount>\d{1,3}(?:,\d{3})+(?:\.\d{1,2})?)"
+    r"(?:(?P<us_amount>\d{1,3}(?:,\d{3})+(?:\.\d{1,2})?|\d+\.\d{1,2})"
     r"|(?P<amount>\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?|\d+(?:,\d{1,2})?))"
+    r"(?![.,]?\d)"
 )
-# «36,9 millones» primero: así «$ 36 millones» no se lee también como «$ 36».
+# «36,9 millones» primero: así «$ 36 millones» no se lee también como «$ 36». La moneda puede ir
+# delante («USD 2 millones») o detrás («2 millones de dólares»); sin ella, son pesos.
 AMOUNT_IN_MILLIONS = re.compile(
-    r"(?:\$\s?)?\b(?P<amount>\d+(?:,\d+)?)\s+millones\b(?:\s+de\s+pesos)?", re.IGNORECASE
+    r"(?:(?P<before>US\$|\$|\bCOP\b|\bUSD\b)\s?)?\b(?P<amount>\d+(?:,\d+)?)\s+millones\b"
+    r"(?:\s+de\s+(?P<after>pesos|dólares|dolares)\b)?",
+    re.IGNORECASE,
 )
 CURRENCY_BEFORE_AMOUNT = re.compile(
     rf"(?P<currency>US\$|\$|\bCOP\b|\bUSD\b)\s?{AMOUNT}",
@@ -63,7 +69,9 @@ def _candidates(text: str) -> Iterator[EntityMatch]:
 
 
 def _millions_match(match: re.Match[str]) -> EntityMatch:
-    money = Money(parse_colombian_number(match.group("amount")) * MILLION)
+    symbol = match.group("before") or match.group("after")
+    currency = CURRENCY_BY_SYMBOL[symbol.upper()] if symbol else DEFAULT_CURRENCY
+    money = Money(parse_colombian_number(match.group("amount")) * MILLION, currency)
     return _to_match(match, money)
 
 
