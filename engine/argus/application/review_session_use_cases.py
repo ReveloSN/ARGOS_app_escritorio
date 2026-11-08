@@ -47,7 +47,8 @@ class RenameReviewSession:
     def execute(self, session_id: str, name: str) -> ReviewSession:
         renamed = self._sessions.get(session_id).rename(name)
         self._sessions.save(renamed)
-        return renamed
+        # Lo guardado, no la copia leída: si se cerró entretanto, la respuesta lo dice.
+        return self._sessions.get(session_id)
 
 
 class DeleteReviewSession:
