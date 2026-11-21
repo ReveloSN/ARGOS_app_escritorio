@@ -37,6 +37,8 @@ def test_the_docx_can_be_edited_and_numbers_its_pages() -> None:
     assert headings == ["Informe de revisión documental", "1. Resumen", "2. Evidencia"]
     (table,) = word.tables
     assert table.rows[1].cells[1].text == "4857\nContrato_4857_v3.docx · Página 1"
+    # La fila de títulos se repite en cada página del documento de Word.
+    assert "w:tblHeader" in table.rows[0]._tr.xml
     footer = word.sections[0].footer.paragraphs[0]
     assert "Generado con ARGUS" in footer.text
     assert "w:instrText" in footer._p.xml
