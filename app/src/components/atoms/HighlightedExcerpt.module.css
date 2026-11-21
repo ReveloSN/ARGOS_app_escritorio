@@ -1,0 +1,10 @@
+.mark {
+  padding: 0 var(--spacing-0-5);
+  border-radius: var(--radius-xs);
+  background: var(--excerpt-mark-bg);
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--excerpt-mark-line);
+  text-decoration-thickness: var(--border-width-strong);
+  text-underline-offset: var(--spacing-0-5);
+}

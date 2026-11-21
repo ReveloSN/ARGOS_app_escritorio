@@ -18,9 +18,9 @@
 
 .title {
   margin: 0;
-  font-size: var(--font-size-display);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-value);
+  font-size: var(--text-page-title-size);
+  font-weight: var(--text-page-title-weight);
+  line-height: var(--text-page-title-line);
 }
 
 .workspace {
@@ -127,9 +127,13 @@
   line-height: var(--line-height-body);
 }
 
+/*
+ * Como en el PDF: las columnas cortas (#, riesgo, dato) miden su contenido y las de valores y
+ * origen se reparten el resto; los nombres de archivo se parten por sus separadores.
+ */
 .table {
   width: 100%;
-  table-layout: fixed;
+  table-layout: auto;
   border-collapse: collapse;
   font-size: var(--font-size-caption);
 }
@@ -140,7 +144,7 @@
   border-bottom: var(--border-width) solid var(--color-border-default);
   text-align: start;
   vertical-align: top;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .table th {

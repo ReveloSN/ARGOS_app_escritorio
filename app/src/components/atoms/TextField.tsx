@@ -9,8 +9,48 @@ interface TextFieldProps {
   readonly onChange: (value: string) => void;
   readonly placeholder?: string;
   readonly error?: string;
+  /** Para qué sirve el campo; se anuncia junto a él. */
+  readonly hint?: string;
+  /** Texto visible junto a la etiqueta («obligatorio»); el lector lo recibe como aria-required. */
+  readonly requiredMark?: string;
   /** Dentro de un diálogo: el foco entra al abrirlo y el texto actual queda seleccionado. */
   readonly autoFocus?: boolean;
+}
+
+interface FieldHeadingProps {
+  readonly inputId: string;
+  readonly hintId: string;
+  readonly label: string;
+  readonly hint?: string | undefined;
+  readonly requiredMark?: string | undefined;
+}
+
+/** Etiqueta, marca de obligatorio y ayuda: lo que el usuario lee antes de escribir. */
+function FieldHeading({ inputId, hintId, label, hint, requiredMark }: FieldHeadingProps) {
+  return (
+    <>
+      <span className={styles.labelRow}>
+        <label htmlFor={inputId} className={styles.label}>
+          {label}
+        </label>
+        {requiredMark && (
+          <span aria-hidden="true" className={styles.requiredMark}>
+            {requiredMark}
+          </span>
+        )}
+      </span>
+      {hint && (
+        <span id={hintId} className={styles.hint}>
+          {hint}
+        </span>
+      )}
+    </>
+  );
+}
+
+function describedByOf(ids: readonly (string | false | undefined)[]): string | undefined {
+  const joined = ids.filter(Boolean).join(" ");
+  return joined || undefined;
 }
 
 export function TextField({
@@ -19,10 +59,14 @@ export function TextField({
   onChange,
   placeholder,
   error,
+  hint,
+  requiredMark,
   autoFocus = false,
 }: TextFieldProps) {
   const inputId = useId();
   const errorId = useId();
+  const hintId = useId();
+  const describedBy = describedByOf([hint && hintId, error && errorId]);
   const input = useRef<HTMLInputElement>(null);
   // Al aparecer un error el foco va al campo: es lo que hay que corregir y se anuncia ahí.
   useEffect(() => {
@@ -31,9 +75,13 @@ export function TextField({
 
   return (
     <div className={styles.field}>
-      <label htmlFor={inputId} className={styles.label}>
-        {label}
-      </label>
+      <FieldHeading
+        inputId={inputId}
+        hintId={hintId}
+        label={label}
+        hint={hint}
+        requiredMark={requiredMark}
+      />
       <input
         ref={input}
         id={inputId}
@@ -49,7 +97,8 @@ export function TextField({
         }
         placeholder={placeholder}
         aria-invalid={error ? true : undefined}
-        aria-describedby={error ? errorId : undefined}
+        aria-required={requiredMark ? true : undefined}
+        aria-describedby={describedBy}
         onChange={(event) => {
           onChange(event.target.value);
         }}

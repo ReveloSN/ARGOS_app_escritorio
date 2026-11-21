@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Breadcrumb } from "../components/molecules/Breadcrumb";
+import { TopbarLocation } from "../features/navigation/TopbarLocation";
 import { StepIndicator } from "../components/molecules/StepIndicator";
 import { WizardLayout } from "../components/templates/WizardLayout";
 import { CloudOcrConsent } from "../features/review/CloudOcrConsent";
@@ -45,7 +45,7 @@ export function NewReviewPage({ onCancel, onReviewed }: NewReviewPageProps) {
 
   const header = (
     <>
-      <Breadcrumb
+      <TopbarLocation
         items={[
           { id: "home", label: t("navigation.home"), onSelect: onCancel },
           { id: "new", label: t("newReview.title") },

@@ -58,19 +58,24 @@ describe("Informe del expediente", () => {
     ]);
     expect(summary?.paragraphs).toEqual([
       "Se revisaron 2 documentos el 15/10/2026. Se marcaron como error: identificador. Quedan pendientes: nombre.",
+      "Por riesgo: 1 alta, 1 media y 0 bajas.",
     ]);
   });
 
   it("cada valor de la evidencia lleva su origen y cada decisión su valor correcto", () => {
     const [evidence, decisions] = build(["evidence", "decisions"]).sections;
 
+    expect(evidence?.table?.columns.slice(0, 2)).toEqual(["#", "Riesgo"]);
     expect(evidence?.table?.rows[0]).toEqual([
+      { text: "1" },
+      { text: "Alto" },
       { text: "Identificador" },
       { text: "1234", detail: "contrato.txt · Línea 1" },
       { text: "1324", detail: "anexo.pdf · Página 3" },
     ]);
     expect(decisions?.table?.rows).toEqual([
       [
+        { text: "1" },
         { text: "Identificador" },
         { text: "Es un error" },
         // §7: el valor correcto también lleva su origen, aunque no se incluya «Evidencia».

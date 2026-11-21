@@ -153,6 +153,12 @@
     "description": "Load the documents you are about to send or sign. ARGUS compares them with each other and shows you the differences before you finish.",
     "note": "Files are analyzed on this computer.",
     "compareVersions": "Compare two versions",
+    "steps": {
+      "label": "How a review works",
+      "load": "Choose the documents, emails and attachments you are about to send or sign.",
+      "confirm": "Check what text ARGUS read from each file before comparing.",
+      "review": "Decide on each difference: it's correct, it's an error, or ignore."
+    },
     "saved": {
       "title": "No review is open",
       "description": {
@@ -183,7 +189,9 @@
     "what": "The analysis engine is not responding.",
     "why": "Without the engine, ARGUS can't read or compare files.",
     "todo": "Retry the connection. If it still doesn't respond, close ARGUS and open it again.",
-    "retry": "Retry connection"
+    "retry": "Retry connection",
+    "checking": "Checking…",
+    "stillDown": "Still not responding at {time}."
   },
   "newReview": {
     "title": "New review",
@@ -194,6 +202,9 @@
     },
     "sessionName": "Session name",
     "sessionNameRequired": "Enter a name for the session.",
+    "sessionNameRequiredMark": "(required)",
+    "sessionNameHint": "Identifies the review in the History, the session switcher and the report.",
+    "sessionNamePlaceholder": "For example: Contract 4857 – Supplier",
     "files": "Session files",
     "filesHint": "Check what was read in each one before continuing",
     "noFiles": "No files yet. Add them with the drop zone.",
@@ -416,6 +427,8 @@
     "title": "How do you want to continue?",
     "undoHint": "You can undo any decision with Ctrl Z",
     "ignore": "Ignore",
+    "progress": "{decided} of {total} decided · {pending} pending",
+    "chosen": "Chosen",
     "correctDescription": "Both values are valid. The alert is closed with no changes.",
     "errorDescription": "One of the values is wrong. It goes to the corrections list.",
     "ignoreDescription": "Not relevant now. It is not corrected and stays marked as ignored.",
@@ -615,6 +628,16 @@
     "title": "Settings",
     "navLabel": "Settings sections",
     "saved": "Changes saved",
+    "groups": {
+      "analysis": {
+        "title": "Analysis",
+        "description": "How ARGUS compares documents. The analysis engine stores these settings."
+      },
+      "app": {
+        "title": "This app",
+        "description": "Stored on this computer; they work even when the engine is not responding."
+      }
+    },
     "sections": {
       "detection": "Detection",
       "language": "Language and region",
@@ -985,7 +1008,6 @@
     },
     "list": {
       "title": "Changes",
-      "navigate": "J K to navigate",
       "decided": "{done} of {total} decided",
       "completeNote": "Review complete. {summary}. You can now export the report.",
       "totals": {
@@ -1383,9 +1405,19 @@
         "other": "{count} documents were reviewed on {date}."
       },
       "errors": "Marked as errors: {data}.",
+      "byRisk": "By risk: {high}, {medium} and {low}.",
+      "riskHigh": { "one": "{count} high", "other": "{count} high" },
+      "riskMedium": { "one": "{count} medium", "other": "{count} medium" },
+      "riskLow": { "one": "{count} low", "other": "{count} low" },
+      "pendingHigh": {
+        "one": "{count} high-risk alert is still undecided.",
+        "other": "{count} high-risk alerts are still undecided."
+      },
       "pending": "Still pending: {data}."
     },
     "evidence": {
+      "number": "#",
+      "risk": "Risk",
       "data": "Data",
       "valueA": "Value A · source",
       "valueB": "Value B · source"
@@ -1437,7 +1469,6 @@
   "assistant": {
     "name": "AI assistant",
     "label": "AI assistant: {status}",
-    "retry": "Retry",
     "status": {
       "starting": "Starting",
       "paused": "Paused",

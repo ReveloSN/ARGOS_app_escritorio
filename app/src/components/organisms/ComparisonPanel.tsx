@@ -7,6 +7,7 @@ import { Icon } from "../atoms/Icon";
 import { DiffValue } from "../molecules/DiffValue";
 import { OccurrenceList, type OccurrenceView } from "../molecules/OccurrenceList";
 import { SourceLine } from "../molecules/SourceLine";
+import { HighlightedExcerpt } from "../atoms/HighlightedExcerpt";
 import styles from "./ComparisonPanel.module.css";
 
 export interface ComparedValue {
@@ -67,7 +68,11 @@ function ValueCard({ label, compared }: { label: TranslationKey; compared: Compa
       <div className={styles.cardBody}>
         <DiffValue value={compared.value} positions={compared.positions} />
         <SourceLine fileName={compared.fileName} location={compared.location} />
-        {compared.excerpt && <blockquote className={styles.excerpt}>{compared.excerpt}</blockquote>}
+        {compared.excerpt && (
+          <blockquote className={styles.excerpt}>
+            <HighlightedExcerpt excerpt={compared.excerpt} value={compared.value} />
+          </blockquote>
+        )}
         <ValueActions compared={compared} />
       </div>
     </section>

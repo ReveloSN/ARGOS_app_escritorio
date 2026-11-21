@@ -118,8 +118,8 @@ describe("DecisionCard", () => {
     );
 
     const card = screen.getByRole("article");
-    expect(card).toHaveTextContent("contrato.pdf·Página 2");
-    expect(card).toHaveTextContent("factura.xlsx·Hoja Resumen · C12");
+    expect(card).toHaveTextContent("contrato.pdf · Página 2");
+    expect(card).toHaveTextContent("factura.xlsx · Hoja Resumen · C12");
     expect(card).toHaveTextContent("$ 18.540.000");
     expect(card).toHaveTextContent("Es un error");
     expect(card).toHaveTextContent("Valor correcto: $ 18.450.000");

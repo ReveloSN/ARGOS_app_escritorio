@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { BreakableText } from "../../components/atoms/BreakableText";
 import { Icon } from "../../components/atoms/Icon";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ComparisonResult } from "../../services/engine/comparisonTypes";
@@ -34,16 +35,21 @@ function ScopeHeading({ comparison, view }: Pick<CompareTopProps, "comparison" |
       </>
     );
   }
+  // Cada letra va pegada a su documento: si no caben juntos, pasan a una línea cada uno.
   return (
     <>
-      <span className={styles.sideBadge}>{t("comparison.sideA")}</span>
-      <span title={pair?.firstDocument} className={styles.documentName}>
-        {pair?.firstDocument}
+      <span className={styles.documentUnit}>
+        <span className={styles.sideBadge}>{t("comparison.sideA")}</span>
+        <span title={pair?.firstDocument} className={styles.documentName}>
+          <BreakableText text={pair?.firstDocument ?? ""} />
+        </span>
       </span>
-      <Icon name="arrow_forward" size="sm" />
-      <span className={styles.sideBadge}>{t("comparison.sideB")}</span>
-      <span title={pair?.secondDocument} className={styles.documentName}>
-        {pair?.secondDocument}
+      <span className={styles.documentUnit}>
+        <Icon name="arrow_forward" size="sm" />
+        <span className={styles.sideBadge}>{t("comparison.sideB")}</span>
+        <span title={pair?.secondDocument} className={styles.documentName}>
+          <BreakableText text={pair?.secondDocument ?? ""} />
+        </span>
       </span>
     </>
   );

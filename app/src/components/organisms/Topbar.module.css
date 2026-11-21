@@ -4,8 +4,52 @@
   gap: var(--spacing-4);
   height: var(--size-topbar);
   padding: 0 var(--spacing-4);
-  border-bottom: var(--border-width) solid var(--color-border-default);
-  background: var(--color-background-surface);
+  /* Sin línea inferior: la barra comparte el fondo del área de trabajo y la separa el espacio. */
+  background: var(--topbar-bg);
+}
+
+.location {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  /* Con poco ancho la ubicación conserva lo suficiente para «Expediente › Alerta 12». */
+  min-width: min(var(--size-topbar-location-min), 30%);
+  max-width: var(--size-topbar-location-max);
+}
+
+/* Una sola línea en la barra: el nivel actual se recorta con elipsis y su nombre completo queda
+   en el título emergente y en la propia pantalla. */
+.trail {
+  --breadcrumb-font-size: var(--font-size-body);
+  --breadcrumb-wrap: nowrap;
+
+  min-width: 0;
+  overflow: hidden;
+}
+
+.trail:empty {
+  display: none;
+}
+
+/* La sección solo se ve si la pantalla no puso su propia ruta. */
+.trail:not(:empty) + .section {
+  display: none;
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.section > :first-child {
+  color: var(--sidebar-item-active-icon);
 }
 
 .search {

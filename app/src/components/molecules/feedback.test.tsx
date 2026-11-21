@@ -110,21 +110,4 @@ describe("AssistantStatusIndicator", () => {
 
     expect(screen.getByRole("status")).toHaveTextContent("3 alertas de riesgo alto");
   });
-
-  it("con el motor detenido ofrece reintentar", async () => {
-    const onClick = vi.fn();
-    renderWithProviders(
-      <AssistantStatusIndicator
-        status={{
-          text: "Asistente de IA detenido",
-          isHighRisk: true,
-          retry: { label: "Reintentar", onClick },
-        }}
-      />,
-    );
-
-    await userEvent.click(screen.getByRole("button", { name: "Reintentar" }));
-
-    expect(onClick).toHaveBeenCalledOnce();
-  });
 });

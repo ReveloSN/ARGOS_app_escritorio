@@ -26,6 +26,9 @@ export function SessionNameAside({ name, isNameMissing, onNameChange }: SessionN
     <>
       <TextField
         label={t("newReview.sessionName")}
+        requiredMark={t("newReview.sessionNameRequiredMark")}
+        hint={t("newReview.sessionNameHint")}
+        placeholder={t("newReview.sessionNamePlaceholder")}
         value={name}
         onChange={onNameChange}
         {...(isNameMissing ? { error: t("newReview.sessionNameRequired") } : {})}

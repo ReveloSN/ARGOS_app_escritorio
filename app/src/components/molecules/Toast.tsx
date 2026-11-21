@@ -13,14 +13,38 @@ interface ToastProps {
   readonly onUndo?: (() => void) | undefined;
   /** Oculta «Ctrl Z» cuando ese atajo no deshace lo que el aviso confirma. */
   readonly hasUndoShortcut?: boolean;
+  /** Dentro de un bloque (la decisión del detalle) en lugar de flotar sobre el contenido. */
+  readonly isInline?: boolean;
+  /** Ocupa siempre su hueco: aparecer o irse no mueve lo que hay debajo. */
+  readonly reservesSpace?: boolean;
+}
+
+function toastClassName(state: {
+  readonly isInline: boolean;
+  readonly reservesSpace: boolean;
+  readonly visible: boolean;
+}): string {
+  return joinClassNames(
+    styles.toast,
+    state.isInline && styles.inline,
+    state.reservesSpace && styles.reserved,
+    state.visible && styles.visible,
+  );
 }
 
 /** Confirmación al decidir con «Deshacer» a mano (CLAUDE.md §9, feedback). */
-export function Toast({ message, visible, onUndo, hasUndoShortcut = true }: ToastProps) {
+export function Toast({
+  message,
+  visible,
+  onUndo,
+  hasUndoShortcut = true,
+  isInline = false,
+  reservesSpace = false,
+}: ToastProps) {
   const { t } = useI18n();
 
   return (
-    <div role="status" className={joinClassNames(styles.toast, visible && styles.visible)}>
+    <div role="status" className={toastClassName({ isInline, reservesSpace, visible })}>
       <Icon name="check" size="md" />
       <span className={styles.message}>{message}</span>
       {onUndo && (

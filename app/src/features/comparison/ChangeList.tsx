@@ -71,7 +71,7 @@ interface ListHeaderProps {
   readonly total: number;
 }
 
-/** Título, qué significa el punto rojo, cuántos cambios van decididos y la pista de teclado. */
+/** Título, qué significa el punto rojo y cuántos cambios van decididos (los atajos, en la franja de arriba). */
 function ListHeader({ hasHighRisk, done, total }: ListHeaderProps) {
   const { t } = useI18n();
   return (
@@ -86,7 +86,6 @@ function ListHeader({ hasHighRisk, done, total }: ListHeaderProps) {
       {total > 0 && done < total && (
         <span className={styles.listProgress}>{t("comparison.list.decided", { done, total })}</span>
       )}
-      <span className={styles.listHint}>{t("comparison.list.navigate")}</span>
     </div>
   );
 }

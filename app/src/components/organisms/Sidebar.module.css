@@ -28,7 +28,6 @@
   width: 100%;
   height: var(--size-topbar);
   padding: 0 var(--spacing-4);
-  border-bottom: var(--border-width) solid var(--color-border-default);
 }
 
 .expanded .brand {
@@ -61,9 +60,8 @@
   gap: var(--spacing-1);
   margin: var(--spacing-1) var(--spacing-2) 0;
   padding: var(--spacing-2-5);
-  border: var(--border-width) solid var(--color-border-default);
   border-radius: var(--radius-sm);
-  background: var(--color-background-surface);
+  background: var(--sidebar-panel-bg);
 }
 
 .sessionLabel {
@@ -97,7 +95,6 @@
   flex-direction: column;
   gap: var(--spacing-1-5);
   padding: var(--spacing-2-5) var(--spacing-2);
-  border-top: var(--border-width) solid var(--color-border-default);
 }
 
 .collapseToggle {
@@ -123,8 +120,9 @@
   align-items: center;
   gap: var(--spacing-2);
   padding: 0 var(--spacing-2-5);
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-micro);
+  color: var(--text-auxiliary-color);
+  font-size: var(--text-auxiliary-size);
+  line-height: var(--text-auxiliary-line);
 }
 
 .collapsedFooter {

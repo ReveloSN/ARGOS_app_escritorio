@@ -11,7 +11,16 @@ import styles from "./Topbar.module.css";
 
 const SEARCH_SHORTCUT = [MODIFIER_KEY, "K"];
 
+/** La sección actual: se muestra cuando la pantalla no trae una ruta propia. */
+export interface TopbarSection {
+  readonly icon: string;
+  readonly label: string;
+}
+
 interface TopbarProps {
+  readonly section: TopbarSection;
+  /** Recibe el hueco donde cada pantalla pone su ruta contextual (portal). */
+  readonly locationRef?: (element: HTMLElement | null) => void;
   /** El selector de la sesión activa; sin sesión no se muestra nada. */
   readonly session?: ReactNode;
   readonly searchPlaceholder?: string | undefined;
@@ -23,6 +32,8 @@ interface TopbarProps {
 }
 
 export function Topbar({
+  section,
+  locationRef,
   session,
   searchPlaceholder,
   assistantStatus,
@@ -34,6 +45,14 @@ export function Topbar({
 
   return (
     <header className={styles.topbar}>
+      <div className={styles.location}>
+        <div ref={locationRef} className={styles.trail} />
+        {/* Sin ruta propia de la pantalla, la sección; la barra lateral ya la anuncia como actual. */}
+        <span aria-hidden="true" className={styles.section}>
+          <Icon name={section.icon} size="md" />
+          {section.label}
+        </span>
+      </div>
       {session}
       {onOpenSearch && (
         <button type="button" className={styles.search} onClick={onOpenSearch}>

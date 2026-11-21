@@ -10,6 +10,24 @@
   font-weight: var(--font-weight-medium);
 }
 
+.labelRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-1);
+}
+
+.requiredMark {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.hint {
+  color: var(--text-auxiliary-color);
+  font-size: var(--text-auxiliary-size);
+  line-height: var(--text-auxiliary-line);
+}
+
 .input {
   height: var(--size-control-lg);
   padding: 0 var(--spacing-2-5);

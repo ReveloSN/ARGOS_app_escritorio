@@ -153,6 +153,12 @@
     "description": "Cargue los documentos que va a enviar o firmar. ARGUS los compara entre sí y le muestra las diferencias antes de que finalice.",
     "note": "Los archivos se analizan en este equipo.",
     "compareVersions": "Comparar dos versiones",
+    "steps": {
+      "label": "Cómo funciona una revisión",
+      "load": "Elija los documentos, correos y adjuntos que va a enviar o firmar.",
+      "confirm": "Compruebe qué texto leyó ARGUS en cada archivo antes de comparar.",
+      "review": "Decida sobre cada diferencia: es correcto, es un error o ignorar."
+    },
     "saved": {
       "title": "No hay una revisión abierta",
       "description": {
@@ -183,7 +189,9 @@
     "what": "El motor de análisis no responde.",
     "why": "Sin el motor, ARGUS no puede leer ni comparar los archivos.",
     "todo": "Reintente la conexión. Si sigue sin responder, cierre ARGUS y ábralo de nuevo.",
-    "retry": "Reintentar conexión"
+    "retry": "Reintentar conexión",
+    "checking": "Comprobando…",
+    "stillDown": "Seguía sin responder a las {time}."
   },
   "newReview": {
     "title": "Nueva revisión",
@@ -194,6 +202,9 @@
     },
     "sessionName": "Nombre de la sesión",
     "sessionNameRequired": "Escriba un nombre para la sesión.",
+    "sessionNameRequiredMark": "(obligatorio)",
+    "sessionNameHint": "Identifica la revisión en el Historial, en el selector de sesión y en el informe.",
+    "sessionNamePlaceholder": "Por ejemplo: Contrato 4857 – Proveedor",
     "files": "Archivos de la sesión",
     "filesHint": "Revise qué se leyó en cada uno antes de continuar",
     "noFiles": "Todavía no hay archivos. Agréguelos con la zona de carga.",
@@ -416,6 +427,8 @@
     "title": "¿Cómo quiere continuar?",
     "undoHint": "Puede deshacer cualquier decisión con Ctrl Z",
     "ignore": "Ignorar",
+    "progress": "{decided} de {total} decididas · {pending} pendientes",
+    "chosen": "Elegida",
     "correctDescription": "Los dos valores son válidos. La alerta se cierra sin cambios.",
     "errorDescription": "Uno de los valores está mal. Pasa a la lista de correcciones.",
     "ignoreDescription": "No es relevante ahora. No se corrige y queda marcada como ignorada.",
@@ -615,6 +628,16 @@
     "title": "Ajustes",
     "navLabel": "Secciones de ajustes",
     "saved": "Se guardaron los cambios",
+    "groups": {
+      "analysis": {
+        "title": "Análisis",
+        "description": "Cómo compara ARGUS los documentos. Estos ajustes los guarda el motor de análisis."
+      },
+      "app": {
+        "title": "Esta aplicación",
+        "description": "Se guardan en este equipo y funcionan aunque el motor no responda."
+      }
+    },
     "sections": {
       "detection": "Detección",
       "language": "Idioma y región",
@@ -985,7 +1008,6 @@
     },
     "list": {
       "title": "Cambios",
-      "navigate": "J K para navegar",
       "decided": "{done} de {total} decididos",
       "completeNote": "Revisión completa. {summary}. Ya puede exportar el informe.",
       "totals": {
@@ -1383,9 +1405,19 @@
         "other": "Se revisaron {count} documentos el {date}."
       },
       "errors": "Se marcaron como error: {data}.",
+      "byRisk": "Por riesgo: {high}, {medium} y {low}.",
+      "riskHigh": { "one": "{count} alta", "other": "{count} altas" },
+      "riskMedium": { "one": "{count} media", "other": "{count} medias" },
+      "riskLow": { "one": "{count} baja", "other": "{count} bajas" },
+      "pendingHigh": {
+        "one": "Queda {count} alerta de riesgo alto sin decidir.",
+        "other": "Quedan {count} alertas de riesgo alto sin decidir."
+      },
       "pending": "Quedan pendientes: {data}."
     },
     "evidence": {
+      "number": "#",
+      "risk": "Riesgo",
       "data": "Dato",
       "valueA": "Valor A · origen",
       "valueB": "Valor B · origen"
@@ -1437,7 +1469,6 @@
   "assistant": {
     "name": "Asistente de IA",
     "label": "Asistente de IA: {status}",
-    "retry": "Reintentar",
     "status": {
       "starting": "Iniciando",
       "paused": "En pausa",

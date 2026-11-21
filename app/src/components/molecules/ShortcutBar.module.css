@@ -2,11 +2,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-1) var(--spacing-4);
-  padding: var(--spacing-1-5) var(--spacing-6);
+  padding: var(--spacing-1-5) var(--page-inset-inline);
   border-top: var(--border-width) solid var(--color-border-default);
   background: var(--color-background-surface);
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-micro);
+  color: var(--text-auxiliary-color);
+  font-size: var(--text-shortcut-size);
+  line-height: var(--line-height-caption);
 }
 
 .hint {

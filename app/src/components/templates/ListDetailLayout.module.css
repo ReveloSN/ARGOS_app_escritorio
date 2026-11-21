@@ -19,10 +19,16 @@
 }
 
 .detail {
-  container-type: inline-size;
+  /* Su alto lo fija la rejilla: así el contenido puede preguntar cuánto alto tiene el panel. */
+  container-type: size;
   min-height: 0;
   overflow: auto;
   padding: var(--spacing-5) var(--spacing-6);
+}
+
+/* Con un bloque fijo al pie, lo que recibe el foco se desplaza por encima de él, no detrás. */
+.detail:has([data-sticky-dock]) {
+  scroll-padding-block-end: min(var(--size-decision-dock), 40%);
 }
 
 @container (max-width: 760px) {

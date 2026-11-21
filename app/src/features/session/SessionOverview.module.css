@@ -7,9 +7,9 @@
 
 .name {
   margin: 0;
-  font-size: var(--font-size-display);
-  line-height: var(--line-height-value);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-page-title-size);
+  font-weight: var(--text-page-title-weight);
+  line-height: var(--text-page-title-line);
   overflow-wrap: anywhere;
 }
 

@@ -16,6 +16,32 @@
   pointer-events: auto;
 }
 
+/*
+ * La decisión queda al pie del panel de detalle mientras se lee el resto. Va en el flujo: al
+ * llegar a su sitio deja de flotar y no tapa nada. El margen negativo la apoya en el borde
+ * inferior del panel con desplazamiento, por encima de su relleno.
+ */
+.decisionDock {
+  position: sticky;
+  bottom: calc(-1 * var(--spacing-8));
+  z-index: 1;
+  margin-block-end: calc(-1 * var(--spacing-8));
+  padding-block: var(--spacing-2) var(--spacing-8);
+  background: var(--color-background-primary);
+}
+
+/* Con poco alto, fija taparía casi todo el detalle: queda en su sitio; C, E e I siguen a mano. */
+@container (max-height: 480px) {
+  .decisionDock {
+    position: static;
+  }
+}
+
+.feedbackInline {
+  display: flex;
+  flex-direction: column;
+}
+
 .detail {
   display: flex;
   flex-direction: column;

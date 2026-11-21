@@ -1,5 +1,5 @@
 import { Button } from "../../components/atoms/Button";
-import { Breadcrumb } from "../../components/molecules/Breadcrumb";
+import { TopbarLocation } from "../navigation/TopbarLocation";
 import { ErrorMessage } from "../../components/molecules/ErrorMessage";
 import { Tabs } from "../../components/molecules/Tabs";
 import { useI18n } from "../../i18n/i18nContext";
@@ -42,9 +42,9 @@ export function ResultsHeader({
   };
   return (
     <div className={styles.header}>
-      <Breadcrumb
+      <TopbarLocation
         items={[
-          { id: "session", label: review.session.name, onSelect: showAlerts },
+          { id: "session", label: t("navigation.caseFile"), onSelect: showAlerts },
           { id: "tab", label: tabs.find((item) => item.id === tab)?.label ?? "" },
         ]}
       />

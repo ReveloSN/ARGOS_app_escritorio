@@ -8,6 +8,28 @@
   flex: none;
   color: var(--eye-accent);
   aspect-ratio: 120 / 128;
+  /* El color del estado (alerta, pausa, error) llega con un fundido, no de golpe. */
+  transition: color var(--duration-slow) var(--easing-standard);
+}
+
+/* Las dos poses están dibujadas: el cambio es un fundido de los brazos y la sonrisa. */
+.restArms,
+.celebrateArms,
+.mouth {
+  transition:
+    opacity var(--duration-slow) var(--easing-standard),
+    transform var(--duration-base) var(--easing-standard);
+}
+
+.celebrateArms,
+.mouth,
+.mascot[data-pose="celebrate"] .restArms {
+  opacity: 0;
+}
+
+.mascot[data-pose="celebrate"] .celebrateArms,
+.mascot[data-pose="celebrate"] .mouth {
+  opacity: 1;
 }
 
 .sm {
@@ -74,7 +96,6 @@
 /* Saludo al pasar el puntero: una pose, no un bucle; con movimiento reducido es instantánea. */
 .limbs {
   transform-box: fill-box;
-  transition: transform var(--duration-base) var(--easing-standard);
 }
 
 .mascot:hover .limbs {

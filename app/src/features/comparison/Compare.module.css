@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2-5);
-  padding: var(--spacing-2-5) var(--spacing-5) var(--spacing-3);
+  padding: var(--page-inset-top) var(--page-inset-inline) var(--spacing-3);
   border-bottom: var(--border-width) solid var(--color-border-default);
   background: var(--color-background-surface);
 }
@@ -34,9 +34,9 @@
 .title {
   flex: 1;
   margin: 0;
-  font-size: var(--font-size-display);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-value);
+  font-size: var(--text-page-title-size);
+  font-weight: var(--text-page-title-weight);
+  line-height: var(--text-page-title-line);
 }
 
 .modes {
@@ -69,10 +69,9 @@
 }
 
 .markNumber,
-.itemNumber,
-.listHint {
+.itemNumber {
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-micro);
+  font-size: var(--text-shortcut-size);
 }
 
 .toolbar {
@@ -96,6 +95,20 @@
 
 .ignores {
   margin-left: auto;
+}
+
+.documentUnit {
+  display: inline-flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: var(--spacing-1-5);
+}
+
+/* En la cabecera el nombre se muestra completo y se parte por sus separadores. */
+.documentUnit .documentName {
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 /* El botón queda en la línea superior y el panel ocupa una fila propia debajo. */
@@ -433,6 +446,35 @@
   background: var(--color-background-surface);
 }
 
+/* Hint y confirmación comparten la misma celda de la rejilla: el alto no cambia entre ellos. */
+.decisionSlot {
+  display: grid;
+  flex: none;
+  min-height: var(--size-feedback-slot);
+}
+
+.decisionSlot > * {
+  grid-area: 1 / 1;
+  align-self: stretch;
+}
+
+.slotHint,
+.slotHintHidden {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-1);
+  margin: 0;
+  padding: var(--spacing-2) var(--spacing-4);
+  color: var(--text-auxiliary-color);
+  font-size: var(--text-auxiliary-size);
+  line-height: var(--text-auxiliary-line);
+}
+
+.slotHintHidden {
+  visibility: hidden;
+}
+
 .listPanel,
 .detail {
   display: flex;
@@ -509,11 +551,6 @@
   gap: var(--spacing-1);
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
-}
-
-.listHint {
-  margin-left: auto;
-  color: var(--color-text-tertiary);
 }
 
 .chips {

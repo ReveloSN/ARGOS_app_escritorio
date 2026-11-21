@@ -1,20 +1,28 @@
 .source {
   display: flex;
-  flex-wrap: wrap;
-  min-width: 0;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-1-5);
+  min-width: 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
 }
 
 .icon {
   color: var(--color-text-tertiary);
 }
 
-.file {
+.text {
   min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.file {
   color: var(--color-text-primary);
   font-family: var(--font-family-mono);
-  overflow-wrap: anywhere;
+}
+
+/* La ubicación no se parte: «Línea 12» o «Página 3» se leen de una vez. */
+.location {
+  white-space: nowrap;
 }
