@@ -6,10 +6,12 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import Flowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from argus.domain.report_document import ReportCell, ReportDocument, ReportSection, ReportTable
+from argus.infrastructure.reports.report_column_widths import column_widths
 
 MARGIN = 18 * mm
 FOOTER_Y = 10 * mm
@@ -27,6 +29,8 @@ HEADING = ParagraphStyle("ArgusHeading", parent=STYLES["Heading2"], fontSize=12,
 BODY = ParagraphStyle("ArgusBody", parent=STYLES["Normal"], fontSize=9.5, leading=13)
 CELL = ParagraphStyle("ArgusCell", parent=BODY, fontSize=8.5, leading=11)
 METRIC = ParagraphStyle("ArgusMetric", parent=BODY, fontSize=16, leading=19)
+HEADER_FONT = "Helvetica-Bold"
+CONTENT_WIDTH = LETTER[0] - 2 * MARGIN
 
 
 def _text(value: str) -> str:
@@ -42,10 +46,16 @@ def _cell(cell: ReportCell) -> Paragraph:
     return Paragraph(f"{_text(cell.text)}{detail}", CELL)
 
 
+def _cell_text_width(text: str) -> float:
+    # Se mide con la negrita del encabezado: es la más ancha de las dos.
+    return float(stringWidth(text, HEADER_FONT, CELL.fontSize))
+
+
 def _table(table: ReportTable) -> Table:
     header = [Paragraph(f"<b>{_text(column)}</b>", CELL) for column in table.columns]
     data = [header, *([_cell(cell) for cell in row] for row in table.rows)]
-    flowable = Table(data, repeatRows=1, hAlign="LEFT")
+    widths = column_widths(table, CONTENT_WIDTH, _cell_text_width)
+    flowable = Table(data, colWidths=list(widths), repeatRows=1, hAlign="LEFT")
     flowable.setStyle(
         TableStyle(
             [

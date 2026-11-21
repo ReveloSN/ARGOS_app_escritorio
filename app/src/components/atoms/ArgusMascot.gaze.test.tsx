@@ -147,13 +147,22 @@ describe("ArgusMascot · mirada que sigue al puntero", () => {
   describe("reacción a cambios reales de estado", () => {
     it("al aparecer riesgo alto, un archivo ilegible o un resultado limpio, da un salto", () => {
       (["alert", "error", "success"] as const).forEach((state) => {
-        const { container, rerender, unmount } = render(<ArgusMascot state="reading" />);
+        const { container, rerender, unmount } = render(<ArgusMascot state="reading" size="lg" />);
 
-        rerender(<ArgusMascot state={state} />);
+        rerender(<ArgusMascot state={state} size="lg" />);
 
         expect(container.firstElementChild).toHaveAttribute("data-poked");
         unmount();
       });
+    });
+
+    it("en la barra lateral (figura pequeña) no salta: solo cambia de expresión", () => {
+      const { container, rerender } = render(<ArgusMascot state="reading" size="sm" />);
+
+      rerender(<ArgusMascot state="alert" size="sm" />);
+
+      expect(container.firstElementChild).not.toHaveAttribute("data-poked");
+      expect(container.firstElementChild).toHaveAttribute("data-state", "alert");
     });
 
     it("al montarse ya en riesgo alto no salta: solo reacciona a un cambio", () => {

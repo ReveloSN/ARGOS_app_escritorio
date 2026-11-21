@@ -103,8 +103,12 @@ export function AlertDetailView(props: AlertDetailViewProps) {
       <DifferenceLine {...difference} />
       <ExplanationPanel
         target={alertExplainTarget(review.session.id, alert, i18n)}
-        actions={<DetailDecision {...props} />}
+        actions={null}
       />
+      {/* Último hijo del detalle: así puede quedar fijo al pie mientras se lee todo lo de arriba. */}
+      <div className={styles.decisionDock} data-sticky-dock="">
+        <DetailDecision {...props} />
+      </div>
     </div>
   );
 }

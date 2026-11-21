@@ -1,67 +1,135 @@
+/* Alineado arriba, no centrado en el vacío: el bloque y los pasos se leen como una sola columna. */
 .home {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  gap: var(--spacing-10);
+  width: 100%;
+  max-width: calc(var(--size-home-content) + 2 * var(--page-inset-inline));
+  padding: var(--page-inset-top) var(--page-inset-inline) var(--spacing-8);
 }
-.notice {
-  padding: var(--spacing-5) var(--spacing-6) 0;
-}
-.stage {
-  display: grid;
-  flex: 1;
-  align-items: center;
-  padding: var(--spacing-8) var(--spacing-6);
-}
-.content {
+
+.intro {
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
   align-items: flex-start;
   gap: var(--spacing-8);
-  width: 100%;
-  max-width: var(--size-readable-wide);
-  margin-inline: auto;
 }
+
+.companion,
+.companionCompact {
+  flex: none;
+}
+
+/* Con el asistente oculto no queda un hueco. */
+.companion:empty,
+.companionCompact:empty {
+  display: none;
+}
+
+.companionCompact {
+  padding-block-start: var(--spacing-1);
+}
+
 .workspace {
   display: flex;
   flex: 1;
-  flex-basis: var(--size-readable-narrow);
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-6);
+  gap: var(--spacing-5);
   min-width: 0;
 }
-.companion {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-3);
-  width: var(--size-eye-lg);
-}
-.assistantText {
-  margin: 0;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-caption);
-  text-align: center;
-}
+
 .title {
   margin: 0;
-  font-size: var(--font-size-display);
-  line-height: var(--line-height-value);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-page-title-size);
+  font-weight: var(--text-page-title-weight);
+  line-height: var(--text-page-title-line);
+  text-wrap: balance;
 }
+
 .description {
-  margin: 0;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-heading);
-  line-height: var(--line-height-reading);
+  max-width: var(--size-readable-copy);
+  margin: calc(-1 * var(--spacing-2)) 0 0;
+  color: var(--text-description-color);
+  font-size: var(--text-description-size);
+  line-height: var(--text-description-line);
 }
+
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-2);
 }
+
 .note {
+  color: var(--text-auxiliary-color);
+  font-size: var(--text-auxiliary-size);
+  line-height: var(--text-auxiliary-line);
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding-block-start: var(--spacing-6);
+  border-block-start: var(--border-width) solid var(--color-border-default);
+}
+
+.stepsTitle {
+  margin: 0;
+  font-size: var(--text-section-title-size);
+  font-weight: var(--text-title-weight);
+  line-height: var(--text-section-title-line);
+}
+
+.stepList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-6);
+  margin: 0;
+  padding: 0;
+  counter-reset: step;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  counter-increment: step;
+}
+
+/* El número dice el orden real de la revisión; no es decoración. */
+.stepName {
+  font-weight: var(--font-weight-semibold);
+}
+
+.stepName::before {
+  content: counter(step) ". ";
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-caption);
+  font-family: var(--font-family-mono);
+}
+
+.stepText {
+  color: var(--text-description-color);
+  line-height: var(--line-height-body);
+}
+
+@container (max-width: 640px) {
+  .home {
+    gap: var(--spacing-8);
+  }
+  .intro {
+    gap: var(--spacing-5);
+  }
+  .stepList {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-4);
+  }
+}
+
+/* Solo con muy poco ancho la mascota pasa encima: antes, la acción principal quedaría abajo. */
+@container (max-width: 480px) {
+  .intro {
+    flex-direction: column;
+  }
 }

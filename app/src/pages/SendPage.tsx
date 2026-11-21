@@ -1,5 +1,3 @@
-import { EngineUnavailableMessage } from "../features/engine/EngineUnavailableMessage";
-import { useEngineStatus } from "../features/engine/useEngineStatus";
 import { useReview } from "../features/review/reviewContext";
 import { useSendReview } from "../features/sending/sendContext";
 import { SendStart } from "../features/sending/SendStart";
@@ -15,11 +13,9 @@ export function SendPage() {
   const { review } = useSendReview();
   const { review: caseFile } = useReview();
   const start = useStartSendReview();
-  const engineStatus = useEngineStatus();
   if (review) return <SendWorkspace key={review.id} review={review} />;
   return (
     <div className={styles.page}>
-      {engineStatus === "stopped" && <EngineUnavailableMessage />}
       <SendStart status={start.status} hasCaseFile={caseFile !== null} onFile={start.start} />
     </div>
   );

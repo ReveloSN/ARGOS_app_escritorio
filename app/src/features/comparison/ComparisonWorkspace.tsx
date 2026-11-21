@@ -1,6 +1,5 @@
 import { useI18n } from "../../i18n/i18nContext";
 import type { ComparisonResult } from "../../services/engine/comparisonTypes";
-import { DecisionFeedback } from "../alerts/DecisionFeedback";
 import styles from "./Compare.module.css";
 import { useComparison } from "./comparisonContext";
 import { CompareTop } from "./CompareTop";
@@ -73,7 +72,6 @@ export function ComparisonWorkspace({ comparison }: ComparisonWorkspaceProps) {
         <InconsistenciesView comparison={comparison} view={view} decisions={decisions} />
       )}
       {view.tab === "matrix" && <MatrixView comparison={comparison} view={view} />}
-      <DecisionFeedback decisions={decisions} />
     </div>
   );
 }

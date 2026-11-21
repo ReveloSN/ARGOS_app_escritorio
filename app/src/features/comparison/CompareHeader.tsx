@@ -1,6 +1,6 @@
 import { Button } from "../../components/atoms/Button";
 import { Kbd } from "../../components/atoms/Kbd";
-import { Breadcrumb } from "../../components/molecules/Breadcrumb";
+import { TopbarLocation } from "../navigation/TopbarLocation";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ComparisonResult } from "../../services/engine/comparisonTypes";
@@ -26,7 +26,7 @@ export function CompareHeader({ comparison, tab, crumb, onTab, onClose }: Compar
   return (
     <div className={styles.header}>
       <div className={styles.closeRow}>
-        <Breadcrumb
+        <TopbarLocation
           items={[
             { id: "compare", label: t("navigation.compare") },
             { id: "current", label: crumb },

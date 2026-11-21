@@ -1,4 +1,5 @@
 import { ArgusEye } from "../../components/atoms/ArgusEye";
+import { BreakableText } from "../../components/atoms/BreakableText";
 import { useI18n } from "../../i18n/i18nContext";
 import type {
   ReportDocumentData,
@@ -25,7 +26,11 @@ function PreviewTable({ table }: { table: ReportTableData }) {
                 <span className={cell.detail ? styles.cellValue : styles.cellText}>
                   {cell.text}
                 </span>
-                {cell.detail && <span className={styles.cellDetail}>{cell.detail}</span>}
+                {cell.detail && (
+                  <span className={styles.cellDetail}>
+                    <BreakableText text={cell.detail} />
+                  </span>
+                )}
               </td>
             ))}
           </tr>

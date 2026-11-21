@@ -1,4 +1,4 @@
-import { Breadcrumb } from "../components/molecules/Breadcrumb";
+import { TopbarLocation } from "../features/navigation/TopbarLocation";
 import { ExportFeedback } from "../features/report/ExportFeedback";
 import { reportDocument } from "../features/report/reportDocument";
 import styles from "../features/report/Report.module.css";
@@ -30,9 +30,9 @@ export function ReportPage({ review, onBack }: ReportPageProps) {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <Breadcrumb
+        <TopbarLocation
           items={[
-            { id: "case", label: review.session.name, onSelect: onBack },
+            { id: "case", label: texts.t("navigation.caseFile"), onSelect: onBack },
             { id: "report", label: texts.t("report.crumb") },
           ]}
         />

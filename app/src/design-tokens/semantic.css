@@ -30,11 +30,36 @@
   --color-focus-ring: var(--color-accent-500);
   --shadow-overlay: 0 4px 12px var(--color-shadow);
   --color-backdrop: var(--color-scrim-light);
+
+  /* Roles tipográficos: toda pantalla principal usa los mismos para título, descripción,
+     secciones y texto auxiliar, así la jerarquía no depende de cada hoja de estilos. */
+  --text-page-title-size: var(--font-size-display);
+  --text-page-title-line: var(--line-height-value);
+  --text-page-title-weight: var(--font-weight-semibold);
+  --text-group-title-size: var(--font-size-title);
+  --text-group-title-line: var(--line-height-title);
+  --text-section-title-size: var(--font-size-section);
+  --text-section-title-line: var(--line-height-heading);
+  --text-title-weight: var(--font-weight-semibold);
+  --text-description-size: var(--font-size-body);
+  --text-description-line: var(--line-height-reading);
+  --text-description-color: var(--color-text-secondary);
+  --text-auxiliary-size: var(--font-size-auxiliary);
+  --text-auxiliary-line: var(--line-height-auxiliary);
+  /* Atajos de teclado (Kbd) y encabezados de columna: un paso por debajo del texto auxiliar. */
+  --text-shortcut-size: var(--font-size-caption);
+  --text-column-label-size: var(--font-size-caption);
+  --text-auxiliary-color: var(--color-text-tertiary);
+
+  /* Eje común de las pantallas: dónde empiezan el título y el contenido en el área de trabajo. */
+  --page-inset-inline: var(--spacing-6);
+  --page-inset-top: var(--spacing-5);
 }
 
 [data-theme="dark"] {
-  --color-background-primary: var(--color-neutral-950);
-  --color-background-surface: var(--color-neutral-900);
+  /* Tres planos separados: fondo de trabajo, paneles y barras, controles elevados. */
+  --color-background-primary: var(--color-neutral-960);
+  --color-background-surface: var(--color-neutral-890);
   --color-background-subtle: var(--color-neutral-875);
   --color-background-raised: var(--color-neutral-820);
   --color-background-inverse: var(--color-neutral-75);

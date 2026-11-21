@@ -100,7 +100,10 @@ describe("Explicar esta alerta", () => {
     expect(
       panel.getByText(/Un número de contrato distinto puede referirse a otro acuerdo/),
     ).toBeVisible();
-    const decision = panel.getByRole("button", { name: /Es un error/ });
+    // La decisión va después de la explicación, en su propio bloque fijo al pie del detalle.
+    const decision = within(
+      screen.getByRole("region", { name: "¿Cómo quiere continuar?" }),
+    ).getByRole("button", { name: /Es un error/ });
     expect(titles[2]?.compareDocumentPosition(decision)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(explainAlert).not.toHaveBeenCalled();
   });

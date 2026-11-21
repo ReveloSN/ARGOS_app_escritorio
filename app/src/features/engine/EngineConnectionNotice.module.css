@@ -1,0 +1,46 @@
+/* Franja fija bajo la barra superior: no se desplaza con la página ni la tapa. */
+.notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2) var(--spacing-3);
+  padding: var(--spacing-2-5) var(--spacing-6);
+  background: var(--engine-notice-bg);
+  color: var(--color-text-primary);
+}
+
+.icon {
+  flex: none;
+  color: var(--color-text-secondary);
+}
+
+.text {
+  flex: 1 1 var(--size-readable-narrow);
+  min-width: 0;
+  max-width: var(--size-readable-wide);
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.what {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-inline-start: auto;
+}
+
+.lastCheck {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.lastCheck:empty {
+  display: none;
+}

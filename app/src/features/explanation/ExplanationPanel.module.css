@@ -23,12 +23,15 @@
   font-weight: var(--font-weight-medium);
 }
 
+/* La frase que dice qué cambió: un paso sobre el cuerpo, sin el interlineado de un título. */
 .summary {
   margin: 0;
   font-size: var(--font-size-heading);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-value);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-heading);
+  /* Un nombre de archivo sin espacios también cuenta para el ancho mínimo: se parte si no cabe. */
   overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 
 .aiNote {

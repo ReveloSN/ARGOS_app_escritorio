@@ -30,9 +30,11 @@ interface UploadZoneProps {
   readonly onFilesSelected: (files: readonly File[]) => void;
   /** Sin acción no se muestra «Pegar texto»: nunca un botón que no hace nada. */
   readonly onPasteText?: () => void;
+  /** Con archivos ya elegidos, la zona se reduce a una fila para dejar sitio a la lista. */
+  readonly isCompact?: boolean;
 }
 
-export function UploadZone({ onFilesSelected, onPasteText }: UploadZoneProps) {
+export function UploadZone({ onFilesSelected, onPasteText, isCompact = false }: UploadZoneProps) {
   const { t, tPlural } = useI18n();
   const inputId = useId();
   const [draggedCount, setDraggedCount] = useState(0);
@@ -46,7 +48,11 @@ export function UploadZone({ onFilesSelected, onPasteText }: UploadZoneProps) {
 
   return (
     <div
-      className={joinClassNames(styles.zone, draggedCount > 0 && styles.dragging)}
+      className={joinClassNames(
+        styles.zone,
+        isCompact ? styles.compact : styles.spacious,
+        draggedCount > 0 && styles.dragging,
+      )}
       onDragEnter={(event) => {
         setDraggedCount(event.dataTransfer.items.length);
       }}
@@ -58,7 +64,7 @@ export function UploadZone({ onFilesSelected, onPasteText }: UploadZoneProps) {
       }}
       onDrop={handleDrop}
     >
-      <Icon name="upload_file" size="xl" className={styles.icon} />
+      <Icon name="upload_file" size={isCompact ? "xl" : "xxl"} className={styles.icon} />
       {draggedCount > 0 ? (
         <span className={styles.prompt}>
           {tPlural({ key: "upload.dropping", count: draggedCount })}

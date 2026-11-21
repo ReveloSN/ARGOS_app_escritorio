@@ -1,6 +1,6 @@
 .shell {
   display: grid;
-  grid-template-rows: var(--size-topbar) minmax(0, 1fr);
+  grid-template-rows: var(--size-topbar) auto minmax(0, 1fr);
   grid-template-columns: auto minmax(0, 1fr);
   height: 100%;
   overflow: hidden;
@@ -9,12 +9,18 @@
 .sidebar {
   display: flex;
   min-height: 0;
-  grid-row: 1 / 3;
+  grid-row: 1 / 4;
+}
+
+.notice {
+  grid-column: 2;
+  min-width: 0;
 }
 
 /* Cada pantalla decide su composición según el ancho que le queda, no el de la ventana. */
 .main {
   container-type: inline-size;
+  grid-column: 2;
   min-height: 0;
   overflow: auto;
 }

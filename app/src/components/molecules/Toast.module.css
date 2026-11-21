@@ -27,6 +27,51 @@
   transform: none;
 }
 
+/* Dentro del bloque de decisión: sin fondo invertido, y sin ocupar sitio mientras no hay aviso. */
+.inline {
+  max-height: 0;
+  padding-block: 0;
+  overflow: hidden;
+  border-radius: 0;
+  background: var(--decision-feedback-bg);
+  color: var(--color-text-primary);
+  transform: none;
+  transition:
+    opacity var(--duration-base) var(--easing-standard),
+    max-height var(--duration-base) var(--easing-standard);
+}
+
+.inline.visible {
+  max-height: var(--size-inline-feedback-max);
+  padding-block: var(--spacing-2);
+}
+
+/* Con el hueco reservado no cambia de alto: se funde y, oculto, sale del árbol accesible. */
+.reserved,
+.reserved.visible {
+  max-height: none;
+  padding-block: var(--spacing-2);
+}
+
+.reserved {
+  visibility: hidden;
+  /* Se oculta al terminar el fundido (step-end) y aparece al empezarlo (step-start). */
+  transition:
+    opacity var(--duration-base) var(--easing-standard),
+    visibility var(--duration-base) step-end;
+}
+
+.reserved.visible {
+  visibility: visible;
+  transition:
+    opacity var(--duration-base) var(--easing-standard),
+    visibility var(--duration-base) step-start;
+}
+
+.inline > :first-child {
+  color: var(--color-action-text);
+}
+
 .undo {
   display: inline-flex;
   flex: none;

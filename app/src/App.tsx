@@ -5,7 +5,10 @@ import { Topbar } from "./components/organisms/Topbar";
 import { AppShell } from "./components/templates/AppShell";
 import { OnboardingGate } from "./features/assistant/OnboardingDialog";
 import { topbarStatusFor, useAssistantChrome } from "./features/assistant/useAssistantChrome";
+import { EngineConnectionNotice } from "./features/engine/EngineConnectionNotice";
 import { useShortcuts } from "./features/keyboard/useShortcuts";
+import { TopbarLocationContext } from "./features/navigation/topbarLocationContext";
+import { topbarSectionFor } from "./features/navigation/topbarSection";
 import {
   HOME_ROUTE,
   routeForSection,
@@ -22,6 +25,7 @@ import { useSessionSwitch } from "./features/session/useSessionSwitch";
 import { GlobalSearch } from "./features/search/GlobalSearch";
 import { useGlobalSearch } from "./features/search/useGlobalSearch";
 import { CurrentPage } from "./pages/CurrentPage";
+import { useI18n } from "./i18n/i18nContext";
 
 const NEW_REVIEW_ROUTE: AppRoute = { page: "newReview" };
 
@@ -36,6 +40,8 @@ export function App() {
   const [collapsed, setCollapsed] = useState(false);
   const search = useGlobalSearch(route, setRoute);
   const assistant = useAssistantChrome();
+  const i18n = useI18n();
+  const [locationTarget, setLocationTarget] = useState<HTMLElement | null>(null);
   const toggleSidebar = () => {
     setCollapsed((current) => !current);
   };
@@ -61,6 +67,7 @@ export function App() {
 
   return (
     <AppShell
+      notice={<EngineConnectionNotice />}
       sidebar={
         <Sidebar
           active={sectionOf(route)}
@@ -79,6 +86,8 @@ export function App() {
       }
       topbar={
         <Topbar
+          section={topbarSectionFor(route, i18n)}
+          locationRef={setLocationTarget}
           session={
             snapshot.review && (
               <SessionSwitcher
@@ -92,7 +101,7 @@ export function App() {
               />
             )
           }
-          assistantStatus={topbarStatusFor(assistant.topbar, collapsed)}
+          assistantStatus={topbarStatusFor(assistant, collapsed)}
           searchPlaceholder={search.scope?.placeholder}
           onOpenSearch={
             search.open &&
@@ -103,7 +112,9 @@ export function App() {
         />
       }
     >
-      <CurrentPage route={route} onNavigate={setRoute} onSearchDocuments={search.open} />
+      <TopbarLocationContext.Provider value={locationTarget}>
+        <CurrentPage route={route} onNavigate={setRoute} onSearchDocuments={search.open} />
+      </TopbarLocationContext.Provider>
       {search.scope && search.query !== null && (
         <GlobalSearch scope={search.scope} initialQuery={search.query} onClose={search.close} />
       )}

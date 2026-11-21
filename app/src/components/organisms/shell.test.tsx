@@ -108,6 +108,7 @@ describe("Topbar", () => {
     const onOpenSearch = vi.fn();
     renderWithProviders(
       <Topbar
+        section={{ icon: "history", label: "Historial" }}
         session={<span>{SESSION.name}</span>}
         assistantStatus={{
           text: "Leyendo 3 de 5 archivos",
@@ -130,6 +131,7 @@ describe("Topbar", () => {
     const onOpenHelp = vi.fn();
     renderWithProviders(
       <Topbar
+        section={{ icon: "history", label: "Historial" }}
         assistantStatus={{ text: "Asistente de IA: listo", isHighRisk: false }}
         onOpenSearch={vi.fn()}
         onOpenHelp={onOpenHelp}
