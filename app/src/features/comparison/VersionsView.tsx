@@ -9,6 +9,7 @@ import { ChangeList } from "./ChangeList";
 import { changeCountsByDocument } from "./comparisonScope";
 import { DocumentFilterChips } from "./DocumentFilterChips";
 import { ChangeMinimap } from "./ChangeMinimap";
+import { DecisionStatusSlot } from "./DecisionStatusSlot";
 import styles from "./Compare.module.css";
 import { UnifiedDocument } from "./UnifiedDocument";
 import { ItemDetail } from "./ItemDetail";
@@ -102,6 +103,10 @@ export function VersionsView({ comparison, pair, list, view, decisions }: Versio
         )}
       </div>
       <aside className={styles.aside}>
+        <DecisionStatusSlot
+          decisions={decisions}
+          largestNumber={Math.max(0, ...pair.changes.map((change) => change.number))}
+        />
         {view.scope.against.kind === "all" && (
           <DocumentFilterChips
             documents={changeCountsByDocument(comparison, view.scope, list.shown)}

@@ -46,6 +46,38 @@ describe("Decisiones en la lista de cambios", () => {
     expect(await screen.findByText("1 de 4 decididos")).toBeVisible();
   });
 
+  it("(regresión) la confirmación ocupa la franja reservada: la lista y el cambio elegido no se mueven", async () => {
+    const list = await openChanges();
+    await userEvent.click(required(onlyRows(list.getAllByRole("button"))[0]));
+    const hint = screen.getByText(
+      (_content, element) =>
+        element?.tagName === "P" && (element.textContent ?? "").includes("decidir"),
+    );
+    const slot = hint.parentElement;
+    expect(hint).toBeVisible();
+    expect(hint).toHaveTextContent("J K moverse · C E I decidir · Ctrl Z deshacer");
+
+    await userEvent.click(selectedChangeDetail().getByRole("button", { name: /Es correcto/ }));
+
+    // La copia oculta que reserva el alto no cuenta: solo la confirmación visible.
+    const matches = await screen.findAllByText(/marcado como «Es correcto»/);
+    const visible = matches.filter((element) => !element.closest("[aria-hidden='true']"));
+    expect(visible).toHaveLength(1);
+    const status = visible[0]?.closest("[role='status']");
+    // Misma franja que los atajos (que se ocultan), arriba del panel y antes de la lista.
+    expect(slot).toContainElement(status as HTMLElement);
+    // El alto de la franja lo fija una copia oculta de la confirmación más larga posible.
+    const sizer = slot?.querySelector("[data-slot-sizer]");
+    expect(sizer).toHaveAttribute("aria-hidden", "true");
+    expect(sizer).toHaveTextContent(/marcado como «.+»/);
+    expect(status).toHaveTextContent("Deshacer");
+    expect(hint).toHaveAttribute("aria-hidden", "true");
+    const changes = screen.getByRole("heading", { name: "Cambios" });
+    expect(slot?.compareDocumentPosition(changes)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    // La confirmación no se lleva el foco.
+    expect(status).not.toContainElement(document.activeElement as HTMLElement);
+  });
+
   it("(regresión) con todos decididos la cabecera dice que la revisión está completa", async () => {
     const list = await openChanges(ALL_DECIDED as typeof DECIDED_FIRST);
 

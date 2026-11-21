@@ -4,6 +4,7 @@ import { EmptyState } from "../../components/molecules/EmptyState";
 import { useI18n } from "../../i18n/i18nContext";
 import type { ComparisonResult } from "../../services/engine/comparisonTypes";
 import type { AlertDecisions } from "../alerts/useAlertDecisions";
+import { DecisionStatusSlot } from "./DecisionStatusSlot";
 import styles from "./Compare.module.css";
 import { confirmedFactFor } from "./confirmedFacts";
 import { InconsistenciesIntro, InconsistenciesLegend } from "./InconsistenciesNotes";
@@ -88,6 +89,10 @@ export function InconsistenciesView({ comparison, view, decisions }: Inconsisten
         <InconsistenciesLegend isConfirmedReference={rows.some((row) => row.confirmed)} />
       </div>
       <aside className={styles.aside}>
+        <DecisionStatusSlot
+          decisions={decisions}
+          largestNumber={Math.max(0, ...rows.map((row) => row.alert.number))}
+        />
         {selected && (
           <ItemDetail
             content={inconsistencyDetail(selected, t)}

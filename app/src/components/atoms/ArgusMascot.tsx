@@ -40,8 +40,13 @@ function poseFor(state: EyeState): MascotPose {
  * En la barra lateral un ojo que se mueve sin parar distraería del trabajo.
  */
 const FOLLOWING_SIZE: EyeSize = "lg";
+/** La figura pequeña acompaña las pantallas de trabajo: no salta al cambiar de estado. */
+const QUIET_SIZE: EyeSize = "sm";
 
-/** Estados que merecen llamar la atención al aparecer: riesgo alto, archivo ilegible y éxito. */
+/**
+ * Estados que merecen llamar la atención al aparecer: riesgo alto, archivo ilegible y éxito. Solo
+ * en las figuras grandes: en la barra lateral, junto al trabajo, basta el cambio de expresión.
+ */
 const NOTEWORTHY: ReadonlySet<EyeState> = new Set<EyeState>(["alert", "error", "success"]);
 
 const FEET_PATH = "M39 100 L33 116 Q40 121 49 115 L51 103 M69 103 L71 115 Q80 121 87 116 L81 100";
@@ -51,18 +56,29 @@ const CREST_PATH = "M53 13 Q46 2 39 8 M60 12 Q63 3 70 5";
 const PAGE_PATH = "M48 80 H73 V98 H48 Z";
 const PAGE_LINES_PATH = "M54 86 H66 M54 91 H62";
 
-/** El cuerpo dibujado según la pose; el ojo va encima, en su propia capa. */
-function MascotBody({ pose }: { readonly pose: MascotPose }) {
-  const { arms, mouth } = POSE_SHAPES[pose];
+const CELEBRATE_MOUTH = POSE_SHAPES.celebrate.mouth ?? "";
+
+/**
+ * El cuerpo con las dos poses dibujadas: `data-pose` decide cuál se ve y el cambio es un fundido
+ * corto, no un salto. El ojo va encima, en su propia capa.
+ */
+function MascotBody() {
   return (
     <svg className={styles.body} viewBox="0 0 120 128" aria-hidden="true">
-      <path className={styles.limbs} d={arms} />
+      <path
+        className={`${styles.limbs ?? ""} ${styles.restArms ?? ""}`}
+        d={POSE_SHAPES.rest.arms}
+      />
+      <path
+        className={`${styles.limbs ?? ""} ${styles.celebrateArms ?? ""}`}
+        d={POSE_SHAPES.celebrate.arms}
+      />
       <path className={styles.feet} d={FEET_PATH} />
       <path className={styles.shell} d={SHELL_PATH} />
       <path className={styles.crest} d={CREST_PATH} />
       <path className={styles.page} d={PAGE_PATH} />
       <path className={styles.pageLines} d={PAGE_LINES_PATH} />
-      {mouth && <path className={styles.mouth} d={mouth} />}
+      <path className={styles.mouth} d={CELEBRATE_MOUTH} />
     </svg>
   );
 }
@@ -72,7 +88,7 @@ export function ArgusMascot({ state, size = "sm", label }: ArgusMascotProps) {
   const figure = useRef<HTMLSpanElement>(null);
   usePointerGaze(figure, size === FOLLOWING_SIZE);
   usePokeReaction(figure);
-  useReactionOnChange(figure, state, NOTEWORTHY.has(state));
+  useReactionOnChange(figure, state, NOTEWORTHY.has(state) && size !== QUIET_SIZE);
   const pose = poseFor(state);
   return (
     <span
@@ -84,7 +100,7 @@ export function ArgusMascot({ state, size = "sm", label }: ArgusMascotProps) {
       data-state={state}
       data-pose={pose}
     >
-      <MascotBody pose={pose} />
+      <MascotBody />
       <span className={styles.face}>
         <ArgusEye state={state} isFluid />
       </span>

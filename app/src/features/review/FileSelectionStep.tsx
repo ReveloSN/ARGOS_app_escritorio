@@ -25,7 +25,7 @@ export function FileSelectionStep({
   const { t } = useI18n();
   return (
     <>
-      <UploadZone onFilesSelected={onAdd} />
+      <UploadZone onFilesSelected={onAdd} isCompact={files.length > 0} />
       <h2 className={styles.heading}>{t("newReview.files")}</h2>
       {files.length === 0 ? (
         <p className={styles.muted}>{t("newReview.noFiles")}</p>

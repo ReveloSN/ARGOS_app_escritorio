@@ -55,12 +55,10 @@ describe("Error único de Ajustes", () => {
     vi.unstubAllGlobals();
   });
 
-  it("muestra un único error en tres partes antes de las secciones y un solo reintento", async () => {
-    const page = await openSettings({
-      checkHealth: () => Promise.reject(new Error("sin respuesta")),
-    });
+  it("con el motor respondiendo, muestra un único error en tres partes y un solo reintento", async () => {
+    const page = await openSettings();
     const alert = await within(page).findByRole("alert");
-    expect(within(page).getAllByRole("alert")).toHaveLength(1);
+    expect(screen.getAllByRole("alert")).toHaveLength(1);
     expect(within(alert).getByText("No pudimos cargar los ajustes.")).toBeVisible();
     expect(within(alert).getByText("El motor de análisis no respondió.")).toBeVisible();
     expect(within(alert).getByText(/Reintente en unos segundos/)).toBeVisible();
@@ -69,6 +67,21 @@ describe("Error único de Ajustes", () => {
     expect(
       alert.compareDocumentPosition(detection) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
+  });
+
+  it("con el motor detenido no repite el aviso de conexión de la app", async () => {
+    const page = await openSettings({
+      checkHealth: () => Promise.reject(new Error("sin respuesta")),
+    });
+    await waitFor(() => {
+      expect(within(page).getAllByText("Disponible cuando el motor responda.")).toHaveLength(
+        DEPENDENT_SECTIONS.length,
+      );
+    });
+    const alerts = screen.getAllByRole("alert");
+    expect(alerts).toHaveLength(1);
+    expect(alerts[0]).toHaveTextContent("El motor de análisis no responde.");
+    expect(within(page).queryByRole("alert")).not.toBeInTheDocument();
   });
 
   it("cada sección dependiente muestra la misma línea neutra sin botones", async () => {

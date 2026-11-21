@@ -9,6 +9,7 @@ import type {
 import { decisionStateOf } from "../alerts/alertDecisions";
 import { describeLocation, entityTypeLabel } from "../alerts/alertPresentation";
 import { NO_SECOND_VALUE } from "../alerts/alertSides";
+import { riskParagraph } from "./reportRisk";
 
 export type ReportTexts = Pick<I18n, "t" | "tPlural" | "format" | "locale">;
 
@@ -43,6 +44,13 @@ function summaryParagraph(review: ReviewResult, texts: ReportTexts): string {
   return parts.join(" ");
 }
 
+/** Qué se revisó y qué queda; con alertas, también su reparto por riesgo. */
+function summaryParagraphs(review: ReviewResult, texts: ReportTexts): string[] {
+  const paragraphs = [summaryParagraph(review, texts)];
+  if (review.alerts.length > 0) paragraphs.push(riskParagraph(review, texts));
+  return paragraphs;
+}
+
 /** «Resumen»: cuántas alertas hubo y cómo se decidieron, con una frase de lo que queda. */
 export function summarySection(
   review: ReviewResult,
@@ -61,8 +69,17 @@ export function summarySection(
     metric("report.metrics.ignored", countBy(review, "ignored").length),
     metric("report.metrics.pending", countBy(review, "pending").length),
   ];
-  return { ...EMPTY_SECTION, heading, metrics, paragraphs: [summaryParagraph(review, texts)] };
+  return { ...EMPTY_SECTION, heading, metrics, paragraphs: summaryParagraphs(review, texts) };
 }
+
+// Número y riesgo primero: el informe se lee en el mismo orden que la lista de alertas.
+const EVIDENCE_COLUMNS = [
+  "report.evidence.number",
+  "report.evidence.risk",
+  "report.evidence.data",
+  "report.evidence.valueA",
+  "report.evidence.valueB",
+] as const;
 
 /** «Evidencia»: cada valor con su archivo y su ubicación (CLAUDE.md §7). */
 export function evidenceSection(
@@ -71,12 +88,10 @@ export function evidenceSection(
   texts: ReportTexts,
 ): ReportSectionData {
   const { t } = texts;
-  const columns = [
-    t("report.evidence.data"),
-    t("report.evidence.valueA"),
-    t("report.evidence.valueB"),
-  ];
+  const columns = EVIDENCE_COLUMNS.map((key) => t(key));
   const rows = review.alerts.map((alert) => [
+    { text: String(alert.number) },
+    { text: t(`risk.${alert.risk}`) },
     { text: entityTypeLabel(alert.entityType, t) },
     sideCell(alert.first, texts),
     sideCell(alert.second, texts),
@@ -104,6 +119,7 @@ function decisionRow(
 ): ReportCellData[] {
   const { t, format } = texts;
   return [
+    { text: String(alert.number) },
     { text: entityTypeLabel(alert.entityType, t) },
     { text: t(`decision.${decision.kind}`) },
     decisionNote(alert, decision, texts),
@@ -119,6 +135,7 @@ export function decisionsSection(
 ): ReportSectionData {
   const { t } = texts;
   const columns = [
+    t("report.evidence.number"),
     t("report.evidence.data"),
     t("report.decisions.decision"),
     t("report.decisions.note"),

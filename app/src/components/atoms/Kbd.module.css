@@ -1,6 +1,6 @@
 .kbd {
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-micro);
+  font-size: var(--text-shortcut-size);
   line-height: var(--line-height-caption);
   white-space: nowrap;
 }

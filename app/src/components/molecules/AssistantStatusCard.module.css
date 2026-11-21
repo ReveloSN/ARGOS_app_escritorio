@@ -3,9 +3,8 @@
   align-items: center;
   gap: var(--spacing-2-5);
   padding: var(--spacing-1-5) var(--spacing-2);
-  border: var(--border-width) solid var(--color-border-default);
   border-radius: var(--radius-sm);
-  background: var(--color-background-surface);
+  background: var(--sidebar-panel-bg);
 }
 
 .compact {

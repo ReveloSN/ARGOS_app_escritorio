@@ -25,3 +25,7 @@
 .xl {
   font-size: var(--icon-size-xl);
 }
+
+.xxl {
+  font-size: var(--icon-size-xxl);
+}

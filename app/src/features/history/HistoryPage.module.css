@@ -1,7 +1,7 @@
 .layout {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  grid-template-columns: minmax(0, 1fr) var(--size-history-aside);
+  grid-template-columns: minmax(0, 1fr) var(--history-aside-width);
   height: 100%;
 }
 
@@ -10,7 +10,7 @@
   grid-column: 1 / 3;
   flex-direction: column;
   gap: var(--spacing-3-5);
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: var(--page-inset-top) var(--page-inset-inline) var(--spacing-4);
   border-bottom: var(--border-width) solid var(--color-border-default);
   background: var(--color-background-surface);
 }
@@ -25,14 +25,14 @@
 .title {
   flex: 1;
   margin: 0;
-  font-size: var(--font-size-display);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-value);
+  font-size: var(--text-page-title-size);
+  font-weight: var(--text-page-title-weight);
+  line-height: var(--text-page-title-line);
 }
 
 .sessions {
   min-height: 0;
-  padding: var(--spacing-3) var(--spacing-6);
+  padding: var(--spacing-3) var(--page-inset-inline);
   overflow: auto;
 }
 
@@ -145,20 +145,32 @@
   font-size: var(--font-size-caption);
 }
 
-/* Sin ancho para la tabla y el panel lado a lado, el panel de decisiones pasa debajo. */
-@container (max-width: 1120px) {
+/*
+ * Sin ancho para la tabla y el panel lado a lado, la pantalla se lee como una sola columna que se
+ * desplaza entera: todas las sesiones con su altura natural y, debajo, las decisiones de la
+ * elegida. Así el detalle no le quita filas a la lista ni quedan dos barras de desplazamiento
+ * juntas en ventanas bajas.
+ */
+@container (max-width: 960px) {
   .layout {
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-rows: none;
     grid-template-columns: minmax(0, 1fr);
+    height: auto;
   }
 
   .header {
     grid-column: 1;
   }
 
+  .sessions {
+    overflow: visible;
+  }
+
   .aside {
-    border-top: var(--border-width) solid var(--color-border-default);
-    border-inline-start: 0;
+    overflow: visible;
+    margin: var(--spacing-4) var(--page-inset-inline) var(--spacing-8);
+    border: var(--border-width) solid var(--color-border-default);
+    border-radius: var(--radius-md);
   }
 }
 
@@ -167,12 +179,6 @@
   margin: 0;
   font-size: var(--font-size-caption);
   overflow-wrap: anywhere;
-}
-
-@container (max-width: 1120px) {
-  .aside {
-    max-height: var(--size-side-panel);
-  }
 }
 
 .noSelection {

@@ -1,21 +1,52 @@
 import type { TranslationKey } from "../../i18n/translate";
 
+export type SettingsSectionId =
+  "detection" | "privacy" | "ai" | "ocr" | "language" | "appearance" | "assistant" | "shortcuts";
+
 export interface SettingsSectionItem {
-  readonly id: string;
+  readonly id: SettingsSectionId;
   readonly title: TranslationKey;
 }
 
-/** Secciones de Ajustes de los mockups, en el orden de la navegación lateral. */
-export const SETTINGS_SECTIONS: readonly SettingsSectionItem[] = [
-  { id: "detection", title: "settings.sections.detection" },
-  { id: "language", title: "settings.sections.language" },
-  { id: "appearance", title: "settings.sections.appearance" },
-  { id: "privacy", title: "settings.sections.privacy" },
-  { id: "ai", title: "settings.sections.ai" },
-  { id: "ocr", title: "settings.sections.ocr" },
-  { id: "assistant", title: "settings.sections.assistant" },
-  { id: "shortcuts", title: "settings.sections.shortcuts" },
+export interface SettingsGroupItem {
+  readonly id: string;
+  readonly title: TranslationKey;
+  readonly description: TranslationKey;
+  readonly sections: readonly SettingsSectionItem[];
+}
+
+/**
+ * Ajustes en dos grupos: lo que depende del motor de análisis y lo que se guarda en este equipo
+ * y funciona aunque el motor no responda. El orden es el de la navegación lateral.
+ */
+export const SETTINGS_GROUPS: readonly SettingsGroupItem[] = [
+  {
+    id: "analysis",
+    title: "settings.groups.analysis.title",
+    description: "settings.groups.analysis.description",
+    sections: [
+      { id: "detection", title: "settings.sections.detection" },
+      { id: "privacy", title: "settings.sections.privacy" },
+      { id: "ai", title: "settings.sections.ai" },
+      { id: "ocr", title: "settings.sections.ocr" },
+    ],
+  },
+  {
+    id: "app",
+    title: "settings.groups.app.title",
+    description: "settings.groups.app.description",
+    sections: [
+      { id: "language", title: "settings.sections.language" },
+      { id: "appearance", title: "settings.sections.appearance" },
+      { id: "assistant", title: "settings.sections.assistant" },
+      { id: "shortcuts", title: "settings.sections.shortcuts" },
+    ],
+  },
 ];
+
+export const SETTINGS_SECTIONS: readonly SettingsSectionItem[] = SETTINGS_GROUPS.flatMap(
+  (group) => group.sections,
+);
 
 export function scrollToSettingsSection(id: string): void {
   document.getElementById(id)?.scrollIntoView({ block: "start" });

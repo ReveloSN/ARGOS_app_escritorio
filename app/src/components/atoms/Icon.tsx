@@ -1,7 +1,7 @@
 import { joinClassNames } from "../joinClassNames";
 import styles from "./Icon.module.css";
 
-export type IconSize = "xs" | "sm" | "md" | "lg" | "xl";
+export type IconSize = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 
 interface IconProps {
   /** Nombre del símbolo de Material Symbols (se empaqueta localmente, sin internet). */

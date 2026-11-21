@@ -1,14 +1,12 @@
 import { Button } from "../../components/atoms/Button";
 import { MODIFIER_KEY } from "../../components/atoms/Kbd";
 import { joinClassNames } from "../../components/joinClassNames";
-import { Breadcrumb } from "../../components/molecules/Breadcrumb";
 import { ErrorMessage } from "../../components/molecules/ErrorMessage";
 import { Toast } from "../../components/molecules/Toast";
 import { useI18n } from "../../i18n/i18nContext";
 import type { SendReviewResult } from "../../services/engine/sendTypes";
 import { useTimedNotice } from "../alerts/useTimedNotice";
 import { useShortcuts } from "../keyboard/useShortcuts";
-import { useReview } from "../review/reviewContext";
 import { DraftView } from "./DraftView";
 import { summaryTexts } from "./issuePresentation";
 import { IssuePanel } from "./IssuePanel";
@@ -20,14 +18,9 @@ const OPEN_SHORTCUT = [MODIFIER_KEY, "↵"];
 
 function SendHeader({ review }: { review: SendReviewResult }) {
   const { t } = useI18n();
-  const { review: caseFile } = useReview();
   const { discardReview } = useSendReview();
-  const current = { id: "send", label: t("navigation.send") };
-  // Sin expediente la ruta es solo esta pantalla: repetir su nombre no orienta a nadie.
-  const trail = caseFile ? [{ id: "root", label: caseFile.session.name }, current] : [current];
   return (
     <div className={styles.header}>
-      <Breadcrumb items={trail} />
       <div className={styles.titleRow}>
         <h1 className={styles.title}>{t("navigation.send")}</h1>
         <span className={styles.fileName}>{review.draft.fileName}</span>

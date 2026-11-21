@@ -2,13 +2,38 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-4);
-  padding: var(--spacing-4) var(--spacing-4);
+  padding: var(--spacing-4);
   border: var(--border-width) dashed var(--color-border-strong);
   border-radius: var(--radius-md);
   background: var(--color-background-surface);
   transition:
     background-color var(--duration-slow) var(--easing-standard),
     border-color var(--duration-slow) var(--easing-standard);
+}
+
+/* Sin archivos todavía, arrastrar o elegir es la tarea de la pantalla: la zona la protagoniza. */
+.spacious {
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--spacing-3);
+  min-height: var(--upload-zone-min-height);
+  padding: var(--spacing-8) var(--spacing-6);
+  text-align: center;
+}
+
+.spacious .text {
+  flex: none;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.spacious .prompt {
+  font-size: var(--text-section-title-size);
+  line-height: var(--text-section-title-line);
+}
+
+.compact .text {
+  flex: 1;
 }
 
 .dragging {
@@ -27,7 +52,6 @@
 
 .text {
   display: flex;
-  flex: 1;
   flex-direction: column;
   gap: var(--spacing-0-5);
   min-width: 0;
@@ -39,6 +63,7 @@
 }
 
 .formats {
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-caption);
+  color: var(--text-auxiliary-color);
+  font-size: var(--text-auxiliary-size);
+  line-height: var(--text-auxiliary-line);
 }

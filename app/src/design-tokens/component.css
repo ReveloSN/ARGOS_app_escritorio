@@ -28,8 +28,19 @@
   --value-diff-bg: var(--color-diff-highlight);
   --value-diff-fg: var(--color-risk-high);
   --value-diff-underline: var(--color-risk-high);
+  /* El valor dentro del fragmento citado: dónde está en el documento de origen. */
+  --excerpt-mark-bg: var(--color-diff-highlight);
+  --excerpt-mark-line: var(--color-risk-high);
 
   --sidebar-bg: var(--color-background-subtle);
+  /* Tarjetas dentro de la barra lateral (asistente, sesión activa): solo cambio de fondo. */
+  --sidebar-panel-bg: var(--color-background-surface);
+  --topbar-bg: var(--color-background-primary);
+  --engine-notice-bg: var(--color-background-raised);
+  /* Zona de carga vacía: alta en ventanas altas, sin bajar de un mínimo en las bajas. */
+  --upload-zone-min-height: clamp(var(--size-upload-zone-min), 40vh, var(--size-upload-zone-max));
+  /* Panel de decisiones del Historial: estrecho con poco ancho, sin bajar del mínimo legible. */
+  --history-aside-width: clamp(var(--size-history-aside-min), 30%, var(--size-history-aside));
   --sidebar-item-active-bg: var(--color-background-surface);
   --sidebar-item-active-border: var(--color-border-strong);
   --sidebar-item-active-icon: var(--color-action-text);
@@ -40,6 +51,7 @@
 
   --decision-selected-bg: var(--color-action-subtle);
   --decision-selected-border: var(--color-action-primary);
+  --decision-feedback-bg: var(--color-action-subtle);
 
   /* Marcas de diferencia en el texto: cada tipo tiene una forma propia, no solo un color. */
   --diff-removed-bg: var(--color-risk-high-bg);

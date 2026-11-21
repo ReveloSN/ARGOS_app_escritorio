@@ -6,17 +6,25 @@ import type { AlertDecisions } from "./useAlertDecisions";
 
 interface DecisionFeedbackProps {
   readonly decisions: AlertDecisions;
+  /** En el bloque de decisión del detalle, en vez de abajo y al centro sobre el contenido. */
+  readonly isInline?: boolean;
+  /** Con `isInline`: la confirmación ocupa siempre su hueco (Comparar, sobre la lista). */
+  readonly reservesSpace?: boolean;
 }
 
 /**
  * Confirmación al decidir, con «Deshacer», y el aviso si una decisión no se guardó: ese aviso
  * no desaparece solo, porque la alerta sigue pendiente (mockup «Guardado»).
  */
-export function DecisionFeedback({ decisions }: DecisionFeedbackProps) {
+export function DecisionFeedback({
+  decisions,
+  isInline = false,
+  reservesSpace = false,
+}: DecisionFeedbackProps) {
   const { t } = useI18n();
   const { notice, failure } = decisions;
   return (
-    <div className={styles.feedback}>
+    <div className={isInline ? styles.feedbackInline : styles.feedback}>
       {failure && (
         <ErrorMessage
           tone="neutral"
@@ -31,6 +39,8 @@ export function DecisionFeedback({ decisions }: DecisionFeedbackProps) {
         message={notice.message}
         visible={notice.isVisible}
         onUndo={notice.isUndoable && decisions.canUndo ? decisions.undo : undefined}
+        isInline={isInline}
+        reservesSpace={reservesSpace}
       />
     </div>
   );

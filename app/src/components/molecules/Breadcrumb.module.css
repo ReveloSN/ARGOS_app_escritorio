@@ -4,13 +4,14 @@
 
 .trail {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: var(--breadcrumb-wrap, wrap);
   align-items: center;
   margin: 0;
   padding: 0;
   list-style: none;
   color: var(--color-text-secondary);
-  font-size: var(--font-size-caption);
+  /* Dentro de la barra superior la ruta es la ubicación de la pantalla y mide como el texto. */
+  font-size: var(--breadcrumb-font-size, var(--font-size-caption));
 }
 
 .level {
@@ -19,6 +20,11 @@
   align-items: center;
   gap: var(--spacing-1-5);
   margin-inline-end: var(--spacing-1-5);
+}
+
+/* Sin espacio, encoge solo el nivel actual: los anteriores son el camino de vuelta. */
+.level:not(:last-child) {
+  flex: none;
 }
 
 .separator {

@@ -69,6 +69,13 @@ const TEXT_ON_BACKGROUND: readonly (readonly [string, string])[] = [
   ["--color-text-primary", "--diff-added-bg"],
   ["--color-text-primary", "--diff-changed-bg"],
   ["--diff-removed-fg", "--diff-removed-bg"],
+  // El aviso de conexión: su texto y el porqué sobre su propio fondo.
+  ["--color-text-primary", "--engine-notice-bg"],
+  ["--color-text-secondary", "--engine-notice-bg"],
+  ["--color-text-tertiary", "--topbar-bg"],
+  // El valor marcado dentro del fragmento citado y la confirmación de una decisión.
+  ["--color-text-secondary", "--excerpt-mark-bg"],
+  ["--color-text-primary", "--decision-feedback-bg"],
 ];
 
 // WCAG 1.4.11: trazos que comunican algo (marcas de diferencia, el ojo) piden 3:1.
@@ -79,6 +86,11 @@ const GRAPHIC_ON_BACKGROUND: readonly (readonly [string, string])[] = [
   ["--color-border-control", "--color-background-subtle"],
   ["--focus-ring-color", "--color-background-surface"],
   ["--focus-ring-color", "--color-background-raised"],
+  ["--focus-ring-color", "--color-background-primary"],
+  ["--focus-ring-color", "--engine-notice-bg"],
+  ["--color-border-control", "--topbar-bg"],
+  ["--excerpt-mark-line", "--excerpt-mark-bg"],
+  ["--color-action-text", "--decision-feedback-bg"],
   ["--diff-removed-line", "--diff-removed-bg"],
   ["--diff-added-line", "--diff-added-bg"],
   ["--diff-changed-outline", "--diff-changed-bg"],
@@ -104,6 +116,23 @@ describe.each([
     const ratio = contrastRatio(resolve(graphic, theme), resolve(background, theme));
 
     expect(ratio).toBeGreaterThanOrEqual(MIN_GRAPHIC_CONTRAST);
+  });
+});
+
+// Fondo de trabajo, paneles y controles elevados deben leerse como planos distintos sin bordes.
+const MIN_PLANE_STEP = 1.1;
+const PLANES = [
+  "--color-background-primary",
+  "--color-background-surface",
+  "--color-background-raised",
+] as const;
+
+describe("planos del tema oscuro", () => {
+  it.each([0, 1])("el plano %i y el siguiente se distinguen", (index) => {
+    const lower = resolve(PLANES[index] ?? "", dark);
+    const upper = resolve(PLANES[index + 1] ?? "", dark);
+
+    expect(contrastRatio(lower, upper)).toBeGreaterThanOrEqual(MIN_PLANE_STEP);
   });
 });
 

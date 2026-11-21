@@ -24,6 +24,31 @@
   font-size: var(--font-size-caption);
 }
 
+/* Lo que falta revisar: una fila propia bajo el título, con la barra al lado del texto. */
+.progress {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-1) var(--spacing-3);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress > :last-child {
+  flex: 0 1 var(--size-progress-wide);
+}
+
+/* La opción elegida lo dice con icono y texto, también «Es un error», que siempre va rellena. */
+.chosen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+}
+
 .choices {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

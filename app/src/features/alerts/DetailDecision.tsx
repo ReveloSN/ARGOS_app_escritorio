@@ -6,6 +6,15 @@ import { decisionOf, pendingCount } from "./alertDecisions";
 import type { AlertDetailViewProps } from "./AlertDetailView";
 import styles from "./AlertViews.module.css";
 import { correctionHint } from "./correctionHint";
+import { DecisionFeedback } from "./DecisionFeedback";
+import { useSessionSnapshot } from "../session/useSessionSnapshot";
+
+/** Cuántas van decididas: sale del snapshot, igual que en la barra lateral (CLAUDE.md §16). */
+function useDecisionProgress() {
+  const digest = useSessionSnapshot().review;
+  if (!digest) return undefined;
+  return { decided: digest.alertCount - digest.pendingCount, total: digest.alertCount };
+}
 
 /**
  * La decisión de la alerta: el panel «¿Cómo quiere continuar?» en una revisión abierta, o la
@@ -15,6 +24,7 @@ export function DetailDecision({ review, alert, decisions, onCloseReview }: Aler
   const i18n = useI18n();
   const { t, format } = i18n;
   const current = decisionOf(review, alert.number);
+  const progress = useDecisionProgress();
   if (decisions.isReadOnly) {
     const closedAt = review.session.closedAt ? new Date(review.session.closedAt) : new Date();
     return (
@@ -29,6 +39,8 @@ export function DetailDecision({ review, alert, decisions, onCloseReview }: Aler
     <>
       <DecisionPanel
         current={current?.kind}
+        progress={progress}
+        feedback={<DecisionFeedback decisions={decisions} isInline />}
         correctSide={correctSide}
         values={{ first: alert.first.value, second: alert.second?.value }}
         correctionHint={correctionHint(alert, correctSide, i18n)}

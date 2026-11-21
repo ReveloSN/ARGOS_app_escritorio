@@ -12,8 +12,8 @@
 
 .header th {
   padding: var(--spacing-1-5) var(--spacing-3);
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-micro);
+  color: var(--color-text-secondary);
+  font-size: var(--text-column-label-size);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--letter-spacing-label);
   text-align: start;

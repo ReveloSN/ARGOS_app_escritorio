@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import { Icon } from "../components/atoms/Icon";
 import { ErrorMessage } from "../components/molecules/ErrorMessage";
+import { useEngineStatus } from "../features/engine/useEngineStatus";
 import { AiSection } from "../features/settings/AiSection";
 import { AssistantSection } from "../features/settings/AssistantSection";
 import { DetectionSection } from "../features/settings/DetectionSection";
@@ -10,46 +11,80 @@ import { LanguageSection } from "../features/settings/LanguageSection";
 import { OcrSection } from "../features/settings/OcrSection";
 import { PrivacySection } from "../features/settings/PrivacySection";
 import styles from "../features/settings/Settings.module.css";
+import { SettingsGroup } from "../features/settings/SettingsGroup";
+import { SettingsNav } from "../features/settings/SettingsNav";
 import { SettingsSection } from "../features/settings/SettingsSection";
-import { scrollToSettingsSection, SETTINGS_SECTIONS } from "../features/settings/settingsSections";
+import {
+  SETTINGS_GROUPS,
+  SETTINGS_SECTIONS,
+  type SettingsSectionId,
+} from "../features/settings/settingsSections";
 import { ShortcutsSection } from "../features/settings/ShortcutsSection";
 import { AppearanceSwitch } from "../features/settings/theme/AppearanceSwitch";
 import { useSettingsLoad } from "../features/settings/useSettingsLoad";
 import { useI18n } from "../i18n/i18nContext";
 
-const SECTIONS = SETTINGS_SECTIONS;
+type SettingsLoad = ReturnType<typeof useSettingsLoad>;
+
+function sectionBodies(load: SettingsLoad, markSaved: () => void) {
+  const { engine, ai, ocr } = load;
+  const bodies: Readonly<Record<SettingsSectionId, ReactNode>> = {
+    detection: (
+      <EngineSettings engine={engine}>
+        {(preferences) => <DetectionSection preferences={preferences} engine={engine} />}
+      </EngineSettings>
+    ),
+    privacy: (
+      <EngineSettings engine={engine}>
+        {(preferences) => <PrivacySection preferences={preferences} engine={engine} />}
+      </EngineSettings>
+    ),
+    ai: <AiSection control={ai} />,
+    ocr: <OcrSection control={ocr} />,
+    language: <LanguageSection onSaved={markSaved} />,
+    appearance: <AppearanceSwitch onChange={markSaved} />,
+    assistant: <AssistantSection onSaved={markSaved} />,
+    shortcuts: <ShortcutsSection />,
+  };
+  return bodies;
+}
+
+/**
+ * Error propio de Ajustes: fallos de guardado, o de carga con el motor respondiendo. Con el motor
+ * detenido lo dice el aviso de conexión de la app; mientras arranca, la carga se recupera sola al
+ * responder. En ambos casos aquí no se repite.
+ */
+function SettingsProblem({ load }: { readonly load: SettingsLoad }) {
+  const { t } = useI18n();
+  const isEngineReady = useEngineStatus() === "ready";
+  const hasLoadProblem = load.hasLoadFailed && isEngineReady;
+  if (!hasLoadProblem && !load.engine.hasSaveFailed) return null;
+  const problem = load.hasLoadFailed ? "settings.unavailable" : "settings.saveFailed";
+  return (
+    <ErrorMessage
+      tone="neutral"
+      what={t(`${problem}.what`)}
+      why={t(`${problem}.why`)}
+      todo={t(`${problem}.todo`)}
+      primaryAction={{ label: t("settings.unavailable.retry"), onClick: load.reload }}
+    />
+  );
+}
 
 /** Ajustes: cada cambio se guarda al instante y se confirma con la hora (mockup 05). */
 export function SettingsPage() {
   const { t, format } = useI18n();
-  const [active, setActive] = useState(SECTIONS[0]?.id);
+  const [active, setActive] = useState<SettingsSectionId>(SETTINGS_SECTIONS[0]?.id ?? "detection");
   const [savedAt, setSavedAt] = useState<Date | null>(null);
   const markSaved = () => {
     setSavedAt(new Date());
   };
-  const { engine, ai, ocr, hasLoadFailed, reload } = useSettingsLoad(markSaved);
-  const problem = hasLoadFailed ? "settings.unavailable" : "settings.saveFailed";
-  const title = (id: string) =>
-    t(SECTIONS.find((section) => section.id === id)?.title ?? "settings.title");
+  const load = useSettingsLoad(markSaved);
+  const bodies = sectionBodies(load, markSaved);
 
   return (
     <div className={styles.layout}>
-      <nav aria-label={t("settings.navLabel")} className={styles.nav}>
-        {SECTIONS.map((section) => (
-          <button
-            key={section.id}
-            type="button"
-            aria-current={section.id === active ? "true" : undefined}
-            className={styles.navItem}
-            onClick={() => {
-              setActive(section.id);
-              scrollToSettingsSection(section.id);
-            }}
-          >
-            {t(section.title)}
-          </button>
-        ))}
-      </nav>
+      <SettingsNav active={active} onSelect={setActive} />
       <div className={styles.scroll}>
         <div className={styles.content}>
           <div className={styles.titleRow}>
@@ -61,43 +96,16 @@ export function SettingsPage() {
               </span>
             )}
           </div>
-          {(hasLoadFailed || engine.hasSaveFailed) && (
-            <ErrorMessage
-              tone="neutral"
-              what={t(`${problem}.what`)}
-              why={t(`${problem}.why`)}
-              todo={t(`${problem}.todo`)}
-              primaryAction={{ label: t("settings.unavailable.retry"), onClick: reload }}
-            />
-          )}
-          <SettingsSection id="detection" title={title("detection")}>
-            <EngineSettings engine={engine}>
-              {(preferences) => <DetectionSection preferences={preferences} engine={engine} />}
-            </EngineSettings>
-          </SettingsSection>
-          <SettingsSection id="language" title={title("language")}>
-            <LanguageSection onSaved={markSaved} />
-          </SettingsSection>
-          <SettingsSection id="appearance" title={title("appearance")}>
-            <AppearanceSwitch onChange={markSaved} />
-          </SettingsSection>
-          <SettingsSection id="privacy" title={title("privacy")}>
-            <EngineSettings engine={engine}>
-              {(preferences) => <PrivacySection preferences={preferences} engine={engine} />}
-            </EngineSettings>
-          </SettingsSection>
-          <SettingsSection id="ai" title={title("ai")}>
-            <AiSection control={ai} />
-          </SettingsSection>
-          <SettingsSection id="ocr" title={title("ocr")}>
-            <OcrSection control={ocr} />
-          </SettingsSection>
-          <SettingsSection id="assistant" title={title("assistant")}>
-            <AssistantSection onSaved={markSaved} />
-          </SettingsSection>
-          <SettingsSection id="shortcuts" title={title("shortcuts")}>
-            <ShortcutsSection />
-          </SettingsSection>
+          <SettingsProblem load={load} />
+          {SETTINGS_GROUPS.map((group) => (
+            <SettingsGroup key={group.id} group={group}>
+              {group.sections.map((section) => (
+                <SettingsSection key={section.id} id={section.id} title={t(section.title)}>
+                  {bodies[section.id]}
+                </SettingsSection>
+              ))}
+            </SettingsGroup>
+          ))}
         </div>
       </div>
     </div>
