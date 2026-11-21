@@ -5,7 +5,7 @@ from docx.document import Document as WordFile
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Pt, RGBColor
-from docx.table import _Cell
+from docx.table import _Cell, _Row
 from docx.text.paragraph import Paragraph
 
 from argus.domain.report_document import (
@@ -61,9 +61,17 @@ def _cell(cell: _Cell, value: ReportCell) -> None:
         _detail(cell.add_paragraph(), value.detail)
 
 
+def _repeat_as_header(row: _Row) -> None:
+    """La fila de títulos se repite arriba de cada página, como en el PDF."""
+    header = OxmlElement("w:tblHeader")
+    header.set(qn("w:val"), "true")
+    row._tr.get_or_add_trPr().append(header)
+
+
 def _table(word: WordFile, table: ReportTable) -> None:
     grid = word.add_table(rows=1, cols=len(table.columns))
     grid.style = TABLE_STYLE
+    _repeat_as_header(grid.rows[0])
     for cell, column in zip(grid.rows[0].cells, table.columns, strict=True):
         cell.paragraphs[0].add_run(column).bold = True
     for row in table.rows:
