@@ -13,8 +13,9 @@ export function RecoverView(props: GateViewProps) {
   const { email, setEmail } = props;
   const required = useRequiredFields();
   const request = async () => {
-    await actions.requestReset(email.trim());
-    props.advance("reset");
+    const submitted = email.trim();
+    await actions.requestReset(submitted);
+    props.advance("reset", submitted);
   };
   const submit = () => {
     if (required.check([email])) props.form.run(request);

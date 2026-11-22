@@ -206,6 +206,8 @@
   --layer-menu: 5;
   --layer-overlay: 10;
   --layer-toast: 20;
+  /* La puerta de la cuenta va por encima de todo, avisos incluidos. */
+  --layer-gate: 30;
   --border-width-mark: 1.5px;
   --text-underline-offset: 3px;
   --outline-offset-mark: 1px;

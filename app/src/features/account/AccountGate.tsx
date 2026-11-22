@@ -13,7 +13,8 @@ import type { GateView } from "./gateTypes";
 import { useGateForm } from "./useGateForm";
 import { useGateNavigation } from "./useGateNavigation";
 import { useKeepFocusInside } from "./useKeepFocusInside";
-import { GATE_MARK, useOtherModalOpen } from "./useOtherModalOpen";
+import { useIsGateShown } from "./useIsGateShown";
+import { GATE_MARK } from "./useOtherModalOpen";
 
 const TITLE_ID = "account-gate-title";
 const TAB_VIEWS = ["signIn", "signUp"] as const;
@@ -21,24 +22,24 @@ const TAB_VIEWS = ["signIn", "signUp"] as const;
 /** La puerta de la cuenta: se abre al arrancar sin sesión o desde Ajustes; Esc la cierra sin elegir. */
 export function AccountGate() {
   const { gate } = useAccount();
-  return gate ? <GateWhenFree gate={gate} /> : null;
+  const isShown = useIsGateShown();
+  return gate && isShown ? <GateDialog gate={gate} /> : null;
 }
 
-/** Otro diálogo modal abierto va primero: la puerta espera a que se cierre. */
-function GateWhenFree({ gate }: { readonly gate: GateState }) {
-  const isOtherModalOpen = useOtherModalOpen();
-  return isOtherModalOpen ? null : <GateDialog gate={gate} />;
+/** Si quien abrió la puerta ya no está (el arranque), el foco vuelve al primer control de la aplicación. */
+function focusLiveShellElement(): HTMLElement | null {
+  return document.querySelector<HTMLElement>("nav button, main button, main a");
 }
 
 function GateDialog({ gate }: { readonly gate: GateState }) {
   const { t } = useI18n();
   const { state, closeGate } = useAccount();
   const dialog = useRef<HTMLDivElement>(null);
-  const trapTab = useModalFocus(dialog);
+  const trapTab = useModalFocus(dialog, focusLiveShellElement);
   const form = useGateForm();
   const navigation = useGateNavigation(form, gate.email ?? state?.email ?? "");
   const { view } = navigation;
-  useKeepFocusInside(dialog);
+  useKeepFocusInside(dialog, form.isBusy);
   useShortcuts([{ key: "Escape", isActiveWhileTyping: true, run: closeGate }], true, "dialog");
   return (
     <div className={styles.screen}>

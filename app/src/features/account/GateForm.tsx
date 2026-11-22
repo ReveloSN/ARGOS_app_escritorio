@@ -40,6 +40,7 @@ export function GateForm(props: GateFormProps) {
   };
   return (
     <form
+      tabIndex={-1}
       noValidate
       aria-busy={form.isBusy}
       className={styles.form}

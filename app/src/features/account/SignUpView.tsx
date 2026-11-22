@@ -20,7 +20,7 @@ export function SignUpView(props: GateViewProps) {
     const displayName = name.trim();
     const form = { email: email.trim(), password, ...(displayName ? { displayName } : {}) };
     const { needsConfirmation } = await actions.signUp(form);
-    if (needsConfirmation) props.advance("verify");
+    if (needsConfirmation) props.advance("verify", form.email);
   };
   const submit = () => {
     if (required.check([email, password])) props.form.run(create);

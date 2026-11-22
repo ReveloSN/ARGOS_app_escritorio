@@ -2,7 +2,7 @@
 .screen {
   position: fixed;
   inset: 0;
-  z-index: var(--layer-overlay);
+  z-index: var(--layer-gate);
   display: flex;
   overflow: auto;
   padding: var(--spacing-4);

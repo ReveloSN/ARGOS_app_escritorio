@@ -4,6 +4,7 @@ import { Sidebar } from "./components/organisms/Sidebar";
 import { Topbar } from "./components/organisms/Topbar";
 import { AppShell } from "./components/templates/AppShell";
 import { useAccount } from "./features/account/accountContext";
+import { useIsGateShown } from "./features/account/useIsGateShown";
 import { AccountGate } from "./features/account/AccountGate";
 import { summarizeAccount } from "./features/account/accountSummary";
 import { OnboardingGate } from "./features/assistant/OnboardingDialog";
@@ -45,6 +46,7 @@ export function App() {
   const assistant = useAssistantChrome();
   const i18n = useI18n();
   const { state: account } = useAccount();
+  const isGateShown = useIsGateShown();
   const [locationTarget, setLocationTarget] = useState<HTMLElement | null>(null);
   const toggleSidebar = () => {
     setCollapsed((current) => !current);
@@ -70,62 +72,65 @@ export function App() {
   ]);
 
   return (
-    <AppShell
-      notice={<EngineConnectionNotice />}
-      sidebar={
-        <Sidebar
-          active={sectionOf(route)}
-          collapsed={collapsed}
-          session={indicators?.card}
-          reviewBadge={indicators?.badge}
-          assistant={assistant.sidebar}
-          account={summarizeAccount(account, i18n)}
-          onNavigate={(section) => {
-            setRoute(routeForSection(section));
-          }}
-          onToggleCollapsed={toggleSidebar}
-          onNewReview={() => {
-            setRoute(NEW_REVIEW_ROUTE);
-          }}
-        />
-      }
-      topbar={
-        <Topbar
-          section={topbarSectionFor(route, i18n)}
-          locationRef={setLocationTarget}
-          session={
-            snapshot.review && (
-              <SessionSwitcher
-                active={snapshot.review}
-                renaming={renaming}
-                onSwitch={switching.switchTo}
-                onNewSession={() => {
-                  setRoute(NEW_REVIEW_ROUTE);
-                }}
-                onDelete={deletion.schedule}
-              />
-            )
-          }
-          assistantStatus={topbarStatusFor(assistant, collapsed)}
-          searchPlaceholder={search.scope?.placeholder}
-          onOpenSearch={
-            search.open &&
-            (() => {
-              search.open?.();
-            })
-          }
-        />
-      }
-    >
-      <TopbarLocationContext.Provider value={locationTarget}>
-        <CurrentPage route={route} onNavigate={setRoute} onSearchDocuments={search.open} />
-      </TopbarLocationContext.Provider>
-      {search.scope && search.query !== null && (
-        <GlobalSearch scope={search.scope} initialQuery={search.query} onClose={search.close} />
-      )}
-      <OnboardingGate />
+    <>
+      <AppShell
+        isInert={isGateShown}
+        notice={<EngineConnectionNotice />}
+        sidebar={
+          <Sidebar
+            active={sectionOf(route)}
+            collapsed={collapsed}
+            session={indicators?.card}
+            reviewBadge={indicators?.badge}
+            assistant={assistant.sidebar}
+            account={summarizeAccount(account, i18n)}
+            onNavigate={(section) => {
+              setRoute(routeForSection(section));
+            }}
+            onToggleCollapsed={toggleSidebar}
+            onNewReview={() => {
+              setRoute(NEW_REVIEW_ROUTE);
+            }}
+          />
+        }
+        topbar={
+          <Topbar
+            section={topbarSectionFor(route, i18n)}
+            locationRef={setLocationTarget}
+            session={
+              snapshot.review && (
+                <SessionSwitcher
+                  active={snapshot.review}
+                  renaming={renaming}
+                  onSwitch={switching.switchTo}
+                  onNewSession={() => {
+                    setRoute(NEW_REVIEW_ROUTE);
+                  }}
+                  onDelete={deletion.schedule}
+                />
+              )
+            }
+            assistantStatus={topbarStatusFor(assistant, collapsed)}
+            searchPlaceholder={search.scope?.placeholder}
+            onOpenSearch={
+              search.open &&
+              (() => {
+                search.open?.();
+              })
+            }
+          />
+        }
+      >
+        <TopbarLocationContext.Provider value={locationTarget}>
+          <CurrentPage route={route} onNavigate={setRoute} onSearchDocuments={search.open} />
+        </TopbarLocationContext.Provider>
+        {search.scope && search.query !== null && (
+          <GlobalSearch scope={search.scope} initialQuery={search.query} onClose={search.close} />
+        )}
+        <OnboardingGate />
+        <SessionNotice deletion={deletion} switching={switching} />
+      </AppShell>
       <AccountGate />
-      <SessionNotice deletion={deletion} switching={switching} />
-    </AppShell>
+    </>
   );
 }

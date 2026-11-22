@@ -47,4 +47,38 @@ describe("el foco de la puerta", () => {
     expect(insideDialog()).toBe(true);
     expect(within(screen.getByRole("dialog")).queryByRole("alert")).not.toBeInTheDocument();
   });
+
+  it("tras un error, Enter en «Entendido» deja el foco en el primer campo y no omite", async () => {
+    const weak = new EngineRejectedError("/account/sign-in", "weak_password");
+    const skip = answering({ ...SIGNED_OUT, gateSkipped: true });
+    await renderAccount({
+      account: answering(SIGNED_OUT),
+      signIn: () => Promise.reject(weak),
+      skip,
+    });
+    await userEvent.type(screen.getByLabelText("Correo electrónico"), "ana@correo.co");
+    await userEvent.type(screen.getByLabelText("Contraseña"), "clave{Enter}");
+    (await screen.findByRole("button", { name: "Entendido" })).focus();
+
+    await userEvent.keyboard("{Enter}");
+
+    expect(document.activeElement).toBe(screen.getByLabelText("Correo electrónico"));
+    await userEvent.keyboard("{Enter}");
+    expect(skip).not.toHaveBeenCalled();
+  });
+
+  it("al enviar, el foco descansa en el formulario, nunca en Cerrar ni en omitir", async () => {
+    const signIn = vi.fn(() => new Promise<typeof SIGNED_IN>(() => undefined));
+    const skip = answering(SIGNED_OUT);
+    await renderAccount({ account: answering(SIGNED_OUT), signIn, skip });
+    await userEvent.type(screen.getByLabelText("Correo electrónico"), "ana@correo.co");
+    await userEvent.type(screen.getByLabelText("Contraseña"), "clave");
+    await userEvent.click(screen.getByRole("button", { name: /^Entrar/ }));
+
+    expect(document.activeElement).toBe(screen.getByRole("dialog").querySelector("form"));
+    await userEvent.keyboard("{Enter}");
+
+    expect(screen.getByRole("dialog")).toBeVisible();
+    expect(skip).not.toHaveBeenCalled();
+  });
 });
