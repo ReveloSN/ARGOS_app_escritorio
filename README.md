@@ -6,7 +6,7 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 
 **La detección no depende de IA generativa ni de internet.** El análisis se hace en su equipo.
 
-**[Descargar ARGUS 0.1.2 para Windows](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64-setup.exe)** · [Linux, macOS y otros formatos](#descargar) · [Última versión publicada](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/latest)
+**[Descargar ARGUS 0.1.3 para Windows](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS_0.1.3_x64-setup.exe)** · [Linux, macOS y otros formatos](#descargar) · [Última versión publicada](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/latest)
 
 ## Qué hace
 
@@ -24,16 +24,16 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 
 <!-- Al publicar una versión, cambie la versión de esta sección y del enlace de arriba: los nombres de los archivos la incluyen. -->
 
-Versión publicada: **0.1.2**. La más reciente está siempre en [Releases](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/latest).
+Versión publicada: **0.1.3**. La más reciente está siempre en [Releases](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/latest).
 
-**¿No sabe cuál elegir?** Si su PC tiene Windows y procesador Intel o AMD, descargue el [instalador para Windows](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64-setup.exe). «x64», «x86-64», «x86_64» y «amd64» son lo mismo: un procesador Intel o AMD de 64 bits. «x86» a secas suele significar 32 bits.
+**¿No sabe cuál elegir?** Si su PC tiene Windows y procesador Intel o AMD, descargue el [instalador para Windows](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS_0.1.3_x64-setup.exe). «x64», «x86-64», «x86_64» y «amd64» son lo mismo: un procesador Intel o AMD de 64 bits. «x86» a secas suele significar 32 bits.
 
 | Su equipo | Requisito | Descarga |
 |---|---|---|
-| **Windows, Intel o AMD** (x64) | Windows 10 u 11 de 64 bits | [Instalador (recomendado)](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64-setup.exe) · [portable, sin instalar](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64_portable.zip) · [msi para empresas](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64_en-US.msi) |
-| **Linux, Intel o AMD** (x64) | glibc 2.35 o posterior (Ubuntu 22.04, Debian 12, Fedora 36) | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_amd64.deb) · [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS-0.1.2-1.x86_64.rpm) · [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_amd64.AppImage) |
-| **Linux, ARM de 64 bits** (ARM64) | glibc 2.35 o posterior | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_arm64.deb) · [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS-0.1.2-1.aarch64.rpm) · [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_aarch64.AppImage) |
-| **Mac con Apple silicon** (M1 o posterior) | macOS 26. Con macOS 14 o 15 no está probado y es probable que el OCR no funcione | [dmg](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_aarch64.dmg) |
+| **Windows, Intel o AMD** (x64) | Windows 10 u 11 de 64 bits | [Instalador (recomendado)](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS_0.1.3_x64-setup.exe) · [portable, sin instalar](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS_0.1.3_x64_portable.zip) · [msi para empresas](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS_0.1.3_x64_en-US.msi) |
+| **Linux, Intel o AMD** (x64) | glibc 2.35 o posterior (Ubuntu 22.04, Debian 12, Fedora 36) | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS_0.1.3_amd64.deb) · [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS-0.1.3-1.x86_64.rpm) · [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS_0.1.3_amd64.AppImage) |
+| **Linux, ARM de 64 bits** (ARM64) | glibc 2.35 o posterior | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS_0.1.3_arm64.deb) · [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS-0.1.3-1.aarch64.rpm) · [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS_0.1.3_aarch64.AppImage) |
+| **Mac con Apple silicon** (M1 o posterior) | macOS 26. Con macOS 14 o 15 no está probado y es probable que el OCR no funcione | [dmg](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/ARGUS_0.1.3_aarch64.dmg) |
 
 En Linux, use `.deb` en Debian, Ubuntu y derivadas; `.rpm` en Fedora, openSUSE y derivadas; `.AppImage` en las demás.
 
@@ -49,7 +49,7 @@ Para saber qué procesador tiene: en Windows, Configuración › Sistema › Inf
 | Mac con macOS 13 o anterior | `onnxruntime` exige macOS 14 | Actualizar macOS |
 | Android, iPhone y iPad | El motor de análisis no puede ejecutarse en móviles | Usar un computador |
 
-Cada descarga pesa entre 200 y 360 MB. Para verificarla, use [SHA256SUMS.txt](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/SHA256SUMS.txt). Los detalles están en el [ADR 029](docs/decisions/029-empaquetado-multiplataforma.md).
+Cada descarga pesa entre 200 y 360 MB. Para verificarla, use [SHA256SUMS.txt](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.3/SHA256SUMS.txt). Los detalles están en el [ADR 029](docs/decisions/029-empaquetado-multiplataforma.md).
 
 Desde la versión 0.1.2, ARGUS trae una cuenta opcional. Por ahora no verifica el correo ni permite recuperar la contraseña; siempre puede continuar sin cuenta.
 
