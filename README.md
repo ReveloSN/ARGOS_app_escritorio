@@ -6,6 +6,8 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 
 **La detección no depende de IA generativa ni de internet.** El análisis se hace en su equipo.
 
+**[Descargar ARGUS](#descargar)** para Windows, Linux o macOS.
+
 ## Qué hace
 
 - **Revisión de un expediente:** lee PDF, DOCX, XLSX, EML y texto pegado, y cruza contratos, montos, fechas, partes y periodos entre los archivos.
@@ -18,21 +20,29 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 - **Asistente de IA:** el ojo de ARGUS en la barra lateral, con un estado que sale de datos reales del motor.
 - **Cuenta opcional:** correo y contraseña para identificarse al abrir la app, con Supabase Auth. No sincroniza nada ni protege los datos del equipo, y siempre puede continuar sin cuenta (ADR 033; configuración en [docs/configurar-supabase.md](docs/configurar-supabase.md)).
 
-## Instalar
+## Descargar
 
-Los instaladores se generan en GitHub Actions, en el workflow «Instaladores»:
+<!-- Al publicar una versión, cambie la versión de esta sección: los nombres de los archivos la incluyen. -->
 
-| Sistema | Archivo |
-|---|---|
-| Windows 10 u 11 (x64) | `.msi`, instalador `-setup.exe` o zip portable |
-| Debian, Ubuntu y derivadas (x64 y ARM64) | `.deb` |
-| Fedora, openSUSE y derivadas (x64 y ARM64) | `.rpm` |
-| Otras distribuciones Linux (x64 y ARM64) | `.AppImage` |
-| macOS, Apple silicon (M1 o posterior) | `.dmg` |
+Versión publicada: **0.1.1**. La más reciente está siempre en [Releases](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/latest).
 
-Cada versión trae también `SHA256SUMS.txt` para verificar las descargas. No hay versión de 32 bits, macOS Intel, Android ni iOS (ver ADR 029).
+| Sistema | x64 | ARM64 |
+|---|---|---|
+| Windows 10 u 11, instalador (recomendado) | [setup.exe](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_x64-setup.exe) | No disponible |
+| Windows 10 u 11, sin instalar | [zip portable](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_x64_portable.zip) | No disponible |
+| Windows 10 u 11, para empresas | [msi](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_x64_en-US.msi) | No disponible |
+| Debian, Ubuntu y derivadas | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_amd64.deb) | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_arm64.deb) |
+| Fedora, openSUSE y derivadas | [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS-0.1.1-1.x86_64.rpm) | [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS-0.1.1-1.aarch64.rpm) |
+| Otras distribuciones Linux | [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_amd64.AppImage) | [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_aarch64.AppImage) |
+| macOS, Apple silicon (M1 o posterior) | No disponible | [dmg](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_aarch64.dmg) |
 
-Los instaladores llevan el motor, los modelos de lenguaje y Tesseract con español e inglés, así que **funcionan sin internet desde la primera vez**. No tienen firma de código: Windows muestra SmartScreen al instalar («Más información › Ejecutar de todas formas») y macOS pide abrir la app desde Ajustes › Privacidad y seguridad («Abrir de todos modos»).
+Cada descarga pesa entre 200 y 360 MB. Para verificarla, use [SHA256SUMS.txt](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/SHA256SUMS.txt). No hay versión de 32 bits, macOS Intel, Android ni iOS (ver ADR 029).
+
+La cuenta opcional todavía no viene en la versión 0.1.1: llegará en una versión posterior.
+
+### Instalar
+
+Los instaladores se generan en GitHub Actions, en el workflow «Instaladores». Llevan el motor, los modelos de lenguaje y Tesseract con español e inglés, así que **funcionan sin internet desde la primera vez**. No tienen firma de código: Windows muestra SmartScreen al instalar («Más información › Ejecutar de todas formas») y macOS pide abrir la app desde Ajustes › Privacidad y seguridad («Abrir de todos modos»).
 
 ## Privacidad
 
