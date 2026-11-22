@@ -145,6 +145,16 @@ jobs:
                -o -name '*.AppImage' -o -name '*.dmg' \) -exec cp {} out/ \;
           ls -lh out
 
+      # Un instalador que toca el historial no se publica (ADR 034): se instala, se actualiza desde las
+      # versiones publicadas y se desinstala en esta máquina desechable.
+      - name: Probar el instalador (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        timeout-minutes: 30
+        run: |
+          $setup = (Get-ChildItem out -Filter '*-setup.exe' | Select-Object -First 1).FullName
+          ./engine/distribution/test_windows_installer.ps1 -Installer $setup
+
       - uses: actions/upload-artifact@v4
         with:
           name: argus-${{ matrix.artifact }}
