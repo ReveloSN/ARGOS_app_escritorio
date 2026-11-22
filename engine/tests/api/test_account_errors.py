@@ -25,6 +25,9 @@ CONFIRM_PATH = "/account/password-reset/confirm"
         ("email_unavailable", 503),
         ("offline", 503),
         ("account_unavailable", 409),
+        ("same_password", 422),
+        ("invalid_value", 422),
+        ("service_rejected", 502),
     ],
 )
 def test_each_problem_has_its_status_and_code(

@@ -72,9 +72,12 @@ ACCOUNT_ERROR_STATUS: dict[AccountProblem, int] = {
     AccountProblem.INVALID_CODE: 422,
     AccountProblem.EMAIL_TAKEN: 409,
     AccountProblem.WEAK_PASSWORD: 422,
+    AccountProblem.SAME_PASSWORD: 422,
+    AccountProblem.INVALID_VALUE: 422,
     AccountProblem.RATE_LIMITED: 429,
     AccountProblem.EMAIL_UNAVAILABLE: 503,
     AccountProblem.OFFLINE: 503,
+    AccountProblem.SERVICE_REJECTED: 502,
     AccountProblem.ACCOUNT_UNAVAILABLE: 409,
 }
 

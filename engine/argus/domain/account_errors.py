@@ -11,9 +11,13 @@ class AccountProblem(StrEnum):
     INVALID_CODE = "invalid_code"
     EMAIL_TAKEN = "email_taken"
     WEAK_PASSWORD = "weak_password"
+    SAME_PASSWORD = "same_password"
+    INVALID_VALUE = "invalid_value"
     RATE_LIMITED = "rate_limited"
     EMAIL_UNAVAILABLE = "email_unavailable"
     OFFLINE = "offline"
+    # Hay conexión: el servicio respondió que no, por un motivo sin mensaje propio.
+    SERVICE_REJECTED = "service_rejected"
     ACCOUNT_UNAVAILABLE = "account_unavailable"
     # Interno: solo sale de una renovación, y la cuenta lo informa como sesión vencida.
     SESSION_REVOKED = "session_revoked"

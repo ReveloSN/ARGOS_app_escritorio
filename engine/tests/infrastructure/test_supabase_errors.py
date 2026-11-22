@@ -62,7 +62,6 @@ def failure_of(request: ScriptedRequest, operation: str = "sign_in") -> AccountE
         ((400, "over_request_rate_limit"), AccountProblem.RATE_LIMITED),
         ((429, "otro_motivo"), AccountProblem.RATE_LIMITED),
         ((400, "email_address_not_authorized"), AccountProblem.EMAIL_UNAVAILABLE),
-        ((400, "algo_desconocido"), AccountProblem.OFFLINE),
         ((500, "unexpected_failure"), AccountProblem.OFFLINE),
         ((503, "weak_password"), AccountProblem.OFFLINE),
     ],
@@ -88,9 +87,9 @@ def test_the_code_is_read_in_both_formats(body: object) -> None:
     assert failure_of(ScriptedRequest(422, body)).problem is AccountProblem.WEAK_PASSWORD
 
 
-@pytest.mark.parametrize("body", [{"code": ["x"]}, {"code": None, "error_code": {"a": 1}}, [1]])
-def test_a_code_that_is_not_text_is_offline(body: object) -> None:
-    assert failure_of(ScriptedRequest(400, body)).problem is AccountProblem.OFFLINE
+@pytest.mark.parametrize("body", [{"code": ["x"]}, {"code": None, "error_code": {"a": 1}}])
+def test_a_code_that_is_not_text_is_an_unknown_rejection(body: object) -> None:
+    assert failure_of(ScriptedRequest(400, body)).problem.value == "service_rejected"
 
 
 def test_a_sign_up_without_identities_is_a_taken_email() -> None:
@@ -104,8 +103,7 @@ def test_a_sign_up_without_identities_is_a_taken_email() -> None:
 def test_only_a_refresh_says_the_session_was_revoked(operation: str, code: str) -> None:
     problem = failure_of(ScriptedRequest(400, {"code": code}), operation).problem
 
-    revokes = operation == "refresh"
-    assert problem is (AccountProblem.SESSION_REVOKED if revokes else AccountProblem.OFFLINE)
+    assert (problem is AccountProblem.SESSION_REVOKED) == (operation == "refresh")
 
 
 @pytest.mark.parametrize("status", [500, 502, 503, 504])

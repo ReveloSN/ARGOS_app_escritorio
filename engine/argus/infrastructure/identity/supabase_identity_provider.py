@@ -8,7 +8,12 @@ from argus.domain.account import AccountSession, Credentials
 from argus.domain.account_errors import AccountError, AccountProblem
 from argus.infrastructure.identity.account_configuration import AccountConfiguration
 from argus.infrastructure.identity.json_fields import Json, parse_json_object
-from argus.infrastructure.identity.supabase_errors import problem_of
+from argus.infrastructure.identity.supabase_errors import (
+    DEFAULT_RULES,
+    PASSWORD_CHANGE_RULES,
+    REFRESH_RULES,
+    RefusalRules,
+)
 from argus.infrastructure.identity.supabase_sessions import (
     DISPLAY_NAME_FIELD,
     session_of,
@@ -28,7 +33,7 @@ class _Call:
     query: dict[str, str] | None = None
     access_token: str | None = field(default=None, repr=False)
     method: str = "POST"
-    can_revoke: bool = False
+    rules: RefusalRules = field(default_factory=lambda: DEFAULT_RULES)
 
 
 def _proxies() -> dict[str, str]:
@@ -75,7 +80,7 @@ class SupabaseIdentityProvider:
 
     def refresh(self, refresh_token: str) -> AccountSession:
         body = {"refresh_token": refresh_token}
-        call = _Call("/token", body, {"grant_type": "refresh_token"}, can_revoke=True)
+        call = _Call("/token", body, {"grant_type": "refresh_token"}, rules=REFRESH_RULES)
         return session_of(self._read(call))
 
     def sign_out(self, access_token: str) -> None:
@@ -86,7 +91,13 @@ class SupabaseIdentityProvider:
         self._read(_Call("/recover", {"email": email}))
 
     def update_password(self, access_token: str, password: str) -> None:
-        call = _Call("/user", {"password": password}, access_token=access_token, method="PUT")
+        call = _Call(
+            "/user",
+            {"password": password},
+            access_token=access_token,
+            method="PUT",
+            rules=PASSWORD_CHANGE_RULES,
+        )
         self._read(call)
 
     def _read(self, call: _Call) -> Json:
@@ -102,8 +113,8 @@ class SupabaseIdentityProvider:
             raise AccountError(AccountProblem.OFFLINE)
         if HTTPStatus.OK <= response.status_code < HTTPStatus.MULTIPLE_CHOICES:
             return response
-        refusal = parse_json_object(response.content) or {}
-        raise AccountError(problem_of(response.status_code, refusal, call.can_revoke))
+        refusal = parse_json_object(response.content)
+        raise AccountError(call.rules.problem_of(response.status_code, refusal))
 
     def _exchange(self, call: _Call) -> requests.Response | None:
         try:
