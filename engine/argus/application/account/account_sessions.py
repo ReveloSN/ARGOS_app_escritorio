@@ -3,11 +3,13 @@ from dataclasses import replace
 from threading import Lock
 
 from argus.application.account.held_session import HeldSession
+from argus.application.account.session_renewal import request_renewal
 from argus.application.account.spent_recovery import SpentRecovery
 from argus.application.ports.account_storage import GatePreference, SessionStore
 from argus.application.ports.identity_provider import IdentityProvider
-from argus.domain.account import AccountSession, AccountState, AccountStatus, StoredSession
-from argus.domain.errors import AccountError, AccountProblem, KeychainUnavailableError
+from argus.domain.account import AccountSession, AccountState, AccountStatus
+from argus.domain.account_errors import AccountError, AccountProblem
+from argus.domain.errors import KeychainUnavailableError
 
 
 class AccountSessions:
@@ -73,27 +75,41 @@ class AccountSessions:
         return self.current()
 
     def end(self) -> None:
-        """Olvida la sesión aunque el llavero falle; en ese caso lanza KeychainUnavailableError."""
+        """Olvida la sesión siempre. Si estaba en el llavero y no se deja borrar, lanza
+        KeychainUnavailableError."""
         with self._state_lock:
-            self._held = HeldSession(is_persisted=False)
+            was_saved = self._load().is_in_keychain
+            self._held = HeldSession(is_persisted=False, is_left_in_keychain=was_saved)
             self._recovery = SpentRecovery()
             try:
-                self._store.clear()
+                self._clear_saved(was_saved)
             finally:
                 self._gate.set_skipped(False)
+
+    def _clear_saved(self, was_saved: bool) -> None:
+        try:
+            self._store.clear()
+        except KeychainUnavailableError:
+            # La que solo vivía en memoria ya se olvidó: no hay de qué avisar.
+            if was_saved:
+                raise
+        else:
             self._held = HeldSession()
 
     def _snapshot(self) -> HeldSession:
         with self._state_lock:
-            if self._held is not None:
-                return self._held
-            try:
-                stored = self._store.read()
-            except KeychainUnavailableError:
-                # No se recuerda el fallo: el llavero puede volver sin reabrir ARGUS.
-                return HeldSession(is_persisted=False)
-            self._held = HeldSession(stored)
+            return self._load()
+
+    def _load(self) -> HeldSession:
+        if self._held is not None:
             return self._held
+        try:
+            stored = self._store.read()
+        except KeychainUnavailableError:
+            # No se recuerda el fallo: el llavero puede volver sin reabrir ARGUS.
+            return HeldSession(is_persisted=False)
+        self._held = HeldSession(stored)
+        return self._held
 
     def _is_unchanged(self, seen: HeldSession) -> bool:
         with self._state_lock:
@@ -103,7 +119,7 @@ class AccountSessions:
         # También un fallo cuenta como cambio: quien esperaba no repite el mismo token.
         outcome = replace(started_from)
         try:
-            outcome = _request_renewal(provider, started_from)
+            outcome = request_renewal(provider, started_from)
         finally:
             self._replace_if_unchanged(started_from, outcome)
 
@@ -121,20 +137,11 @@ class AccountSessions:
         self._held = replace(held, is_persisted=False)
         if held.stored is None:
             return
-        with suppress(KeychainUnavailableError):
+        try:
             self._store.write(held.stored)
+        except KeychainUnavailableError:
+            # Lo que quedó es de otra cuenta o un token gastado: no debe volver al reabrir.
+            with suppress(KeychainUnavailableError):
+                self._store.clear()
+        else:
             self._held = replace(held, is_persisted=True)
-
-
-def _request_renewal(provider: IdentityProvider, held: HeldSession) -> HeldSession:
-    stored = held.stored
-    if stored is None or stored.refresh_token is None:
-        return held
-    try:
-        return HeldSession.from_session(provider.refresh(stored.refresh_token))
-    except AccountError as error:
-        if error.problem is AccountProblem.OFFLINE:
-            return replace(held, is_offline=True)
-        if error.problem is AccountProblem.SESSION_REVOKED:
-            return HeldSession(StoredSession(stored.account, None))
-        raise

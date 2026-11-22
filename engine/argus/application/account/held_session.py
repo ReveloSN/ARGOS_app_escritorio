@@ -11,6 +11,12 @@ class HeldSession:
     access_token: str | None = field(default=None, repr=False)
     is_persisted: bool = True
     is_offline: bool = False
+    # Se salió y el llavero no dejó borrar: reintentar debe seguir avisando.
+    is_left_in_keychain: bool = False
+
+    @property
+    def is_in_keychain(self) -> bool:
+        return self.is_left_in_keychain or (self.stored is not None and self.is_persisted)
 
     @classmethod
     def from_session(cls, session: AccountSession) -> "HeldSession":

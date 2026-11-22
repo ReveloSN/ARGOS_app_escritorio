@@ -3,7 +3,7 @@ from contextlib import suppress
 from argus.application.account.account_sessions import AccountSessions
 from argus.application.ports.identity_provider import IdentityProvider
 from argus.domain.account import AccountState
-from argus.domain.errors import AccountError
+from argus.domain.account_errors import AccountError
 
 
 class SignOut:
@@ -18,7 +18,7 @@ class SignOut:
         try:
             self._sessions.end()
         finally:
-            # Si el llavero no dejó borrar, revocar es lo que inutiliza el token que quedó.
+            # También si el llavero falló: revocar inutiliza el token que haya quedado.
             if access_token:
                 _revoke(provider, access_token)
         return self._sessions.current()

@@ -1,7 +1,7 @@
 import pytest
 
 from argus.domain.account import AccountState, AccountStatus, StoredSession
-from argus.domain.errors import AccountError, AccountProblem
+from argus.domain.account_errors import AccountError, AccountProblem
 from tests.application.account_doubles import ACCOUNT, RENEWED, STORED, AccountDoubles
 
 SIGNED_IN = AccountState(AccountStatus.SIGNED_IN, ACCOUNT, ACCOUNT.email)

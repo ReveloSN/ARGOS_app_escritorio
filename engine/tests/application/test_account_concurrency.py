@@ -7,7 +7,7 @@ import pytest
 from argus.application.account.sign_in import SignIn
 from argus.application.account.sign_out import SignOut
 from argus.domain.account import AccountState, AccountStatus, Credentials, StoredSession
-from argus.domain.errors import AccountError, AccountProblem
+from argus.domain.account_errors import AccountError, AccountProblem
 from tests.application.account_doubles import ACCOUNT, STORED, AccountDoubles
 from tests.application.thread_doubles import TIMEOUT_SECONDS, Pause, WatchedLock
 

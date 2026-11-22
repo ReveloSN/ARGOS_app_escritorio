@@ -4,7 +4,8 @@ from dataclasses import dataclass, field
 
 from argus.application.account.account_sessions import AccountSessions
 from argus.domain.account import Account, AccountSession, Credentials, StoredSession
-from argus.domain.errors import AccountError, AccountProblem, KeychainUnavailableError
+from argus.domain.account_errors import AccountError, AccountProblem
+from argus.domain.errors import KeychainUnavailableError
 from tests.application.thread_doubles import Pause
 
 ACCOUNT = Account("user-1", "ana@example.com", "Ana")

@@ -3,7 +3,7 @@ import pytest
 from argus.application.account.password_reset import PasswordReset
 from argus.application.account.sign_in import SignIn
 from argus.domain.account import Credentials, StoredSession
-from argus.domain.errors import AccountError, AccountProblem
+from argus.domain.account_errors import AccountError, AccountProblem
 from tests.application.account_doubles import RECOVERED, SESSION, AccountDoubles
 
 PASSWORD = "contraseña-privada"

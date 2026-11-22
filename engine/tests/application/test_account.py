@@ -8,7 +8,7 @@ from argus.application.account.sign_in import SignIn
 from argus.application.account.sign_out import SignOut
 from argus.application.account.sign_up import SignUp
 from argus.domain.account import AccountState, AccountStatus, Credentials
-from argus.domain.errors import AccountError, AccountProblem
+from argus.domain.account_errors import AccountError, AccountProblem
 from tests.application.account_doubles import ACCOUNT, STORED, AccountDoubles
 
 EMAIL = "ana@example.com"

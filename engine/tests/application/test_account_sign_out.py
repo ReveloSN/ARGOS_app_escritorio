@@ -3,7 +3,8 @@ import pytest
 from argus.application.account.sign_in import SignIn
 from argus.application.account.sign_out import SignOut
 from argus.domain.account import AccountState, AccountStatus, Credentials
-from argus.domain.errors import AccountProblem, KeychainUnavailableError
+from argus.domain.account_errors import AccountProblem
+from argus.domain.errors import KeychainUnavailableError
 from tests.application.account_doubles import SESSION, STORED, AccountDoubles
 
 CREDENTIALS = Credentials("ana@example.com", "clave")
@@ -69,7 +70,7 @@ def test_sign_out_reports_a_keychain_that_cannot_delete(doubles: AccountDoubles)
     with pytest.raises(KeychainUnavailableError):
         SignOut(sessions).execute()
 
-    # Sin llavero también hay que poder salir: se olvida en memoria y se avisa de lo guardado.
+    # Estaba guardada: se olvida en memoria y se avisa de lo que quedó en el llavero.
     assert sessions.current() == AccountState(AccountStatus.SIGNED_OUT, is_persisted=False)
     assert doubles.provider.calls[-1] == ("sign_out", SESSION.access_token)
 
@@ -85,3 +86,40 @@ def test_sign_out_can_be_retried_when_the_keychain_returns(doubles: AccountDoubl
 
     assert SignOut(sessions).execute() == AccountState(AccountStatus.SIGNED_OUT)
     assert doubles.store.stored is None
+
+
+@pytest.mark.parametrize("failing", [{"write", "clear"}, {"read", "write", "clear"}])
+def test_memory_only_session_signs_out_without_error(
+    doubles: AccountDoubles, failing: set[str]
+) -> None:
+    doubles.store.unavailable = failing
+    sessions = doubles.sessions()
+    SignIn(sessions).execute(CREDENTIALS)
+
+    state = SignOut(sessions).execute()
+
+    assert state == AccountState(AccountStatus.SIGNED_OUT, is_persisted=False)
+    assert doubles.provider.calls[-1] == ("sign_out", SESSION.access_token)
+
+
+@pytest.mark.parametrize("failing", [{"clear"}, {"read", "clear"}])
+def test_without_a_known_session_sign_out_has_no_error(
+    doubles: AccountDoubles, failing: set[str]
+) -> None:
+    doubles.store.unavailable = failing
+
+    state = SignOut(doubles.sessions()).execute()
+
+    assert state == AccountState(AccountStatus.SIGNED_OUT, is_persisted=False)
+
+
+def test_retrying_still_reports_what_was_left_in_the_keychain(doubles: AccountDoubles) -> None:
+    doubles.store.stored = STORED
+    doubles.store.unavailable = {"clear"}
+    sessions = doubles.sessions()
+
+    for _attempt in range(2):
+        with pytest.raises(KeychainUnavailableError):
+            SignOut(sessions).execute()
+
+    assert doubles.store.stored == STORED
