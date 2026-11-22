@@ -36,6 +36,8 @@ export interface AccountContextValue {
   /** `null` mientras no hay una primera lectura: sin ella no existe nada de la cuenta. */
   readonly state: AccountStateResult | null;
   readonly gate: GateState | null;
+  /** Verdadero hasta que la primera lectura de la cuenta responde o falla. */
+  readonly isFirstReadPending: boolean;
   readonly openGate: (email?: string | null) => void;
   readonly closeGate: () => void;
   readonly actions: AccountActions;

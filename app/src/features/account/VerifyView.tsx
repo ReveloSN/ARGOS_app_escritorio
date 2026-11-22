@@ -16,7 +16,7 @@ export function VerifyView(props: GateViewProps) {
   const required = useRequiredFields();
   const submit = () => {
     if (!required.check([code])) return;
-    props.form.run(() => actions.verify({ email: props.email, code: code.trim() }));
+    props.form.run(() => actions.verify({ email: props.email.trim(), code: code.trim() }));
   };
   return (
     <GateForm
@@ -25,7 +25,7 @@ export function VerifyView(props: GateViewProps) {
       busyLabel="account.actions.verifying"
       onSubmit={submit}
     >
-      <p className={styles.note}>{t("account.notes.verify", { email: props.email })}</p>
+      <p className={styles.note}>{t("account.notes.verify", { email: props.email.trim() })}</p>
       <TextField
         label={t("account.fields.code")}
         hint={t("account.fields.codeHint")}
@@ -39,8 +39,9 @@ export function VerifyView(props: GateViewProps) {
       <button
         type="button"
         className={styles.link}
+        disabled={props.form.isBusy}
         onClick={() => {
-          props.go("signIn", props.email);
+          props.go("signIn");
         }}
       >
         {t("account.actions.backToSignIn")}

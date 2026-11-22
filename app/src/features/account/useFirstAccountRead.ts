@@ -1,55 +1,47 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 
-import type { AccountGateway, AccountStateResult } from "../../services/engine/accountTypes";
+import type { AccountGateway } from "../../services/engine/accountTypes";
+import { useEngineStatus } from "../engine/useEngineStatus";
 import { useReloadWhenEngineReady } from "../settings/useReloadWhenEngineReady";
+import { FirstAccountRead, type FirstReadContext } from "./FirstAccountRead";
 import type { AccountStore } from "./useAccountStore";
 import type { GateControl } from "./useGate";
 
-const identity = (state: AccountStateResult) => state;
-
-interface Collaborators {
-  readonly gateway: AccountGateway;
-  readonly store: AccountStore;
-  readonly gate: GateControl;
+/** Lo último que la lectura necesita saber, sin que su identidad dispare nada. */
+function useLatestContext(parts: Omit<FirstReadContext, "isEngineReady">) {
+  const isEngineReady = useEngineStatus() === "ready";
+  const latest = useRef<FirstReadContext>({ ...parts, isEngineReady });
+  useEffect(() => {
+    latest.current = { ...parts, isEngineReady };
+  });
+  return latest;
 }
 
-/** Solo con `signed_out` y sin la marca de «Continuar sin cuenta» se abre; con sesión, se renueva. */
-function actOnFirstRead(state: AccountStateResult, { gateway, store, gate }: Collaborators) {
-  if (state.status === "signed_out" && !state.gateSkipped) gate.open("startup", null);
-  if (state.status === "signed_in") {
-    store.accept(gateway.refresh(), identity).catch(() => undefined);
-  }
+function useReader(latest: RefObject<FirstReadContext>) {
+  const [isPending, setPending] = useState(true);
+  const settle = () => {
+    setPending(false);
+  };
+  const [reader] = useState(() => new FirstAccountRead(() => latest.current, settle));
+  return { reader, isPending };
 }
 
-function readUntilDecided(isDecided: { current: boolean }, current: Collaborators): void {
-  if (isDecided.current) return;
-  current.store.accept(current.gateway.account(), identity).then(
-    (state) => {
-      if (isDecided.current) return;
-      isDecided.current = true;
-      actOnFirstRead(state, current);
-    },
-    () => undefined,
-  );
-}
-
-/**
- * La primera lectura que llega decide, una sola vez por ejecución, si la puerta se abre. El motor
- * puede tardar en responder: si falla, se repite cuando pasa a responder.
- */
+/** Lee la cuenta al arrancar y de nuevo cuando el motor responde. Devuelve si sigue pendiente. */
 export function useFirstAccountRead(
   gateway: AccountGateway,
   store: AccountStore,
   gate: GateControl,
-): void {
-  const isDecided = useRef(false);
-  const latest = useRef<Collaborators>({ gateway, store, gate });
+): boolean {
+  const latest = useLatestContext({ gateway, store, gate });
+  const { reader, isPending } = useReader(latest);
   useEffect(() => {
-    latest.current = { gateway, store, gate };
+    reader.read();
+    return () => {
+      reader.stop();
+    };
+  }, [reader]);
+  useReloadWhenEngineReady(() => {
+    reader.read();
   });
-  const read = () => {
-    readUntilDecided(isDecided, latest.current);
-  };
-  useEffect(read, []);
-  useReloadWhenEngineReady(read);
+  return isPending;
 }

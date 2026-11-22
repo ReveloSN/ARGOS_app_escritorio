@@ -675,6 +675,20 @@
       "recover": "Enter your account email. If there is an account with that email, it will receive a code.",
       "reset": "If there is an account with that email, it will receive a code. Enter it here with the new password."
     },
+    "flowProblems": {
+      "verifyInvalidCode": {
+        "what": "The code is not valid or has expired.",
+        "why": "Codes last a short time and work only once.",
+        "todo": "Check the code in the email, correct it and confirm again.",
+        "action": "Understood"
+      },
+      "signUpEmailUnavailable": {
+        "what": "The confirmation email could not be sent.",
+        "why": "This installation cannot send emails.",
+        "todo": "The account cannot be created from here. Continue without an account: the rest of ARGUS works the same.",
+        "action": "Understood"
+      }
+    },
     "problems": {
       "invalid_credentials": {
         "what": "The email or the password do not match.",
@@ -780,6 +794,10 @@
       "app": {
         "title": "This app",
         "description": "Stored on this computer; they work even when the engine is not responding."
+      },
+      "account": {
+        "title": "Your account",
+        "description": "Depends on the account service and the analysis engine. Without a connection, ARGUS uses the saved session."
       }
     },
     "sections": {

@@ -56,14 +56,16 @@ export const SETTINGS_SECTIONS: readonly SettingsSectionItem[] = SETTINGS_GROUPS
   (group) => group.sections,
 );
 
-const ACCOUNT_SECTION: SettingsSectionItem = { id: "account", title: "settings.sections.account" };
+const ACCOUNT_GROUP: SettingsGroupItem = {
+  id: "account",
+  title: "settings.groups.account.title",
+  description: "settings.groups.account.description",
+  sections: [{ id: "account", title: "settings.sections.account" }],
+};
 
 /** Las secciones que existen: «Cuenta» solo aparece si esta instalación tiene cuenta. */
 export function settingsGroupsFor(hasAccount: boolean): readonly SettingsGroupItem[] {
-  if (!hasAccount) return SETTINGS_GROUPS;
-  return SETTINGS_GROUPS.map((group) =>
-    group.id === "app" ? { ...group, sections: [ACCOUNT_SECTION, ...group.sections] } : group,
-  );
+  return hasAccount ? [...SETTINGS_GROUPS, ACCOUNT_GROUP] : SETTINGS_GROUPS;
 }
 
 export function settingsSectionsFor(hasAccount: boolean): readonly SettingsSectionItem[] {

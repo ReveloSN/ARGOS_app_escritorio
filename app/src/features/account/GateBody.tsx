@@ -16,7 +16,7 @@ const VIEWS: Readonly<Record<GateView, ComponentType<GateViewProps>>> = {
 };
 
 /** La vista que toca: cada una empieza con campos vacíos, así la contraseña no pasa de una a otra. */
-export function GateBody({ view, ...props }: GateViewProps & { readonly view: GateView }) {
-  const View = VIEWS[view];
-  return <View key={view} {...props} />;
+export function GateBody(props: GateViewProps) {
+  const View = VIEWS[props.view];
+  return <View key={props.view} {...props} />;
 }

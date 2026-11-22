@@ -84,6 +84,7 @@ describe("las vistas de la puerta", () => {
     ).toBeInTheDocument();
     await typeInto("Código del correo", "12345678{Enter}");
     expect(verify).toHaveBeenCalledWith({ email: "ana@correo.co", code: "12345678" });
+    expect(gateDialog()).not.toBeInTheDocument();
   });
 
   it("recuperar: pide el código sin afirmar que haya cuenta y sigue con la contraseña nueva", async () => {
@@ -116,6 +117,7 @@ describe("las vistas de la puerta", () => {
       code: "123456",
       password: "otra clave larga",
     });
+    expect(gateDialog()).not.toBeInTheDocument();
   });
 
   it("«Continuar sin cuenta» guarda la elección y cierra", async () => {

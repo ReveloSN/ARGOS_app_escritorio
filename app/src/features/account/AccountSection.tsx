@@ -88,7 +88,7 @@ function Details({ state, form }: { state: AccountStateResult; form: GateFormSta
  * sesión ya se haya cerrado en memoria; vencida, pide volver a entrar sin bloquear nada.
  */
 export function AccountSection() {
-  const { state } = useAccount();
+  const { state, actions } = useAccount();
   const form = useGateForm();
   if (!state || !hasAccountFeature(state)) return null;
   return (
@@ -98,7 +98,7 @@ export function AccountSection() {
         <AccountProblemMessage
           problem={form.problem}
           onAction={(action) => {
-            if (action === "retry") form.retry();
+            if (action === "retry") form.run(actions.signOut);
             else form.dismiss();
           }}
         />

@@ -13,10 +13,11 @@ export function AccountProvider({ children }: { readonly children: ReactNode }) 
   const store = useAccountStore();
   const gate = useGate();
   const actions = useAccountActions(gateway, store, gate);
-  useFirstAccountRead(gateway, store, gate);
+  const isFirstReadPending = useFirstAccountRead(gateway, store, gate);
   const value: AccountContextValue = {
     state: store.state,
     gate: gate.gate,
+    isFirstReadPending,
     openGate: (email = null) => {
       gate.open("settings", email);
     },

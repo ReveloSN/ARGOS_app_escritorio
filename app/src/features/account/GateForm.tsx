@@ -1,4 +1,4 @@
-import { useEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
 
 import { Button } from "../../components/atoms/Button";
 import { useI18n } from "../../i18n/i18nContext";
@@ -22,22 +22,10 @@ interface GateFormProps extends GateViewProps {
   readonly children: ReactNode;
 }
 
-/** Con el botón deshabilitado el foco no debe perderse en la ventana de atrás. */
-function useKeepFocusWhileBusy(isBusy: boolean) {
-  const form = useRef<HTMLFormElement>(null);
-  useEffect(() => {
-    const active = document.activeElement;
-    const isLost = !active || active === document.body || (active as HTMLButtonElement).disabled;
-    if (isBusy && isLost) form.current?.focus();
-  }, [isBusy]);
-  return form;
-}
-
 /** El cuerpo de una vista: campos, el fallo (una sola alerta) y el botón principal. Enter envía. */
 export function GateForm(props: GateFormProps) {
   const { t } = useI18n();
-  const { form, email, go, onSubmit, children } = props;
-  const element = useKeepFocusWhileBusy(form.isBusy);
+  const { form, go, onSubmit, children } = props;
   const submitOnEnter = (event: KeyboardEvent<HTMLFormElement>) => {
     if (event.key !== "Enter" || !(event.target instanceof HTMLInputElement)) return;
     event.preventDefault();
@@ -45,14 +33,13 @@ export function GateForm(props: GateFormProps) {
   };
   const act = (action: ProblemAction) => {
     const view = VIEW_BY_ACTION[action];
-    if (view) go(view, email);
-    else if (action === "retry") form.retry();
+    if (view) go(view);
+    // Reintentar manda lo que hay ahora en los campos, nunca lo que se escribió antes.
+    else if (action === "retry") form.retry(onSubmit);
     else form.dismiss();
   };
   return (
     <form
-      ref={element}
-      tabIndex={-1}
       noValidate
       aria-busy={form.isBusy}
       className={styles.form}
@@ -62,7 +49,14 @@ export function GateForm(props: GateFormProps) {
       onKeyDown={submitOnEnter}
     >
       {children}
-      {form.problem && <AccountProblemMessage problem={form.problem} onAction={act} />}
+      {form.problem && (
+        <AccountProblemMessage
+          problem={form.problem}
+          flow={props.view}
+          isActionSecondary
+          onAction={act}
+        />
+      )}
       <Button
         variant="primary"
         size="lg"

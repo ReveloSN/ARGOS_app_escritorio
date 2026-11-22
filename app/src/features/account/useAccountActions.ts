@@ -4,49 +4,68 @@ import type {
   SignUpForm,
 } from "../../services/engine/accountTypes";
 import type { AccountActions, SignUpAnswer } from "./accountContext";
-import { problemOf } from "./accountProblem";
 import type { AccountStore } from "./useAccountStore";
 import type { GateControl } from "./useGate";
 
 const identity = (state: AccountStateResult) => state;
 
-/** Cierra la puerta con una respuesta que dejó a la persona dentro; solo si sigue siendo la misma. */
-function closingGateWhenSignedIn(gate: GateControl, store: AccountStore) {
-  return (request: () => Promise<AccountStateResult>) => {
-    const session = gate.session();
-    return store.accept(request(), identity).then((state) => {
-      if (state.status === "signed_in") gate.closeIfSame(session);
-    });
+interface Collaborators {
+  readonly gateway: AccountGateway;
+  readonly store: AccountStore;
+  readonly gate: GateControl;
+}
+
+/**
+ * Una operación que cambia la cuenta. Si su respuesta se descarta por una más nueva, o si falla
+ * (pudo completarse en el motor aunque la respuesta no llegara), se vuelve a leer la cuenta.
+ */
+function mutating({ gateway, store }: Collaborators) {
+  const reread = () => store.accept(gateway.account(), identity).then(() => undefined);
+  const quietly = () => {
+    reread().catch(() => undefined);
+  };
+  return async <Answer>(
+    request: () => Promise<Answer>,
+    stateOf: (a: Answer) => AccountStateResult,
+  ) => {
+    try {
+      return await store.accept(request(), stateOf, quietly);
+    } catch (error) {
+      await reread().catch(() => undefined);
+      throw error;
+    }
   };
 }
 
-/** Tras un fallo al salir, la sesión pudo cerrarse en memoria: se vuelve a leer y se muestra. */
-async function signOutRereadingAfterFailure(gateway: AccountGateway, store: AccountStore) {
-  try {
-    await store.accept(gateway.signOut(), identity);
-  } catch (error) {
-    if (problemOf(error) === "keychain_unavailable") {
-      await store.accept(gateway.account(), identity).catch(() => undefined);
-    }
-    throw error;
-  }
+type Mutate = ReturnType<typeof mutating>;
+
+/** Una respuesta que deja a la persona dentro cierra la puerta, si sigue siendo la misma. */
+function enteringWith(mutate: Mutate, gate: GateControl) {
+  return async (request: () => Promise<AccountStateResult>) => {
+    const session = gate.session();
+    const state = await mutate(request, identity);
+    if (state.status === "signed_in") gate.closeIfSame(session);
+  };
 }
 
-async function signUpAndCloseIfSignedIn(
-  form: SignUpForm,
-  gateway: AccountGateway,
-  { store, gate }: { store: AccountStore; gate: GateControl },
-): Promise<SignUpAnswer> {
-  const session = gate.session();
-  const outcome = await store.accept(gateway.signUp(form), (answer) => answer.state);
-  if (outcome.state.status === "signed_in") gate.closeIfSame(session);
-  return { needsConfirmation: outcome.needsConfirmation };
+function signingUpWith(mutate: Mutate, { gateway, gate }: Collaborators) {
+  return async (form: SignUpForm): Promise<SignUpAnswer> => {
+    const session = gate.session();
+    const outcome = await mutate(
+      () => gateway.signUp(form),
+      (answer) => answer.state,
+    );
+    if (outcome.state.status === "signed_in") gate.closeIfSame(session);
+    return { needsConfirmation: outcome.needsConfirmation };
+  };
 }
 
-async function skipAndClose(gateway: AccountGateway, store: AccountStore, gate: GateControl) {
-  const session = gate.session();
-  await store.accept(gateway.skip(), identity);
-  gate.closeIfSame(session);
+function skippingWith(mutate: Mutate, { gateway, gate }: Collaborators) {
+  return async () => {
+    const session = gate.session();
+    await mutate(() => gateway.skip(), identity);
+    gate.closeIfSame(session);
+  };
 }
 
 export function useAccountActions(
@@ -54,14 +73,18 @@ export function useAccountActions(
   store: AccountStore,
   gate: GateControl,
 ): AccountActions {
-  const enter = closingGateWhenSignedIn(gate, store);
+  const parts = { gateway, store, gate };
+  const mutate = mutating(parts);
+  const enter = enteringWith(mutate, gate);
   return {
     signIn: (form) => enter(() => gateway.signIn(form)),
     verify: (form) => enter(() => gateway.verify(form)),
     confirmReset: (form) => enter(() => gateway.confirmPasswordReset(form)),
-    signUp: (form) => signUpAndCloseIfSignedIn(form, gateway, { store, gate }),
+    signUp: signingUpWith(mutate, parts),
     requestReset: (email) => gateway.requestPasswordReset(email),
-    skip: () => skipAndClose(gateway, store, gate),
-    signOut: () => signOutRereadingAfterFailure(gateway, store),
+    skip: skippingWith(mutate, parts),
+    signOut: async () => {
+      await mutate(() => gateway.signOut(), identity);
+    },
   };
 }

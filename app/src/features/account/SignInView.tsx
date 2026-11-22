@@ -13,7 +13,7 @@ import { useRequiredFields } from "./useRequiredFields";
 export function SignInView(props: GateViewProps) {
   const { t } = useI18n();
   const { actions } = useAccount();
-  const [email, setEmail] = useState(props.email);
+  const { email, setEmail } = props;
   const [password, setPassword] = useState("");
   const required = useRequiredFields();
   const submit = () => {
@@ -23,7 +23,6 @@ export function SignInView(props: GateViewProps) {
   return (
     <GateForm
       {...props}
-      email={email}
       submitLabel="account.actions.signIn"
       busyLabel="account.actions.signingIn"
       onSubmit={submit}
@@ -48,8 +47,9 @@ export function SignInView(props: GateViewProps) {
       <button
         type="button"
         className={styles.link}
+        disabled={props.form.isBusy}
         onClick={() => {
-          props.go("recover", email.trim());
+          props.go("recover");
         }}
       >
         {t("account.actions.forgot")}

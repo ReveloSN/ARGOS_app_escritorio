@@ -675,6 +675,20 @@
       "recover": "Escriba el correo de su cuenta. Si hay una cuenta con ese correo, recibirá un código.",
       "reset": "Si hay una cuenta con ese correo, recibirá un código. Escríbalo aquí con la contraseña nueva."
     },
+    "flowProblems": {
+      "verifyInvalidCode": {
+        "what": "El código no es válido o ya venció.",
+        "why": "Los códigos duran poco y solo sirven una vez.",
+        "todo": "Revise el código del correo, corríjalo y vuelva a confirmar.",
+        "action": "Entendido"
+      },
+      "signUpEmailUnavailable": {
+        "what": "No se pudo enviar el correo de confirmación.",
+        "why": "Esta instalación no puede enviar correos.",
+        "todo": "No se puede crear la cuenta desde aquí. Continúe sin cuenta: el resto de ARGUS funciona igual.",
+        "action": "Entendido"
+      }
+    },
     "problems": {
       "invalid_credentials": {
         "what": "El correo o la contraseña no coinciden.",
@@ -780,6 +794,10 @@
       "app": {
         "title": "Esta aplicación",
         "description": "Se guardan en este equipo y funcionan aunque el motor no responda."
+      },
+      "account": {
+        "title": "Su cuenta",
+        "description": "Depende del servicio de cuentas y del motor de análisis. Sin conexión, ARGUS usa la sesión guardada."
       }
     },
     "sections": {

@@ -13,7 +13,7 @@ import { useRequiredFields } from "./useRequiredFields";
 export function ResetView(props: GateViewProps) {
   const { t } = useI18n();
   const { actions } = useAccount();
-  const [email, setEmail] = useState(props.email);
+  const { email, setEmail } = props;
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
   const required = useRequiredFields();
@@ -25,7 +25,6 @@ export function ResetView(props: GateViewProps) {
   return (
     <GateForm
       {...props}
-      email={email}
       submitLabel="account.actions.reset"
       busyLabel="account.actions.resetting"
       onSubmit={submit}
@@ -60,8 +59,9 @@ export function ResetView(props: GateViewProps) {
       <button
         type="button"
         className={styles.link}
+        disabled={props.form.isBusy}
         onClick={() => {
-          props.go("signIn", email.trim());
+          props.go("signIn");
         }}
       >
         {t("account.actions.backToSignIn")}

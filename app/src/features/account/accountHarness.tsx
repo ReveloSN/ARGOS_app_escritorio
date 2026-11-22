@@ -1,4 +1,5 @@
 import { act, render, type RenderResult } from "@testing-library/react";
+import type { ReactNode } from "react";
 
 import { I18nProvider } from "../../i18n/I18nProvider";
 import type { Locale } from "../../i18n/messages";
@@ -12,12 +13,14 @@ import { AccountSection } from "./AccountSection";
 export async function renderAccount(
   account: NonNullable<FakeEngineOptions["account"]>,
   locale: Locale = "es",
+  outside?: ReactNode,
 ): Promise<RenderResult> {
   const services = fakeEngineServices({ account });
   const result = render(
     <I18nProvider initialLocale={locale}>
       <EngineServicesContext.Provider value={services}>
         <AccountProvider>
+          {outside}
           <AccountSection />
           <AccountGate />
         </AccountProvider>

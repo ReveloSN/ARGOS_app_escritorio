@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { TextField } from "../../components/atoms/TextField";
 import { useI18n } from "../../i18n/i18nContext";
 import { useAccount } from "./accountContext";
@@ -12,11 +10,11 @@ import { useRequiredFields } from "./useRequiredFields";
 export function RecoverView(props: GateViewProps) {
   const { t } = useI18n();
   const { actions } = useAccount();
-  const [email, setEmail] = useState(props.email);
+  const { email, setEmail } = props;
   const required = useRequiredFields();
   const request = async () => {
     await actions.requestReset(email.trim());
-    props.go("reset", email.trim());
+    props.advance("reset");
   };
   const submit = () => {
     if (required.check([email])) props.form.run(request);
@@ -24,7 +22,6 @@ export function RecoverView(props: GateViewProps) {
   return (
     <GateForm
       {...props}
-      email={email}
       submitLabel="account.actions.sendCode"
       busyLabel="account.actions.sendingCode"
       onSubmit={submit}
@@ -44,8 +41,9 @@ export function RecoverView(props: GateViewProps) {
         <button
           type="button"
           className={styles.link}
+          disabled={props.form.isBusy}
           onClick={() => {
-            props.go("reset", email.trim());
+            props.go("reset");
           }}
         >
           {t("account.actions.haveCode")}
@@ -53,8 +51,9 @@ export function RecoverView(props: GateViewProps) {
         <button
           type="button"
           className={styles.link}
+          disabled={props.form.isBusy}
           onClick={() => {
-            props.go("signIn", email.trim());
+            props.go("signIn");
           }}
         >
           {t("account.actions.backToSignIn")}

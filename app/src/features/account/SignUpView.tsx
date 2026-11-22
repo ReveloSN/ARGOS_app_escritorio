@@ -13,14 +13,14 @@ export function SignUpView(props: GateViewProps) {
   const { t } = useI18n();
   const { actions } = useAccount();
   const [name, setName] = useState("");
-  const [email, setEmail] = useState(props.email);
+  const { email, setEmail } = props;
   const [password, setPassword] = useState("");
   const required = useRequiredFields();
   const create = async () => {
     const displayName = name.trim();
     const form = { email: email.trim(), password, ...(displayName ? { displayName } : {}) };
     const { needsConfirmation } = await actions.signUp(form);
-    if (needsConfirmation) props.go("verify", form.email);
+    if (needsConfirmation) props.advance("verify");
   };
   const submit = () => {
     if (required.check([email, password])) props.form.run(create);
@@ -28,7 +28,6 @@ export function SignUpView(props: GateViewProps) {
   return (
     <GateForm
       {...props}
-      email={email}
       submitLabel="account.actions.signUp"
       busyLabel="account.actions.signingUp"
       onSubmit={submit}

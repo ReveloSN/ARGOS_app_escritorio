@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "../../components/atoms/Button";
 import { Icon } from "../../components/atoms/Icon";
@@ -69,13 +69,20 @@ function StepContent({ step }: { readonly step: OnboardingStep }) {
 }
 
 /**
- * Los primeros pasos, solo mientras están abiertos (la primera vez o desde Ajustes). Si la puerta
- * de la cuenta está abierta, esperan a que se cierre.
+ * Los primeros pasos, solo mientras están abiertos (la primera vez o desde Ajustes). Esperan a que
+ * la primera lectura de la cuenta responda o falle (nunca para siempre) y, si la puerta se abre
+ * antes de que se vean, a que se cierre. Una puerta que llega con los pasos ya a la vista espera
+ * ella: no se les quita el sitio ni se reinician.
  */
 export function OnboardingGate() {
   const { isOnboardingOpen } = useAssistantPreferences();
-  const { gate } = useAccount();
-  return isOnboardingOpen && !gate ? <OnboardingDialog /> : null;
+  const { gate, isFirstReadPending } = useAccount();
+  const wasShown = useRef(false);
+  const isVisible = isOnboardingOpen && !isFirstReadPending && (gate === null || wasShown.current);
+  useEffect(() => {
+    wasShown.current = isVisible;
+  });
+  return isVisible ? <OnboardingDialog /> : null;
 }
 
 /** Primeros pasos: tres pantallas con el asistente; se omiten con Esc y avanzan con Enter. */

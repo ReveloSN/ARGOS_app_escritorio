@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type RefObject } from "react";
 
-const FOCUSABLE = "button, input, [href], select, textarea";
+// Lo deshabilitado no recibe el foco: no puede ser el borde donde Tab da la vuelta.
+const FOCUSABLE =
+  "button:not(:disabled), input:not(:disabled), [href], select:not(:disabled), textarea:not(:disabled)";
 
 function focusableIn(container: HTMLElement | null): HTMLElement[] {
   return container ? [...container.querySelectorAll<HTMLElement>(FOCUSABLE)] : [];

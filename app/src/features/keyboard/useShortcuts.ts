@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 
+import { hasOpenModal } from "../../components/openModal";
+
 export interface Shortcut {
   /** Tecla tal como la informa el navegador («j», «/», «z»); no distingue mayúsculas. */
   readonly key: string;
@@ -11,14 +13,13 @@ export interface Shortcut {
 }
 
 const EDITABLE_SELECTOR = "input, textarea, select, [contenteditable='true']";
-const MODAL_SELECTOR = "[role='dialog'][aria-modal='true']";
 
 /** De quién son los atajos: de la pantalla (por defecto) o de un diálogo modal. */
 export type ShortcutOwner = "screen" | "dialog";
 
 /** Con un diálogo modal abierto, la pantalla de atrás no responde al teclado (E no decide). */
 function isBlockedByDialog(owner: ShortcutOwner): boolean {
-  return owner === "screen" && document.querySelector(MODAL_SELECTOR) !== null;
+  return owner === "screen" && hasOpenModal();
 }
 
 /** Atajos visibles de los mockups (J K, C E I, /, Ctrl Z…) mientras la vista está montada. */
