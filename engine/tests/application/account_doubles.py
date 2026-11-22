@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 
+from argus.api.account_composition import AccountAdapters
 from argus.application.account.account_sessions import AccountSessions
 from argus.domain.account import Account, AccountSession, Credentials, StoredSession
 from argus.domain.account_errors import AccountError, AccountProblem
@@ -110,6 +111,9 @@ class AccountDoubles:
     provider: FakeIdentityProvider = field(default_factory=FakeIdentityProvider)
     store: InMemorySessionStore = field(default_factory=InMemorySessionStore)
     gate: InMemoryGatePreference = field(default_factory=InMemoryGatePreference)
+
+    def adapters(self) -> AccountAdapters:
+        return AccountAdapters(self.provider, self.store)
 
     def sessions(self) -> AccountSessions:
         """Cada llamada equivale a abrir ARGUS de nuevo: solo se conserva lo guardado."""

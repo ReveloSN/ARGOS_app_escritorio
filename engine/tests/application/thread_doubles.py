@@ -20,6 +20,9 @@ class Pause:
     def __exit__(
         self, _type: type[BaseException] | None, _error: object, _trace: TracebackType | None
     ) -> None:
+        self.release()
+
+    def release(self) -> None:
         self._release.set()
 
     def hold(self) -> None:

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from argus.domain.account_errors import AccountError, AccountProblem
 from argus.domain.errors import (
     AlertNotFoundError,
     ArchivedFileMissingError,
@@ -63,17 +64,39 @@ ERROR_RESPONSES: dict[type[ArgusDomainError], ErrorResponse] = {
     UnreadableDocumentError: ErrorResponse(422, "unreadable_draft"),
 }
 
+# En la cuenta el detalle es el motivo. `invalid_credentials` se repite con el OCR a propósito: la
+# interfaz traduce por función. SESSION_REVOKED no está porque nunca sale por HTTP.
+ACCOUNT_ERROR_STATUS: dict[AccountProblem, int] = {
+    AccountProblem.INVALID_CREDENTIALS: 401,
+    AccountProblem.EMAIL_NOT_CONFIRMED: 403,
+    AccountProblem.INVALID_CODE: 422,
+    AccountProblem.EMAIL_TAKEN: 409,
+    AccountProblem.WEAK_PASSWORD: 422,
+    AccountProblem.RATE_LIMITED: 429,
+    AccountProblem.EMAIL_UNAVAILABLE: 503,
+    AccountProblem.OFFLINE: 503,
+    AccountProblem.ACCOUNT_UNAVAILABLE: 409,
+}
+
 
 def register_error_handlers(app: FastAPI) -> None:
     for error_type, response in ERROR_RESPONSES.items():
         app.add_exception_handler(error_type, _handler_for(response))
     app.add_exception_handler(HistoryFolderError, _history_folder_handler)
+    app.add_exception_handler(AccountError, _account_error_handler)
 
 
 async def _history_folder_handler(_request: Request, error: Exception) -> JSONResponse:
     # El motivo («folder_not_writable», «folder_has_history»…) elige el mensaje en la interfaz.
     problem = error.problem if isinstance(error, HistoryFolderError) else "invalid_value"
     return JSONResponse({"detail": problem}, status_code=UNPROCESSABLE)
+
+
+async def _account_error_handler(_request: Request, error: Exception) -> JSONResponse:
+    problem = error.problem if isinstance(error, AccountError) else AccountProblem.OFFLINE
+    if problem not in ACCOUNT_ERROR_STATUS:
+        problem = AccountProblem.OFFLINE
+    return JSONResponse({"detail": problem}, status_code=ACCOUNT_ERROR_STATUS[problem])
 
 
 def _handler_for(response: ErrorResponse) -> ErrorHandler:
