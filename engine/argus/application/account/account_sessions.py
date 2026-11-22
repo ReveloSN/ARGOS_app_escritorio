@@ -75,8 +75,8 @@ class AccountSessions:
         return self.current()
 
     def end(self) -> None:
-        """Olvida la sesión siempre. Si estaba en el llavero y no se deja borrar, lanza
-        KeychainUnavailableError."""
+        """Olvida la sesión siempre. Si se sabe que algo sigue en el llavero y no se deja borrar,
+        lanza KeychainUnavailableError."""
         with self._state_lock:
             was_saved = self._load().is_in_keychain
             self._held = HeldSession(is_persisted=False, is_left_in_keychain=was_saved)
@@ -90,7 +90,7 @@ class AccountSessions:
         try:
             self._store.clear()
         except KeychainUnavailableError:
-            # La que solo vivía en memoria ya se olvidó: no hay de qué avisar.
+            # Sin una entrada conocida no hay de qué avisar: así se sale sin Secret Service.
             if was_saved:
                 raise
         else:
@@ -133,8 +133,9 @@ class AccountSessions:
                 self._save(outcome)
 
     def _save(self, held: HeldSession) -> None:
+        is_left = self._load().is_in_keychain
         # Primero en memoria: si el llavero falla, el token anterior ya no sirve.
-        self._held = replace(held, is_persisted=False)
+        self._held = replace(held, is_persisted=False, is_left_in_keychain=is_left)
         if held.stored is None:
             return
         try:
@@ -143,5 +144,6 @@ class AccountSessions:
             # Lo que quedó es de otra cuenta o un token gastado: no debe volver al reabrir.
             with suppress(KeychainUnavailableError):
                 self._store.clear()
+                self._held = replace(self._held, is_left_in_keychain=False)
         else:
             self._held = replace(held, is_persisted=True)

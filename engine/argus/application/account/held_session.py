@@ -11,7 +11,7 @@ class HeldSession:
     access_token: str | None = field(default=None, repr=False)
     is_persisted: bool = True
     is_offline: bool = False
-    # Se salió y el llavero no dejó borrar: reintentar debe seguir avisando.
+    # Quedó una entrada que no se pudo borrar ni reemplazar: salir debe avisarlo.
     is_left_in_keychain: bool = False
 
     @property

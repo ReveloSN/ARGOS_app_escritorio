@@ -13,6 +13,7 @@ SESSION = AccountSession(ACCOUNT, "access-1", "refresh-1")
 RENEWED = AccountSession(ACCOUNT, "access-2", "refresh-2")
 RECOVERED = AccountSession(ACCOUNT, "access-3", "refresh-3")
 STORED = StoredSession(ACCOUNT, "refresh-1")
+PREVIOUS = StoredSession(Account("user-0", "luis@example.com", None), "refresh-0")
 
 
 class FakeIdentityProvider:

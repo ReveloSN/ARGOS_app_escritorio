@@ -115,11 +115,29 @@ def test_without_a_known_session_sign_out_has_no_error(
 
 def test_retrying_still_reports_what_was_left_in_the_keychain(doubles: AccountDoubles) -> None:
     doubles.store.stored = STORED
-    doubles.store.unavailable = {"clear"}
+    doubles.store.unavailable = {"write", "clear"}
     sessions = doubles.sessions()
 
     for _attempt in range(2):
         with pytest.raises(KeychainUnavailableError):
             SignOut(sessions).execute()
+    SignIn(sessions).execute(CREDENTIALS)
+    with pytest.raises(KeychainUnavailableError):
+        SignOut(sessions).execute()
 
     assert doubles.store.stored == STORED
+
+
+@pytest.mark.parametrize("problem", [None, AccountProblem.SESSION_REVOKED])
+def test_failed_renewal_does_not_forget_the_saved_session(
+    doubles: AccountDoubles, problem: AccountProblem | None
+) -> None:
+    doubles.store.stored = STORED
+    doubles.store.unavailable = {"write", "clear"}
+    if problem:
+        doubles.provider.fail("refresh", problem)
+    sessions = doubles.sessions()
+    sessions.refresh()
+
+    with pytest.raises(KeychainUnavailableError):
+        SignOut(sessions).execute()

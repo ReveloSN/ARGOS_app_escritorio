@@ -1,19 +1,14 @@
 import pytest
 
 from argus.application.account.sign_in import SignIn
-from argus.domain.account import (
-    Account,
-    AccountState,
-    AccountStatus,
-    Credentials,
-    StoredSession,
-)
+from argus.application.account.sign_out import SignOut
+from argus.domain.account import AccountState, AccountStatus, Credentials, StoredSession
 from argus.domain.account_errors import AccountProblem
-from tests.application.account_doubles import ACCOUNT, STORED, AccountDoubles
+from argus.domain.errors import KeychainUnavailableError
+from tests.application.account_doubles import ACCOUNT, PREVIOUS, STORED, AccountDoubles
 
 CREDENTIALS = Credentials(ACCOUNT.email, "clave")
 SIGNED_IN = AccountState(AccountStatus.SIGNED_IN, ACCOUNT, ACCOUNT.email)
-PREVIOUS = StoredSession(Account("user-0", "luis@example.com", None), "refresh-0")
 NOT_PERSISTED = AccountState(AccountStatus.SIGNED_IN, ACCOUNT, ACCOUNT.email, is_persisted=False)
 
 
@@ -104,11 +99,14 @@ def test_expiration_that_cannot_be_saved_holds_in_memory(doubles: AccountDoubles
 def test_failed_write_clears_the_previous_account(doubles: AccountDoubles) -> None:
     doubles.store.stored = PREVIOUS
     doubles.store.unavailable = {"write"}
+    sessions = doubles.sessions()
 
-    assert SignIn(doubles.sessions()).execute(CREDENTIALS) == NOT_PERSISTED
+    assert SignIn(sessions).execute(CREDENTIALS) == NOT_PERSISTED
 
     assert doubles.store.stored is None
     assert doubles.sessions().current().status is AccountStatus.SIGNED_OUT
+    doubles.store.unavailable.add("clear")
+    assert SignOut(sessions).execute().status is AccountStatus.SIGNED_OUT
 
 
 @pytest.mark.parametrize("problem", [None, AccountProblem.SESSION_REVOKED])
@@ -136,3 +134,15 @@ def test_failed_write_and_clear_leave_the_session_in_memory(doubles: AccountDoub
     assert sessions.current() == NOT_PERSISTED
     assert doubles.store.calls[-2:] == ["write", "clear"]
     assert doubles.store.stored == PREVIOUS
+
+
+def test_failed_switch_does_not_forget_the_previous_account(doubles: AccountDoubles) -> None:
+    doubles.store.stored = PREVIOUS
+    doubles.store.unavailable = {"write", "clear"}
+    sessions = doubles.sessions()
+    SignIn(sessions).execute(CREDENTIALS)
+    doubles.provider.fail("refresh", AccountProblem.OFFLINE)
+    sessions.refresh()
+
+    with pytest.raises(KeychainUnavailableError):
+        SignOut(sessions).execute()
