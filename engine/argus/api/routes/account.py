@@ -40,6 +40,7 @@ def build_account_router(services: EngineServices) -> APIRouter:
     router = APIRouter(prefix="/account", route_class=SecretSafeRoute)
     _add_session_routes(router, services.account)
     _add_access_routes(router, services.account)
+    _add_confirmation_routes(router, services.account)
     _add_password_routes(router, services.account)
     return router
 
@@ -70,13 +71,19 @@ def _add_access_routes(router: APIRouter, account: AccountServices) -> None:
             state=_state(result.state), needs_confirmation=result.needs_confirmation
         )
 
+    @router.post("/sign-in")
+    def sign_in(body: SignInBody) -> AccountStateResponse:
+        return _state(account.sign_in.execute(Credentials(body.email, body.password)))
+
+
+def _add_confirmation_routes(router: APIRouter, account: AccountServices) -> None:
     @router.post("/verify")
     def verify_email(body: VerifyBody) -> AccountStateResponse:
         return _state(account.sign_up.verify(body.email, body.code))
 
-    @router.post("/sign-in")
-    def sign_in(body: SignInBody) -> AccountStateResponse:
-        return _state(account.sign_in.execute(Credentials(body.email, body.password)))
+    @router.post("/verify/resend", status_code=HTTPStatus.NO_CONTENT)
+    def resend_code(body: EmailBody) -> None:
+        account.sign_up.resend(body.email)
 
 
 def _add_password_routes(router: APIRouter, account: AccountServices) -> None:

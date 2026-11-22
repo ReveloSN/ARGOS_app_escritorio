@@ -18,6 +18,10 @@ class IdentityProvider(Protocol):
 
     def verify_signup(self, email: str, code: str) -> AccountSession: ...
 
+    def resend_signup(self, email: str) -> None:
+        """Pide otro código de confirmación; no dice si hay una cuenta por confirmar."""
+        ...
+
     def verify_recovery(self, email: str, code: str) -> AccountSession:
         """Gasta el código: la sesión que devuelve es la única forma de cambiar la contraseña."""
         ...

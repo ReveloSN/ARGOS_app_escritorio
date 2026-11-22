@@ -25,6 +25,7 @@ CALLS: dict[str, Call] = {
     "sign_up": lambda it: it.sign_up(CREDENTIALS, None),
     "sign_in": lambda it: it.sign_in(CREDENTIALS),
     "verify_signup": lambda it: it.verify_signup(EMAIL, CODE),
+    "resend_signup": lambda it: it.resend_signup(EMAIL),
     "verify_recovery": lambda it: it.verify_recovery(EMAIL, CODE),
     "refresh": lambda it: it.refresh(REFRESH),
     "sign_out": lambda it: it.sign_out(ACCESS),

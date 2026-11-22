@@ -10,6 +10,7 @@ POSTS = (
     "refresh",
     "sign-up",
     "verify",
+    "verify/resend",
     "sign-in",
     "sign-out",
     "skip",

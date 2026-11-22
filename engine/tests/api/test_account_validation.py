@@ -15,7 +15,14 @@ CODE = "80417236"
 TOKEN = "renovacion-pegada"
 SECRETS = (PASSWORD, CODE, TOKEN)
 LOGIN = {"email": EMAIL, "password": PASSWORD}
-WITH_BODY = ("sign-up", "verify", "sign-in", "password-reset", "password-reset/confirm")
+WITH_BODY = (
+    "sign-up",
+    "verify",
+    "verify/resend",
+    "sign-in",
+    "password-reset",
+    "password-reset/confirm",
+)
 JSON = "application/json"
 MALFORMED = {
     "cortado": (f'{{"password": "{PASSWORD}", "code": "{CODE}", "token": "{TOKEN}"', JSON),

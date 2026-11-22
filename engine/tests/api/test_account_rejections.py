@@ -107,6 +107,14 @@ def test_a_rejected_refresh_keeps_the_session(api: TestClient, supabase: Supabas
     assert (response.json()["status"], response.json()["isOffline"]) == ("signed_in", True)
 
 
+def test_a_rejected_resend_is_reported(api: TestClient, supabase: SupabaseByPath) -> None:
+    supabase.refuse("/resend", {"code": "over_email_send_rate_limit"}, 429)
+
+    response = api.post("/account/verify/resend", json={"email": EMAIL})
+
+    assert (response.status_code, response.json()) == (429, {"detail": "rate_limited"})
+
+
 def test_a_rejected_revocation_still_signs_out(api: TestClient, supabase: SupabaseByPath) -> None:
     api.post("/account/sign-in", json=LOGIN)
     supabase.refuse("/logout", {"code": "bad_jwt"}, 403)

@@ -65,6 +65,13 @@ def test_verify(account_api: TestClient, doubles: AccountDoubles) -> None:
     assert doubles.provider.calls == [("verify_signup", "ana@example.com", "80417236")]
 
 
+def test_asking_for_another_signup_code(account_api: TestClient, doubles: AccountDoubles) -> None:
+    response = account_api.post("/account/verify/resend", json=EMAIL)
+
+    assert (response.status_code, response.content) == (204, b"")
+    assert doubles.provider.calls == [("resend_signup", "ana@example.com")]
+
+
 def test_refresh(account_api: TestClient, doubles: AccountDoubles) -> None:
     account_api.post("/account/sign-in", json=LOGIN)
 
@@ -83,7 +90,7 @@ def test_sign_out_forgets_the_session_and_the_mark(
     response = account_api.post("/account/sign-out")
 
     assert (response.status_code, response.json()) == (200, SIGNED_OUT)
-    assert doubles.provider.calls[-1] == ("sign_out", "access-1")
+    assert doubles.provider.calls[-1] == ("sign_out", "access-2")
     assert doubles.store.stored is None
 
 

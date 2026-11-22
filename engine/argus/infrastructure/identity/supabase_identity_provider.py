@@ -74,6 +74,9 @@ class SupabaseIdentityProvider:
         body = {"type": "signup", "email": email, "token": code}
         return session_of(self._read(_Call("/verify", body)))
 
+    def resend_signup(self, email: str) -> None:
+        self._read(_Call("/resend", {"type": "signup", "email": email}))
+
     def verify_recovery(self, email: str, code: str) -> AccountSession:
         body = {"type": "recovery", "email": email, "token": code}
         return session_of(self._read(_Call("/verify", body)))

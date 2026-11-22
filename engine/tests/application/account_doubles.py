@@ -36,7 +36,8 @@ class FakeIdentityProvider:
 
     def _answer(self, operation: str, *arguments: object) -> None:
         self.calls.append((operation, *arguments))
-        if pause := self.pauses.get(operation):
+        # Solo se detiene la primera llamada: salir también renueva.
+        if pause := self.pauses.pop(operation, None):
             pause.hold()
         if failure := self.failures.get(operation):
             raise failure
@@ -52,6 +53,9 @@ class FakeIdentityProvider:
     def verify_signup(self, email: str, code: str) -> AccountSession:
         self._answer("verify_signup", email, code)
         return SESSION
+
+    def resend_signup(self, email: str) -> None:
+        self._answer("resend_signup", email)
 
     def verify_recovery(self, email: str, code: str) -> AccountSession:
         self._answer("verify_recovery", email, code)

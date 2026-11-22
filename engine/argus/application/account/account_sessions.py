@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from contextlib import suppress
 from dataclasses import replace
 from threading import Lock
@@ -15,9 +16,8 @@ from argus.domain.errors import KeychainUnavailableError
 class AccountSessions:
     """La única dueña de la sesión: debe haber una por motor.
 
-    El candado de estado nunca se retiene durante una llamada a la red, así `current()` no espera
-    a internet. Cada cambio crea otro HeldSession y se compara por identidad: así una renovación
-    sabe si alguien salió, entró o renovó mientras ella esperaba.
+    El candado de estado nunca se retiene durante la red: `current()` no la espera. Cada cambio
+    crea otro HeldSession: por identidad, una renovación sabe si alguien se le adelantó.
     """
 
     def __init__(
@@ -45,9 +45,6 @@ class AccountSessions:
             return AccountState(AccountStatus.UNAVAILABLE, gate_skipped=self._gate.is_skipped())
         return self._snapshot().to_state(self._gate.is_skipped())
 
-    def access_token(self) -> str | None:
-        return self._snapshot().access_token
-
     def skip(self) -> AccountState:
         self.require_provider()
         self._gate.set_skipped(True)
@@ -63,30 +60,32 @@ class AccountSessions:
 
     def start(self, session: AccountSession) -> AccountState:
         with self._state_lock:
+            self._recovery = SpentRecovery()
             self._save(HeldSession.from_session(session))
         return self.current()
 
     def finish_recovery(self, session: AccountSession, recovery: SpentRecovery) -> AccountState:
         with self._state_lock:
-            # Si alguien cerró sesión durante el cambio de contraseña, gana la salida.
+            # Si alguien salió o entró durante el cambio de contraseña, gana eso.
             if recovery is self._recovery:
                 self._recovery = SpentRecovery()
                 self._save(HeldSession.from_session(session))
         return self.current()
 
-    def end(self) -> None:
-        """Olvida la sesión siempre. Si se sabe que algo sigue en el llavero y no se deja borrar,
-        lanza KeychainUnavailableError."""
-        with self._state_lock:
-            was_saved = self._load().is_in_keychain
-            self._held = HeldSession(is_persisted=False, is_left_in_keychain=was_saved)
-            self._recovery = SpentRecovery()
-            try:
-                self._clear_saved(was_saved)
-            finally:
-                self._gate.set_skipped(False)
+    def end(self, then: Callable[[HeldSession], None]) -> None:
+        """Olvida la sesión siempre y, ya sin el candado, entrega a `then` la que había. Si algo
+        sigue en el llavero y no se deja borrar, lanza KeychainUnavailableError."""
+        ended = HeldSession()
+        try:
+            with self._state_lock:
+                ended = self._load()
+                self._recovery = SpentRecovery()
+                self._forget(ended.is_in_keychain)
+        finally:
+            then(ended)
 
-    def _clear_saved(self, was_saved: bool) -> None:
+    def _forget(self, was_saved: bool) -> None:
+        self._held = HeldSession(is_persisted=False, is_left_in_keychain=was_saved)
         try:
             self._store.clear()
         except KeychainUnavailableError:
@@ -95,6 +94,8 @@ class AccountSessions:
                 raise
         else:
             self._held = HeldSession()
+        finally:
+            self._gate.set_skipped(False)
 
     def _snapshot(self) -> HeldSession:
         with self._state_lock:

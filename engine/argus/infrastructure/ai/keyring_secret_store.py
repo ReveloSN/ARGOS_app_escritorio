@@ -31,6 +31,15 @@ class KeyringSecretStore:
         try:
             keyring.delete_password(self._service, self._account)
         except PasswordDeleteError:
-            return
+            # macOS lanza este error para todo fallo: solo es inofensivo si ya no hay nada.
+            if not self._is_absent():
+                raise KeychainUnavailableError("No se pudo borrar del llavero.") from None
         except KeyringError:
             raise KeychainUnavailableError("No se pudo borrar del llavero.") from None
+
+    def _is_absent(self) -> bool:
+        try:
+            return keyring.get_password(self._service, self._account) is None
+        except Exception:
+            # Cada sistema lanza los suyos al leer; lo que no se puede leer no se da por borrado.
+            return False

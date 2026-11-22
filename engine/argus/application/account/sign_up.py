@@ -25,3 +25,6 @@ class SignUp:
     def verify(self, email: str, code: str) -> AccountState:
         session = self._sessions.require_provider().verify_signup(normalize_email(email), code)
         return self._sessions.start(session)
+
+    def resend(self, email: str) -> None:
+        self._sessions.require_provider().resend_signup(normalize_email(email))
