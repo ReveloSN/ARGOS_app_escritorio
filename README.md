@@ -6,7 +6,7 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 
 **La detección no depende de IA generativa ni de internet.** El análisis se hace en su equipo.
 
-**[Descargar ARGUS](#descargar)** para Windows, Linux o macOS.
+**[Descargar ARGUS 0.1.2 para Windows](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64-setup.exe)** · [Linux, macOS y otros formatos](#descargar) · [Última versión publicada](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/latest)
 
 ## Qué hace
 
@@ -22,21 +22,34 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 
 ## Descargar
 
-<!-- Al publicar una versión, cambie la versión de esta sección: los nombres de los archivos la incluyen. -->
+<!-- Al publicar una versión, cambie la versión de esta sección y del enlace de arriba: los nombres de los archivos la incluyen. -->
 
 Versión publicada: **0.1.2**. La más reciente está siempre en [Releases](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/latest).
 
-| Sistema | x64 | ARM64 |
-|---|---|---|
-| Windows 10 u 11, instalador (recomendado) | [setup.exe](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64-setup.exe) | No disponible |
-| Windows 10 u 11, sin instalar | [zip portable](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64_portable.zip) | No disponible |
-| Windows 10 u 11, para empresas | [msi](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64_en-US.msi) | No disponible |
-| Debian, Ubuntu y derivadas | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_amd64.deb) | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_arm64.deb) |
-| Fedora, openSUSE y derivadas | [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS-0.1.2-1.x86_64.rpm) | [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS-0.1.2-1.aarch64.rpm) |
-| Otras distribuciones Linux | [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_amd64.AppImage) | [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_aarch64.AppImage) |
-| macOS, Apple silicon (M1 o posterior) | No disponible | [dmg](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_aarch64.dmg) |
+**¿No sabe cuál elegir?** Si su PC tiene Windows y procesador Intel o AMD, descargue el [instalador para Windows](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64-setup.exe). «x64», «x86-64», «x86_64» y «amd64» son lo mismo: un procesador Intel o AMD de 64 bits. «x86» a secas suele significar 32 bits.
 
-Cada descarga pesa entre 200 y 360 MB. Para verificarla, use [SHA256SUMS.txt](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/SHA256SUMS.txt). No hay versión de 32 bits, macOS Intel, Android ni iOS (ver ADR 029).
+| Su equipo | Requisito | Descarga |
+|---|---|---|
+| **Windows, Intel o AMD** (x64) | Windows 10 u 11 de 64 bits | [Instalador (recomendado)](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64-setup.exe) · [portable, sin instalar](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64_portable.zip) · [msi para empresas](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64_en-US.msi) |
+| **Linux, Intel o AMD** (x64) | glibc 2.35 o posterior (Ubuntu 22.04, Debian 12, Fedora 36) | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_amd64.deb) · [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS-0.1.2-1.x86_64.rpm) · [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_amd64.AppImage) |
+| **Linux, ARM de 64 bits** (ARM64) | glibc 2.35 o posterior | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_arm64.deb) · [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS-0.1.2-1.aarch64.rpm) · [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_aarch64.AppImage) |
+| **Mac con Apple silicon** (M1 o posterior) | macOS 26. Con macOS 14 o 15 no está probado y es probable que el OCR no funcione | [dmg](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_aarch64.dmg) |
+
+En Linux, use `.deb` en Debian, Ubuntu y derivadas; `.rpm` en Fedora, openSUSE y derivadas; `.AppImage` en las demás.
+
+Para saber qué procesador tiene: en Windows, Configuración › Sistema › Información › «Tipo de sistema»; en Mac, menú Apple › Acerca de este Mac; en Linux, `uname -m`.
+
+**Equipos sin descarga**
+
+| Equipo | Por qué | Qué puede hacer |
+|---|---|---|
+| Windows con procesador ARM (Snapdragon) | Dos componentes del motor (`blis` y `cryptography`) no publican versión para él | En Windows 11 puede probar el instalador x64, que se ejecuta emulado (no está probado) |
+| Windows o Linux de 32 bits (x86) | La IA local (spaCy, ONNX Runtime) no existe para 32 bits | Usar un equipo de 64 bits |
+| Mac con procesador Intel | `onnxruntime` y `cryptography`, en las versiones que usa ARGUS, solo publican versión para Apple silicon | Usar un equipo con Windows, Linux o Apple silicon |
+| Mac con macOS 13 o anterior | `onnxruntime` exige macOS 14 | Actualizar macOS |
+| Android, iPhone y iPad | El motor de análisis no puede ejecutarse en móviles | Usar un computador |
+
+Cada descarga pesa entre 200 y 360 MB. Para verificarla, use [SHA256SUMS.txt](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/SHA256SUMS.txt). Los detalles están en el [ADR 029](docs/decisions/029-empaquetado-multiplataforma.md).
 
 Desde la versión 0.1.2, ARGUS trae una cuenta opcional. Por ahora no verifica el correo ni permite recuperar la contraseña; siempre puede continuar sin cuenta.
 

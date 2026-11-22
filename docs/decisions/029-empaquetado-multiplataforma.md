@@ -19,11 +19,12 @@
   - **Sumas SHA-256:** al publicar una versión se añade `SHA256SUMS.txt` con todos los archivos.
   - **Misma prueba de humo en cada sistema:** ningún instalador se genera si el motor empaquetado no arranca sin internet, no lee el escaneado con OCR o no carga keyring, anthropic y google-auth.
 - **Fuera de alcance (y por qué):**
-  - **macOS Intel:** probado y descartado: `onnxruntime` 1.31.0, fijado en `uv.lock`, solo publica ruedas para macOS arm64, así que `uv sync --locked` falla en Intel. Volver exigiría fijar una versión anterior de onnxruntime para ese sistema.
-  - **Windows 32 bits y Linux 32 bits:** onnxruntime, spaCy y pypdfium2 no publican ruedas para 32 bits.
-  - **Windows ARM64 y Linux ARM32:** onnxruntime y spaCy tienen ruedas para Windows ARM64, pero Tesseract (Chocolatey) y los runners no están disponibles de forma estable; ARM32 no tiene ruedas.
+  - **macOS Intel:** probado y descartado: `onnxruntime` 1.31.0 y `cryptography` 50.0.2, fijados en `uv.lock`, solo publican ruedas para macOS arm64, así que `uv sync --locked` falla en Intel. Volver exigiría fijar versiones anteriores de ambos para ese sistema.
+  - **Windows 32 bits y Linux 32 bits:** onnxruntime, spaCy y sus dependencias no publican ruedas para 32 bits (corregido el 22/11/2026: pypdfium2 sí las publica).
+  - **Windows ARM64 y Linux ARM32:** para Windows ARM64, `blis` 1.3.3 (de spaCy) y `cryptography` 50.0.2 (de google-auth) no publican ruedas, aunque onnxruntime y spaCy sí (corregido el 22/11/2026); ARM32 no tiene ruedas.
   - **Android e iOS:** Tauri móvil no puede ejecutar el motor Python (PyInstaller) como proceso hijo; exigiría reescribir el motor o llevarlo a un servidor, lo que rompe el principio de análisis local (CLAUDE.MD §1).
   - **Firma y notarización:** sin certificados por ahora. Windows muestra SmartScreen; macOS pide abrir la app desde Ajustes › Privacidad y seguridad (o `xattr -dr com.apple.quarantine`).
+- **Versiones mínimas (añadido el 22/11/2026, según `uv.lock` y el log de la v0.1.2; sin probar en esos sistemas):** Linux necesita glibc 2.35, la de ubuntu-22.04. En macOS, onnxruntime exige la 14, pero `macos-latest` es hoy macOS 26 y el Tesseract de Homebrew que se empaqueta es el compilado para esa versión (`arm64_tahoe`): en macOS 14 o 15 es probable que el OCR no cargue. Bajar ese mínimo exige compilar el dmg en un runner `macos-14`.
 - **Consecuencias:**
   - CLAUDE.MD §1 y §12 hablaban de Windows y Linux; macOS y ARM64 se suman por pedido explícito del usuario.
   - Cada versión publica unos 12 archivos de varios cientos de MB; el tiempo de CI crece con cinco trabajos en paralelo.
