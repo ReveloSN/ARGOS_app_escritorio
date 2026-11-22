@@ -24,21 +24,21 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 
 <!-- Al publicar una versión, cambie la versión de esta sección: los nombres de los archivos la incluyen. -->
 
-Versión publicada: **0.1.1**. La más reciente está siempre en [Releases](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/latest).
+Versión publicada: **0.1.2**. La más reciente está siempre en [Releases](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/latest).
 
 | Sistema | x64 | ARM64 |
 |---|---|---|
-| Windows 10 u 11, instalador (recomendado) | [setup.exe](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_x64-setup.exe) | No disponible |
-| Windows 10 u 11, sin instalar | [zip portable](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_x64_portable.zip) | No disponible |
-| Windows 10 u 11, para empresas | [msi](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_x64_en-US.msi) | No disponible |
-| Debian, Ubuntu y derivadas | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_amd64.deb) | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_arm64.deb) |
-| Fedora, openSUSE y derivadas | [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS-0.1.1-1.x86_64.rpm) | [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS-0.1.1-1.aarch64.rpm) |
-| Otras distribuciones Linux | [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_amd64.AppImage) | [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_aarch64.AppImage) |
-| macOS, Apple silicon (M1 o posterior) | No disponible | [dmg](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_aarch64.dmg) |
+| Windows 10 u 11, instalador (recomendado) | [setup.exe](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64-setup.exe) | No disponible |
+| Windows 10 u 11, sin instalar | [zip portable](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64_portable.zip) | No disponible |
+| Windows 10 u 11, para empresas | [msi](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_x64_en-US.msi) | No disponible |
+| Debian, Ubuntu y derivadas | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_amd64.deb) | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_arm64.deb) |
+| Fedora, openSUSE y derivadas | [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS-0.1.2-1.x86_64.rpm) | [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS-0.1.2-1.aarch64.rpm) |
+| Otras distribuciones Linux | [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_amd64.AppImage) | [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_aarch64.AppImage) |
+| macOS, Apple silicon (M1 o posterior) | No disponible | [dmg](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/ARGUS_0.1.2_aarch64.dmg) |
 
-Cada descarga pesa entre 200 y 360 MB. Para verificarla, use [SHA256SUMS.txt](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/SHA256SUMS.txt). No hay versión de 32 bits, macOS Intel, Android ni iOS (ver ADR 029).
+Cada descarga pesa entre 200 y 360 MB. Para verificarla, use [SHA256SUMS.txt](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.2/SHA256SUMS.txt). No hay versión de 32 bits, macOS Intel, Android ni iOS (ver ADR 029).
 
-La cuenta opcional todavía no viene en la versión 0.1.1: llegará en una versión posterior.
+Desde la versión 0.1.2, ARGUS trae una cuenta opcional. Por ahora no verifica el correo ni permite recuperar la contraseña; siempre puede continuar sin cuenta.
 
 ### Instalar
 
