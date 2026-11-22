@@ -37,6 +37,7 @@ Los instaladores llevan el motor, los modelos de lenguaje y Tesseract con españ
 ## Privacidad
 
 - Los archivos se leen y comparan en su equipo. Ningún contenido sale de él sin que usted lo active en Ajustes y confirme cada envío.
+- Si usa la cuenta opcional, van a Supabase su correo, su contraseña, el nombre si lo escribe, los códigos y los tokens de sesión. La cuenta nunca envía documentos, fragmentos ni nombres de archivo, y la contraseña no se guarda en el equipo: el token de renovación de la sesión queda en el llavero del sistema (ADR 033).
 - Las claves de Anthropic, DeepSeek y Google Cloud se guardan en el llavero del sistema operativo: el Administrador de credenciales en Windows, Keychain en macOS y Secret Service en Linux. Nunca van a archivos ni al historial.
 - El historial se guarda en su carpeta de datos, o en la que usted elija en Ajustes. Opcionalmente se borra a los 90 días.
 
@@ -100,7 +101,7 @@ npm run tauri -- build --config src-tauri/tauri.bundle.conf.json
 
 - `engine/`: motor en Python con FastAPI y arquitectura hexagonal (`domain`, `application`, `infrastructure`, `api`), persistencia en SQLite y NLP local con spaCy, ONNX Runtime y rapidfuzz.
 - `app/`: interfaz en Tauri 2, React y TypeScript estricto, con design tokens en tres niveles, Atomic Design e i18n en español e inglés.
-- `docs/decisions/`: decisiones de arquitectura (ADR 001 a 028).
+- `docs/decisions/`: decisiones de arquitectura (ADR 001 a 033).
 - `docs/progreso.md`: el estado de cada fase.
 - `docs/mockups/`: la fuente de verdad visual.
 

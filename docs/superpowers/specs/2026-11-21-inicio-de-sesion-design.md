@@ -64,6 +64,7 @@ Se eligió A porque es la más sencilla (la pidió el usuario).
   - `GET /account`: estado.
   - `POST /account/sign-up`
   - `POST /account/verify`
+  - `POST /account/verify/resend`: otro código para confirmar la cuenta (`/auth/v1/resend`, `type=signup`).
   - `POST /account/sign-in`
   - `POST /account/sign-out`
   - `POST /account/password-reset`
