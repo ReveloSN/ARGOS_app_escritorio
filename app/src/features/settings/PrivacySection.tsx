@@ -2,6 +2,7 @@ import { Icon } from "../../components/atoms/Icon";
 import { Toggle } from "../../components/atoms/Toggle";
 import { useI18n } from "../../i18n/i18nContext";
 import type { PreferencesResult } from "../../services/engine/preferencesTypes";
+import { hasAccountFeature, useAccount } from "../account/accountContext";
 import { HistoryFolderFeedback, HistoryFolderPath } from "./HistoryFolder";
 import styles from "./Settings.module.css";
 import type { EnginePreferences } from "./useEnginePreferences";
@@ -15,6 +16,7 @@ interface PrivacySectionProps {
 /** Ajustes > Privacidad: el análisis es local, cuánto tiempo se guarda el historial y dónde. */
 export function PrivacySection({ preferences, engine }: PrivacySectionProps) {
   const { t } = useI18n();
+  const hasAccount = hasAccountFeature(useAccount().state);
   const isLimited = preferences.hasRetentionLimit;
   const move = useHistoryFolderChange(engine.refresh);
   return (
@@ -23,7 +25,13 @@ export function PrivacySection({ preferences, engine }: PrivacySectionProps) {
         <Icon name="lock" size="lg" className={styles.privacyIcon} />
         <div className={styles.privacyText}>
           <span className={styles.privacyTitle}>{t("settings.privacy.localTitle")}</span>
-          <span>{t("settings.privacy.localDescription")}</span>
+          <span>
+            {t(
+              hasAccount
+                ? "settings.privacy.localDescriptionWithAccount"
+                : "settings.privacy.localDescription",
+            )}
+          </span>
         </div>
       </div>
       <div className={styles.retention}>

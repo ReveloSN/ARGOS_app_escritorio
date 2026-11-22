@@ -2,6 +2,7 @@ import { render, type RenderResult } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { App } from "../App";
+import { AccountProvider } from "../features/account/AccountProvider";
 import { AssistantProvider } from "../features/assistant/AssistantProvider";
 import {
   EngineServicesContext,
@@ -37,16 +38,18 @@ export function renderApp(
     <I18nProvider>
       <ThemeProvider>
         <EngineServicesContext.Provider value={services}>
-          <ReviewProvider>
-            <AssistantProvider storage={storage}>
-              <ComparisonProvider>
-                <SendProvider>
-                  {review && <ReviewSeed review={review} />}
-                  <App />
-                </SendProvider>
-              </ComparisonProvider>
-            </AssistantProvider>
-          </ReviewProvider>
+          <AccountProvider>
+            <ReviewProvider>
+              <AssistantProvider storage={storage}>
+                <ComparisonProvider>
+                  <SendProvider>
+                    {review && <ReviewSeed review={review} />}
+                    <App />
+                  </SendProvider>
+                </ComparisonProvider>
+              </AssistantProvider>
+            </ReviewProvider>
+          </AccountProvider>
         </EngineServicesContext.Provider>
       </ThemeProvider>
     </I18nProvider>,

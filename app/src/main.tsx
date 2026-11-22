@@ -14,6 +14,7 @@ import { StrictMode, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 
 import { App } from "./App";
+import { AccountProvider } from "./features/account/AccountProvider";
 import { AssistantProvider } from "./features/assistant/AssistantProvider";
 import { EngineServicesContext } from "./features/engine/EngineServicesContext";
 import { ComparisonProvider } from "./features/comparison/ComparisonProvider";
@@ -38,13 +39,15 @@ function render(content: ReactNode) {
       <I18nProvider storage={browserPreferenceStorage}>
         <ThemeProvider storage={browserPreferenceStorage}>
           <EngineServicesContext.Provider value={engineServices}>
-            <ReviewProvider>
-              <AssistantProvider storage={browserPreferenceStorage}>
-                <ComparisonProvider>
-                  <SendProvider>{content}</SendProvider>
-                </ComparisonProvider>
-              </AssistantProvider>
-            </ReviewProvider>
+            <AccountProvider>
+              <ReviewProvider>
+                <AssistantProvider storage={browserPreferenceStorage}>
+                  <ComparisonProvider>
+                    <SendProvider>{content}</SendProvider>
+                  </ComparisonProvider>
+                </AssistantProvider>
+              </ReviewProvider>
+            </AccountProvider>
           </EngineServicesContext.Provider>
         </ThemeProvider>
       </I18nProvider>

@@ -5,6 +5,7 @@ from argus.api.access_token import AUTHORIZATION_HEADER, AccessTokenMiddleware
 from argus.api.composition import build_engine_services
 from argus.api.error_handlers import register_error_handlers
 from argus.api.ocr_composition import ExternalAdapters, default_external_adapters
+from argus.api.routes.account import build_account_router
 from argus.api.routes.ai import (
     build_ai_settings_router,
     build_alert_explanation_router,
@@ -74,6 +75,7 @@ def create_app(
         build_ai_settings_router,
         build_ocr_settings_router,
         build_ocr_credentials_router,
+        build_account_router,
     )
     for build_router in routers:
         app.include_router(build_router(services))

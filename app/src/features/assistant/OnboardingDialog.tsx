@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "../../components/atoms/Button";
 import { Icon } from "../../components/atoms/Icon";
@@ -6,6 +6,7 @@ import { ReticleMotif } from "../../components/atoms/ReticleMotif";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useModalFocus } from "../../components/useModalFocus";
 import { useI18n } from "../../i18n/i18nContext";
+import { useAccount } from "../account/accountContext";
 import { useShortcuts } from "../keyboard/useShortcuts";
 import { useAssistantPreferences } from "./assistantContext";
 import { AssistantEye } from "./AssistantEye";
@@ -67,10 +68,17 @@ function StepContent({ step }: { readonly step: OnboardingStep }) {
   );
 }
 
-/** Los primeros pasos, solo mientras están abiertos (la primera vez o desde Ajustes). */
+/** Los primeros pasos esperan a la lectura de la cuenta (o a saber que no hay motor) y a la
+ * puerta que llegó antes. La que llega con los pasos a la vista espera ella: no se reinician. */
 export function OnboardingGate() {
   const { isOnboardingOpen } = useAssistantPreferences();
-  return isOnboardingOpen ? <OnboardingDialog /> : null;
+  const { gate, isFirstReadPending } = useAccount();
+  const wasShown = useRef(false);
+  const isVisible = isOnboardingOpen && !isFirstReadPending && (gate === null || wasShown.current);
+  useEffect(() => {
+    wasShown.current = isVisible;
+  });
+  return isVisible ? <OnboardingDialog /> : null;
 }
 
 /** Primeros pasos: tres pantallas con el asistente; se omiten con Esc y avanzan con Enter. */

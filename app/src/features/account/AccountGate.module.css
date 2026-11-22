@@ -1,0 +1,113 @@
+/* Pantalla completa y opaca, antes del shell: nada de la aplicación se ve ni se alcanza detrás. */
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-gate);
+  display: flex;
+  overflow: auto;
+  padding: var(--spacing-4);
+  background: var(--color-background-primary);
+}
+
+/* Dos columnas (identidad y formulario) si caben; con zoom o en ventanas angostas, una sobre otra. */
+.layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-account-column), 100%), 1fr));
+  gap: var(--spacing-6);
+  align-items: start;
+  width: min(var(--size-account-layout), 100%);
+  margin: auto;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding: var(--spacing-2) 0;
+}
+
+.topline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.kbd {
+  color: var(--color-text-tertiary);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-micro);
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-1-5);
+  border: 0;
+  background: transparent;
+  color: var(--color-action-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-title);
+  line-height: var(--line-height-title);
+  font-weight: var(--font-weight-semibold);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3-5);
+}
+
+.note {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2) var(--spacing-4);
+}
+
+.link {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-action-text);
+  font-size: var(--font-size-caption);
+  text-decoration: underline;
+  text-underline-offset: var(--spacing-0-5);
+  cursor: pointer;
+}
+
+.link:disabled {
+  color: var(--color-text-tertiary);
+  cursor: default;
+}
+
+.reveal {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--size-control-lg);
+  height: var(--size-control-lg);
+  border: var(--border-width) solid var(--color-border-control);
+  border-radius: var(--radius-control);
+  background: var(--color-background-surface);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.reveal[aria-pressed="true"] {
+  border-color: var(--color-action-text);
+  color: var(--color-action-text);
+}

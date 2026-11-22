@@ -43,6 +43,10 @@ hiddenimports += KEYRING_EXTRA_IMPORTS.get(sys.platform, ["secretstorage", "jeep
 datas += copy_metadata("argus-engine")
 # uvicorn elige su bucle y protocolos en tiempo de ejecución.
 hiddenimports += collect_submodules("uvicorn") + ["multipart", "python_multipart"]
+# La cuenta (ADR 033) viaja en el motor solo si el paso de empaquetado escribió su archivo.
+ACCOUNT_CONFIG = Path(SPECPATH) / "account-config.json"
+if ACCOUNT_CONFIG.exists():
+    datas += [(str(ACCOUNT_CONFIG), ".")]
 
 analysis = Analysis(
     ["entry.py"],

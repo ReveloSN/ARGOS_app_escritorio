@@ -3,6 +3,7 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 
+from argus.api.account_composition import AccountAdapters, default_account_adapters
 from argus.api.ai_composition import AiAdapters, default_ai_adapters
 from argus.application.ocr_fallback import FallbackOcrEngine
 from argus.application.ocr_settings import (
@@ -46,10 +47,11 @@ class OcrAdapters:
 
 @dataclass(frozen=True)
 class ExternalAdapters:
-    """Todo lo que sale del motor: la IA opcional y el OCR."""
+    """Todo lo que sale del motor: la IA opcional, el OCR y la cuenta."""
 
     ai: AiAdapters
     ocr: OcrAdapters
+    account: AccountAdapters
 
 
 def default_ocr_adapters() -> OcrAdapters:
@@ -63,7 +65,9 @@ def default_ocr_adapters() -> OcrAdapters:
 
 
 def default_external_adapters() -> ExternalAdapters:
-    return ExternalAdapters(default_ai_adapters(), default_ocr_adapters())
+    return ExternalAdapters(
+        default_ai_adapters(), default_ocr_adapters(), default_account_adapters()
+    )
 
 
 def build_ocr_reader(settings: OcrSettingsRepository, adapters: OcrAdapters) -> OcrReader:

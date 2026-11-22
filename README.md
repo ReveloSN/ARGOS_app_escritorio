@@ -6,6 +6,8 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 
 **La detección no depende de IA generativa ni de internet.** El análisis se hace en su equipo.
 
+**[Descargar ARGUS](#descargar)** para Windows, Linux o macOS.
+
 ## Qué hace
 
 - **Revisión de un expediente:** lee PDF, DOCX, XLSX, EML y texto pegado, y cruza contratos, montos, fechas, partes y periodos entre los archivos.
@@ -16,26 +18,36 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 - **OCR** para PDF escaneados, con Tesseract en el equipo. Opcionalmente se puede usar Google Document AI, que pide su permiso antes de cada envío.
 - **IA opcional:** «Explicar este cambio» y «Explicar esta alerta» con Claude (Anthropic) o DeepSeek, a elección. Viene apagada, cada proveedor guarda su clave en el llavero del sistema y cada explicación se rotula «Sugerencia de IA» con la cita de su origen.
 - **Asistente de IA:** el ojo de ARGUS en la barra lateral, con un estado que sale de datos reales del motor.
+- **Cuenta opcional:** correo y contraseña para identificarse al abrir la app, con Supabase Auth. No sincroniza nada ni protege los datos del equipo, y siempre puede continuar sin cuenta (ADR 033; configuración en [docs/configurar-supabase.md](docs/configurar-supabase.md)).
 
-## Instalar
+## Descargar
 
-Los instaladores se generan en GitHub Actions, en el workflow «Instaladores»:
+<!-- Al publicar una versión, cambie la versión de esta sección: los nombres de los archivos la incluyen. -->
 
-| Sistema | Archivo |
-|---|---|
-| Windows 10 u 11 (x64) | `.msi`, instalador `-setup.exe` o zip portable |
-| Debian, Ubuntu y derivadas (x64 y ARM64) | `.deb` |
-| Fedora, openSUSE y derivadas (x64 y ARM64) | `.rpm` |
-| Otras distribuciones Linux (x64 y ARM64) | `.AppImage` |
-| macOS, Apple silicon (M1 o posterior) | `.dmg` |
+Versión publicada: **0.1.1**. La más reciente está siempre en [Releases](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/latest).
 
-Cada versión trae también `SHA256SUMS.txt` para verificar las descargas. No hay versión de 32 bits, macOS Intel, Android ni iOS (ver ADR 029).
+| Sistema | x64 | ARM64 |
+|---|---|---|
+| Windows 10 u 11, instalador (recomendado) | [setup.exe](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_x64-setup.exe) | No disponible |
+| Windows 10 u 11, sin instalar | [zip portable](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_x64_portable.zip) | No disponible |
+| Windows 10 u 11, para empresas | [msi](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_x64_en-US.msi) | No disponible |
+| Debian, Ubuntu y derivadas | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_amd64.deb) | [deb](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_arm64.deb) |
+| Fedora, openSUSE y derivadas | [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS-0.1.1-1.x86_64.rpm) | [rpm](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS-0.1.1-1.aarch64.rpm) |
+| Otras distribuciones Linux | [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_amd64.AppImage) | [AppImage](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_aarch64.AppImage) |
+| macOS, Apple silicon (M1 o posterior) | No disponible | [dmg](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/ARGUS_0.1.1_aarch64.dmg) |
 
-Los instaladores llevan el motor, los modelos de lenguaje y Tesseract con español e inglés, así que **funcionan sin internet desde la primera vez**. No tienen firma de código: Windows muestra SmartScreen al instalar («Más información › Ejecutar de todas formas») y macOS pide abrir la app desde Ajustes › Privacidad y seguridad («Abrir de todos modos»).
+Cada descarga pesa entre 200 y 360 MB. Para verificarla, use [SHA256SUMS.txt](https://github.com/ReveloSN/ARGOS_app_escritorio/releases/download/v0.1.1/SHA256SUMS.txt). No hay versión de 32 bits, macOS Intel, Android ni iOS (ver ADR 029).
+
+La cuenta opcional todavía no viene en la versión 0.1.1: llegará en una versión posterior.
+
+### Instalar
+
+Los instaladores se generan en GitHub Actions, en el workflow «Instaladores». Llevan el motor, los modelos de lenguaje y Tesseract con español e inglés, así que **funcionan sin internet desde la primera vez**. No tienen firma de código: Windows muestra SmartScreen al instalar («Más información › Ejecutar de todas formas») y macOS pide abrir la app desde Ajustes › Privacidad y seguridad («Abrir de todos modos»).
 
 ## Privacidad
 
 - Los archivos se leen y comparan en su equipo. Ningún contenido sale de él sin que usted lo active en Ajustes y confirme cada envío.
+- Si usa la cuenta opcional, van a Supabase su correo, su contraseña, el nombre si lo escribe, los códigos y los tokens de sesión. La cuenta nunca envía documentos, fragmentos ni nombres de archivo, y la contraseña no se guarda en el equipo: el token de renovación de la sesión queda en el llavero del sistema (ADR 033).
 - Las claves de Anthropic, DeepSeek y Google Cloud se guardan en el llavero del sistema operativo: el Administrador de credenciales en Windows, Keychain en macOS y Secret Service en Linux. Nunca van a archivos ni al historial.
 - El historial se guarda en su carpeta de datos, o en la que usted elija en Ajustes. Opcionalmente se borra a los 90 días.
 
@@ -99,7 +111,7 @@ npm run tauri -- build --config src-tauri/tauri.bundle.conf.json
 
 - `engine/`: motor en Python con FastAPI y arquitectura hexagonal (`domain`, `application`, `infrastructure`, `api`), persistencia en SQLite y NLP local con spaCy, ONNX Runtime y rapidfuzz.
 - `app/`: interfaz en Tauri 2, React y TypeScript estricto, con design tokens en tres niveles, Atomic Design e i18n en español e inglés.
-- `docs/decisions/`: decisiones de arquitectura (ADR 001 a 028).
+- `docs/decisions/`: decisiones de arquitectura (ADR 001 a 033).
 - `docs/progreso.md`: el estado de cada fase.
 - `docs/mockups/`: la fuente de verdad visual.
 

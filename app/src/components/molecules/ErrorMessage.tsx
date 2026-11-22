@@ -29,6 +29,8 @@ interface ErrorMessageProps {
   readonly todo: string;
   readonly primaryAction: ErrorAction;
   readonly secondaryAction?: ErrorAction;
+  /** Con otro botón principal a la vista (el de un formulario), la acción del error es secundaria. */
+  readonly isActionSecondary?: boolean;
   readonly icon?: string;
   /** Código interno: nunca solo, siempre presentado como detalle para soporte. */
   readonly technicalCode?: string;
@@ -53,7 +55,11 @@ export function ErrorMessage(props: ErrorMessageProps) {
           </span>
         )}
         <div className={styles.actions}>
-          <Button variant="primary" size="md" onClick={primaryAction.onClick}>
+          <Button
+            variant={props.isActionSecondary ? "secondary" : "primary"}
+            size="md"
+            onClick={primaryAction.onClick}
+          >
             {primaryAction.label}
           </Button>
           {secondaryAction && (

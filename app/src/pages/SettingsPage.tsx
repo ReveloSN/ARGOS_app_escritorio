@@ -3,6 +3,8 @@ import { useState, type ReactNode } from "react";
 import { Icon } from "../components/atoms/Icon";
 import { ErrorMessage } from "../components/molecules/ErrorMessage";
 import { useEngineStatus } from "../features/engine/useEngineStatus";
+import { AccountSection } from "../features/account/AccountSection";
+import { hasAccountFeature, useAccount } from "../features/account/accountContext";
 import { AiSection } from "../features/settings/AiSection";
 import { AssistantSection } from "../features/settings/AssistantSection";
 import { DetectionSection } from "../features/settings/DetectionSection";
@@ -15,8 +17,8 @@ import { SettingsGroup } from "../features/settings/SettingsGroup";
 import { SettingsNav } from "../features/settings/SettingsNav";
 import { SettingsSection } from "../features/settings/SettingsSection";
 import {
-  SETTINGS_GROUPS,
   SETTINGS_SECTIONS,
+  settingsGroupsFor,
   type SettingsSectionId,
 } from "../features/settings/settingsSections";
 import { ShortcutsSection } from "../features/settings/ShortcutsSection";
@@ -29,6 +31,7 @@ type SettingsLoad = ReturnType<typeof useSettingsLoad>;
 function sectionBodies(load: SettingsLoad, markSaved: () => void) {
   const { engine, ai, ocr } = load;
   const bodies: Readonly<Record<SettingsSectionId, ReactNode>> = {
+    account: <AccountSection />,
     detection: (
       <EngineSettings engine={engine}>
         {(preferences) => <DetectionSection preferences={preferences} engine={engine} />}
@@ -81,6 +84,7 @@ export function SettingsPage() {
   };
   const load = useSettingsLoad(markSaved);
   const bodies = sectionBodies(load, markSaved);
+  const { state } = useAccount();
 
   return (
     <div className={styles.layout}>
@@ -97,7 +101,7 @@ export function SettingsPage() {
             )}
           </div>
           <SettingsProblem load={load} />
-          {SETTINGS_GROUPS.map((group) => (
+          {settingsGroupsFor(hasAccountFeature(state)).map((group) => (
             <SettingsGroup key={group.id} group={group}>
               {group.sections.map((section) => (
                 <SettingsSection key={section.id} id={section.id} title={t(section.title)}>

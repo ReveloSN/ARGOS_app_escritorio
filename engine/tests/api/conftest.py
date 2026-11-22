@@ -7,6 +7,7 @@ from argus.api.ai_composition import AiAdapters
 from argus.api.app import create_app
 from argus.api.ocr_composition import ExternalAdapters, OcrAdapters
 from argus.api.settings import EngineSettings
+from tests.application.account_doubles import AccountDoubles
 from tests.application.ai_doubles import offline_ai
 from tests.application.in_memory_repositories import RecordingFileOpener
 from tests.application.ocr_doubles import offline_adapters, offline_ocr
@@ -55,6 +56,25 @@ def client(
     settings: EngineSettings, opener: RecordingFileOpener, external: ExternalAdapters
 ) -> TestClient:
     return TestClient(create_app(settings, opener, external))
+
+
+@pytest.fixture
+def doubles() -> AccountDoubles:
+    return AccountDoubles()
+
+
+@pytest.fixture
+def account_client(
+    settings: EngineSettings, opener: RecordingFileOpener, doubles: AccountDoubles
+) -> TestClient:
+    external = offline_adapters(account=doubles.adapters())
+    return TestClient(create_app(settings, opener, external))
+
+
+@pytest.fixture
+def account_api(account_client: TestClient, auth_headers: dict[str, str]) -> TestClient:
+    account_client.headers.update(auth_headers)
+    return account_client
 
 
 @pytest.fixture

@@ -1,7 +1,11 @@
 import type { I18n } from "../../i18n/i18nContext";
 import type { HistorySource } from "../../services/engine/historyTypes";
 import type { AppRoute } from "../navigation/appRoute";
-import { scrollToSettingsSection, SETTINGS_SECTIONS } from "../settings/settingsSections";
+import {
+  scrollToSettingsSection,
+  SETTINGS_SECTIONS,
+  type SettingsSectionItem,
+} from "../settings/settingsSections";
 import { includesFolded } from "./foldForSearch";
 import { MAX_RESULTS_PER_GROUP, nonEmptyGroups, type SearchScope } from "./searchScope";
 
@@ -36,23 +40,33 @@ export function historySearchScope({ history, i18n, navigate }: HistorySearchCon
   };
 }
 
+function matchingSections(
+  sections: readonly SettingsSectionItem[],
+  i18n: Pick<I18n, "t">,
+  query: string,
+) {
+  return sections
+    .filter((section) => includesFolded(i18n.t(section.title), query))
+    .map((section) => ({
+      id: section.id,
+      title: i18n.t(section.title),
+      open: () => {
+        scrollToSettingsSection(section.id);
+      },
+    }));
+}
+
 /** En Ajustes, Ctrl K lleva a la sección buscada. */
-export function settingsSearchScope(i18n: Pick<I18n, "t">): SearchScope {
+export function settingsSearchScope(
+  i18n: Pick<I18n, "t">,
+  sections: readonly SettingsSectionItem[] = SETTINGS_SECTIONS,
+): SearchScope {
   return {
     placeholder: i18n.t("search.settingsPlaceholder"),
     search: (query) => {
-      const items = SETTINGS_SECTIONS.filter((section) =>
-        includesFolded(i18n.t(section.title), query),
-      ).map((section) => ({
-        id: section.id,
-        title: i18n.t(section.title),
-        open: () => {
-          scrollToSettingsSection(section.id);
-        },
-      }));
-      return Promise.resolve(
-        nonEmptyGroups([{ id: "sections", label: i18n.t("search.sectionsGroup"), items }]),
-      );
+      const items = matchingSections(sections, i18n, query);
+      const label = i18n.t("search.sectionsGroup");
+      return Promise.resolve(nonEmptyGroups([{ id: "sections", label, items }]));
     },
   };
 }

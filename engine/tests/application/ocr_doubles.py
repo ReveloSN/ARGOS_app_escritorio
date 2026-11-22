@@ -1,11 +1,13 @@
 """Dobles del OCR: un motor que responde páginas fijas y una nube que nunca sale a la red."""
 
+from argus.api.account_composition import AccountAdapters
 from argus.api.ai_composition import AiAdapters
 from argus.api.ocr_composition import ExternalAdapters, OcrAdapters
 from argus.application.ports.ocr_engine import OcrResult, PageProgress
 from argus.domain.errors import OcrUnavailableError
 from argus.domain.ocr import PageCount, ReadMethod
 from argus.infrastructure.ocr.document_ai_ocr_engine import Json
+from tests.application.account_doubles import InMemorySessionStore
 from tests.application.ai_doubles import InMemorySecretStore, offline_ai
 
 
@@ -63,7 +65,14 @@ def offline_ocr(local: ScriptedOcrEngine | None = None) -> OcrAdapters:
     )
 
 
+def offline_account() -> AccountAdapters:
+    """Sin configuración: la cuenta no está disponible y nadie toca el llavero real."""
+    return AccountAdapters(None, InMemorySessionStore())
+
+
 def offline_adapters(
-    ai: AiAdapters | None = None, ocr: OcrAdapters | None = None
+    ai: AiAdapters | None = None,
+    ocr: OcrAdapters | None = None,
+    account: AccountAdapters | None = None,
 ) -> ExternalAdapters:
-    return ExternalAdapters(ai or offline_ai(), ocr or offline_ocr())
+    return ExternalAdapters(ai or offline_ai(), ocr or offline_ocr(), account or offline_account())

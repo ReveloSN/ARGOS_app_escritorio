@@ -1,6 +1,7 @@
 import { useEffect, useId, useState, type DragEvent } from "react";
 
 import { useI18n } from "../../i18n/i18nContext";
+import { hasOpenModal } from "../openModal";
 import { Button } from "../atoms/Button";
 import { Icon } from "../atoms/Icon";
 import { MODIFIER_KEY } from "../atoms/Kbd";
@@ -16,6 +17,7 @@ function useChooseFilesShortcut(inputId: string): void {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== CHOOSE_KEY) return;
+      if (hasOpenModal()) return;
       event.preventDefault();
       document.getElementById(inputId)?.click();
     };

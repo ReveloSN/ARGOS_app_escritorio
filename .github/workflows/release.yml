@@ -56,6 +56,14 @@ jobs:
         working-directory: engine
         run: uv run python -m argus.infrastructure.nlp.embedding_model
 
+      # Cuenta opcional (ADR 033): sin estos secretos el instalador sale sin cuenta.
+      - name: Configurar la cuenta
+        working-directory: engine
+        run: uv run python distribution/write_account_config.py
+        env:
+          ARGUS_SUPABASE_URL: ${{ secrets.ARGUS_SUPABASE_URL }}
+          ARGUS_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.ARGUS_SUPABASE_PUBLISHABLE_KEY }}
+
       - name: Empaquetar el motor
         working-directory: engine
         run: uv run pyinstaller distribution/argus-engine.spec --noconfirm --distpath dist --workpath build/pyinstaller

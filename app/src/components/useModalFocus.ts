@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type RefObject } from "react";
 
-const FOCUSABLE = "button, input, [href], select, textarea";
+// Lo deshabilitado no recibe el foco: no puede ser el borde donde Tab da la vuelta.
+const FOCUSABLE =
+  "button:not(:disabled), input:not(:disabled), [href], select:not(:disabled), textarea:not(:disabled)";
 
 function focusableIn(container: HTMLElement | null): HTMLElement[] {
   return container ? [...container.querySelectorAll<HTMLElement>(FOCUSABLE)] : [];
@@ -17,12 +19,31 @@ export function keepFocusInside(event: KeyboardEvent<HTMLElement>, container: HT
   opposite?.focus();
 }
 
+function isFocusLost(): boolean {
+  const active = document.activeElement;
+  return !active || active === document.body;
+}
+
+function liveElement(element: Element | null): HTMLElement | null {
+  const isLive = element instanceof HTMLElement && element !== document.body && element.isConnected;
+  return isLive ? element : null;
+}
+
+/**
+ * Devuelve el foco a quien abrió el diálogo, o al reemplazo si ya no existe, pero solo si el foco
+ * se perdió: si otro control ya lo tomó (la puerta de la cuenta, por ejemplo), no se le quita.
+ */
+function restoreFocus(opener: Element | null, fallback?: () => HTMLElement | null): void {
+  if (isFocusLost()) (liveElement(opener) ?? fallback?.())?.focus();
+}
+
 /**
  * Un diálogo modal con el foco bien llevado: Tab no sale de él y, al cerrarse, el foco vuelve a
  * quien lo abrió. Devuelve el manejador de teclas que va en el diálogo.
  */
 export function useModalFocus(
   dialog: RefObject<HTMLElement | null>,
+  fallback?: () => HTMLElement | null,
 ): (event: KeyboardEvent<HTMLElement>) => void {
   // Se lee al renderizar, antes de que un hijo con `autoFocus` se quede con el foco.
   const [opener] = useState(() => document.activeElement);
@@ -34,10 +55,10 @@ export function useModalFocus(
     return () => {
       isOpen.current = false;
       window.setTimeout(() => {
-        if (!isOpen.current && opener instanceof HTMLElement) opener.focus();
+        if (!isOpen.current) restoreFocus(opener, fallback);
       }, 0);
     };
-  }, [opener]);
+  }, [opener, fallback]);
   return (event) => {
     if (event.key === "Tab") keepFocusInside(event, dialog.current);
   };

@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, type ReactNode } from "react";
 
 import { Icon } from "./Icon";
 import styles from "./TextField.module.css";
@@ -8,13 +8,20 @@ interface TextFieldProps {
   readonly value: string;
   readonly onChange: (value: string) => void;
   readonly placeholder?: string;
-  readonly error?: string;
+  readonly error?: string | undefined;
   /** Para qué sirve el campo; se anuncia junto a él. */
   readonly hint?: string;
   /** Texto visible junto a la etiqueta («obligatorio»); el lector lo recibe como aria-required. */
   readonly requiredMark?: string;
   /** Dentro de un diálogo: el foco entra al abrirlo y el texto actual queda seleccionado. */
   readonly autoFocus?: boolean;
+  /** `password` para contraseñas; cualquier otro tipo es texto. */
+  readonly type?: "text" | "password" | "email";
+  /** Pista para el gestor de contraseñas y el teclado: «username», «new-password», «one-time-code». */
+  readonly autoComplete?: string;
+  readonly inputMode?: "text" | "numeric" | "email";
+  /** Un control junto al campo (mostrar u ocultar la contraseña). */
+  readonly trailing?: ReactNode;
 }
 
 interface FieldHeadingProps {
@@ -62,6 +69,10 @@ export function TextField({
   hint,
   requiredMark,
   autoFocus = false,
+  type,
+  autoComplete,
+  inputMode,
+  trailing,
 }: TextFieldProps) {
   const inputId = useId();
   const errorId = useId();
@@ -82,27 +93,33 @@ export function TextField({
         hint={hint}
         requiredMark={requiredMark}
       />
-      <input
-        ref={input}
-        id={inputId}
-        className={styles.input}
-        value={value}
-        autoFocus={autoFocus}
-        onFocus={
-          autoFocus
-            ? (event) => {
-                event.target.select();
-              }
-            : undefined
-        }
-        placeholder={placeholder}
-        aria-invalid={error ? true : undefined}
-        aria-required={requiredMark ? true : undefined}
-        aria-describedby={describedBy}
-        onChange={(event) => {
-          onChange(event.target.value);
-        }}
-      />
+      <div className={styles.control}>
+        <input
+          ref={input}
+          id={inputId}
+          className={styles.input}
+          type={type}
+          autoComplete={autoComplete}
+          inputMode={inputMode}
+          value={value}
+          autoFocus={autoFocus}
+          onFocus={
+            autoFocus
+              ? (event) => {
+                  event.target.select();
+                }
+              : undefined
+          }
+          placeholder={placeholder}
+          aria-invalid={error ? true : undefined}
+          aria-required={requiredMark ? true : undefined}
+          aria-describedby={describedBy}
+          onChange={(event) => {
+            onChange(event.target.value);
+          }}
+        />
+        {trailing}
+      </div>
       {error && (
         <span id={errorId} role="alert" className={styles.error}>
           <Icon name="report" size="xs" />

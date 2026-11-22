@@ -195,6 +195,9 @@
   --size-report-sheet: 680px;
   /* Primeros pasos (mockup «ARGUS Inicio», onboarding): diálogo y marcas de avance. */
   --size-onboarding: 640px;
+  /* Puerta de la cuenta: dos columnas (identidad y formulario); con zoom se apilan y se desplazan. */
+  --size-account-column: 360px;
+  --size-account-layout: 960px;
   --size-onboarding-dot: 6px;
   --size-onboarding-dot-current: 20px;
   /* Inicio: la retícula y el contenido suben un poco sobre el centro (mockup «ARGUS Inicio»). */
@@ -203,6 +206,8 @@
   --layer-menu: 5;
   --layer-overlay: 10;
   --layer-toast: 20;
+  /* La puerta de la cuenta va por encima de todo, avisos incluidos. */
+  --layer-gate: 30;
   --border-width-mark: 1.5px;
   --text-underline-offset: 3px;
   --outline-offset-mark: 1px;

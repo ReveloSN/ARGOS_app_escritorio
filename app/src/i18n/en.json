@@ -12,6 +12,8 @@
     "collapse": "Collapse",
     "expand": "Expand",
     "localAnalysis": "Analyzed locally on this computer",
+    "accountLabel": "Account: {name}",
+    "accountExpired": "Session expired",
     "activeSession": "Active session",
     "compare": "Compare",
     "send": "Check before sending"
@@ -624,6 +626,170 @@
     "failed": "We could not search: the analysis engine did not respond. Type again to retry.",
     "openFailed": "We could not open “{name}”. Try again."
   },
+  "account": {
+    "heading": "Your ARGUS account",
+    "close": "Close",
+    "escape": "Esc",
+    "privacy": "Your email and password are sent to Supabase only to verify the account. Your documents do not leave this computer.",
+    "skip": "Continue without an account",
+    "tabs": {
+      "label": "Access",
+      "signIn": "Sign in",
+      "signUp": "Create account"
+    },
+    "views": {
+      "signIn": "Sign in",
+      "signUp": "Create account",
+      "verify": "Check your email to confirm the account",
+      "recover": "Recover the password",
+      "reset": "Choose a new password"
+    },
+    "fields": {
+      "email": "Email address",
+      "password": "Password",
+      "newPassword": "New password",
+      "name": "Name",
+      "nameHint": "Optional. It appears in the sidebar and, if you enter it, it is also sent to Supabase.",
+      "code": "Code from the email",
+      "codeHint": "6 to 10 digits.",
+      "showPassword": "Show password",
+      "required": "This field is required."
+    },
+    "actions": {
+      "signIn": "Sign in",
+      "signingIn": "Signing in…",
+      "signUp": "Create account",
+      "signingUp": "Creating the account…",
+      "verify": "Confirm account",
+      "verifying": "Confirming…",
+      "sendCode": "Send code",
+      "sendingCode": "Sending…",
+      "reset": "Change password",
+      "resetting": "Changing…",
+      "forgot": "Forgot your password?",
+      "haveCode": "I already have a code",
+      "resendCode": "Send a new code",
+      "backToSignIn": "Back to sign in"
+    },
+    "notes": {
+      "verify": "Enter the code we sent to {email}.",
+      "resent": "If there is an account to confirm with that email, it will receive a new code.",
+      "recover": "Enter your account email. If there is an account with that email, it will receive a code.",
+      "reset": "If there is an account with that email, it will receive a code. Enter it here with the new password."
+    },
+    "flowProblems": {
+      "verifyInvalidCode": {
+        "what": "The code is not valid or has expired.",
+        "why": "Codes last a short time and work only once.",
+        "todo": "Check the code in the email and correct it, or ask for a new one.",
+        "action": "Send a new code"
+      },
+      "verifyEmailUnavailable": {
+        "what": "The confirmation email could not be sent.",
+        "why": "This installation cannot send emails.",
+        "todo": "If you already have a code, enter it. Otherwise, continue without an account: the rest of ARGUS works the same.",
+        "action": "Understood"
+      },
+      "signUpEmailUnavailable": {
+        "what": "The confirmation email could not be sent.",
+        "why": "This installation cannot send emails.",
+        "todo": "The account cannot be created from here. Continue without an account: the rest of ARGUS works the same.",
+        "action": "Understood"
+      }
+    },
+    "problems": {
+      "invalid_credentials": {
+        "what": "The email or the password do not match.",
+        "why": "For security, the service does not say which of the two failed.",
+        "todo": "Check both and try again, or recover the password.",
+        "action": "Recover the password"
+      },
+      "email_not_confirmed": {
+        "what": "This account has not been confirmed yet.",
+        "why": "The service is waiting for the code it sent to the account email.",
+        "todo": "Enter that code to confirm it and sign in.",
+        "action": "Enter the code"
+      },
+      "invalid_code": {
+        "what": "The code is not valid or has expired.",
+        "why": "Codes last a short time and work only once.",
+        "todo": "Check that you entered all of it, or ask for a new one.",
+        "action": "Ask for a new code"
+      },
+      "email_taken": {
+        "what": "An account with that email already exists.",
+        "why": "Each email can have only one account.",
+        "todo": "Sign in with that email, or use another one to create a new account.",
+        "action": "Sign in"
+      },
+      "weak_password": {
+        "what": "The password is too weak.",
+        "why": "The service requires a longer or more varied password.",
+        "todo": "Choose another password and try again.",
+        "action": "Understood"
+      },
+      "same_password": {
+        "what": "The new password is the same as the current one.",
+        "why": "The service does not accept reusing the password.",
+        "todo": "Choose a different password.",
+        "action": "Understood"
+      },
+      "invalid_value": {
+        "what": "The service did not accept one of the values.",
+        "why": "The email or the code may have a format it does not recognize, or the password may exceed the maximum of 72 characters (fewer if it has accents).",
+        "todo": "Check them and try again.",
+        "action": "Understood"
+      },
+      "rate_limited": {
+        "what": "Too many attempts were made in a row.",
+        "why": "The account service limits requests to protect accounts.",
+        "todo": "Wait a few minutes and try again.",
+        "action": "Understood"
+      },
+      "email_unavailable": {
+        "what": "This installation cannot send emails.",
+        "why": "The account service is not set up to send codes.",
+        "todo": "The password cannot be recovered from ARGUS. Sign in with the one you remember.",
+        "action": "Back to sign in"
+      },
+      "service_rejected": {
+        "what": "The account service rejected the request.",
+        "why": "It answered, but with a reason ARGUS cannot explain.",
+        "todo": "Try again in a few minutes.",
+        "action": "Try again"
+      },
+      "offline": {
+        "what": "The account service could not be reached.",
+        "why": "There may be no internet connection, or the service may not be responding.",
+        "todo": "Try again later. If you do not need it now, continue without an account.",
+        "action": "Try again"
+      },
+      "keychain_unavailable": {
+        "what": "The system keychain could not be used.",
+        "why": "ARGUS keeps the session there and could not reach it.",
+        "todo": "The session may have ended only until you close ARGUS. Try again.",
+        "action": "Try again"
+      },
+      "account_unavailable": {
+        "what": "The account is not available in this installation.",
+        "why": "The account service is not configured.",
+        "todo": "Continue without an account: the rest of ARGUS works the same.",
+        "action": "Understood"
+      },
+      "engine_unavailable": {
+        "what": "The analysis engine did not respond.",
+        "why": "It may still be starting.",
+        "todo": "Wait a few seconds and try again.",
+        "action": "Try again"
+      },
+      "timeout": {
+        "what": "The request took too long.",
+        "why": "The account service did not respond in time.",
+        "todo": "The operation may not have completed. Try again.",
+        "action": "Try again"
+      }
+    }
+  },
   "settings": {
     "title": "Settings",
     "navLabel": "Settings sections",
@@ -636,9 +802,14 @@
       "app": {
         "title": "This app",
         "description": "Stored on this computer; they work even when the engine is not responding."
+      },
+      "account": {
+        "title": "Your account",
+        "description": "Depends on the account service and the analysis engine. Without a connection, ARGUS uses the saved session."
       }
     },
     "sections": {
+      "account": "Account",
       "detection": "Detection",
       "language": "Language and region",
       "appearance": "Appearance",
@@ -690,6 +861,7 @@
     "privacy": {
       "localTitle": "Analysis is local",
       "localDescription": "Files are read and compared on this computer, including OCR. ARGUS does not send their content to the internet or to external servers; only what you confirm sending to a service you enabled in Settings leaves it.",
+      "localDescriptionWithAccount": "Files are read and compared on this computer, including OCR. ARGUS does not send their content to the internet or to external servers; only two things leave it: what you confirm sending to a service you enabled in Settings and, if you use the account, your email, password, optional name, codes and session, which go to Supabase.",
       "retention": "Keep the decision history for 90 days",
       "folder": "History folder",
       "retentionOn": "Reviews and comparisons older than 90 days, with the copy of their files, are deleted when ARGUS starts and when you turn this option on.",
@@ -781,6 +953,23 @@
       "keyPlaceholders": {
         "anthropic": "sk-ant-…",
         "deepseek": "sk-…"
+      }
+    },
+    "account": {
+      "email": "Email",
+      "name": "Name",
+      "noName": "No name",
+      "signOut": "Sign out",
+      "signingOut": "Signing out…",
+      "signedOut": "You are not signed in. ARGUS works the same without an account.",
+      "signIn": "Sign in",
+      "offline": "No connection to the account service: the saved session is being used.",
+      "notPersisted": "The system keychain could not be used: the session will last only while ARGUS is open.",
+      "expired": {
+        "what": "Your session has expired.",
+        "why": "The account service no longer recognizes it: it may have ended on another computer, or the account was deleted.",
+        "todo": "Sign in again. In the meantime you can keep using ARGUS.",
+        "action": "Sign in"
       }
     },
     "assistant": {

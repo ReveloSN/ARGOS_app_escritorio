@@ -3,6 +3,7 @@ import { ArgusEye } from "../atoms/ArgusEye";
 import { Button } from "../atoms/Button";
 import { Icon } from "../atoms/Icon";
 import { Kbd } from "../atoms/Kbd";
+import { AccountBadge, type AccountSummary } from "../molecules/AccountBadge";
 import { AssistantStatusCard, type AssistantSummary } from "../molecules/AssistantStatusCard";
 import { NavItem } from "../molecules/NavItem";
 import styles from "./Sidebar.module.css";
@@ -24,6 +25,8 @@ interface SidebarProps {
   readonly session?: ActiveSessionSummary | undefined;
   readonly reviewBadge?: string | undefined;
   readonly assistant: AssistantSummary;
+  /** Quién está dentro; sin cuenta (o sin sesión) no se muestra nada. */
+  readonly account?: AccountSummary | undefined;
   readonly onNavigate: (section: SidebarSection) => void;
   readonly onToggleCollapsed: () => void;
   readonly onNewReview: () => void;
@@ -83,10 +86,11 @@ function SessionCard({ session }: { session: ActiveSessionSummary }) {
   );
 }
 
-function ExpandedFooter({ assistant, onNewReview, onToggleCollapsed }: SidebarProps) {
+function ExpandedFooter({ assistant, account, onNewReview, onToggleCollapsed }: SidebarProps) {
   const { t } = useI18n();
   return (
     <div className={styles.footer}>
+      {account && <AccountBadge account={account} collapsed={false} />}
       <AssistantStatusCard assistant={assistant} isCompact={false} />
       <Button variant="secondary" icon="add" shortcut={NEW_REVIEW_SHORTCUT} onClick={onNewReview}>
         {t("navigation.newReview")}
@@ -104,10 +108,11 @@ function ExpandedFooter({ assistant, onNewReview, onToggleCollapsed }: SidebarPr
   );
 }
 
-function CollapsedFooter({ assistant, onNewReview, onToggleCollapsed }: SidebarProps) {
+function CollapsedFooter({ assistant, account, onNewReview, onToggleCollapsed }: SidebarProps) {
   const { t } = useI18n();
   return (
     <div className={styles.collapsedFooter}>
+      {account && <AccountBadge account={account} collapsed />}
       <AssistantStatusCard assistant={assistant} isCompact />
       <button
         type="button"

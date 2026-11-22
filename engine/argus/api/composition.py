@@ -4,6 +4,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+from argus.api.account_composition import AccountServices, build_account_services
 from argus.api.ai_composition import build_ai_settings, build_change_explainer
 from argus.api.comparison_composition import (
     ComparisonDependencies,
@@ -119,6 +120,7 @@ from argus.infrastructure.persistence.sqlite_decision_repository import (
 )
 from argus.infrastructure.persistence.sqlite_decision_statistics import SqliteDecisionStatistics
 from argus.infrastructure.persistence.sqlite_document_repository import SqliteDocumentRepository
+from argus.infrastructure.persistence.sqlite_gate_preference import SqliteGatePreference
 from argus.infrastructure.persistence.sqlite_preference_repositories import (
     SqliteAiSettingsRepository,
     SqliteOcrSettingsRepository,
@@ -153,6 +155,7 @@ class ReviewStorage:
     send_decisions: SqliteDecisionRepository
     ai_settings: SqliteAiSettingsRepository
     ocr_settings: SqliteOcrSettingsRepository
+    account_gate: SqliteGatePreference
 
 
 @dataclass(frozen=True)
@@ -180,6 +183,7 @@ class EngineServices:
     ai_settings: ManageAiSettings
     explain_alert: ExplainAlert
     ocr_settings: ManageOcrSettings
+    account: AccountServices
     storage: ReviewStorage
     data_directory: Path
     # Borra lo vencido si el historial tiene límite; corre al iniciar y al activar el límite.
@@ -204,6 +208,7 @@ def build_review_storage(database_path: Path) -> ReviewStorage:
         SqliteDecisionRepository(database, SEND_DECISIONS),
         SqliteAiSettingsRepository(database),
         SqliteOcrSettingsRepository(database),
+        SqliteGatePreference(database),
     )
 
 
@@ -292,6 +297,7 @@ def build_engine_services(
         ),
         ai_settings=build_ai_settings(storage.ai_settings, ai),
         ocr_settings=build_ocr_settings(storage.ocr_settings, external.ocr),
+        account=build_account_services(storage.account_gate, external.account),
         storage=storage,
         data_directory=data_directory,
         purge_history=lambda: apply_history_retention(storage, archive),

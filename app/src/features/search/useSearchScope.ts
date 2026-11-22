@@ -1,7 +1,9 @@
 import { useI18n } from "../../i18n/i18nContext";
+import { hasAccountFeature, useAccount } from "../account/accountContext";
 import { useEngineServices } from "../engine/EngineServicesContext";
 import type { AppRoute } from "../navigation/appRoute";
 import { useReview } from "../review/reviewContext";
+import { settingsSectionsFor } from "../settings/settingsSections";
 import { historySearchScope, settingsSearchScope } from "./pageSearchScopes";
 import { reviewSearchScope } from "./reviewSearchScope";
 import type { SearchScope } from "./searchScope";
@@ -25,6 +27,7 @@ export function useSearchScope(
   const i18n = useI18n();
   const { documents, history } = useEngineServices();
   const { review } = useReview();
+  const { state: account } = useAccount();
   const reviewScope = () =>
     review ? reviewSearchScope({ review, documents, i18n, navigate }) : undefined;
   const scopes: Readonly<Record<AppRoute["page"], () => SearchScope | undefined>> = {
@@ -33,7 +36,7 @@ export function useSearchScope(
     alert: reviewScope,
     report: reviewScope,
     history: () => historySearchScope({ history, i18n, navigate }),
-    settings: () => settingsSearchScope(i18n),
+    settings: () => settingsSearchScope(i18n, settingsSectionsFor(hasAccountFeature(account))),
   };
   return scopes[route.page]();
 }

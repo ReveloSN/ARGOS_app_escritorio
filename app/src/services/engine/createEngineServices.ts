@@ -2,6 +2,7 @@ import { isTauri } from "@tauri-apps/api/core";
 
 import type { EngineServices } from "../../features/engine/EngineServicesContext";
 import { TauriDesktopShell } from "../desktop/tauriDesktopShell";
+import { AccountClient } from "./accountClient";
 import { AiClient } from "./aiClient";
 import { OcrClient } from "./ocrClient";
 import { ComparisonClient } from "./comparisonClient";
@@ -30,6 +31,7 @@ export function createEngineServices(): EngineServices {
     sending: new SendClient(http),
     reports: new ReportClient(http),
     comparisonReports: new ReportClient(http, "/comparisons"),
+    account: new AccountClient(http),
     ai: new AiClient(http),
     ocr: new OcrClient(http),
     history: new HistoryClient(http),
