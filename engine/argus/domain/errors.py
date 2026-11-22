@@ -176,3 +176,27 @@ class OcrUnavailableError(ArgusDomainError):
 
 class InvalidOcrCredentialsError(ArgusDomainError):
     """Lo que se pegó no es la clave JSON de una cuenta de servicio de Google Cloud."""
+
+
+class AccountProblem(StrEnum):
+    """Por qué falló una operación de la cuenta; la interfaz lo traduce a un mensaje de 3 partes."""
+
+    INVALID_CREDENTIALS = "invalid_credentials"
+    EMAIL_NOT_CONFIRMED = "email_not_confirmed"
+    INVALID_CODE = "invalid_code"
+    EMAIL_TAKEN = "email_taken"
+    WEAK_PASSWORD = "weak_password"
+    RATE_LIMITED = "rate_limited"
+    EMAIL_UNAVAILABLE = "email_unavailable"
+    OFFLINE = "offline"
+    ACCOUNT_UNAVAILABLE = "account_unavailable"
+    # Interno: solo sale de una renovación, y la cuenta lo informa como sesión vencida.
+    SESSION_REVOKED = "session_revoked"
+
+
+class AccountError(ArgusDomainError):
+    """El mensaje solo lleva el motivo: nunca la contraseña, el código ni los tokens."""
+
+    def __init__(self, problem: AccountProblem) -> None:
+        super().__init__(f"No se pudo completar la operación de la cuenta: {problem}.")
+        self.problem = problem

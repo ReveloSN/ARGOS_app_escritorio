@@ -1,0 +1,87 @@
+import pytest
+
+from argus.application.account.sign_in import SignIn
+from argus.application.account.sign_out import SignOut
+from argus.domain.account import AccountState, AccountStatus, Credentials
+from argus.domain.errors import AccountProblem, KeychainUnavailableError
+from tests.application.account_doubles import SESSION, STORED, AccountDoubles
+
+CREDENTIALS = Credentials("ana@example.com", "clave")
+
+
+@pytest.fixture
+def doubles() -> AccountDoubles:
+    doubles = AccountDoubles()
+    doubles.gate.skipped = True
+    return doubles
+
+
+def test_sign_out_revokes_with_the_access_token_in_memory(doubles: AccountDoubles) -> None:
+    sessions = doubles.sessions()
+    SignIn(sessions).execute(CREDENTIALS)
+
+    SignOut(sessions).execute()
+
+    assert doubles.provider.calls[-1] == ("sign_out", SESSION.access_token)
+
+
+@pytest.mark.parametrize("problem", [AccountProblem.OFFLINE, AccountProblem.SESSION_REVOKED])
+def test_sign_out_without_network_clears_what_is_local(
+    doubles: AccountDoubles, problem: AccountProblem
+) -> None:
+    doubles.provider.fail("sign_out", problem)
+    sessions = doubles.sessions()
+    SignIn(sessions).execute(CREDENTIALS)
+
+    state = SignOut(sessions).execute()
+
+    assert state == AccountState(AccountStatus.SIGNED_OUT, gate_skipped=False)
+    assert doubles.store.stored is None
+    assert doubles.sessions().current() == state
+
+
+def test_local_session_is_cleared_before_using_the_network(doubles: AccountDoubles) -> None:
+    doubles.provider.failures["sign_out"] = RuntimeError("fallo inesperado")
+    sessions = doubles.sessions()
+    SignIn(sessions).execute(CREDENTIALS)
+
+    with pytest.raises(RuntimeError):
+        SignOut(sessions).execute()
+
+    assert sessions.current().status is AccountStatus.SIGNED_OUT
+    assert doubles.store.stored is None
+
+
+def test_sign_out_after_restart_has_no_access_token_to_revoke(doubles: AccountDoubles) -> None:
+    doubles.store.stored = STORED
+
+    SignOut(doubles.sessions()).execute()
+
+    assert doubles.store.stored is None
+    assert doubles.provider.calls == []
+
+
+def test_sign_out_reports_a_keychain_that_cannot_delete(doubles: AccountDoubles) -> None:
+    sessions = doubles.sessions()
+    SignIn(sessions).execute(CREDENTIALS)
+    doubles.store.unavailable = {"clear"}
+
+    with pytest.raises(KeychainUnavailableError):
+        SignOut(sessions).execute()
+
+    # Sin llavero también hay que poder salir: se olvida en memoria y se avisa de lo guardado.
+    assert sessions.current() == AccountState(AccountStatus.SIGNED_OUT, is_persisted=False)
+    assert doubles.provider.calls[-1] == ("sign_out", SESSION.access_token)
+
+
+def test_sign_out_can_be_retried_when_the_keychain_returns(doubles: AccountDoubles) -> None:
+    doubles.store.stored = STORED
+    doubles.store.unavailable = {"clear"}
+    sessions = doubles.sessions()
+    with pytest.raises(KeychainUnavailableError):
+        SignOut(sessions).execute()
+
+    doubles.store.unavailable.clear()
+
+    assert SignOut(sessions).execute() == AccountState(AccountStatus.SIGNED_OUT)
+    assert doubles.store.stored is None
