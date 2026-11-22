@@ -30,3 +30,7 @@ Thumbs.db
 # Variables locales de desarrollo (pueden contener tokens)
 .env.local
 *.local
+
+# Configuración de la cuenta para los instaladores, escrita al empaquetar (ADR 033)
+engine/distribution/account-config.json
+engine/account-config.json

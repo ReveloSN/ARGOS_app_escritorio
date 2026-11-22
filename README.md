@@ -16,6 +16,7 @@ Cada alerta muestra los dos valores con el archivo, la página y el fragmento de
 - **OCR** para PDF escaneados, con Tesseract en el equipo. Opcionalmente se puede usar Google Document AI, que pide su permiso antes de cada envío.
 - **IA opcional:** «Explicar este cambio» y «Explicar esta alerta» con Claude (Anthropic) o DeepSeek, a elección. Viene apagada, cada proveedor guarda su clave en el llavero del sistema y cada explicación se rotula «Sugerencia de IA» con la cita de su origen.
 - **Asistente de IA:** el ojo de ARGUS en la barra lateral, con un estado que sale de datos reales del motor.
+- **Cuenta opcional:** correo y contraseña para identificarse al abrir la app, con Supabase Auth. No sincroniza nada ni protege los datos del equipo, y siempre puede continuar sin cuenta (ADR 033; configuración en [docs/configurar-supabase.md](docs/configurar-supabase.md)).
 
 ## Instalar
 
