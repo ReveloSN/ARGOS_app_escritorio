@@ -70,7 +70,8 @@ def test_an_expired_session_has_nothing_to_revoke(doubles: AccountDoubles) -> No
 
     assert SignOut(doubles.sessions()).execute() == SIGNED_OUT
 
-    assert (doubles.provider.calls, doubles.store.stored) == ([], None)
+    assert doubles.provider.calls == []
+    assert doubles.store.read() is None
 
 
 def test_the_renewed_session_is_never_saved(doubles: AccountDoubles) -> None:
