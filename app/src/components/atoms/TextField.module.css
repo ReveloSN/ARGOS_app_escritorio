@@ -28,7 +28,14 @@
   line-height: var(--text-auxiliary-line);
 }
 
+.control {
+  display: flex;
+  gap: var(--spacing-1-5);
+}
+
 .input {
+  flex: 1;
+  min-width: 0;
   height: var(--size-control-lg);
   padding: 0 var(--spacing-2-5);
   border: var(--border-width) solid var(--color-border-control);

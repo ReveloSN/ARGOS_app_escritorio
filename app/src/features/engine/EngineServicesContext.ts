@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 
 import type { DesktopShell } from "../../services/desktop/desktopShell";
+import type { AccountGateway } from "../../services/engine/accountTypes";
 import type { AiGateway } from "../../services/engine/aiTypes";
 import type { OcrGateway } from "../../services/engine/ocrTypes";
 import type { ComparisonGateway } from "../../services/engine/comparisonTypes";
@@ -23,6 +24,7 @@ export interface EngineServices {
   readonly reports: ReportGateway;
   /** El informe de una comparación: mismo formato, otro origen. */
   readonly comparisonReports: ReportGateway;
+  readonly account: AccountGateway;
   readonly ai: AiGateway;
   readonly ocr: OcrGateway;
   readonly history: HistorySource;

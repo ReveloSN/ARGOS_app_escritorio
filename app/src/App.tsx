@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Sidebar } from "./components/organisms/Sidebar";
 import { Topbar } from "./components/organisms/Topbar";
 import { AppShell } from "./components/templates/AppShell";
+import { useAccount } from "./features/account/accountContext";
+import { AccountGate } from "./features/account/AccountGate";
+import { summarizeAccount } from "./features/account/accountSummary";
 import { OnboardingGate } from "./features/assistant/OnboardingDialog";
 import { topbarStatusFor, useAssistantChrome } from "./features/assistant/useAssistantChrome";
 import { EngineConnectionNotice } from "./features/engine/EngineConnectionNotice";
@@ -41,6 +44,7 @@ export function App() {
   const search = useGlobalSearch(route, setRoute);
   const assistant = useAssistantChrome();
   const i18n = useI18n();
+  const { state: account } = useAccount();
   const [locationTarget, setLocationTarget] = useState<HTMLElement | null>(null);
   const toggleSidebar = () => {
     setCollapsed((current) => !current);
@@ -75,6 +79,7 @@ export function App() {
           session={indicators?.card}
           reviewBadge={indicators?.badge}
           assistant={assistant.sidebar}
+          account={summarizeAccount(account, i18n)}
           onNavigate={(section) => {
             setRoute(routeForSection(section));
           }}
@@ -119,6 +124,7 @@ export function App() {
         <GlobalSearch scope={search.scope} initialQuery={search.query} onClose={search.close} />
       )}
       <OnboardingGate />
+      <AccountGate />
       <SessionNotice deletion={deletion} switching={switching} />
     </AppShell>
   );

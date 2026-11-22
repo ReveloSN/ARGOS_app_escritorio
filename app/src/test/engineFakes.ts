@@ -1,6 +1,7 @@
 import { vi } from "vitest";
 
 import type { EngineServices } from "../features/engine/EngineServicesContext";
+import { fakeAccount } from "./accountFakes";
 import type { DesktopShell } from "../services/desktop/desktopShell";
 import type { EngineHealth } from "../services/engine/engineClient";
 import type {
@@ -36,6 +37,7 @@ export interface FakeEngineOptions {
   readonly sending?: Partial<EngineServices["sending"]>;
   readonly reports?: Partial<EngineServices["reports"]>;
   readonly comparisonReports?: Partial<EngineServices["comparisonReports"]>;
+  readonly account?: Partial<EngineServices["account"]>;
   readonly ai?: Partial<EngineServices["ai"]>;
   readonly ocr?: Partial<EngineServices["ocr"]>;
   readonly history?: Partial<EngineServices["history"]>;
@@ -154,6 +156,7 @@ export function fakeEngineServices(options: FakeEngineOptions = {}): EngineServi
     sending: fakeSending(options.sending),
     reports: fakeReports(options.reports),
     comparisonReports: fakeReports(options.comparisonReports),
+    account: fakeAccount(options.account),
     ai: fakeAi(options.ai),
     ocr: fakeOcr(options.ocr),
     history: { history: notConfigured(), records: notConfigured(), ...options.history },

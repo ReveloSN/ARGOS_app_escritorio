@@ -12,6 +12,8 @@
     "collapse": "Contraer",
     "expand": "Expandir",
     "localAnalysis": "Análisis local en este equipo",
+    "accountLabel": "Cuenta: {name}",
+    "accountExpired": "Sesión vencida",
     "activeSession": "Sesión activa",
     "compare": "Comparar",
     "send": "Revisar antes de enviar"
@@ -624,6 +626,148 @@
     "failed": "No pudimos buscar: el motor de análisis no respondió. Escriba de nuevo para reintentar.",
     "openFailed": "No pudimos abrir «{name}». Inténtelo de nuevo."
   },
+  "account": {
+    "heading": "Su cuenta de ARGUS",
+    "close": "Cerrar",
+    "escape": "Esc",
+    "privacy": "Su correo y contraseña se envían a Supabase solo para verificar la cuenta. Sus documentos no salen del equipo.",
+    "skip": "Continuar sin cuenta",
+    "tabs": {
+      "label": "Acceso",
+      "signIn": "Iniciar sesión",
+      "signUp": "Crear cuenta"
+    },
+    "views": {
+      "signIn": "Iniciar sesión",
+      "signUp": "Crear cuenta",
+      "verify": "Revise su correo para confirmar la cuenta",
+      "recover": "Recuperar la contraseña",
+      "reset": "Elija una contraseña nueva"
+    },
+    "fields": {
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "newPassword": "Contraseña nueva",
+      "name": "Nombre",
+      "nameHint": "Opcional. Aparece en la barra lateral.",
+      "code": "Código del correo",
+      "codeHint": "De 6 a 10 dígitos.",
+      "showPassword": "Mostrar contraseña",
+      "required": "Este dato es obligatorio."
+    },
+    "actions": {
+      "signIn": "Entrar",
+      "signingIn": "Entrando…",
+      "signUp": "Crear cuenta",
+      "signingUp": "Creando la cuenta…",
+      "verify": "Confirmar cuenta",
+      "verifying": "Confirmando…",
+      "sendCode": "Enviar código",
+      "sendingCode": "Enviando…",
+      "reset": "Cambiar contraseña",
+      "resetting": "Cambiando…",
+      "forgot": "¿Olvidó su contraseña?",
+      "haveCode": "Ya tengo un código",
+      "backToSignIn": "Volver a iniciar sesión"
+    },
+    "notes": {
+      "verify": "Escriba el código que enviamos a {email}.",
+      "recover": "Escriba el correo de su cuenta. Si hay una cuenta con ese correo, recibirá un código.",
+      "reset": "Si hay una cuenta con ese correo, recibirá un código. Escríbalo aquí con la contraseña nueva."
+    },
+    "problems": {
+      "invalid_credentials": {
+        "what": "El correo o la contraseña no coinciden.",
+        "why": "Por seguridad, el servicio no dice cuál de los dos falló.",
+        "todo": "Revise ambos datos e inténtelo de nuevo, o recupere la contraseña.",
+        "action": "Recuperar la contraseña"
+      },
+      "email_not_confirmed": {
+        "what": "Esta cuenta todavía no está confirmada.",
+        "why": "El servicio espera el código que envió al correo de la cuenta.",
+        "todo": "Escriba ese código para confirmarla y entrar.",
+        "action": "Escribir el código"
+      },
+      "invalid_code": {
+        "what": "El código no es válido o ya venció.",
+        "why": "Los códigos duran poco y solo sirven una vez.",
+        "todo": "Revise que lo escribió completo, o pida uno nuevo.",
+        "action": "Pedir un código nuevo"
+      },
+      "email_taken": {
+        "what": "Ya existe una cuenta con ese correo.",
+        "why": "Cada correo solo puede tener una cuenta.",
+        "todo": "Inicie sesión con ese correo, o use otro para crear una cuenta nueva.",
+        "action": "Iniciar sesión"
+      },
+      "weak_password": {
+        "what": "La contraseña es demasiado débil.",
+        "why": "El servicio exige una contraseña más larga o más variada.",
+        "todo": "Elija otra contraseña e inténtelo de nuevo.",
+        "action": "Entendido"
+      },
+      "same_password": {
+        "what": "La contraseña nueva es igual a la actual.",
+        "why": "El servicio no acepta repetir la contraseña.",
+        "todo": "Elija una contraseña distinta.",
+        "action": "Entendido"
+      },
+      "invalid_value": {
+        "what": "El servicio no aceptó uno de los datos.",
+        "why": "Puede que el correo o el código tengan un formato que no reconoce.",
+        "todo": "Revíselos e inténtelo de nuevo.",
+        "action": "Entendido"
+      },
+      "rate_limited": {
+        "what": "Se hicieron demasiados intentos seguidos.",
+        "why": "El servicio de cuentas limita las solicitudes para proteger las cuentas.",
+        "todo": "Espere unos minutos e inténtelo de nuevo.",
+        "action": "Entendido"
+      },
+      "email_unavailable": {
+        "what": "Esta instalación no puede enviar correos.",
+        "why": "El servicio de cuentas no está preparado para enviar códigos.",
+        "todo": "La contraseña no se puede recuperar desde ARGUS. Inicie sesión con la que recuerde.",
+        "action": "Volver a iniciar sesión"
+      },
+      "service_rejected": {
+        "what": "El servicio de cuentas rechazó la solicitud.",
+        "why": "Respondió, pero sin un motivo que ARGUS pueda explicar.",
+        "todo": "Inténtelo de nuevo en unos minutos.",
+        "action": "Reintentar"
+      },
+      "offline": {
+        "what": "No se pudo contactar con el servicio de cuentas.",
+        "why": "Puede que no haya conexión a internet o que el servicio no esté respondiendo.",
+        "todo": "Inténtelo más tarde. Si no lo necesita ahora, continúe sin cuenta.",
+        "action": "Reintentar"
+      },
+      "keychain_unavailable": {
+        "what": "No se pudo usar el llavero del sistema.",
+        "why": "ARGUS guarda ahí la sesión y no logró acceder a él.",
+        "todo": "La sesión pudo cerrarse solo hasta que cierre ARGUS. Inténtelo de nuevo.",
+        "action": "Reintentar"
+      },
+      "account_unavailable": {
+        "what": "La cuenta no está disponible en esta instalación.",
+        "why": "Falta la configuración del servicio de cuentas.",
+        "todo": "Continúe sin cuenta: el resto de ARGUS funciona igual.",
+        "action": "Entendido"
+      },
+      "engine_unavailable": {
+        "what": "El motor de análisis no respondió.",
+        "why": "Puede que todavía esté arrancando.",
+        "todo": "Espere unos segundos e inténtelo de nuevo.",
+        "action": "Reintentar"
+      },
+      "timeout": {
+        "what": "La solicitud tardó demasiado.",
+        "why": "El servicio de cuentas no respondió a tiempo.",
+        "todo": "La operación pudo no completarse. Inténtelo de nuevo.",
+        "action": "Reintentar"
+      }
+    }
+  },
   "settings": {
     "title": "Ajustes",
     "navLabel": "Secciones de ajustes",
@@ -639,6 +783,7 @@
       }
     },
     "sections": {
+      "account": "Cuenta",
       "detection": "Detección",
       "language": "Idioma y región",
       "appearance": "Apariencia",
@@ -781,6 +926,24 @@
       "keyPlaceholders": {
         "anthropic": "sk-ant-…",
         "deepseek": "sk-…"
+      }
+    },
+    "account": {
+      "signedInAs": "Sesión iniciada",
+      "email": "Correo",
+      "name": "Nombre",
+      "noName": "Sin nombre",
+      "signOut": "Cerrar sesión",
+      "signingOut": "Cerrando sesión…",
+      "signedOut": "No ha iniciado sesión. ARGUS funciona igual sin una cuenta.",
+      "signIn": "Iniciar sesión",
+      "offline": "Sin conexión con el servicio de cuentas: se usa la sesión guardada.",
+      "notPersisted": "No se pudo usar el llavero del sistema: la sesión durará solo mientras ARGUS esté abierto.",
+      "expired": {
+        "what": "Su sesión venció.",
+        "why": "El servicio de cuentas ya no la reconoce: pudo cerrarse en otro equipo o la cuenta se eliminó.",
+        "todo": "Inicie sesión de nuevo. Mientras tanto puede seguir usando ARGUS.",
+        "action": "Iniciar sesión"
       }
     },
     "assistant": {

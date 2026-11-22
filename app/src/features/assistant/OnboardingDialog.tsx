@@ -6,6 +6,7 @@ import { ReticleMotif } from "../../components/atoms/ReticleMotif";
 import { joinClassNames } from "../../components/joinClassNames";
 import { useModalFocus } from "../../components/useModalFocus";
 import { useI18n } from "../../i18n/i18nContext";
+import { useAccount } from "../account/accountContext";
 import { useShortcuts } from "../keyboard/useShortcuts";
 import { useAssistantPreferences } from "./assistantContext";
 import { AssistantEye } from "./AssistantEye";
@@ -67,10 +68,14 @@ function StepContent({ step }: { readonly step: OnboardingStep }) {
   );
 }
 
-/** Los primeros pasos, solo mientras están abiertos (la primera vez o desde Ajustes). */
+/**
+ * Los primeros pasos, solo mientras están abiertos (la primera vez o desde Ajustes). Si la puerta
+ * de la cuenta está abierta, esperan a que se cierre.
+ */
 export function OnboardingGate() {
   const { isOnboardingOpen } = useAssistantPreferences();
-  return isOnboardingOpen ? <OnboardingDialog /> : null;
+  const { gate } = useAccount();
+  return isOnboardingOpen && !gate ? <OnboardingDialog /> : null;
 }
 
 /** Primeros pasos: tres pantallas con el asistente; se omiten con Esc y avanzan con Enter. */
