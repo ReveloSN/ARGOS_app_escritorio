@@ -1,4 +1,4 @@
-import { act, screen } from "@testing-library/react";
+import { act, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -48,5 +48,19 @@ describe("la puerta que esperaba a la búsqueda", () => {
     const active = document.activeElement;
     expect(active).not.toBe(document.body);
     expect(screen.getByRole("main").parentElement?.contains(active)).toBe(true);
+  });
+
+  it("el mismo Esc que cierra la búsqueda queda atendido y no cierra la puerta", async () => {
+    await openSearchThenResolveAccount();
+    const escape = new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true });
+
+    await act(async () => {
+      within(screen.getByRole("dialog")).getByRole("combobox").dispatchEvent(escape);
+      await later();
+    });
+
+    expect(escape.defaultPrevented).toBe(true);
+    expect(screen.getByLabelText("Correo electrónico")).toBeVisible();
+    expect(document.activeElement).toBe(screen.getByLabelText("Correo electrónico"));
   });
 });

@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useLayoutEffect, useReducer } from "react";
 
 import { hasOpenModal, MODAL_SELECTOR } from "../../components/openModal";
 
@@ -13,7 +13,7 @@ const OTHER_MODAL = `${MODAL_SELECTOR}:not([${GATE_MARK}])`;
  */
 export function useOtherModalOpen(isEnabled: boolean): boolean {
   const [, refresh] = useReducer((count: number) => count + 1, 0);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isEnabled) return undefined;
     const observer = new MutationObserver(refresh);
     observer.observe(document.body, {
@@ -22,6 +22,8 @@ export function useOtherModalOpen(isEnabled: boolean): boolean {
       attributes: true,
       attributeFilter: ["role", "aria-modal"],
     });
+    // Un diálogo montado en este mismo commit no avisa al observador: se lee antes de pintar.
+    refresh();
     return () => {
       observer.disconnect();
     };

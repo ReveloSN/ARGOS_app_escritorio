@@ -7,7 +7,10 @@ export function useDismiss(ref: RefObject<HTMLElement | null>, onDismiss: () => 
       if (event.target instanceof Node && !ref.current?.contains(event.target)) onDismiss();
     };
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onDismiss();
+      if (event.key !== "Escape") return;
+      // Una tecla que ya cerró algo no debe cerrar también lo que aparezca en ese mismo gesto.
+      event.preventDefault();
+      onDismiss();
     };
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
