@@ -57,6 +57,8 @@ Desde la versión 0.1.2, ARGUS trae una cuenta opcional. Por ahora no verifica e
 
 Los instaladores se generan en GitHub Actions, en el workflow «Instaladores». Llevan el motor, los modelos de lenguaje y Tesseract con español e inglés, así que **funcionan sin internet desde la primera vez**. No tienen firma de código: Windows muestra SmartScreen al instalar («Más información › Ejecutar de todas formas») y macOS pide abrir la app desde Ajustes › Privacidad y seguridad («Abrir de todos modos»).
 
+En Windows, desde la 0.1.3 el programa se instala en `%LOCALAPPDATA%\Programs\ARGUS` y el historial sigue en `%LOCALAPPDATA%\ARGUS`. Para actualizar, instale encima: el historial se conserva. **No borre `%LOCALAPPDATA%\ARGUS` para reinstalar**, porque ahí están sus revisiones (ADR 034).
+
 ## Privacidad
 
 - Los archivos se leen y comparan en su equipo. Ningún contenido sale de él sin que usted lo active en Ajustes y confirme cada envío.
@@ -124,7 +126,7 @@ npm run tauri -- build --config src-tauri/tauri.bundle.conf.json
 
 - `engine/`: motor en Python con FastAPI y arquitectura hexagonal (`domain`, `application`, `infrastructure`, `api`), persistencia en SQLite y NLP local con spaCy, ONNX Runtime y rapidfuzz.
 - `app/`: interfaz en Tauri 2, React y TypeScript estricto, con design tokens en tres niveles, Atomic Design e i18n en español e inglés.
-- `docs/decisions/`: decisiones de arquitectura (ADR 001 a 033).
+- `docs/decisions/`: decisiones de arquitectura (ADR 001 a 034).
 - `docs/progreso.md`: el estado de cada fase.
 - `docs/mockups/`: la fuente de verdad visual.
 
