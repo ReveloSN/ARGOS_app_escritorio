@@ -123,12 +123,19 @@ Se eligió A porque es la más sencilla (la pidió el usuario).
    - Usa el mismo token interno que el resto del motor.
    - Los errores llevan un `code` estable, que la interfaz traduce al mensaje en 3 partes: `invalid_credentials`, `email_not_confirmed`, `invalid_code`, `email_taken`, `weak_password`, `rate_limited`, `offline` y `keychain_unavailable`.
    - En el estado `expired`, se borra la sesión del llavero y se conserva el correo para rellenar el formulario.
-5. **Configuración de Supabase.** El plan incluye una lista de pasos para el usuario:
-   - Crear el proyecto.
-   - Activar la confirmación por correo.
-   - Cambiar las 2 plantillas para que envíen el código.
-   - Copiar la URL y la clave publicable.
-   - El plan gratuito usa el correo de Supabase, con un límite bajo de envíos por hora; basta para el curso.
+5. **Configuración de Supabase (corregido el 22 nov con la documentación oficial).**
+   - El correo incluido solo envía a miembros del proyecto (2 por hora) y los proyectos gratuitos creados desde el 3 jun 2026 no pueden editar sus plantillas. Con él los códigos no sirven.
+   - **Modo con correo:** el usuario configura un SMTP propio, activa la confirmación y cambia las 2 plantillas para que envíen el código. Funciona todo.
+   - **Modo sin correo:** el usuario apaga «Confirm Email». Crear cuenta entra directo; la recuperación no está disponible y responde `email_unavailable`, con su mensaje en 3 partes.
+   - El motor admite los dos modos sin cambios de código; se elige al configurar el proyecto.
+   - El código del correo puede tener de 6 a 10 dígitos: su longitud se configura en Supabase.
+6. **ADR 005.** Decía «no hay cuentas ni inicio de sesión». El ADR 033 reemplaza esa parte, por pedido del usuario.
+7. **Precisiones técnicas al leer el código.**
+   - En el llavero van solo la cuenta y el token de renovación (el de acceso queda en memoria), con `ChunkedSecretStore` por el límite de tamaño de Windows.
+   - `GET /account` no usa la red. La renovación es `POST /account/refresh`: abrir ARGUS nunca espera a internet.
+   - La sesión vencida se informa como `expired`, con el correo.
+   - `account_gate_skipped` tiene su propio repositorio sobre la tabla de preferencias: guardar otros Ajustes no lo pisa.
+   - Los instaladores llevan la configuración en un archivo generado al empaquetar, porque una variable de la CI no existe en el equipo de quien instala.
 
 ## Lo que queda al constructor
 
