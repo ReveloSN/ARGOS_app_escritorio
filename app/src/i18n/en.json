@@ -649,7 +649,7 @@
       "password": "Password",
       "newPassword": "New password",
       "name": "Name",
-      "nameHint": "Optional. It appears in the sidebar.",
+      "nameHint": "Optional. It appears in the sidebar and, if you enter it, it is also sent to Supabase.",
       "code": "Code from the email",
       "codeHint": "6 to 10 digits.",
       "showPassword": "Show password",
@@ -668,10 +668,12 @@
       "resetting": "Changing…",
       "forgot": "Forgot your password?",
       "haveCode": "I already have a code",
+      "resendCode": "Send a new code",
       "backToSignIn": "Back to sign in"
     },
     "notes": {
       "verify": "Enter the code we sent to {email}.",
+      "resent": "If there is an account to confirm with that email, it will receive a new code.",
       "recover": "Enter your account email. If there is an account with that email, it will receive a code.",
       "reset": "If there is an account with that email, it will receive a code. Enter it here with the new password."
     },
@@ -679,7 +681,13 @@
       "verifyInvalidCode": {
         "what": "The code is not valid or has expired.",
         "why": "Codes last a short time and work only once.",
-        "todo": "Check the code in the email, correct it and confirm again.",
+        "todo": "Check the code in the email and correct it, or ask for a new one.",
+        "action": "Send a new code"
+      },
+      "verifyEmailUnavailable": {
+        "what": "The confirmation email could not be sent.",
+        "why": "This installation cannot send emails.",
+        "todo": "If you already have a code, enter it. Otherwise, continue without an account: the rest of ARGUS works the same.",
         "action": "Understood"
       },
       "signUpEmailUnavailable": {
@@ -728,7 +736,7 @@
       },
       "invalid_value": {
         "what": "The service did not accept one of the values.",
-        "why": "The email or the code may have a format it does not recognize.",
+        "why": "The email or the code may have a format it does not recognize, or the password may exceed the maximum of 72 characters (fewer if it has accents).",
         "todo": "Check them and try again.",
         "action": "Understood"
       },
@@ -853,6 +861,7 @@
     "privacy": {
       "localTitle": "Analysis is local",
       "localDescription": "Files are read and compared on this computer, including OCR. ARGUS does not send their content to the internet or to external servers; only what you confirm sending to a service you enabled in Settings leaves it.",
+      "localDescriptionWithAccount": "Files are read and compared on this computer, including OCR. ARGUS does not send their content to the internet or to external servers; only two things leave it: what you confirm sending to a service you enabled in Settings and, if you use the account, your email, password, optional name, codes and session, which go to Supabase.",
       "retention": "Keep the decision history for 90 days",
       "folder": "History folder",
       "retentionOn": "Reviews and comparisons older than 90 days, with the copy of their files, are deleted when ARGUS starts and when you turn this option on.",
@@ -947,7 +956,6 @@
       }
     },
     "account": {
-      "signedInAs": "Signed in",
       "email": "Email",
       "name": "Name",
       "noName": "No name",

@@ -8,11 +8,7 @@ import type {
   VerifyForm,
 } from "../../services/engine/accountTypes";
 
-/** Quién abrió la puerta: el arranque o Ajustes (Esc no cambia la marca de ninguno). */
-export type GateOrigin = "startup" | "settings";
-
 export interface GateState {
-  readonly origin: GateOrigin;
   /** Correo con el que se rellena el formulario (la sesión vencida lo conserva). */
   readonly email: string | null;
 }
@@ -26,6 +22,7 @@ export interface AccountActions {
   readonly signIn: (form: SignInForm) => Promise<void>;
   readonly signUp: (form: SignUpForm) => Promise<SignUpAnswer>;
   readonly verify: (form: VerifyForm) => Promise<void>;
+  readonly resendCode: (email: string) => Promise<void>;
   readonly requestReset: (email: string) => Promise<void>;
   readonly confirmReset: (form: PasswordResetForm) => Promise<void>;
   readonly skip: () => Promise<void>;
@@ -36,7 +33,7 @@ export interface AccountContextValue {
   /** `null` mientras no hay una primera lectura: sin ella no existe nada de la cuenta. */
   readonly state: AccountStateResult | null;
   readonly gate: GateState | null;
-  /** Verdadero hasta que la primera lectura de la cuenta responde o falla. */
+  /** Verdadero hasta que la cuenta responde, su lectura falla con el motor listo o no hay motor. */
   readonly isFirstReadPending: boolean;
   readonly openGate: (email?: string | null) => void;
   readonly closeGate: () => void;

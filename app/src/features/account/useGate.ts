@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 
-import type { GateOrigin, GateState } from "./accountContext";
+import type { GateState } from "./accountContext";
 
 export interface GateControl {
   readonly gate: GateState | null;
-  readonly open: (origin: GateOrigin, email: string | null) => void;
+  readonly open: (email: string | null) => void;
   readonly close: () => void;
   /** Cierra solo si la puerta sigue siendo la que estaba abierta al lanzar la petición. */
   readonly closeIfSame: (session: number) => void;
@@ -22,9 +22,9 @@ export function useGate(): GateControl {
   };
   return {
     gate,
-    open: (origin, email) => {
+    open: (email) => {
       sessions.current += 1;
-      setGate({ origin, email });
+      setGate({ email });
     },
     close,
     closeIfSame: (session) => {

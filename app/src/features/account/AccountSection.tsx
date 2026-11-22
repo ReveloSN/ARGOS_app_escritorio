@@ -8,9 +8,9 @@ import styles from "./AccountSection.module.css";
 import { AccountProblemMessage } from "./AccountProblemMessage";
 import { useGateForm, type GateFormState } from "./useGateForm";
 
-function ExpiredNotice({ state }: { readonly state: AccountStateResult }) {
+function ExpiredNotice({ state, form }: { state: AccountStateResult; form: GateFormState }) {
   const { t } = useI18n();
-  const { openGate } = useAccount();
+  const { openGate, actions } = useAccount();
   return (
     <ErrorMessage
       tone="neutral"
@@ -21,6 +21,12 @@ function ExpiredNotice({ state }: { readonly state: AccountStateResult }) {
         label: t("settings.account.expired.action"),
         onClick: () => {
           openGate(state.email);
+        },
+      }}
+      secondaryAction={{
+        label: t(form.isBusy ? "settings.account.signingOut" : "settings.account.signOut"),
+        onClick: () => {
+          form.run(actions.signOut);
         },
       }}
     />
@@ -79,13 +85,13 @@ function SignedOutDetails() {
 
 function Details({ state, form }: { state: AccountStateResult; form: GateFormState }) {
   if (state.status === "signed_in") return <SignedInDetails state={state} form={form} />;
-  if (state.status === "expired") return <ExpiredNotice state={state} />;
+  if (state.status === "expired") return <ExpiredNotice state={state} form={form} />;
   return <SignedOutDetails />;
 }
 
 /**
  * Ajustes › Cuenta: quién está dentro y cómo salir. El fallo de «Cerrar sesión» se queda aunque la
- * sesión ya se haya cerrado en memoria; vencida, pide volver a entrar sin bloquear nada.
+ * sesión ya se haya cerrado en memoria; vencida, pide volver a entrar o deja quitarla.
  */
 export function AccountSection() {
   const { state, actions } = useAccount();

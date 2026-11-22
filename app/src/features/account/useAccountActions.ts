@@ -68,6 +68,14 @@ function skippingWith(mutate: Mutate, { gateway, gate }: Collaborators) {
   };
 }
 
+/** Pedir un código por correo no cambia la cuenta: no hace falta volver a leerla. */
+function askingForCodes(gateway: AccountGateway) {
+  return {
+    resendCode: (email: string) => gateway.resendSignUpCode(email),
+    requestReset: (email: string) => gateway.requestPasswordReset(email),
+  };
+}
+
 export function useAccountActions(
   gateway: AccountGateway,
   store: AccountStore,
@@ -81,7 +89,7 @@ export function useAccountActions(
     verify: (form) => enter(() => gateway.verify(form)),
     confirmReset: (form) => enter(() => gateway.confirmPasswordReset(form)),
     signUp: signingUpWith(mutate, parts),
-    requestReset: (email) => gateway.requestPasswordReset(email),
+    ...askingForCodes(gateway),
     skip: skippingWith(mutate, parts),
     signOut: async () => {
       await mutate(() => gateway.signOut(), identity);

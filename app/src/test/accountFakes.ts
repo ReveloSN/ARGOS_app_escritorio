@@ -48,6 +48,7 @@ export function fakeAccount(
     signUp: notConfigured(),
     verify: notConfigured(),
     signIn: notConfigured(),
+    resendSignUpCode: notConfigured(),
     requestPasswordReset: notConfigured(),
     confirmPasswordReset: notConfigured(),
     ...overrides,

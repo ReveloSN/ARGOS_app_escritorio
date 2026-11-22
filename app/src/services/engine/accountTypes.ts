@@ -66,6 +66,7 @@ export interface AccountGateway {
   signUp(form: SignUpForm): Promise<SignUpOutcome>;
   verify(form: VerifyForm): Promise<AccountStateResult>;
   signIn(form: SignInForm): Promise<AccountStateResult>;
+  resendSignUpCode(email: string): Promise<void>;
   requestPasswordReset(email: string): Promise<void>;
   confirmPasswordReset(form: PasswordResetForm): Promise<AccountStateResult>;
 }

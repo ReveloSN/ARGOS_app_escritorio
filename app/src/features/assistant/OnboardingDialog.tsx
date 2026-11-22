@@ -68,12 +68,8 @@ function StepContent({ step }: { readonly step: OnboardingStep }) {
   );
 }
 
-/**
- * Los primeros pasos, solo mientras están abiertos (la primera vez o desde Ajustes). Esperan a que
- * la primera lectura de la cuenta responda o falle (nunca para siempre) y, si la puerta se abre
- * antes de que se vean, a que se cierre. Una puerta que llega con los pasos ya a la vista espera
- * ella: no se les quita el sitio ni se reinician.
- */
+/** Los primeros pasos esperan a la lectura de la cuenta (o a saber que no hay motor) y a la
+ * puerta que llegó antes. La que llega con los pasos a la vista espera ella: no se reinician. */
 export function OnboardingGate() {
   const { isOnboardingOpen } = useAssistantPreferences();
   const { gate, isFirstReadPending } = useAccount();

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { answering, SIGNED_IN, SIGNED_OUT } from "../../test/accountFakes";
-import { fakeEngineServices } from "../../test/engineFakes";
+import { fakeEngineServices, HEALTHY } from "../../test/engineFakes";
 import { renderApp, stubBrowser } from "../../test/renderApp";
 import type { PreferenceStorage } from "../../services/preferences/preferenceStorage";
 import type { AccountStateResult } from "../../services/engine/accountTypes";
@@ -55,13 +55,14 @@ describe("el fondo detrás de la puerta", () => {
   });
 
   it("si la puerta espera a otro diálogo, la aplicación sigue activa", async () => {
-    const account = vi
-      .fn()
-      .mockRejectedValueOnce(new Error("arrancando"))
-      .mockResolvedValue(SIGNED_OUT);
-    renderApp(fakeEngineServices({ account: { account } }), undefined, emptyStorage());
+    const down = () => Promise.reject(new Error("sin motor"));
+    const account = vi.fn().mockImplementationOnce(down).mockResolvedValue(SIGNED_OUT);
+    const checkHealth = vi.fn().mockImplementationOnce(down).mockResolvedValue(HEALTHY);
+    const services = fakeEngineServices({ account: { account }, checkHealth });
+    renderApp(services, undefined, emptyStorage());
     await act(() => Promise.resolve());
-    await act(() => Promise.resolve());
+    await act(() => services.statusMonitor.refresh());
+    expect(account).toHaveBeenCalledTimes(2);
 
     expect(screen.getByRole("dialog", { name: /Cargue los documentos/ })).toBeVisible();
     expect(document.querySelector("[inert]")).toBeNull();

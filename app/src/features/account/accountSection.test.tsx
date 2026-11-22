@@ -55,6 +55,19 @@ describe("Ajustes › Cuenta", () => {
     expect(gateDialog()).not.toBeInTheDocument();
   });
 
+  it("vencida, también deja cerrar la sesión", async () => {
+    const signOut = answering(SIGNED_OUT);
+    await renderAccount({ account: answering(EXPIRED), signOut });
+
+    const leave = screen.getByRole("button", { name: "Cerrar sesión" });
+    expect(leave.className).toMatch(/secondary/);
+    await userEvent.click(leave);
+
+    expect(signOut).toHaveBeenCalledTimes(1);
+    expect(await screen.findByText(/No ha iniciado sesión/)).toBeVisible();
+    expect(gateDialog()).not.toBeInTheDocument();
+  });
+
   it("si el llavero falla al salir, vuelve a leer la cuenta y sigue mostrando el fallo", async () => {
     const account = vi.fn().mockResolvedValueOnce(SIGNED_IN).mockResolvedValue(SIGNED_OUT);
     const signOut = vi.fn(() =>

@@ -649,7 +649,7 @@
       "password": "Contraseña",
       "newPassword": "Contraseña nueva",
       "name": "Nombre",
-      "nameHint": "Opcional. Aparece en la barra lateral.",
+      "nameHint": "Opcional. Aparece en la barra lateral y, si lo escribe, también se envía a Supabase.",
       "code": "Código del correo",
       "codeHint": "De 6 a 10 dígitos.",
       "showPassword": "Mostrar contraseña",
@@ -668,10 +668,12 @@
       "resetting": "Cambiando…",
       "forgot": "¿Olvidó su contraseña?",
       "haveCode": "Ya tengo un código",
+      "resendCode": "Enviar un código nuevo",
       "backToSignIn": "Volver a iniciar sesión"
     },
     "notes": {
       "verify": "Escriba el código que enviamos a {email}.",
+      "resent": "Si hay una cuenta por confirmar con ese correo, recibirá un código nuevo.",
       "recover": "Escriba el correo de su cuenta. Si hay una cuenta con ese correo, recibirá un código.",
       "reset": "Si hay una cuenta con ese correo, recibirá un código. Escríbalo aquí con la contraseña nueva."
     },
@@ -679,7 +681,13 @@
       "verifyInvalidCode": {
         "what": "El código no es válido o ya venció.",
         "why": "Los códigos duran poco y solo sirven una vez.",
-        "todo": "Revise el código del correo, corríjalo y vuelva a confirmar.",
+        "todo": "Revise el código del correo y corríjalo, o pida uno nuevo.",
+        "action": "Enviar un código nuevo"
+      },
+      "verifyEmailUnavailable": {
+        "what": "No se pudo enviar el correo de confirmación.",
+        "why": "Esta instalación no puede enviar correos.",
+        "todo": "Si ya tiene un código, escríbalo. Si no, continúe sin cuenta: el resto de ARGUS funciona igual.",
         "action": "Entendido"
       },
       "signUpEmailUnavailable": {
@@ -728,7 +736,7 @@
       },
       "invalid_value": {
         "what": "El servicio no aceptó uno de los datos.",
-        "why": "Puede que el correo o el código tengan un formato que no reconoce.",
+        "why": "Puede que el correo o el código tengan un formato que no reconoce, o que la contraseña supere el máximo de 72 caracteres (menos si lleva tildes).",
         "todo": "Revíselos e inténtelo de nuevo.",
         "action": "Entendido"
       },
@@ -853,6 +861,7 @@
     "privacy": {
       "localTitle": "El análisis es local",
       "localDescription": "Los archivos se leen y comparan en este equipo, incluida la lectura por OCR. ARGUS no envía su contenido a internet ni a servidores externos; solo sale lo que usted confirme enviar a un servicio que activó en Ajustes.",
+      "localDescriptionWithAccount": "Los archivos se leen y comparan en este equipo, incluida la lectura por OCR. ARGUS no envía su contenido a internet ni a servidores externos; solo sale lo que usted confirme enviar a un servicio que activó en Ajustes y, si usa la cuenta, su correo, contraseña, nombre opcional, códigos y sesión, que van a Supabase.",
       "retention": "Guardar el historial de decisiones durante 90 días",
       "folder": "Carpeta del historial",
       "retentionOn": "Las revisiones y comparaciones de más de 90 días, con la copia de sus archivos, se borran al iniciar ARGUS y al activar esta opción.",
@@ -947,7 +956,6 @@
       }
     },
     "account": {
-      "signedInAs": "Sesión iniciada",
       "email": "Correo",
       "name": "Nombre",
       "noName": "Sin nombre",

@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { answering, SIGNED_IN, SIGNED_OUT } from "../../test/accountFakes";
 import type { AccountStateResult } from "../../services/engine/accountTypes";
 import type { PreferenceStorage } from "../../services/preferences/preferenceStorage";
-import { fakeEngineServices } from "../../test/engineFakes";
+import { fakeEngineServices, HEALTHY } from "../../test/engineFakes";
 import { renderApp, stubBrowser } from "../../test/renderApp";
 import { renderAccount } from "./accountHarness";
 
@@ -64,17 +64,18 @@ describe("la puerta y los Primeros pasos", () => {
   });
 
   it("una lectura tardía no interrumpe los Primeros pasos: la puerta espera a que se cierren", async () => {
-    const account = vi
-      .fn()
-      .mockRejectedValueOnce(new Error("arrancando"))
-      .mockResolvedValue(SIGNED_OUT);
-    renderApp(fakeEngineServices({ account: { account } }), undefined, emptyStorage());
+    const down = () => Promise.reject(new Error("sin motor"));
+    const account = vi.fn().mockImplementationOnce(down).mockResolvedValue(SIGNED_OUT);
+    const checkHealth = vi.fn().mockImplementationOnce(down).mockResolvedValue(HEALTHY);
+    const services = fakeEngineServices({ account: { account }, checkHealth });
+    renderApp(services, undefined, emptyStorage());
     await act(() => Promise.resolve());
     await userEvent.keyboard("{Enter}");
     expect(await screen.findByRole("heading", { name: /Compruebe lo que se leyó/ })).toBeVisible();
 
-    await act(() => Promise.resolve());
+    await act(() => services.statusMonitor.refresh());
 
+    expect(account).toHaveBeenCalledTimes(2);
     expect(screen.getByRole("heading", { name: /Compruebe lo que se leyó/ })).toBeVisible();
     expect(screen.queryByRole("dialog", { name: "Iniciar sesión" })).not.toBeInTheDocument();
     await userEvent.keyboard("{Escape}");

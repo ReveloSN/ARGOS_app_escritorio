@@ -19,7 +19,7 @@ export function AccountProvider({ children }: { readonly children: ReactNode }) 
     gate: gate.gate,
     isFirstReadPending,
     openGate: (email = null) => {
-      gate.open("settings", email);
+      gate.open(email);
     },
     closeGate: gate.close,
     actions,

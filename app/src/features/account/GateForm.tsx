@@ -19,6 +19,8 @@ interface GateFormProps extends GateViewProps {
   readonly busyLabel: TranslationKey;
   /** Se llama con la vista ya validada; no se vuelve a llamar mientras haya una petición. */
   readonly onSubmit: () => void;
+  /** Pedir otro código: solo lo ofrece la vista que lo puede enviar. */
+  readonly onResend?: () => void;
   readonly children: ReactNode;
 }
 
@@ -34,6 +36,7 @@ export function GateForm(props: GateFormProps) {
   const act = (action: ProblemAction) => {
     const view = VIEW_BY_ACTION[action];
     if (view) go(view);
+    else if (action === "resend") props.onResend?.();
     // Reintentar manda lo que hay ahora en los campos, nunca lo que se escribió antes.
     else if (action === "retry") form.retry(onSubmit);
     else form.dismiss();

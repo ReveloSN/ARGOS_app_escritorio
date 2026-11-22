@@ -1,0 +1,53 @@
+.identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-6);
+  border: var(--border-width) solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-background-subtle);
+}
+
+/* La retícula cabe en el ojo de la marca: nunca queda detrás de un texto. */
+.mark {
+  position: relative;
+  display: flex;
+  flex: none;
+}
+
+.mark > * {
+  position: relative;
+}
+
+.mark > .reticle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.name {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-brand);
+}
+
+.heading {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-emphasis);
+}
+
+.privacy {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}

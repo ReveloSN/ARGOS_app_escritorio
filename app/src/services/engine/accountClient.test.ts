@@ -68,6 +68,18 @@ describe("AccountClient", () => {
     expect(init?.body).toBe('{"email":"a@b.co"}');
   });
 
+  it("pide otro código de alta sin esperar un cuerpo de respuesta", async () => {
+    const fetchResource = vi.fn<FetchResource>(() =>
+      Promise.resolve(new Response(null, { status: 204 })),
+    );
+
+    await clientWith(fetchResource).resendSignUpCode("a@b.co");
+
+    const [url, init] = fetchResource.mock.calls[0] ?? [];
+    expect([url, init?.method]).toEqual([`${BASE}/verify/resend`, "POST"]);
+    expect(init?.body).toBe('{"email":"a@b.co"}');
+  });
+
   it("deja pasar el motivo del motor sin tocarlo", async () => {
     const client = clientWith(answering({ detail: "invalid_credentials" }, 401));
 
@@ -87,9 +99,10 @@ describe("AccountClient", () => {
     await client.refresh();
     await client.signOut();
     await client.requestPasswordReset("a@b.co").catch(() => undefined);
+    await client.resendSignUpCode("a@b.co").catch(() => undefined);
 
     const timeouts = spy.mock.calls.map(([milliseconds]) => milliseconds);
-    expect(timeouts).toEqual([10_000, 10_000, 40_000, 40_000, 40_000, 40_000]);
+    expect(timeouts).toEqual([10_000, 10_000, 40_000, 40_000, 40_000, 40_000, 40_000]);
     spy.mockRestore();
   });
 });

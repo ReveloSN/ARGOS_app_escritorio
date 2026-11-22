@@ -17,6 +17,8 @@ export interface FirstReadContext {
  * La primera lectura de la cuenta que llega decide, una sola vez por ejecución, si la puerta se
  * abre: solo con `signed_out` y sin la marca de «Continuar sin cuenta». Con sesión, se renueva en
  * segundo plano. Una lectura a la vez; si falla con el motor ya listo, se repite una vez.
+ * Se da por resuelta al responder, o al fallar con el motor listo: mientras arranca, el fallo es
+ * inmediato y no dice nada de la cuenta.
  */
 export class FirstAccountRead {
   private isDecided = false;
@@ -40,12 +42,10 @@ export class FirstAccountRead {
     const { gateway, store } = this.context();
     store.accept(gateway.account(), identity).then(
       (state) => {
-        this.finish();
-        this.decide(state);
+        this.succeed(state);
       },
       () => {
-        this.finish();
-        this.scheduleRetry();
+        this.fail();
       },
     );
   }
@@ -54,16 +54,24 @@ export class FirstAccountRead {
     clearTimeout(this.timer);
   }
 
-  private finish(): void {
+  private succeed(state: AccountStateResult): void {
     this.isReading = false;
     this.onSettled();
+    this.decide(state);
+  }
+
+  private fail(): void {
+    this.isReading = false;
+    // Con otra lectura pedida, decide esa: esta pudo salir antes de que el motor respondiera.
+    if (this.context().isEngineReady && !this.wasAsked) this.onSettled();
+    this.scheduleRetry();
   }
 
   private decide(state: AccountStateResult): void {
     if (this.isDecided) return;
     this.isDecided = true;
     const { gateway, store, gate } = this.context();
-    if (state.status === "signed_out" && !state.gateSkipped) gate.open("startup", null);
+    if (state.status === "signed_out" && !state.gateSkipped) gate.open(null);
     if (state.status === "signed_in") {
       store.accept(gateway.refresh(), identity).catch(() => undefined);
     }

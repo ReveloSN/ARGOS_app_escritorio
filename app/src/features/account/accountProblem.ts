@@ -6,7 +6,7 @@ import { EngineRejectedError, EngineUnavailableError } from "../../services/engi
 export type AccountProblem = AccountProblemValue | "engine_unavailable" | "timeout";
 
 /** Qué puede hacer la persona ahora; cada motivo trae su acción, con botón (CLAUDE.md §9). */
-export type ProblemAction = "dismiss" | "retry" | "signIn" | "verify" | "recover";
+export type ProblemAction = "dismiss" | "retry" | "signIn" | "verify" | "recover" | "resend";
 
 export const PROBLEM_ACTIONS: Readonly<Record<AccountProblem, ProblemAction>> = {
   invalid_credentials: "recover",
@@ -29,6 +29,7 @@ export const PROBLEM_ACTIONS: Readonly<Record<AccountProblem, ProblemAction>> = 
 export type ProblemPrefix =
   | `account.problems.${AccountProblem}`
   | "account.flowProblems.verifyInvalidCode"
+  | "account.flowProblems.verifyEmailUnavailable"
   | "account.flowProblems.signUpEmailUnavailable";
 
 export interface ProblemCopy {
@@ -36,15 +37,22 @@ export interface ProblemCopy {
   readonly action: ProblemAction;
 }
 
+type CopyByProblem = Readonly<Partial<Record<AccountProblem, ProblemCopy>>>;
+
+const FLOW_COPY: Readonly<Partial<Record<GateView, CopyByProblem>>> = {
+  signUp: {
+    email_unavailable: { prefix: "account.flowProblems.signUpEmailUnavailable", action: "dismiss" },
+  },
+  verify: {
+    invalid_code: { prefix: "account.flowProblems.verifyInvalidCode", action: "resend" },
+    email_unavailable: { prefix: "account.flowProblems.verifyEmailUnavailable", action: "dismiss" },
+  },
+};
+
 /** El mismo motivo se dice distinto según lo que la persona estaba haciendo. */
 export function problemCopy(problem: AccountProblem, flow?: GateView): ProblemCopy {
-  if (flow === "verify" && problem === "invalid_code") {
-    return { prefix: "account.flowProblems.verifyInvalidCode", action: "dismiss" };
-  }
-  if (flow === "signUp" && problem === "email_unavailable") {
-    return { prefix: "account.flowProblems.signUpEmailUnavailable", action: "dismiss" };
-  }
-  return { prefix: `account.problems.${problem}`, action: PROBLEM_ACTIONS[problem] };
+  const inFlow = flow && FLOW_COPY[flow]?.[problem];
+  return inFlow ?? { prefix: `account.problems.${problem}`, action: PROBLEM_ACTIONS[problem] };
 }
 
 const KNOWN_PROBLEMS = new Set<string>(Object.keys(PROBLEM_ACTIONS));

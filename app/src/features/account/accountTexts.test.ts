@@ -13,6 +13,7 @@ function leaves(node: unknown, prefix = ""): [string, string][] {
 const SCOPES = [
   (messages: typeof es) => ({ account: messages.account }),
   (messages: typeof es) => ({ settingsAccount: messages.settings.account }),
+  (messages: typeof es) => ({ settingsPrivacy: messages.settings.privacy }),
   (messages: typeof es) => ({
     nav: [messages.navigation.accountLabel, messages.navigation.accountExpired],
   }),
@@ -34,6 +35,11 @@ describe("textos de la cuenta", () => {
       expect(text).not.toMatch(/[!¡]/);
       expect(text).not.toMatch(/átomo|molécula|organismo|atom|molecule|organism/i);
     }
+  });
+
+  it("un dato no aceptado también puede ser una contraseña larga", () => {
+    expect(es.account.problems.invalid_value.why).toMatch(/contraseña.*72 caracteres/);
+    expect(en.account.problems.invalid_value.why).toMatch(/password.*72 characters/);
   });
 
   it("el aviso de privacidad es el acordado", () => {

@@ -54,9 +54,17 @@ export class AccountClient implements AccountGateway {
     return this.post("/password-reset/confirm", form);
   }
 
+  resendSignUpCode(email: string): Promise<void> {
+    return this.sendEmail("/verify/resend", email);
+  }
+
   requestPasswordReset(email: string): Promise<void> {
+    return this.sendEmail("/password-reset", email);
+  }
+
+  private sendEmail(route: string, email: string): Promise<void> {
     return this.http.empty({
-      path: `${ACCOUNT_PATH}/password-reset`,
+      path: `${ACCOUNT_PATH}${route}`,
       timeoutMs: SERVICE_TIMEOUT_MS,
       method: "POST",
       body: { email },

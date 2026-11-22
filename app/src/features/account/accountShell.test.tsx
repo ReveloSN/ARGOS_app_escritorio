@@ -65,6 +65,19 @@ describe("la cuenta en la aplicación", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("al cerrar una sesión vencida se van el correo y el pie", async () => {
+    const account = { account: answering(EXPIRED), signOut: answering(SIGNED_OUT) };
+    renderApp(fakeEngineServices({ account }));
+    await act(() => Promise.resolve());
+    await userEvent.click(screen.getByRole("button", { name: /Ajustes/ }));
+
+    await userEvent.click(screen.getByRole("button", { name: "Cerrar sesión" }));
+
+    expect(screen.queryByText(/ana@correo\.co/)).not.toBeInTheDocument();
+    expect(screen.queryByText("Sesión vencida")).not.toBeInTheDocument();
+    expect(screen.queryByRole("img", { name: /^Cuenta/ })).not.toBeInTheDocument();
+  });
+
   it("con `unavailable` no hay pie ni sección de cuenta", async () => {
     await renderShell(UNAVAILABLE_ACCOUNT);
     await userEvent.click(screen.getByRole("button", { name: /Ajustes/ }));
