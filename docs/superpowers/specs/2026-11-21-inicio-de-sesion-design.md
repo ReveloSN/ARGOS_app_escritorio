@@ -59,7 +59,7 @@ Se eligió A porque es la más sencilla (la pidió el usuario).
 - `application/ports/identity_provider.py`: puerto `IdentityProvider` con `sign_up`, `sign_in`, `refresh`, `sign_out` y `request_password_reset`.
 - `application/account_use_cases.py`: casos de uso `SignUp`, `SignIn`, `SignOut`, `CurrentAccount` y `ResetPassword`. Dependen del puerto y de un `SessionStore`.
 - `infrastructure/identity/supabase_identity_provider.py`: llama a la API REST de Supabase Auth (`/auth/v1/signup`, `/token?grant_type=password|refresh_token`, `/logout`, `/recover`) con `requests`.
-- `infrastructure/identity/keyring_session_store.py`: guarda la sesión como JSON en el llavero (servicio `ARGUS`, cuenta `account-session`).
+- `infrastructure/identity/keyring_session_store.py`: guarda la sesión como JSON en el llavero (servicio `ARGUS account`, cuenta `account-session`).
 - `api/routes/account.py`, con estas rutas:
   - `GET /account`: estado.
   - `POST /account/sign-up`

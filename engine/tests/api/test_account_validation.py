@@ -9,7 +9,8 @@ from argus.api.schemas.account import PasswordResetBody, SignInBody, SignUpBody
 from tests.application.account_doubles import AccountDoubles
 
 EMAIL = "ana@example.com"
-PASSWORD = "contraseña-privada"
+# ASCII y sin símbolos: json y las URL escapan el resto y la búsqueda no lo encontraría.
+PASSWORD = "contrasena-privada-7f3a"
 CODE = "80417236"
 TOKEN = "renovacion-pegada"
 SECRETS = (PASSWORD, CODE, TOKEN)
@@ -56,7 +57,7 @@ def test_a_malformed_body_is_never_logged(
 
 @pytest.mark.parametrize("post", WITH_BODY)
 def test_a_body_that_is_not_utf8_is_never_echoed(account_api: TestClient, post: str) -> None:
-    content = b'{"password": "' + PASSWORD.encode("latin-1") + b'"}'
+    content = b'{"password": "' + PASSWORD.encode() + b'\xf1"}'
 
     response = account_api.post(f"/account/{post}", content=content, headers={"Content-Type": JSON})
 

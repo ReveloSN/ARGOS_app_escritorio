@@ -6,7 +6,8 @@ from argus.domain.account import Credentials, StoredSession
 from argus.domain.account_errors import AccountError, AccountProblem
 from tests.application.account_doubles import RECOVERED, SESSION, AccountDoubles
 
-PASSWORD = "contraseña-privada"
+# ASCII y sin símbolos: json y las URL escapan el resto y la búsqueda no lo encontraría.
+PASSWORD = "contrasena-privada-7f3a"
 CODE = "80417236"
 SECRETS = (
     PASSWORD,

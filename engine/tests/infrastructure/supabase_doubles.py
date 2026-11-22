@@ -14,7 +14,8 @@ import requests
 
 KEY = "sb_publishable_clave-de-prueba"
 EMAIL = "ana@example.com"
-PASSWORD = "contraseña-privada"
+# ASCII y sin símbolos: json y las URL escapan el resto y la búsqueda no lo encontraría.
+PASSWORD = "contrasena-privada-7f3a"
 CODE = "80417236"
 ACCESS = "acceso-secreto"
 REFRESH = "renovacion-secreta"

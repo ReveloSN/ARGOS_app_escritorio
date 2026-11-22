@@ -126,7 +126,7 @@ def test_a_long_session_is_chunked_and_survives_a_restart(
     body = engine.open().post("/account/sign-in", json=LOGIN).json()
 
     assert (body["status"], body["isPersisted"]) == ("signed_in", True)
-    assert ("ARGUS", "account-session") in system.entries
+    assert ("ARGUS account", "account-session") in system.entries
     assert len(system.entries) > 2
     assert not any(ACCESS in value for value in system.entries.values())
     reopened = engine.open()

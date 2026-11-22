@@ -11,17 +11,26 @@ WINDOWS_LIMIT_BYTES = 2560
 class BoundedKeyring:
     def __init__(self) -> None:
         self.entries: dict[tuple[str, str], str] = {}
+        self.services_used: set[str] = set()
+        self.writes = 0
+        self.failing_write: int | None = None
 
     def get_password(self, service: str, account: str) -> str | None:
+        self.services_used.add(service)
         return self.entries.get((service, account))
 
     def set_password(self, service: str, account: str, secret: str) -> None:
+        self.services_used.add(service)
+        self.writes += 1
+        if self.writes == self.failing_write:
+            raise OSError(5, "CredWrite")
         if len(secret.encode("utf-16-le")) > WINDOWS_LIMIT_BYTES:
             # Como CredWrite: no es un KeyringError.
             raise OSError(1783, "CredWrite")
         self.entries[(service, account)] = secret
 
     def delete_password(self, service: str, account: str) -> None:
+        self.services_used.add(service)
         if (service, account) not in self.entries:
             raise PasswordDeleteError("no existe")
         del self.entries[(service, account)]

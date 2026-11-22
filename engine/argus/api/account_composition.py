@@ -19,6 +19,9 @@ from argus.infrastructure.identity.keyring_session_store import KeyringSessionSt
 from argus.infrastructure.identity.supabase_identity_provider import SupabaseIdentityProvider
 from argus.infrastructure.ocr.chunked_secret_store import ChunkedSecretStore
 
+# Servicio propio: en Windows, keyring mueve y reescribe el destino común de cada servicio, y
+# guardar la sesión podría borrar una clave de la IA o del OCR.
+SESSION_KEYCHAIN_SERVICE = "ARGUS account"
 SESSION_KEYCHAIN_ACCOUNT = "account-session"
 
 
@@ -46,7 +49,8 @@ def default_account_adapters() -> AccountAdapters:
     configuration = read_account_configuration(os.environ, bundled_configuration_file())
     provider = SupabaseIdentityProvider(configuration) if configuration else None
     secrets = ChunkedSecretStore(
-        lambda account: KeyringSecretStore(account=account), SESSION_KEYCHAIN_ACCOUNT
+        lambda account: KeyringSecretStore(SESSION_KEYCHAIN_SERVICE, account),
+        SESSION_KEYCHAIN_ACCOUNT,
     )
     return AccountAdapters(provider, KeyringSessionStore(secrets))
 
